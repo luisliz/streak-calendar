@@ -3,13 +3,16 @@ import Link from "next/link";
 
 export function AppHeader() {
   return (
-    <header className="border-b">
+    <header>
       <div className="container flex h-16 items-center justify-between px-4">
         <Link href="/" className="text-xl font-bold">
           Streak Calendar
         </Link>
 
         <nav className="hidden md:flex items-center gap-6 absolute left-1/2 -translate-x-1/2">
+          <Link href="/get-started" className="text-sm font-medium hover:text-muted-foreground">
+            Pricing
+          </Link>
           <Link href="/calendars" className="text-sm font-medium hover:text-muted-foreground">
             Calendars
           </Link>
