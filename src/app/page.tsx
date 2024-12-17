@@ -1,18 +1,22 @@
-import { SignInButton, SignOutButton, UserButton } from "@clerk/nextjs";
-import { auth } from "@clerk/nextjs/server";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
-export default async function Home() {
-  const { userId } = await auth();
-
+export default function Home() {
   return (
-    <div className="min-h-screen p-8">
-      <main>
-        <p>Hello World</p>
-        {userId ? <SignOutButton /> : <SignInButton />}
-        <div className="absolute top-0 right-0">
-          <UserButton />
-        </div>
-      </main>
+    <div className="flex flex-col items-center justify-center px-4 py-32 text-center">
+      <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl">
+        Track Your Habits,
+        <br />
+        Build Your Streaks
+      </h1>
+      <p className="mx-auto mt-6 max-w-[600px] text-muted-foreground md:text-xl">
+        Visual habit tracking that helps you stay motivated and achieve your goals. Start your streak today.
+      </p>
+      <div className="mt-8">
+        <Button asChild size="lg">
+          <Link href="/calendars">Get Started</Link>
+        </Button>
+      </div>
     </div>
   );
 }

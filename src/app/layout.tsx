@@ -1,3 +1,5 @@
+import { AppFooter } from "@/components/app-footer";
+import { AppHeader } from "@/components/app-header";
 import { cn } from "@/lib/utils";
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
@@ -60,7 +62,13 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={cn(geistSans.variable, geistMono.variable, "min-h-screen bg-background font-sans antialiased")}>
-        <Providers>{children}</Providers>
+        <Providers>
+          <div className="flex min-h-screen max-w-7xl mx-auto flex-col">
+            <AppHeader />
+            {children}
+            <AppFooter />
+          </div>
+        </Providers>
       </body>
     </html>
   );
