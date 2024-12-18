@@ -5,21 +5,35 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { SignInButton, SignedIn, SignedOut } from "@clerk/nextjs";
+import { useMutation, useQuery } from "convex/react";
 import { PlusCircle } from "lucide-react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
-type Calendar = {
-  id: string;
-  name: string;
-  color: string;
-  habits: Habit[];
-};
+import { api } from "../../../convex/_generated/api";
+import { Id } from "../../../convex/_generated/dataModel";
 
-type Habit = {
-  id: string;
+interface Calendar {
+  _id: Id<"calendars">;
   name: string;
-  completions: { [date: string]: boolean };
-};
+  colorTheme: string;
+  userId: string;
+  createdAt: number;
+}
+
+interface Habit {
+  _id: Id<"habits">;
+  name: string;
+  userId: string;
+  calendarId: Id<"calendars">;
+  createdAt: number;
+}
+
+interface Completion {
+  _id: Id<"completions">;
+  habitId: Id<"habits">;
+  userId: string;
+  completedAt: number;
+}
 
 const COLORS = [
   "#10B981", // Emerald
@@ -29,84 +43,87 @@ const COLORS = [
   "#F59E0B", // Amber
 ];
 
+const getDatesForRange = (daysBack: number) => {
+  const today = new Date();
+  const startDate = new Date(today);
+  startDate.setDate(today.getDate() - daysBack);
+
+  const days = [];
+  for (let d = new Date(startDate); d <= today; d.setDate(d.getDate() + 1)) {
+    const dateStr = d.toISOString().split("T")[0];
+    days.push(dateStr);
+  }
+
+  return {
+    today,
+    startDate,
+    days,
+  };
+};
+
 export default function CalendarsPage() {
-  const [calendars, setCalendars] = useState<Calendar[]>([]);
+  const { today, startDate, days } = useMemo(() => getDatesForRange(30), []);
+
+  const calendarsQuery = useQuery(api.calendars.list);
+  const habitsQuery = useQuery(api.habits.list, { calendarId: undefined });
+  const completionsQuery = useQuery(api.habits.getCompletions, {
+    startDate: startDate.getTime(),
+    endDate: today.getTime(),
+  });
+
+  const createCalendar = useMutation(api.calendars.create);
+  const createHabit = useMutation(api.habits.create);
+  const markComplete = useMutation(api.habits.markComplete);
+
   const [selectedCalendar, setSelectedCalendar] = useState<Calendar | null>(null);
   const [newCalendarName, setNewCalendarName] = useState("");
   const [newCalendarColor, setNewCalendarColor] = useState(COLORS[0]);
   const [newHabitName, setNewHabitName] = useState("");
 
-  const handleAddCalendar = () => {
+  const calendars = calendarsQuery ?? [];
+  const habits = habitsQuery ?? [];
+  const completions = completionsQuery ?? [];
+
+  const handleAddCalendar = async () => {
     if (!newCalendarName.trim()) return;
 
-    const newCalendar: Calendar = {
-      id: crypto.randomUUID(),
+    await createCalendar({
       name: newCalendarName,
-      color: newCalendarColor,
-      habits: [],
-    };
+      colorTheme: newCalendarColor,
+    });
 
-    setCalendars([...calendars, newCalendar]);
     setNewCalendarName("");
     setNewCalendarColor(COLORS[0]);
   };
 
-  const handleAddHabit = () => {
+  const handleAddHabit = async () => {
     if (!selectedCalendar || !newHabitName.trim()) return;
 
-    const newHabit: Habit = {
-      id: crypto.randomUUID(),
+    await createHabit({
       name: newHabitName,
-      completions: {},
-    };
+      calendarId: selectedCalendar._id,
+    });
 
-    const updatedCalendars = calendars.map((cal) =>
-      cal.id === selectedCalendar.id ? { ...cal, habits: [...cal.habits, newHabit] } : cal
-    );
-
-    setCalendars(updatedCalendars);
     setNewHabitName("");
   };
 
-  const toggleHabitCompletion = (calendarId: string, habitId: string, date: string) => {
-    setCalendars((prevCalendars) =>
-      prevCalendars.map((cal) =>
-        cal.id === calendarId
-          ? {
-              ...cal,
-              habits: cal.habits.map((habit) =>
-                habit.id === habitId
-                  ? {
-                      ...habit,
-                      completions: {
-                        ...habit.completions,
-                        [date]: !habit.completions[date],
-                      },
-                    }
-                  : habit
-              ),
-            }
-          : cal
-      )
-    );
+  const toggleHabitCompletion = async (habitId: Id<"habits">, date: string) => {
+    const timestamp = new Date(date).getTime();
+    await markComplete({
+      habitId,
+      completedAt: timestamp,
+    });
   };
 
   const YearlyOverview = ({ habit, color }: { habit: Habit; color: string }) => {
-    const today = new Date();
-    const startDate = new Date(today);
-    startDate.setDate(today.getDate() - 30);
-
-    const days = [];
-    for (let d = new Date(startDate); d <= today; d.setDate(d.getDate() + 1)) {
-      const dateStr = d.toISOString().split("T")[0];
-      days.push(dateStr);
-    }
-
     return (
       <div className="flex-1 overflow-x-auto">
         <div className="inline-flex gap-px bg-background border rounded-md p-1">
           {days.map((date) => {
-            const isCompleted = habit.completions[date];
+            const timestamp = new Date(date).getTime();
+            const isCompleted = completions.some(
+              (completion) => completion.habitId === habit._id && completion.completedAt === timestamp
+            );
             const formattedDate = new Date(date).toLocaleDateString(undefined, {
               month: "short",
               day: "numeric",
@@ -114,7 +131,7 @@ export default function CalendarsPage() {
             return (
               <button
                 key={date}
-                onClick={() => toggleHabitCompletion(selectedCalendar!.id, habit.id, date)}
+                onClick={() => toggleHabitCompletion(habit._id, date)}
                 className="w-6 h-6 flex items-center justify-center rounded-sm transition-colors hover:opacity-80"
                 style={{
                   backgroundColor: isCompleted ? color : "#e5e7eb",
@@ -182,51 +199,54 @@ export default function CalendarsPage() {
           </div>
         ) : (
           <div className="space-y-8">
-            {calendars.map((calendar) => (
-              <div key={calendar.id} className="rounded-lg border p-6" style={{ borderColor: calendar.color }}>
-                <div className="flex justify-between items-center mb-6">
-                  <h2 className="text-2xl font-semibold">{calendar.name}</h2>
-                  <Dialog>
-                    <DialogTrigger asChild>
-                      <Button variant="outline" onClick={() => setSelectedCalendar(calendar)}>
-                        <PlusCircle className="mr-2 h-4 w-4" />
-                        Add Habit
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent>
-                      <DialogHeader>
-                        <DialogTitle>Add New Habit</DialogTitle>
-                      </DialogHeader>
-                      <div className="grid gap-4 py-4">
-                        <div>
-                          <Label htmlFor="habit-name">Habit Name</Label>
-                          <Input
-                            id="habit-name"
-                            value={newHabitName}
-                            onChange={(e) => setNewHabitName(e.target.value)}
-                            placeholder="e.g., Morning Run"
-                          />
+            {calendars.map((calendar) => {
+              const calendarHabits = habits.filter((habit) => habit.calendarId === calendar._id);
+              return (
+                <div key={calendar._id} className="rounded-lg border p-6" style={{ borderColor: calendar.colorTheme }}>
+                  <div className="flex justify-between items-center mb-6">
+                    <h2 className="text-2xl font-semibold">{calendar.name}</h2>
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Button variant="outline" onClick={() => setSelectedCalendar(calendar)}>
+                          <PlusCircle className="mr-2 h-4 w-4" />
+                          Add Habit
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent>
+                        <DialogHeader>
+                          <DialogTitle>Add New Habit</DialogTitle>
+                        </DialogHeader>
+                        <div className="grid gap-4 py-4">
+                          <div>
+                            <Label htmlFor="habit-name">Habit Name</Label>
+                            <Input
+                              id="habit-name"
+                              value={newHabitName}
+                              onChange={(e) => setNewHabitName(e.target.value)}
+                              placeholder="e.g., Morning Run"
+                            />
+                          </div>
+                          <Button onClick={handleAddHabit}>Add Habit</Button>
                         </div>
-                        <Button onClick={handleAddHabit}>Add Habit</Button>
-                      </div>
-                    </DialogContent>
-                  </Dialog>
-                </div>
-
-                {calendar.habits.length === 0 ? (
-                  <p className="text-sm text-muted-foreground">No habits added yet. Add one to start tracking!</p>
-                ) : (
-                  <div className="space-y-3">
-                    {calendar.habits.map((habit) => (
-                      <div key={habit.id} className="flex items-center gap-4">
-                        <h3 className="font-medium text-base w-48">{habit.name}</h3>
-                        <YearlyOverview habit={habit} color={calendar.color} />
-                      </div>
-                    ))}
+                      </DialogContent>
+                    </Dialog>
                   </div>
-                )}
-              </div>
-            ))}
+
+                  {calendarHabits.length === 0 ? (
+                    <p className="text-sm text-muted-foreground">No habits added yet. Add one to start tracking!</p>
+                  ) : (
+                    <div className="space-y-3">
+                      {calendarHabits.map((habit) => (
+                        <div key={habit._id} className="flex items-center gap-4">
+                          <h3 className="font-medium text-base w-48">{habit.name}</h3>
+                          <YearlyOverview habit={habit} color={calendar.colorTheme} />
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </div>
         )}
       </SignedIn>
