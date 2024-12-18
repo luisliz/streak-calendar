@@ -28,13 +28,6 @@ interface Habit {
   createdAt: number;
 }
 
-interface Completion {
-  _id: Id<"completions">;
-  habitId: Id<"habits">;
-  userId: string;
-  completedAt: number;
-}
-
 const COLORS = [
   "#10B981", // Emerald
   "#3B82F6", // Blue
