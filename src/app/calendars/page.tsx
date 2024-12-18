@@ -17,7 +17,6 @@ interface Calendar {
   name: string;
   colorTheme: string;
   userId: string;
-  createdAt: number;
 }
 
 interface Habit {
@@ -25,7 +24,6 @@ interface Habit {
   name: string;
   userId: string;
   calendarId: Id<"calendars">;
-  createdAt: number;
 }
 
 const COLORS = [

@@ -28,7 +28,6 @@ export const create = mutation({
       name: args.name,
       userId: identity.subject,
       colorTheme: args.colorTheme,
-      createdAt: Date.now(),
     });
   },
 });

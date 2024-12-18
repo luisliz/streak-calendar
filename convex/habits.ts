@@ -39,7 +39,6 @@ export const create = mutation({
       name: args.name,
       userId: identity.subject,
       calendarId: args.calendarId,
-      createdAt: Date.now(),
     });
   },
 });
