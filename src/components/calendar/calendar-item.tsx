@@ -5,6 +5,11 @@ import { Id } from "@server/convex/_generated/dataModel";
 
 import { YearlyOverview } from "./yearly-overview";
 
+/**
+ * CalendarItem represents a single calendar view with its habits and their completion tracking.
+ * It displays a calendar's name, color theme, and a list of habits with their yearly progress.
+ */
+
 interface CalendarItemProps {
   calendar: {
     _id: Id<"calendars">;
@@ -15,15 +20,15 @@ interface CalendarItemProps {
     _id: Id<"habits">;
     name: string;
   }>;
-  days: string[];
+  days: string[]; // Array of dates to display in the yearly overview
   completions: Array<{
     habitId: Id<"habits">;
-    completedAt: number;
+    completedAt: number; // Timestamp of when the habit was completed
   }>;
-  onAddHabit: () => void;
-  onEditCalendar: () => void;
-  onEditHabit: (habit: { _id: Id<"habits">; name: string }) => void;
-  onToggleHabit: (habitId: Id<"habits">, date: string) => void;
+  onAddHabit: () => void; // Callback when user wants to add a new habit
+  onEditCalendar: () => void; // Callback when user wants to edit calendar settings
+  onEditHabit: (habit: { _id: Id<"habits">; name: string }) => void; // Callback when user wants to edit a habit
+  onToggleHabit: (habitId: Id<"habits">, date: string) => void; // Callback when user toggles habit completion
 }
 
 export const CalendarItem = ({
@@ -37,8 +42,11 @@ export const CalendarItem = ({
   onToggleHabit,
 }: CalendarItemProps) => {
   return (
+    // Main container with rounded borders and padding
     <div className="rounded-lg border p-6">
+      {/* Header section with calendar name and add habit button */}
       <div className="flex justify-between items-center mb-6">
+        {/* Calendar title with hover-reveal edit button */}
         <div className="flex items-center gap-2 group">
           <h2 className="text-2xl font-semibold">{calendar.name}</h2>
           <Button
@@ -50,18 +58,23 @@ export const CalendarItem = ({
             <MoreHorizontal className="h-4 w-4" />
           </Button>
         </div>
+        {/* Add habit button */}
         <Button variant="outline" onClick={onAddHabit}>
           <PlusCircle className="mr-2 h-4 w-4" />
           Add Habit
         </Button>
       </div>
 
+      {/* Conditional rendering based on habits existence */}
       {habits.length === 0 ? (
+        // Empty state message when no habits exist
         <p className="text-sm text-muted-foreground">No habits added yet. Add one to start tracking!</p>
       ) : (
+        // List of habits with their yearly overviews
         <div className="space-y-1.5">
           {habits.map((habit) => (
             <div key={habit._id} className="flex items-center gap-4">
+              {/* Habit name with hover-reveal edit button */}
               <div className="flex items-center gap-2 w-48 group">
                 <h3 className="font-medium text-base">{habit.name}</h3>
                 <Button
@@ -73,6 +86,7 @@ export const CalendarItem = ({
                   <MoreHorizontal className="h-4 w-4" />
                 </Button>
               </div>
+              {/* Yearly overview grid showing habit completion status */}
               <YearlyOverview
                 habit={habit}
                 color={calendar.colorTheme}

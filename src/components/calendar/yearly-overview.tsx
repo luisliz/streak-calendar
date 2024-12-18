@@ -1,27 +1,37 @@
 import { Id } from "@server/convex/_generated/dataModel";
 
+/**
+ * YearlyOverview displays a grid of days showing habit completion status.
+ * Each day is represented by a button that can be toggled to mark habit completion.
+ */
+
 interface YearlyOverviewProps {
   habit: {
     _id: Id<"habits">;
   };
-  color: string;
-  days: string[];
+  color: string; // Tailwind color class for completed days
+  days: string[]; // Array of dates to display in the grid
   completions: Array<{
     habitId: Id<"habits">;
-    completedAt: number;
+    completedAt: number; // Timestamp when habit was completed
   }>;
-  onToggle: (habitId: Id<"habits">, date: string) => void;
+  onToggle: (habitId: Id<"habits">, date: string) => void; // Callback when a day is toggled
 }
 
 export const YearlyOverview = ({ habit, color, days, completions, onToggle }: YearlyOverviewProps) => {
   return (
+    // Scrollable container for the grid
     <div className="flex-1 overflow-x-auto">
+      {/* Grid of day buttons with rounded border */}
       <div className="inline-flex gap-px bg-background border rounded-md p-1">
         {days.map((date) => {
+          // Convert date string to timestamp for comparison
           const timestamp = new Date(date).getTime();
+          // Check if habit was completed on this date
           const isCompleted = completions.some(
             (completion) => completion.habitId === habit._id && completion.completedAt === timestamp
           );
+          // Format date for tooltip display
           const formattedDate = new Date(date).toLocaleDateString(undefined, {
             month: "short",
             day: "numeric",
