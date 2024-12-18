@@ -4,9 +4,10 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Skeleton } from "@/components/ui/skeleton";
 import { SignInButton, SignedIn, SignedOut } from "@clerk/nextjs";
 import { useMutation, useQuery } from "convex/react";
-import { PlusCircle } from "lucide-react";
+import { MoreHorizontal, PlusCircle } from "lucide-react";
 import { useMemo, useState } from "react";
 
 import { api } from "../../../convex/_generated/api";
@@ -64,6 +65,29 @@ const getDatesForRange = (daysBack: number) => {
   };
 };
 
+const CalendarSkeleton = () => (
+  <div className="space-y-8">
+    {[1, 2].map((i) => (
+      <div key={i} className="rounded-lg border p-6">
+        <div className="flex justify-between items-center mb-6">
+          <Skeleton className="h-8 w-48" />
+          <Skeleton className="h-10 w-32" />
+        </div>
+        <div className="space-y-4">
+          {[1, 2, 3].map((j) => (
+            <div key={j} className="flex items-center gap-4">
+              <Skeleton className="h-6 w-32" />
+              <div className="flex-1">
+                <Skeleton className="h-8 w-full" />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    ))}
+  </div>
+);
+
 export default function CalendarsPage() {
   const { today, startDate, days } = useMemo(() => getDatesForRange(30), []);
 
@@ -77,11 +101,22 @@ export default function CalendarsPage() {
   const createCalendar = useMutation(api.calendars.create);
   const createHabit = useMutation(api.habits.create);
   const markComplete = useMutation(api.habits.markComplete);
+  const updateCalendar = useMutation(api.calendars.update);
+  const updateHabit = useMutation(api.habits.update);
+  const deleteCalendar = useMutation(api.calendars.remove);
+  const deleteHabit = useMutation(api.habits.remove);
 
   const [selectedCalendar, setSelectedCalendar] = useState<Calendar | null>(null);
   const [newCalendarName, setNewCalendarName] = useState("");
   const [newCalendarColor, setNewCalendarColor] = useState(COLORS[0].value);
   const [newHabitName, setNewHabitName] = useState("");
+  const [editingCalendar, setEditingCalendar] = useState<Calendar | null>(null);
+  const [editingHabit, setEditingHabit] = useState<Habit | null>(null);
+  const [editCalendarName, setEditCalendarName] = useState("");
+  const [editCalendarColor, setEditCalendarColor] = useState("");
+  const [editHabitName, setEditHabitName] = useState("");
+  const [isNewCalendarOpen, setIsNewCalendarOpen] = useState(false);
+  const [isNewHabitOpen, setIsNewHabitOpen] = useState(false);
 
   const calendars = calendarsQuery ?? [];
   const habits = habitsQuery ?? [];
@@ -97,6 +132,7 @@ export default function CalendarsPage() {
 
     setNewCalendarName("");
     setNewCalendarColor(COLORS[0].value);
+    setIsNewCalendarOpen(false);
   };
 
   const handleAddHabit = async () => {
@@ -108,6 +144,7 @@ export default function CalendarsPage() {
     });
 
     setNewHabitName("");
+    setIsNewHabitOpen(false);
   };
 
   const toggleHabitCompletion = async (habitId: Id<"habits">, date: string) => {
@@ -116,6 +153,49 @@ export default function CalendarsPage() {
       habitId,
       completedAt: timestamp,
     });
+  };
+
+  const handleEditCalendar = async () => {
+    if (!editingCalendar || !editCalendarName.trim()) return;
+    await updateCalendar({
+      id: editingCalendar._id,
+      name: editCalendarName,
+      colorTheme: editCalendarColor,
+    });
+    setEditingCalendar(null);
+  };
+
+  const handleEditHabit = async () => {
+    if (!editingHabit || !editHabitName.trim()) return;
+    await updateHabit({
+      id: editingHabit._id,
+      name: editHabitName,
+    });
+    setEditingHabit(null);
+  };
+
+  const handleDeleteCalendar = async () => {
+    if (!editingCalendar) return;
+    await deleteCalendar({ id: editingCalendar._id });
+    setEditingCalendar(null);
+  };
+
+  const handleDeleteHabit = async () => {
+    if (!editingHabit) return;
+    await deleteHabit({ id: editingHabit._id });
+    setEditingHabit(null);
+  };
+
+  const handleCalendarKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      handleAddCalendar();
+    }
+  };
+
+  const handleHabitKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      handleAddHabit();
+    }
   };
 
   const YearlyOverview = ({ habit, color }: { habit: Habit; color: string }) => {
@@ -150,105 +230,146 @@ export default function CalendarsPage() {
   return (
     <div className="container max-w-7xl px-4 py-8">
       <SignedIn>
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold">Your Calendars</h1>
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button>
-                <PlusCircle className="mr-2 h-4 w-4" />
-                Add Calendar
-              </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Create New Calendar</DialogTitle>
-              </DialogHeader>
-              <div className="grid gap-4 py-4">
-                <div>
-                  <Label htmlFor="calendar-name">Calendar Name</Label>
-                  <Input
-                    id="calendar-name"
-                    value={newCalendarName}
-                    onChange={(e) => setNewCalendarName(e.target.value)}
-                    placeholder="e.g., Fitness Goals"
-                  />
-                </div>
-                <div>
-                  <Label>Color Theme</Label>
-                  <div className="grid grid-cols-6 gap-2 mt-2">
-                    {COLORS.map((color) => (
-                      <button
-                        key={color.value}
-                        className={`w-8 h-8 rounded-full transition-all ${color.value} ${
-                          newCalendarColor === color.value ? "ring-2 ring-offset-2" : ""
-                        }`}
-                        onClick={() => setNewCalendarColor(color.value)}
-                      />
-                    ))}
-                  </div>
-                </div>
-                <Button onClick={handleAddCalendar}>Create Calendar</Button>
-              </div>
-            </DialogContent>
-          </Dialog>
-        </div>
-
-        {calendars.length === 0 ? (
-          <div className="text-center py-12 text-muted-foreground">
-            <p>You haven&apos;t created any calendars yet.</p>
-            <p className="mt-2">Create one to start tracking your habits!</p>
-          </div>
+        {calendarsQuery === undefined ? (
+          <CalendarSkeleton />
         ) : (
-          <div className="space-y-8">
-            {calendars.map((calendar) => {
-              const calendarHabits = habits.filter((habit) => habit.calendarId === calendar._id);
-              return (
-                <div key={calendar._id} className="rounded-lg border p-6">
-                  <div className="flex justify-between items-center mb-6">
-                    <h2 className="text-2xl font-semibold">{calendar.name}</h2>
-                    <Dialog>
-                      <DialogTrigger asChild>
-                        <Button variant="outline" onClick={() => setSelectedCalendar(calendar)}>
-                          <PlusCircle className="mr-2 h-4 w-4" />
-                          Add Habit
-                        </Button>
-                      </DialogTrigger>
-                      <DialogContent>
-                        <DialogHeader>
-                          <DialogTitle>Add New Habit</DialogTitle>
-                        </DialogHeader>
-                        <div className="grid gap-4 py-4">
-                          <div>
-                            <Label htmlFor="habit-name">Habit Name</Label>
-                            <Input
-                              id="habit-name"
-                              value={newHabitName}
-                              onChange={(e) => setNewHabitName(e.target.value)}
-                              placeholder="e.g., Morning Run"
-                            />
-                          </div>
-                          <Button onClick={handleAddHabit}>Add Habit</Button>
-                        </div>
-                      </DialogContent>
-                    </Dialog>
-                  </div>
-
-                  {calendarHabits.length === 0 ? (
-                    <p className="text-sm text-muted-foreground">No habits added yet. Add one to start tracking!</p>
-                  ) : (
-                    <div className="space-y-1.5">
-                      {calendarHabits.map((habit) => (
-                        <div key={habit._id} className="flex items-center gap-4">
-                          <h3 className="font-medium text-base w-48">{habit.name}</h3>
-                          <YearlyOverview habit={habit} color={calendar.colorTheme} />
-                        </div>
-                      ))}
+          <>
+            <div className="flex justify-between items-center mb-8">
+              <h1 className="text-3xl font-bold">Your Calendars</h1>
+              <Dialog open={isNewCalendarOpen} onOpenChange={setIsNewCalendarOpen}>
+                <DialogTrigger asChild>
+                  <Button>
+                    <PlusCircle className="mr-2 h-4 w-4" />
+                    Add Calendar
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Create New Calendar</DialogTitle>
+                  </DialogHeader>
+                  <div className="grid gap-4 py-4">
+                    <div>
+                      <Label htmlFor="calendar-name">Calendar Name</Label>
+                      <Input
+                        id="calendar-name"
+                        value={newCalendarName}
+                        onChange={(e) => setNewCalendarName(e.target.value)}
+                        onKeyDown={handleCalendarKeyDown}
+                        placeholder="e.g., Fitness Goals"
+                      />
                     </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
+                    <div>
+                      <Label>Color Theme</Label>
+                      <div className="grid grid-cols-6 gap-2 mt-2">
+                        {COLORS.map((color) => (
+                          <button
+                            key={color.value}
+                            className={`w-8 h-8 rounded-full transition-all ${color.value} ${
+                              newCalendarColor === color.value ? "ring-2 ring-offset-2" : ""
+                            }`}
+                            onClick={() => setNewCalendarColor(color.value)}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                    <Button onClick={handleAddCalendar}>Create Calendar</Button>
+                  </div>
+                </DialogContent>
+              </Dialog>
+            </div>
+
+            {calendars.length === 0 ? (
+              <div className="text-center py-12 text-muted-foreground">
+                <p>You haven&apos;t created any calendars yet.</p>
+                <p className="mt-2">Create one to start tracking your habits!</p>
+              </div>
+            ) : (
+              <div className="space-y-8">
+                {calendars.map((calendar) => {
+                  const calendarHabits = habits.filter((habit) => habit.calendarId === calendar._id);
+                  return (
+                    <div key={calendar._id} className="rounded-lg border p-6">
+                      <div className="flex justify-between items-center mb-6">
+                        <div className="flex items-center gap-2 group">
+                          <h2 className="text-2xl font-semibold">{calendar.name}</h2>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="opacity-0 group-hover:opacity-100 transition-opacity"
+                            onClick={() => {
+                              setEditingCalendar(calendar);
+                              setEditCalendarName(calendar.name);
+                              setEditCalendarColor(calendar.colorTheme);
+                            }}
+                          >
+                            <MoreHorizontal className="h-4 w-4" />
+                          </Button>
+                        </div>
+                        <Dialog open={isNewHabitOpen} onOpenChange={setIsNewHabitOpen}>
+                          <DialogTrigger asChild>
+                            <Button
+                              variant="outline"
+                              onClick={() => {
+                                setSelectedCalendar(calendar);
+                                setIsNewHabitOpen(true);
+                              }}
+                            >
+                              <PlusCircle className="mr-2 h-4 w-4" />
+                              Add Habit
+                            </Button>
+                          </DialogTrigger>
+                          <DialogContent>
+                            <DialogHeader>
+                              <DialogTitle>Add New Habit</DialogTitle>
+                            </DialogHeader>
+                            <div className="grid gap-4 py-4">
+                              <div>
+                                <Label htmlFor="habit-name">Habit Name</Label>
+                                <Input
+                                  id="habit-name"
+                                  value={newHabitName}
+                                  onChange={(e) => setNewHabitName(e.target.value)}
+                                  onKeyDown={handleHabitKeyDown}
+                                  placeholder="e.g., Morning Run"
+                                />
+                              </div>
+                              <Button onClick={handleAddHabit}>Add Habit</Button>
+                            </div>
+                          </DialogContent>
+                        </Dialog>
+                      </div>
+
+                      {calendarHabits.length === 0 ? (
+                        <p className="text-sm text-muted-foreground">No habits added yet. Add one to start tracking!</p>
+                      ) : (
+                        <div className="space-y-1.5">
+                          {calendarHabits.map((habit) => (
+                            <div key={habit._id} className="flex items-center gap-4">
+                              <div className="flex items-center gap-2 w-48 group">
+                                <h3 className="font-medium text-base">{habit.name}</h3>
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  className="opacity-0 group-hover:opacity-100 transition-opacity"
+                                  onClick={() => {
+                                    setEditingHabit(habit);
+                                    setEditHabitName(habit.name);
+                                  }}
+                                >
+                                  <MoreHorizontal className="h-4 w-4" />
+                                </Button>
+                              </div>
+                              <YearlyOverview habit={habit} color={calendar.colorTheme} />
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </>
         )}
       </SignedIn>
 
@@ -262,6 +383,68 @@ export default function CalendarsPage() {
           </SignInButton>
         </div>
       </SignedOut>
+
+      <Dialog open={!!editingCalendar} onOpenChange={() => setEditingCalendar(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Edit Calendar</DialogTitle>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div>
+              <Label htmlFor="edit-calendar-name">Calendar Name</Label>
+              <Input
+                id="edit-calendar-name"
+                value={editCalendarName}
+                onChange={(e) => setEditCalendarName(e.target.value)}
+              />
+            </div>
+            <div>
+              <Label>Color Theme</Label>
+              <div className="grid grid-cols-6 gap-2 mt-2">
+                {COLORS.map((color) => (
+                  <button
+                    key={color.value}
+                    className={`w-8 h-8 rounded-full transition-all ${color.value} ${
+                      editCalendarColor === color.value ? "ring-2 ring-offset-2" : ""
+                    }`}
+                    onClick={() => setEditCalendarColor(color.value)}
+                  />
+                ))}
+              </div>
+            </div>
+            <div className="flex gap-2">
+              <Button onClick={handleEditCalendar} className="flex-1">
+                Save Changes
+              </Button>
+              <Button variant="destructive" onClick={handleDeleteCalendar}>
+                Delete
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={!!editingHabit} onOpenChange={() => setEditingHabit(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Edit Habit</DialogTitle>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div>
+              <Label htmlFor="edit-habit-name">Habit Name</Label>
+              <Input id="edit-habit-name" value={editHabitName} onChange={(e) => setEditHabitName(e.target.value)} />
+            </div>
+            <div className="flex gap-2">
+              <Button onClick={handleEditHabit} className="flex-1">
+                Save Changes
+              </Button>
+              <Button variant="destructive" onClick={handleDeleteHabit}>
+                Delete
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

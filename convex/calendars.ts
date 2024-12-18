@@ -69,3 +69,21 @@ export const remove = mutation({
     await ctx.db.delete(args.id);
   },
 });
+
+export const update = mutation({
+  args: { id: v.id("calendars"), name: v.string(), colorTheme: v.string() },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) throw new Error("Unauthenticated");
+
+    const calendar = await ctx.db.get(args.id);
+    if (!calendar || calendar.userId !== identity.subject) {
+      throw new Error("Not authorized");
+    }
+
+    await ctx.db.patch(args.id, {
+      name: args.name,
+      colorTheme: args.colorTheme,
+    });
+  },
+});

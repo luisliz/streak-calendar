@@ -96,3 +96,44 @@ export const getCompletions = query({
       .collect();
   },
 });
+
+export const update = mutation({
+  args: { id: v.id("habits"), name: v.string() },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) throw new Error("Unauthenticated");
+
+    const habit = await ctx.db.get(args.id);
+    if (!habit || habit.userId !== identity.subject) {
+      throw new Error("Not authorized");
+    }
+
+    await ctx.db.patch(args.id, {
+      name: args.name,
+    });
+  },
+});
+
+export const remove = mutation({
+  args: { id: v.id("habits") },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) throw new Error("Unauthenticated");
+
+    const habit = await ctx.db.get(args.id);
+    if (!habit || habit.userId !== identity.subject) {
+      throw new Error("Not authorized");
+    }
+
+    // Delete all completions for this habit
+    const completions = await ctx.db
+      .query("completions")
+      .filter((q) => q.eq(q.field("habitId"), args.id))
+      .collect();
+
+    await Promise.all(completions.map((completion) => ctx.db.delete(completion._id)));
+
+    // Delete the habit
+    await ctx.db.delete(args.id);
+  },
+});
