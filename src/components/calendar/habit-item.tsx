@@ -1,5 +1,7 @@
 import { Id } from "@server/convex/_generated/dataModel";
 
+import { CompletionMenu } from "./completion-menu";
+
 /**
  * HabitItem displays a grid of days showing habit completion status.
  * Each day is represented by a button that can be toggled to mark habit completion.
@@ -13,9 +15,9 @@ interface HabitItemProps {
   days: string[]; // Array of dates to display in the grid
   completions: Array<{
     habitId: Id<"habits">;
-    completedAt: number; // Timestamp when habit was completed
+    completedAt: number;
   }>;
-  onToggle: (habitId: Id<"habits">, date: string) => void; // Callback when a day is toggled
+  onToggle: (habitId: Id<"habits">, date: string, count: number) => void; // Callback when a day is toggled
 }
 
 export const HabitItem = ({ habit, color, days, completions, onToggle }: HabitItemProps) => {
@@ -27,23 +29,19 @@ export const HabitItem = ({ habit, color, days, completions, onToggle }: HabitIt
         {days.map((date) => {
           // Convert date string to timestamp for comparison
           const timestamp = new Date(date).getTime();
-          // Check if habit was completed on this date
-          const isCompleted = completions.some(
+          // Count completions for this date
+          const count = completions.filter(
             (completion) => completion.habitId === habit._id && completion.completedAt === timestamp
-          );
-          // Format date for tooltip display
-          const formattedDate = new Date(date).toLocaleDateString(undefined, {
-            month: "short",
-            day: "numeric",
-          });
+          ).length;
+
           return (
-            <button
+            <CompletionMenu
               key={date}
-              onClick={() => onToggle(habit._id, date)}
-              className={`w-6 h-6 flex items-center justify-center rounded-sm transition-colors hover:opacity-80 ${
-                isCompleted ? color : "bg-gray-200"
-              }`}
-              title={`${formattedDate}: ${isCompleted ? "Completed" : "Not completed"}`}
+              habitId={habit._id}
+              date={date}
+              count={count}
+              onCountChange={(newCount) => onToggle(habit._id, date, newCount)}
+              colorClass={color}
             />
           );
         })}

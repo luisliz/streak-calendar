@@ -207,11 +207,12 @@ export default function CalendarsPage() {
                       setEditingHabit(habit);
                       setEditHabitName(habit.name);
                     }}
-                    onToggleHabit={(habitId, date) => {
+                    onToggleHabit={(habitId, date, count) => {
                       const timestamp = new Date(date).getTime();
                       markComplete({
                         habitId,
                         completedAt: timestamp,
+                        count,
                       });
                     }}
                   />

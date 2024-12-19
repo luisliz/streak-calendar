@@ -23,12 +23,12 @@ interface CalendarItemProps {
   days: string[]; // Array of dates to display in the yearly overview
   completions: Array<{
     habitId: Id<"habits">;
-    completedAt: number; // Timestamp of when the habit was completed
+    completedAt: number;
   }>;
   onAddHabit: () => void; // Callback when user wants to add a new habit
   onEditCalendar: () => void; // Callback when user wants to edit calendar settings
   onEditHabit: (habit: { _id: Id<"habits">; name: string }) => void; // Callback when user wants to edit a habit
-  onToggleHabit: (habitId: Id<"habits">, date: string) => void; // Callback when user toggles habit completion
+  onToggleHabit: (habitId: Id<"habits">, date: string, count: number) => void; // Callback when user toggles habit completion
 }
 
 export const CalendarItem = ({

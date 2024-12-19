@@ -47,6 +47,7 @@ export const markComplete = mutation({
   args: {
     habitId: v.id("habits"),
     completedAt: v.number(),
+    count: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
@@ -58,25 +59,31 @@ export const markComplete = mutation({
       throw new Error("Habit not found");
     }
 
-    // Check if completion already exists for this date
-    const existingCompletion = await ctx.db
+    // Get all completions for this habit on this date
+    const existingCompletions = await ctx.db
       .query("completions")
       .filter((q) => q.eq(q.field("habitId"), args.habitId))
       .filter((q) => q.eq(q.field("completedAt"), args.completedAt))
-      .first();
+      .collect();
 
-    if (existingCompletion) {
-      // If completion exists, remove it (toggle off)
-      await ctx.db.delete(existingCompletion._id);
-      return null;
+    const currentCount = existingCompletions.length;
+    const targetCount = args.count ?? (currentCount > 0 ? 0 : 1); // Toggle behavior if no count specified
+
+    if (targetCount < currentCount) {
+      // Remove excess completions
+      const toRemove = existingCompletions.slice(0, currentCount - targetCount);
+      await Promise.all(toRemove.map((completion) => ctx.db.delete(completion._id)));
+    } else if (targetCount > currentCount) {
+      // Add new completions
+      const newCompletions = Array.from({ length: targetCount - currentCount }, () => ({
+        habitId: args.habitId,
+        userId: identity.subject,
+        completedAt: args.completedAt,
+      }));
+      await Promise.all(newCompletions.map((completion) => ctx.db.insert("completions", completion)));
     }
 
-    // Otherwise, create new completion
-    return await ctx.db.insert("completions", {
-      habitId: args.habitId,
-      userId: identity.subject,
-      completedAt: args.completedAt,
-    });
+    return null;
   },
 });
 
