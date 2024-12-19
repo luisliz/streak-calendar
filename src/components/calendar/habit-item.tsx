@@ -1,11 +1,11 @@
 import { Id } from "@server/convex/_generated/dataModel";
 
 /**
- * YearlyOverview displays a grid of days showing habit completion status.
+ * HabitItem displays a grid of days showing habit completion status.
  * Each day is represented by a button that can be toggled to mark habit completion.
  */
 
-interface YearlyOverviewProps {
+interface HabitItemProps {
   habit: {
     _id: Id<"habits">;
   };
@@ -18,7 +18,7 @@ interface YearlyOverviewProps {
   onToggle: (habitId: Id<"habits">, date: string) => void; // Callback when a day is toggled
 }
 
-export const YearlyOverview = ({ habit, color, days, completions, onToggle }: YearlyOverviewProps) => {
+export const HabitItem = ({ habit, color, days, completions, onToggle }: HabitItemProps) => {
   return (
     // Scrollable container for the grid
     <div className="flex-1 overflow-x-auto">

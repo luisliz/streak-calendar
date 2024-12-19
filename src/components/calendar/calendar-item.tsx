@@ -3,7 +3,7 @@ import { MoreHorizontal, PlusCircle } from "lucide-react";
 
 import { Id } from "@server/convex/_generated/dataModel";
 
-import { YearlyOverview } from "./yearly-overview";
+import { HabitItem } from "./habit-item";
 
 /**
  * CalendarItem represents a single calendar view with its habits and their completion tracking.
@@ -87,7 +87,7 @@ export const CalendarItem = ({
                 </Button>
               </div>
               {/* Yearly overview grid showing habit completion status */}
-              <YearlyOverview
+              <HabitItem
                 habit={habit}
                 color={calendar.colorTheme}
                 days={days}
