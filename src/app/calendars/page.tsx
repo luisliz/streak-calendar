@@ -18,7 +18,8 @@ import { useMemo, useState } from "react";
 import { api } from "@server/convex/_generated/api";
 import { Id } from "@server/convex/_generated/dataModel";
 
-// Helper function to generate an array of dates for the habit tracking view
+// Helper function to generate date range for habit tracking
+// Returns today's date, start date, and array of date strings in ISO format
 const getDatesForRange = (daysBack: number) => {
   const today = new Date();
   const startDate = new Date(today);
@@ -37,10 +38,12 @@ const getDatesForRange = (daysBack: number) => {
   };
 };
 
+// Main calendar page component for managing habit tracking calendars and completions
 export default function CalendarsPage() {
+  // Generate 30-day date range for calendar view
   const { today, startDate, days } = useMemo(() => getDatesForRange(30), []);
 
-  // Fetch data from Convex database
+  // Database queries for calendars, habits, and completions
   const calendarsQuery = useQuery(api.calendars.list);
   const habitsQuery = useQuery(api.habits.list, { calendarId: undefined });
   const completionsQuery = useQuery(api.habits.getCompletions, {
@@ -48,7 +51,7 @@ export default function CalendarsPage() {
     endDate: today.getTime(),
   });
 
-  // Mutation hooks for database operations
+  // Database mutation hooks for CRUD operations
   const createCalendar = useMutation(api.calendars.create);
   const createHabit = useMutation(api.habits.create);
   const markComplete = useMutation(api.habits.markComplete);
@@ -57,7 +60,7 @@ export default function CalendarsPage() {
   const deleteCalendar = useMutation(api.calendars.remove);
   const deleteHabit = useMutation(api.habits.remove);
 
-  // State management for UI interactions
+  // State management for UI interactions and form data
   const [selectedCalendar, setSelectedCalendar] = useState<{
     _id: Id<"calendars">;
     name: string;
@@ -78,10 +81,12 @@ export default function CalendarsPage() {
   const [isNewCalendarOpen, setIsNewCalendarOpen] = useState(false);
   const [isNewHabitOpen, setIsNewHabitOpen] = useState(false);
 
+  // Safely access query results with fallback to empty arrays
   const calendars = calendarsQuery ?? [];
   const habits = habitsQuery ?? [];
   const completions = completionsQuery ?? [];
 
+  // Handler for creating new calendar
   const handleAddCalendar = async () => {
     if (!newCalendarName.trim()) return;
 
@@ -95,6 +100,7 @@ export default function CalendarsPage() {
     setIsNewCalendarOpen(false);
   };
 
+  // Handler for creating new habit within a calendar
   const handleAddHabit = async () => {
     if (!selectedCalendar || !newHabitName.trim()) return;
 
@@ -107,6 +113,7 @@ export default function CalendarsPage() {
     setIsNewHabitOpen(false);
   };
 
+  // Handlers for updating calendars and habits
   const handleEditCalendar = async () => {
     if (!editingCalendar || !editCalendarName.trim()) return;
     await updateCalendar({
@@ -126,6 +133,7 @@ export default function CalendarsPage() {
     setEditingHabit(null);
   };
 
+  // Handlers for deleting calendars and habits
   const handleDeleteCalendar = async () => {
     if (!editingCalendar) return;
     await deleteCalendar({ id: editingCalendar._id });
@@ -138,6 +146,7 @@ export default function CalendarsPage() {
     setEditingHabit(null);
   };
 
+  // Keyboard event handlers for form submission
   const handleCalendarKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
       handleAddCalendar();
@@ -152,6 +161,7 @@ export default function CalendarsPage() {
 
   return (
     <div className="container max-w-7xl px-4 py-8">
+      {/* Authentication-gated content */}
       <SignedIn>
         {calendarsQuery === undefined ? (
           <CalendarSkeleton />
@@ -169,6 +179,7 @@ export default function CalendarsPage() {
               </Dialog>
             </div>
 
+            {/* Empty state or calendar list */}
             {calendars.length === 0 ? (
               <div className="text-center py-12 text-muted-foreground">
                 <p>You haven&apos;t created any calendars yet.</p>
@@ -211,6 +222,7 @@ export default function CalendarsPage() {
         )}
       </SignedIn>
 
+      {/* Sign-in prompt for unauthenticated users */}
       <SignedOut>
         <div className="flex flex-col items-center justify-center min-h-[50vh] gap-4">
           <h2 className="text-xl font-semibold">Please sign in to view your calendars</h2>
@@ -222,6 +234,7 @@ export default function CalendarsPage() {
         </div>
       </SignedOut>
 
+      {/* Dialog components for creating/editing calendars and habits */}
       <NewCalendarDialog
         isOpen={isNewCalendarOpen}
         onOpenChange={setIsNewCalendarOpen}
