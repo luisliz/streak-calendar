@@ -8,6 +8,13 @@ export default {
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
+  safelist: [
+    // Preserve all color variations for habit completion squares
+    {
+      pattern:
+        /bg-(red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-(100|200|300|400|500)/,
+    },
+  ],
   theme: {
     extend: {
       fontFamily: {
