@@ -1,6 +1,8 @@
 import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import Link from "next/link";
 
+import { ThemeToggle } from "./theme-toggle";
+
 export function AppHeader() {
   return (
     <header>
@@ -26,6 +28,7 @@ export function AppHeader() {
             <SignInButton />
           </SignedOut>
           <SignedIn>
+            <ThemeToggle />
             <UserButton />
           </SignedIn>
         </div>
