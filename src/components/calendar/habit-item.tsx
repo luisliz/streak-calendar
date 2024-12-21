@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+
 import { Id } from "@server/convex/_generated/dataModel";
 
 import { CompletionMenu } from "./completion-menu";
@@ -21,9 +23,15 @@ interface HabitItemProps {
 }
 
 export const HabitItem = ({ habit, color, days, completions, onToggle }: HabitItemProps) => {
+  useEffect(() => {
+    const container = document.querySelector(`[data-habit-id="${habit._id}"]`);
+    if (container) {
+      container.scrollLeft = container.scrollWidth;
+    }
+  }, [habit._id]);
+
   return (
-    // Scrollable container for the grid
-    <div className="flex-1 overflow-x-auto">
+    <div data-habit-id={habit._id} className="flex-1 overflow-x-auto">
       {/* Grid of day buttons with rounded border */}
       <div className="inline-flex gap-px bg-background border rounded-md p-1">
         {days.map((date) => {

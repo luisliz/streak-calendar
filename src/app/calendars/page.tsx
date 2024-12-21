@@ -41,7 +41,7 @@ const getDatesForRange = (daysBack: number) => {
 // Main calendar page component for managing habit tracking calendars and completions
 export default function CalendarsPage() {
   // Generate 30-day date range for calendar view
-  const { today, startDate, days } = useMemo(() => getDatesForRange(30), []);
+  const { today, startDate, days } = useMemo(() => getDatesForRange(38), []);
 
   // Database queries for calendars, habits, and completions
   const calendarsQuery = useQuery(api.calendars.list);

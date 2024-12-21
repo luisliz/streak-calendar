@@ -13,6 +13,15 @@ interface CompletionMenuProps {
   colorClass: string;
 }
 
+/**
+ * CompletionMenu Component
+ * Displays an interactive button that shows habit completion status and allows count modification
+ * Features:
+ * - Left click to increment count
+ * - Right click to decrement count
+ * - Dropdown menu with +/- buttons for precise control
+ * - Visual feedback through color changes based on completion count
+ */
 export const CompletionMenu = ({ date, count, onCountChange, colorClass }: CompletionMenuProps) => {
   const handleIncrement = () => {
     onCountChange(count + 1);
@@ -25,8 +34,9 @@ export const CompletionMenu = ({ date, count, onCountChange, colorClass }: Compl
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
+        {/* Main completion button with color feedback */}
         <button
-          className={`w-6 h-6 rounded-sm transition-colors hover:opacity-80 ${getCompletionColorClass(
+          className={`w-6 h-6 rounded-sm border transition-colors hover:opacity-80 ${getCompletionColorClass(
             colorClass,
             count
           )}`}
@@ -35,14 +45,12 @@ export const CompletionMenu = ({ date, count, onCountChange, colorClass }: Compl
             day: "numeric",
           })}: ${count} completion${count !== 1 ? "s" : ""}`}
           onClick={(e) => {
-            // If not right click, just increment the count
             if (e.button === 0) {
               e.preventDefault();
               handleIncrement();
             }
           }}
           onContextMenu={(e) => {
-            // On right click, decrement the count
             e.preventDefault();
             handleDecrement();
           }}
@@ -50,11 +58,11 @@ export const CompletionMenu = ({ date, count, onCountChange, colorClass }: Compl
       </DropdownMenuTrigger>
       <DropdownMenuContent align="center" className="w-24">
         <div className="flex items-center justify-between p-2">
-          <Button variant="ghost" size="icon" className="h-6 w-6" onClick={handleDecrement}>
+          <Button variant="default" size="icon" className="h-6 w-6" onClick={handleDecrement}>
             <Minus className="h-4 w-4" />
           </Button>
           <span className="font-medium">{count}</span>
-          <Button variant="ghost" size="icon" className="h-6 w-6" onClick={handleIncrement}>
+          <Button variant="default" size="icon" className="h-6 w-6" onClick={handleIncrement}>
             <Plus className="h-4 w-4" />
           </Button>
         </div>

@@ -59,7 +59,7 @@ export const CalendarItem = ({
           </Button>
         </div>
         {/* Add habit button */}
-        <Button variant="outline" onClick={onAddHabit}>
+        <Button variant="default" onClick={onAddHabit}>
           <PlusCircle className="mr-2 h-4 w-4" />
           Add Habit
         </Button>
@@ -71,7 +71,7 @@ export const CalendarItem = ({
         <p className="text-sm text-muted-foreground">No habits added yet. Add one to start tracking!</p>
       ) : (
         // List of habits with their yearly overviews
-        <div className="space-y-1.5">
+        <div className="">
           {habits.map((habit) => (
             <div key={habit._id} className="flex items-center gap-4">
               {/* Habit name with hover-reveal edit button */}
