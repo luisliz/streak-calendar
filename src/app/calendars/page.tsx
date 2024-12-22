@@ -21,7 +21,7 @@ import { useMemo, useState } from "react";
 import { api } from "@server/convex/_generated/api";
 import { Id } from "@server/convex/_generated/dataModel";
 
-type CalendarView = "monthRow" | "monthGrid" | "yearRow";
+type CalendarView = "monthRow" | "monthGrid";
 
 // Helper function to generate date range for habit tracking
 // Returns today's date, start date, and array of date strings in ISO format
@@ -190,7 +190,6 @@ export default function CalendarsPage() {
                     <SelectContent>
                       <SelectItem value="monthRow">Monthly Row</SelectItem>
                       <SelectItem value="monthGrid">Monthly Grid</SelectItem>
-                      <SelectItem value="yearRow">Yearly Row</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>

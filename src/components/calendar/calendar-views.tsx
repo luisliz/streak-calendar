@@ -1,3 +1,8 @@
+import { Button } from "@/components/ui/button";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { format, isToday } from "date-fns";
+import { Check, X } from "lucide-react";
+
 import { Id } from "@server/convex/_generated/dataModel";
 
 import { CompletionMenu } from "./completion-menu";
@@ -5,6 +10,7 @@ import { CompletionMenu } from "./completion-menu";
 interface CalendarViewProps {
   habit: {
     _id: Id<"habits">;
+    name: string;
   };
   color: string;
   days: string[];
@@ -13,7 +19,7 @@ interface CalendarViewProps {
     completedAt: number;
   }>;
   onToggle: (habitId: Id<"habits">, date: string, count: number) => void;
-  view: "monthRow" | "monthGrid" | "yearRow";
+  view: "monthRow" | "monthGrid";
 }
 
 export const CalendarView = ({ habit, color, days, completions, onToggle, view }: CalendarViewProps) => {
@@ -43,169 +49,85 @@ export const CalendarView = ({ habit, color, days, completions, onToggle, view }
   }
 
   if (view === "monthGrid") {
-    const weeks = [];
-    let currentWeek = [];
     const firstDay = new Date(days[0]);
     const startPadding = firstDay.getDay();
+    const emptyDays = Array(startPadding).fill(null);
+    const dayLabels = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
-    // Add padding for the first week
-    for (let i = 0; i < startPadding; i++) {
-      currentWeek.push(null);
-    }
-
-    // Group days into weeks
-    for (const date of days) {
-      currentWeek.push(date);
-      if (currentWeek.length === 7) {
-        weeks.push(currentWeek);
-        currentWeek = [];
-      }
-    }
-
-    // Add the last partial week if it exists
-    if (currentWeek.length > 0) {
-      while (currentWeek.length < 7) {
-        currentWeek.push(null);
-      }
-      weeks.push(currentWeek);
-    }
+    const getBgColor = (count: number) => {
+      if (count === 0) return "bg-neutral-100 dark:bg-neutral-800";
+      const colorName = color.match(/bg-(\w+)-\d+/)?.[1] || "neutral";
+      const intensityMap = {
+        1: "100",
+        2: "200",
+        3: "300",
+        4: "400",
+        5: "500",
+      };
+      const intensity = intensityMap[Math.min(count, 5) as keyof typeof intensityMap] || "500";
+      return `bg-${colorName}-${intensity} dark:bg-${colorName}-900/${Math.min(count * 20, 100)}`;
+    };
 
     return (
-      <div data-habit-id={habit._id} className="flex-1">
-        <div className="inline-grid grid-cols-7 gap-px bg-background border rounded-md p-1">
-          {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
-            <div key={day} className="text-xs text-center text-muted-foreground p-1">
-              {day}
+      <div data-habit-id={habit._id} className="mx-auto w-[500px] space-y-2">
+        <h3 className="truncate text-sm font-medium">{format(firstDay, "MMMM yyyy")}</h3>
+        <div className="grid grid-cols-7 gap-1">
+          {dayLabels.map((label) => (
+            <div key={label} className="text-center text-xs text-muted-foreground">
+              {label}
             </div>
           ))}
-          {weeks.map((week, weekIndex) =>
-            week.map((date, dayIndex) => (
-              <div key={`${weekIndex}-${dayIndex}`} className="aspect-square">
-                {date && (
-                  <CompletionMenu
-                    habitId={habit._id}
-                    date={date}
-                    count={getCompletionCount(date)}
-                    onCountChange={(newCount) => onToggle(habit._id, date, newCount)}
-                    colorClass={color}
-                  />
-                )}
-              </div>
-            ))
-          )}
-        </div>
-      </div>
-    );
-  }
+          {emptyDays.map((_, index) => (
+            <div key={`empty-${index}`} className="aspect-square" />
+          ))}
+          {days.map((dateStr) => {
+            const date = new Date(dateStr);
+            const count = getCompletionCount(dateStr);
 
-  if (view === "yearRow") {
-    const yearStart = new Date(days[0]);
-    yearStart.setMonth(0, 1);
-    const yearEnd = new Date(days[0]);
-    yearEnd.setMonth(11, 31);
-
-    // Generate all days in the year
-    const yearDays: string[] = [];
-    for (let d = new Date(yearStart); d <= yearEnd; d.setDate(d.getDate() + 1)) {
-      yearDays.push(d.toISOString().split("T")[0]);
-    }
-
-    // Group days into weeks
-    const weeks: (string | null)[][] = [];
-    let currentWeek: (string | null)[] = [];
-    const firstDay = new Date(yearDays[0]);
-    const startPadding = firstDay.getDay();
-
-    // Add padding for the first week
-    for (let i = 0; i < startPadding; i++) {
-      currentWeek.push(null);
-    }
-
-    // Group days into weeks
-    for (const date of yearDays) {
-      currentWeek.push(date);
-      if (currentWeek.length === 7) {
-        weeks.push(currentWeek);
-        currentWeek = [];
-      }
-    }
-
-    // Add the last partial week if it exists
-    if (currentWeek.length > 0) {
-      while (currentWeek.length < 7) {
-        currentWeek.push(null);
-      }
-      weeks.push(currentWeek);
-    }
-
-    // Get month labels positions
-    interface MonthLabel {
-      month: string;
-      index: number;
-    }
-    const monthLabels: MonthLabel[] = [];
-    let currentMonth = -1;
-    yearDays.forEach((date, index) => {
-      const month = new Date(date).getMonth();
-      if (month !== currentMonth) {
-        monthLabels.push({
-          month: new Date(date).toLocaleString("default", { month: "short" }),
-          index: Math.floor((index + startPadding) / 7),
-        });
-        currentMonth = month;
-      }
-    });
-
-    return (
-      <div data-habit-id={habit._id} className="flex-1 overflow-x-auto">
-        <div className="relative inline-block">
-          {/* Month labels */}
-          <div className="flex mb-2 text-xs text-muted-foreground" style={{ marginLeft: "20px" }}>
-            {monthLabels.map(({ month, index }) => (
-              <div
-                key={month}
-                className="absolute"
-                style={{
-                  left: `${index * 13}px`,
-                  width: "32px",
-                  textAlign: "left",
-                }}
-              >
-                {month}
-              </div>
-            ))}
-          </div>
-
-          <div className="flex">
-            {/* Day of week labels */}
-            <div className="flex flex-col gap-[3px] text-xs text-muted-foreground mr-2 pt-6">
-              <div>Mon</div>
-              <div>Wed</div>
-              <div>Fri</div>
-            </div>
-
-            {/* Calendar grid */}
-            <div className="inline-grid grid-rows-7 grid-flow-col gap-[3px]">
-              {weeks[0].map((_, dayIndex) =>
-                Array.from({ length: weeks.length }).map((_, weekIndex) => {
-                  const date = weeks[weekIndex]?.[dayIndex];
-                  return (
-                    <div key={`${weekIndex}-${dayIndex}`} className="w-[10px] h-[10px]">
-                      {date && (
-                        <CompletionMenu
-                          habitId={habit._id}
-                          date={date}
-                          count={getCompletionCount(date)}
-                          onCountChange={(newCount) => onToggle(habit._id, date, newCount)}
-                          colorClass={color}
-                        />
-                      )}
+            return (
+              <Popover key={dateStr}>
+                <PopoverTrigger asChild>
+                  <button
+                    aria-label={`View habits for ${format(date, "MMMM d, yyyy")}`}
+                    className={`aspect-square w-full rounded p-0.5 text-center text-sm ${getBgColor(count)} ${
+                      isToday(date) ? "ring-2 ring-ring" : ""
+                    } transition-all duration-200 hover:brightness-110`}
+                  >
+                    {format(date, "d")}
+                  </button>
+                </PopoverTrigger>
+                <PopoverContent className="w-64">
+                  <div className="space-y-2">
+                    <h4 className="font-medium">{format(date, "MMMM d, yyyy")}</h4>
+                    <div className="space-y-1">
+                      <div className="flex items-center justify-between gap-2">
+                        <span>{habit.name}</span>
+                        {count > 0 ? (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            aria-label={`Remove completion for ${habit.name}`}
+                            onClick={() => onToggle(habit._id, dateStr, 0)}
+                          >
+                            <X className="h-4 w-4" />
+                          </Button>
+                        ) : (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            aria-label={`Mark ${habit.name} as complete`}
+                            onClick={() => onToggle(habit._id, dateStr, 1)}
+                          >
+                            <Check className="h-4 w-4" />
+                          </Button>
+                        )}
+                      </div>
                     </div>
-                  );
-                })
-              )}
-            </div>
-          </div>
+                  </div>
+                </PopoverContent>
+              </Popover>
+            );
+          })}
         </div>
       </div>
     );
