@@ -1,7 +1,4 @@
-import { Button } from "@/components/ui/button";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { format, isToday } from "date-fns";
-import { Check, X } from "lucide-react";
+import { format } from "date-fns";
 
 import { Id } from "@server/convex/_generated/dataModel";
 
@@ -54,19 +51,6 @@ export const CalendarView = ({ habit, color, days, completions, onToggle, view }
     const emptyDays = Array(startPadding).fill(null);
     const dayLabels = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
-    const getBgColor = (count: number) => {
-      if (count === 0) return "bg-neutral-100 dark:bg-neutral-800";
-      const colorName = color.match(/bg-(\w+)-\d+/)?.[1] || "neutral";
-      const intensityMap = {
-        1: "100",
-        2: "300",
-        3: "500",
-      };
-      const level = Math.min(count, 3);
-      const intensity = intensityMap[level as keyof typeof intensityMap] || "500";
-      return `bg-${colorName}-${intensity} dark:bg-${colorName}-900/${level * 33}`;
-    };
-
     return (
       <div data-habit-id={habit._id} className="mx-auto w-[500px] space-y-2">
         <h3 className="truncate text-sm font-medium">{format(firstDay, "MMMM yyyy")}</h3>
@@ -80,51 +64,18 @@ export const CalendarView = ({ habit, color, days, completions, onToggle, view }
             <div key={`empty-${index}`} className="aspect-square" />
           ))}
           {days.map((dateStr) => {
-            const date = new Date(dateStr);
             const count = getCompletionCount(dateStr);
 
             return (
-              <Popover key={dateStr}>
-                <PopoverTrigger asChild>
-                  <button
-                    aria-label={`View habits for ${format(date, "MMMM d, yyyy")}`}
-                    className={`aspect-square w-full rounded p-0.5 text-center text-sm ${getBgColor(count)} ${
-                      isToday(date) ? "ring-2 ring-ring" : ""
-                    } transition-all duration-200 hover:brightness-110`}
-                  >
-                    {format(date, "d")}
-                  </button>
-                </PopoverTrigger>
-                <PopoverContent className="w-64">
-                  <div className="space-y-2">
-                    <h4 className="font-medium">{format(date, "MMMM d, yyyy")}</h4>
-                    <div className="space-y-1">
-                      <div className="flex items-center justify-between gap-2">
-                        <span>{habit.name}</span>
-                        {count > 0 ? (
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            aria-label={`Remove completion for ${habit.name}`}
-                            onClick={() => onToggle(habit._id, dateStr, 0)}
-                          >
-                            <X className="h-4 w-4" />
-                          </Button>
-                        ) : (
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            aria-label={`Mark ${habit.name} as complete`}
-                            onClick={() => onToggle(habit._id, dateStr, 1)}
-                          >
-                            <Check className="h-4 w-4" />
-                          </Button>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                </PopoverContent>
-              </Popover>
+              <CompletionMenu
+                key={dateStr}
+                habitId={habit._id}
+                date={dateStr}
+                count={count}
+                onCountChange={(newCount) => onToggle(habit._id, dateStr, newCount)}
+                colorClass={color}
+                gridView={true}
+              />
             );
           })}
         </div>

@@ -11,6 +11,7 @@ interface CompletionMenuProps {
   count: number;
   onCountChange: (count: number) => void;
   colorClass: string;
+  gridView?: boolean;
 }
 
 /**
@@ -22,7 +23,7 @@ interface CompletionMenuProps {
  * - Dropdown menu with +/- buttons for precise control
  * - Visual feedback through color changes based on completion count
  */
-export const CompletionMenu = ({ date, count, onCountChange, colorClass }: CompletionMenuProps) => {
+export const CompletionMenu = ({ date, count, onCountChange, colorClass, gridView }: CompletionMenuProps) => {
   const handleIncrement = () => {
     onCountChange(count + 1);
   };
@@ -36,7 +37,9 @@ export const CompletionMenu = ({ date, count, onCountChange, colorClass }: Compl
       <DropdownMenuTrigger asChild>
         {/* Main completion button with color feedback */}
         <button
-          className={`w-6 h-6 rounded-sm transition-colors hover:opacity-80 ${
+          className={`${
+            gridView ? "aspect-square w-full" : "w-6 h-6"
+          } rounded-sm transition-colors hover:opacity-80 relative ${
             count === 0 ? "bg-neutral-100 dark:bg-neutral-800" : getCompletionColorClass(colorClass, count)
           }`}
           title={`${new Date(date).toLocaleDateString(undefined, {
@@ -53,7 +56,13 @@ export const CompletionMenu = ({ date, count, onCountChange, colorClass }: Compl
             e.preventDefault();
             handleDecrement();
           }}
-        />
+        >
+          {gridView && (
+            <span className="absolute inset-0 flex items-center justify-center text-xs font-medium">
+              {new Date(date).getDate()}
+            </span>
+          )}
+        </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="center" className="w-24">
         <div className="flex items-center justify-between p-2">
