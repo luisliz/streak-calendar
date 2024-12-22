@@ -32,7 +32,7 @@ export const CalendarView = ({ habit, color, days, completions, onToggle, view }
   if (view === "monthRow") {
     return (
       <div data-habit-id={habit._id} className="flex-1 overflow-x-auto">
-        <div className="inline-flex gap-px bg-background border rounded-md p-1">
+        <div className="inline-flex gap-px bg-background rounded-md p-1">
           {days.map((date) => (
             <CompletionMenu
               key={date}
@@ -59,13 +59,12 @@ export const CalendarView = ({ habit, color, days, completions, onToggle, view }
       const colorName = color.match(/bg-(\w+)-\d+/)?.[1] || "neutral";
       const intensityMap = {
         1: "100",
-        2: "200",
-        3: "300",
-        4: "400",
-        5: "500",
+        2: "300",
+        3: "500",
       };
-      const intensity = intensityMap[Math.min(count, 5) as keyof typeof intensityMap] || "500";
-      return `bg-${colorName}-${intensity} dark:bg-${colorName}-900/${Math.min(count * 20, 100)}`;
+      const level = Math.min(count, 3);
+      const intensity = intensityMap[level as keyof typeof intensityMap] || "500";
+      return `bg-${colorName}-${intensity} dark:bg-${colorName}-900/${level * 33}`;
     };
 
     return (

@@ -36,7 +36,7 @@ export const CompletionMenu = ({ date, count, onCountChange, colorClass }: Compl
       <DropdownMenuTrigger asChild>
         {/* Main completion button with color feedback */}
         <button
-          className={`w-6 h-6 rounded-sm border transition-colors hover:opacity-80 ${getCompletionColorClass(
+          className={`w-6 h-6 rounded-sm transition-colors hover:opacity-80 ${getCompletionColorClass(
             colorClass,
             count
           )}`}
