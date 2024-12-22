@@ -60,7 +60,7 @@ export default function RootLayout({
           {/* Main layout container with max width and flex column structure */}
           <div className="flex min-h-screen max-w-7xl mx-auto flex-col">
             <AppHeader />
-            {children}
+            <main className="flex-1">{children}</main>
             <AppFooter />
           </div>
         </Providers>

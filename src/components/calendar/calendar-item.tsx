@@ -43,7 +43,7 @@ export const CalendarItem = ({
 }: CalendarItemProps) => {
   return (
     // Main container with rounded borders and padding
-    <div className="rounded-lg border p-6">
+    <div className="rounded-xl shadow-md border p-6">
       {/* Header section with calendar name and add habit button */}
       <div className="flex justify-between items-center mb-6">
         {/* Calendar title with hover-reveal edit button */}
