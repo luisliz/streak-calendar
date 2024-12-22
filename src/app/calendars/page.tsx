@@ -11,6 +11,7 @@ import { CalendarSkeleton } from "@/components/calendar/calendar-skeleton";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { SignInButton, SignedIn, SignedOut } from "@clerk/nextjs";
 import { useMutation, useQuery } from "convex/react";
 import { useConvexAuth } from "convex/react";
@@ -19,6 +20,8 @@ import { useMemo, useState } from "react";
 
 import { api } from "@server/convex/_generated/api";
 import { Id } from "@server/convex/_generated/dataModel";
+
+type CalendarView = "monthRow" | "monthGrid" | "yearRow";
 
 // Helper function to generate date range for habit tracking
 // Returns today's date, start date, and array of date strings in ISO format
@@ -44,6 +47,7 @@ const getDatesForRange = (daysBack: number) => {
 export default function CalendarsPage() {
   // Generate 30-day date range for calendar view
   const { today, startDate, days } = useMemo(() => getDatesForRange(30), []);
+  const [calendarView, setCalendarView] = useState<CalendarView>("monthRow");
 
   // Database queries for calendars, habits, and completions
   const { isAuthenticated } = useConvexAuth();
@@ -177,7 +181,19 @@ export default function CalendarsPage() {
           ) : (
             <>
               <div className="flex justify-between items-center mb-8">
-                <h1 className="text-3xl font-bold">Your Calendars</h1>
+                <div className="flex items-center gap-4">
+                  <h1 className="text-3xl font-bold">Your Calendars</h1>
+                  <Select value={calendarView} onValueChange={(value: CalendarView) => setCalendarView(value)}>
+                    <SelectTrigger className="w-[180px]">
+                      <SelectValue placeholder="Select view" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="monthRow">Monthly Row</SelectItem>
+                      <SelectItem value="monthGrid">Monthly Grid</SelectItem>
+                      <SelectItem value="yearRow">Yearly Row</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
                 <Dialog open={isNewCalendarOpen} onOpenChange={setIsNewCalendarOpen}>
                   <DialogTrigger asChild>
                     <Button>
@@ -224,6 +240,7 @@ export default function CalendarsPage() {
                           count,
                         });
                       }}
+                      view={calendarView}
                     />
                   ))}
                 </div>
