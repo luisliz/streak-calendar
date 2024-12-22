@@ -36,10 +36,9 @@ export const CompletionMenu = ({ date, count, onCountChange, colorClass }: Compl
       <DropdownMenuTrigger asChild>
         {/* Main completion button with color feedback */}
         <button
-          className={`w-6 h-6 rounded-sm transition-colors hover:opacity-80 ${getCompletionColorClass(
-            colorClass,
-            count
-          )}`}
+          className={`w-6 h-6 rounded-sm transition-colors hover:opacity-80 ${
+            count === 0 ? "bg-neutral-100 dark:bg-neutral-800" : getCompletionColorClass(colorClass, count)
+          }`}
           title={`${new Date(date).toLocaleDateString(undefined, {
             month: "short",
             day: "numeric",
