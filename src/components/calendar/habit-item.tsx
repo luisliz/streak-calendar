@@ -12,6 +12,7 @@ import { CalendarView } from "./calendar-views";
 interface HabitItemProps {
   habit: {
     _id: Id<"habits">;
+    name: string;
   };
   color: string;
   days: string[];
@@ -20,7 +21,7 @@ interface HabitItemProps {
     completedAt: number;
   }>;
   onToggle: (habitId: Id<"habits">, date: string, count: number) => void;
-  view: "monthRow" | "monthGrid" | "yearRow";
+  view: "monthRow" | "monthGrid";
 }
 
 export const HabitItem = ({ habit, color, days, completions, onToggle, view }: HabitItemProps) => {

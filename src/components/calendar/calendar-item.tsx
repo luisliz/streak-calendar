@@ -29,7 +29,7 @@ interface CalendarItemProps {
   onEditCalendar: () => void; // Callback when user wants to edit calendar settings
   onEditHabit: (habit: { _id: Id<"habits">; name: string }) => void; // Callback when user wants to edit a habit
   onToggleHabit: (habitId: Id<"habits">, date: string, count: number) => void; // Callback when user toggles habit completion
-  view: "monthRow" | "monthGrid" | "yearRow";
+  view: "monthRow" | "monthGrid";
 }
 
 export const CalendarItem = ({
