@@ -96,8 +96,8 @@ export default function CalendarsPage() {
               <div className="flex items-center gap-4">
                 <Tabs value={calendarView} onValueChange={(value) => setCalendarView(value as CalendarView)}>
                   <TabsList>
-                    <TabsTrigger value="monthRow">Days</TabsTrigger>
-                    <TabsTrigger value="monthGrid">Months</TabsTrigger>
+                    <TabsTrigger value="monthRow">Days View</TabsTrigger>
+                    <TabsTrigger value="monthGrid">Months View</TabsTrigger>
                   </TabsList>
                 </Tabs>
               </div>
