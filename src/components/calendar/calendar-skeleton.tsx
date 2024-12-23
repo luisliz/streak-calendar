@@ -7,27 +7,43 @@ import { Skeleton } from "@/components/ui/skeleton";
  */
 
 export const CalendarSkeleton = () => (
-  <div className="space-y-8">
-    {/* Render two calendar blocks */}
-    {[1, 2].map((i) => (
-      <div key={i} className="rounded-lg border p-6">
-        {/* Calendar header with title and action button placeholders */}
-        <div className="flex justify-between items-center mb-6">
-          <Skeleton className="h-8 w-48" /> {/* Calendar name placeholder */}
-          <Skeleton className="h-10 w-32" /> {/* Add habit button placeholder */}
-        </div>
-        {/* Three habit rows with name and progress bar placeholders */}
-        <div className="space-y-4">
-          {[1, 2, 3].map((j) => (
-            <div key={j} className="flex items-center gap-4">
-              <Skeleton className="h-6 w-32" /> {/* Habit name placeholder */}
-              <div className="flex-1">
-                <Skeleton className="h-8 w-full" /> {/* Progress bar placeholder */}
-              </div>
-            </div>
-          ))}
-        </div>
+  <>
+    <div className="flex justify-between items-center mb-8">
+      <div className="flex items-center gap-4">
+        <Skeleton className="h-10 w-48" /> {/* View toggle placeholder */}
       </div>
-    ))}
-  </div>
+      <div className="flex gap-2">
+        <Skeleton className="h-10 w-32" /> {/* Add calendar button placeholder */}
+      </div>
+    </div>
+
+    <div className="space-y-8">
+      {[1, 2].map((i) => (
+        <div key={i}>
+          <div className="flex justify-between items-center mb-6">
+            <div className="flex items-center gap-2">
+              <Skeleton className="h-8 w-48" /> {/* Calendar name placeholder */}
+            </div>
+            <Skeleton className="h-10 w-32" /> {/* Add habit button placeholder */}
+          </div>
+          <div className="space-y-4">
+            {[1, 2, 3].map((j) => (
+              <div key={j} className="flex items-center gap-4">
+                <div className="flex items-center gap-2 w-48">
+                  <Skeleton className="h-6 w-32" /> {/* Habit name placeholder */}
+                </div>
+                <div className="flex-1">
+                  <Skeleton className="h-8 w-full" /> {/* Progress bar placeholder */}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <div className="mt-8 flex justify-center">
+      <Skeleton className="h-10 w-48" /> {/* Import/Export placeholder */}
+    </div>
+  </>
 );
