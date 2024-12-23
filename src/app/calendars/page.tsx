@@ -22,10 +22,22 @@ import { memo, useCallback, useState } from "react";
 
 type CalendarView = "monthRow" | "monthGrid";
 
+// Move ViewTabs to a separate component
+const ViewTabs = memo(({ value, onChange }: { value: CalendarView; onChange: (value: string) => void }) => (
+  <Tabs value={value} onValueChange={onChange}>
+    <TabsList>
+      <TabsTrigger value="monthRow">Days View</TabsTrigger>
+      <TabsTrigger value="monthGrid">Months View</TabsTrigger>
+    </TabsList>
+  </Tabs>
+));
+ViewTabs.displayName = "ViewTabs";
+
 // Main calendar page component for managing habit tracking calendars and completions
 export default function CalendarsPage() {
   const { calendarView, setCalendarView, ...calendarState } = useCalendarState();
-  const { today, startDate, days } = useDateRange(calendarView === "monthRow" ? 30 : 365);
+  const [deferredView, setDeferredView] = useState<CalendarView>(calendarView);
+  const { today, startDate, days } = useDateRange(deferredView === "monthRow" ? 30 : 365);
   const { today: yearlyToday, startDate: yearlyStartDate } = useDateRange(365);
   const {
     selectedCalendar,
@@ -72,6 +84,19 @@ export default function CalendarsPage() {
 
   const [, setIsViewChanging] = useState(false);
 
+  // Defer data fetching on view change
+  const handleViewChange = useCallback(
+    (value: string) => {
+      setIsViewChanging(true);
+      setDeferredView(value as CalendarView);
+      setTimeout(() => {
+        setCalendarView(value as CalendarView);
+        setIsViewChanging(false);
+      }, 0);
+    },
+    [setCalendarView, setDeferredView]
+  );
+
   // Keyboard event handlers for form submission
   const handleCalendarKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
@@ -90,29 +115,6 @@ export default function CalendarsPage() {
     }
   };
 
-  // Memoize the tab change handler
-  const handleViewChange = useCallback(
-    (value: string) => {
-      setIsViewChanging(true);
-      requestAnimationFrame(() => {
-        setCalendarView(value as CalendarView);
-        setIsViewChanging(false);
-      });
-    },
-    [setCalendarView]
-  );
-
-  // Memoize the tabs component
-  const ViewTabs = memo(() => (
-    <Tabs value={calendarView} onValueChange={handleViewChange}>
-      <TabsList>
-        <TabsTrigger value="monthRow">Days View</TabsTrigger>
-        <TabsTrigger value="monthGrid">Months View</TabsTrigger>
-      </TabsList>
-    </Tabs>
-  ));
-  ViewTabs.displayName = "ViewTabs";
-
   return (
     <div className="container max-w-7xl px-4 py-8">
       {/* Authentication-gated content */}
@@ -127,7 +129,7 @@ export default function CalendarsPage() {
             {/* Calendar View Controls */}
             <div className="flex justify-between items-center mb-8">
               <div className="flex items-center gap-4">
-                <ViewTabs />
+                <ViewTabs value={deferredView} onChange={handleViewChange} />
               </div>
               <div className="flex gap-2">
                 <Button onClick={() => setIsNewCalendarOpen(true)}>
@@ -166,7 +168,7 @@ export default function CalendarsPage() {
                       setEditHabitName(habit.name);
                     }}
                     onToggleHabit={handleToggleHabit}
-                    view={calendarView}
+                    view={deferredView}
                   />
                 ))}
               </div>
