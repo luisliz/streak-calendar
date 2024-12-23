@@ -1,4 +1,5 @@
 import { eachDayOfInterval, format, getDay, subYears } from "date-fns";
+import { memo, useCallback, useMemo } from "react";
 
 import { Id } from "@server/convex/_generated/dataModel";
 
@@ -20,60 +21,73 @@ interface YearlyOverviewProps {
 }
 
 export const YearlyOverview = ({ completions }: YearlyOverviewProps) => {
-  // Get dates for the last year (from today)
-  const today = new Date();
-  const yearAgo = subYears(today, 1);
-  const days = eachDayOfInterval({ start: yearAgo, end: today }).map((date) => format(date, "yyyy-MM-dd"));
+  // Memoize date calculations that don't need to change
+  const { days, weeks, monthLabels } = useMemo(() => {
+    const today = new Date();
+    const yearAgo = subYears(today, 1);
+    const days = eachDayOfInterval({ start: yearAgo, end: today }).map((date) => format(date, "yyyy-MM-dd"));
 
-  // Calculate the starting day of the week (0-4, where 0 is Sunday)
-  const firstDayOfWeek = getDay(yearAgo);
-  const emptyStartDays = Array(firstDayOfWeek).fill(null);
+    // Calculate weeks
+    const firstDayOfWeek = getDay(yearAgo);
+    const emptyStartDays = Array(firstDayOfWeek).fill(null);
+    const weeks: (string | null)[][] = [];
+    let currentWeek: (string | null)[] = [...emptyStartDays];
 
-  // Group days by week
-  const weeks: (string | null)[][] = [];
-  let currentWeek: (string | null)[] = [...emptyStartDays];
+    days.forEach((day) => {
+      if (currentWeek.length === 7) {
+        weeks.push(currentWeek);
+        currentWeek = [];
+      }
+      currentWeek.push(day);
+    });
 
-  days.forEach((day) => {
-    if (currentWeek.length === 7) {
+    if (currentWeek.length > 0) {
+      while (currentWeek.length < 7) {
+        currentWeek.push(null);
+      }
       weeks.push(currentWeek);
-      currentWeek = [];
     }
-    currentWeek.push(day);
-  });
 
-  // Add the last week if it's not empty
-  if (currentWeek.length > 0) {
-    while (currentWeek.length < 7) {
-      currentWeek.push(null);
-    }
-    weeks.push(currentWeek);
-  }
+    // Get month labels
+    const monthLabels = Array.from(new Set(days.map((day) => format(new Date(day), "MMM"))));
 
-  // Calculate total completions for a specific date
-  const getCompletionCount = (date: string) => {
-    const dayStart = new Date(date);
-    dayStart.setHours(0, 0, 0, 0);
-    const dayEnd = new Date(date);
-    dayEnd.setHours(23, 59, 59, 999);
-    const dayStartTime = dayStart.getTime();
-    const dayEndTime = dayEnd.getTime();
+    return { days, weeks, monthLabels };
+  }, []); // Empty deps since these only need to calculate once
 
-    return completions.filter(
-      (completion) => completion.completedAt >= dayStartTime && completion.completedAt <= dayEndTime
-    ).length;
-  };
+  // Memoize completion counts to avoid recalculating on every render
+  const completionCounts = useMemo(() => {
+    const counts: Record<string, number> = {};
 
-  // Get month labels for the top of the grid
-  const monthLabels = Array.from(new Set(days.map((day) => format(new Date(day), "MMM"))));
+    completions.forEach((completion) => {
+      const date = new Date(completion.completedAt);
+      const dateKey = format(date, "yyyy-MM-dd");
+      counts[dateKey] = (counts[dateKey] || 0) + 1;
+    });
 
-  // Function to get color intensity based on completion count
-  const getColorClass = (count: number) => {
+    return counts;
+  }, [completions]);
+
+  // Memoize color class function
+  const getColorClass = useCallback((count: number) => {
     if (count === 0) return "bg-neutral-100 dark:bg-neutral-800";
     if (count <= 2) return "bg-emerald-200 dark:bg-emerald-900";
     if (count <= 5) return "bg-emerald-300 dark:bg-emerald-800";
     if (count <= 10) return "bg-emerald-400 dark:bg-emerald-700";
     return "bg-emerald-500 dark:bg-emerald-600";
-  };
+  }, []);
+
+  // Extract grid cell to separate component for better performance
+  const GridCell = memo(({ day }: { day: string | null }) => {
+    if (!day) return <div className="w-4 h-4" />;
+
+    const count = completionCounts[day] || 0;
+    return (
+      <div
+        className={`w-4 h-4 rounded-sm transition-colors hover:opacity-80 relative ${getColorClass(count)}`}
+        title={`${format(new Date(day), "MMM d, yyyy")}: ${count} completions`}
+      />
+    );
+  });
 
   return (
     <div className="w-full mb-12">
@@ -106,19 +120,9 @@ export const YearlyOverview = ({ completions }: YearlyOverviewProps) => {
             <div className="flex gap-px">
               {weeks.map((week, weekIndex) => (
                 <div key={weekIndex} className="flex flex-col gap-px">
-                  {week.map((day, dayIndex) =>
-                    day ? (
-                      <div
-                        key={day}
-                        className={`w-4 h-4 rounded-sm transition-colors hover:opacity-80 relative ${getColorClass(
-                          getCompletionCount(day)
-                        )}`}
-                        title={`${format(new Date(day), "MMM d, yyyy")}: ${getCompletionCount(day)} completions`}
-                      ></div>
-                    ) : (
-                      <div key={`empty-${weekIndex}-${dayIndex}`} className="w-4 h-4" />
-                    )
-                  )}
+                  {week.map((day, dayIndex) => (
+                    <GridCell key={day || `empty-${weekIndex}-${dayIndex}`} day={day} />
+                  ))}
                 </div>
               ))}
             </div>
