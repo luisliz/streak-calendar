@@ -10,7 +10,7 @@ import { CalendarItem } from "@/components/calendar/calendar-item";
 import { CalendarSkeleton } from "@/components/calendar/calendar-skeleton";
 import { ImportExport } from "@/components/calendar/import-export";
 import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useCalendarData } from "@/hooks/use-calendar-data";
 import { useCalendarState } from "@/hooks/use-calendar-state";
 import { useDateRange } from "@/hooks/use-date-range";
@@ -94,16 +94,12 @@ export default function CalendarsPage() {
           <>
             <div className="flex justify-between items-center mb-8">
               <div className="flex items-center gap-4">
-                <h1 className="text-3xl font-bold">Your Calendars</h1>
-                <Select value={calendarView} onValueChange={(value: CalendarView) => setCalendarView(value)}>
-                  <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="Select view" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="monthRow">Monthly Row</SelectItem>
-                    <SelectItem value="monthGrid">Monthly Grid</SelectItem>
-                  </SelectContent>
-                </Select>
+                <Tabs value={calendarView} onValueChange={(value) => setCalendarView(value as CalendarView)}>
+                  <TabsList>
+                    <TabsTrigger value="monthRow">Days</TabsTrigger>
+                    <TabsTrigger value="monthGrid">Months</TabsTrigger>
+                  </TabsList>
+                </Tabs>
               </div>
               <div className="flex gap-2">
                 <Button onClick={() => setIsNewCalendarOpen(true)}>
