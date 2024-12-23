@@ -22,7 +22,7 @@ interface YearlyOverviewProps {
 
 export const YearlyOverview = ({ completions }: YearlyOverviewProps) => {
   // Memoize date calculations that don't need to change
-  const { days, weeks, monthLabels } = useMemo(() => {
+  const { weeks, monthLabels } = useMemo(() => {
     const today = new Date();
     const yearAgo = subYears(today, 1);
     const days = eachDayOfInterval({ start: yearAgo, end: today }).map((date) => format(date, "yyyy-MM-dd"));
@@ -51,7 +51,7 @@ export const YearlyOverview = ({ completions }: YearlyOverviewProps) => {
     // Get month labels
     const monthLabels = Array.from(new Set(days.map((day) => format(new Date(day), "MMM"))));
 
-    return { days, weeks, monthLabels };
+    return { weeks, monthLabels };
   }, []); // Empty deps since these only need to calculate once
 
   // Memoize completion counts to avoid recalculating on every render
@@ -88,6 +88,7 @@ export const YearlyOverview = ({ completions }: YearlyOverviewProps) => {
       />
     );
   });
+  GridCell.displayName = "GridCell";
 
   return (
     <div className="w-full mb-12">
