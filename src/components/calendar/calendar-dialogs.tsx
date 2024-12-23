@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 /**
  * Available color themes for calendars.
@@ -71,17 +72,26 @@ export const NewCalendarDialog = ({
           </div>
           <div>
             <Label>Color Theme</Label>
-            <div className="grid grid-cols-6 gap-2 mt-2">
-              {COLORS.map((c) => (
-                <button
-                  key={c.value}
-                  className={`w-8 h-8 rounded-full transition-all ${c.value} ${
-                    color === c.value ? "ring-2 ring-offset-2" : ""
-                  }`}
-                  onClick={() => onColorChange(c.value)}
-                />
-              ))}
-            </div>
+            <Select value={color} onValueChange={onColorChange}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select a color">
+                  <div className="flex items-center gap-2">
+                    <div className={`w-4 h-4 rounded-full ${color}`} />
+                    {COLORS.find((c) => c.value === color)?.name}
+                  </div>
+                </SelectValue>
+              </SelectTrigger>
+              <SelectContent>
+                {COLORS.map((c) => (
+                  <SelectItem key={c.value} value={c.value}>
+                    <div className="flex items-center gap-2">
+                      <div className={`w-4 h-4 rounded-full ${c.value}`} />
+                      {c.name}
+                    </div>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
           <Button onClick={onSubmit}>Create Calendar</Button>
         </div>
@@ -173,17 +183,26 @@ export const EditCalendarDialog = ({
           </div>
           <div>
             <Label>Color Theme</Label>
-            <div className="grid grid-cols-6 gap-2 mt-2">
-              {COLORS.map((c) => (
-                <button
-                  key={c.value}
-                  className={`w-8 h-8 rounded-full transition-all ${c.value} ${
-                    color === c.value ? "ring-2 ring-offset-2" : ""
-                  }`}
-                  onClick={() => onColorChange(c.value)}
-                />
-              ))}
-            </div>
+            <Select value={color} onValueChange={onColorChange}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select a color">
+                  <div className="flex items-center gap-2">
+                    <div className={`w-4 h-4 rounded-full ${color}`} />
+                    {COLORS.find((c) => c.value === color)?.name}
+                  </div>
+                </SelectValue>
+              </SelectTrigger>
+              <SelectContent>
+                {COLORS.map((c) => (
+                  <SelectItem key={c.value} value={c.value}>
+                    <div className="flex items-center gap-2">
+                      <div className={`w-4 h-4 rounded-full ${c.value}`} />
+                      {c.name}
+                    </div>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
           <div className="flex gap-2">
             <Button onClick={onSubmit} className="flex-1">
