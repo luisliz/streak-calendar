@@ -9,6 +9,7 @@ import {
 import { CalendarItem } from "@/components/calendar/calendar-item";
 import { CalendarSkeleton } from "@/components/calendar/calendar-skeleton";
 import { ImportExport } from "@/components/calendar/import-export";
+import { YearlyOverview } from "@/components/calendar/yearly-overview";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useCalendarData } from "@/hooks/use-calendar-data";
@@ -22,7 +23,9 @@ type CalendarView = "monthRow" | "monthGrid";
 
 // Main calendar page component for managing habit tracking calendars and completions
 export default function CalendarsPage() {
-  const { today, startDate, days } = useDateRange();
+  const { calendarView, setCalendarView, ...calendarState } = useCalendarState();
+  const { today, startDate, days } = useDateRange(calendarView === "monthRow" ? 30 : 365);
+  const { today: yearlyToday, startDate: yearlyStartDate } = useDateRange(365);
   const {
     selectedCalendar,
     setSelectedCalendar,
@@ -38,9 +41,7 @@ export default function CalendarsPage() {
     setEditCalendarColor,
     isNewCalendarOpen,
     setIsNewCalendarOpen,
-    calendarView,
-    setCalendarView,
-  } = useCalendarState();
+  } = calendarState;
 
   const {
     newHabitName,
@@ -65,6 +66,8 @@ export default function CalendarsPage() {
     handleDeleteHabit,
     handleToggleHabit,
   } = useCalendarData(startDate, today);
+
+  const { completions: yearlyCompletions } = useCalendarData(yearlyStartDate, yearlyToday);
 
   // Keyboard event handlers for form submission
   const handleCalendarKeyDown = (e: React.KeyboardEvent) => {
@@ -92,6 +95,10 @@ export default function CalendarsPage() {
           <CalendarSkeleton />
         ) : (
           <>
+            {/* Yearly Overview Section */}
+            <YearlyOverview completions={yearlyCompletions} habits={habits} calendars={calendars} />
+
+            {/* Calendar View Controls */}
             <div className="flex justify-between items-center mb-8">
               <div className="flex items-center gap-4">
                 <Tabs value={calendarView} onValueChange={(value) => setCalendarView(value as CalendarView)}>

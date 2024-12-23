@@ -26,17 +26,20 @@ interface CompletionMenuProps {
   onCountChange: (count: number) => void; // Callback when completion count changes
   colorClass: string; // Base color theme (e.g., "bg-red-500") for visual feedback
   gridView?: boolean; // Whether to display in grid view (affects sizing)
+  disabled?: boolean; // Whether the completion menu is disabled (outside query range)
 }
 
-export const CompletionMenu = ({ date, count, onCountChange, colorClass, gridView }: CompletionMenuProps) => {
+export const CompletionMenu = ({ date, count, onCountChange, colorClass, gridView, disabled }: CompletionMenuProps) => {
   // Increment handler - no upper limit on completions
   const handleIncrement = (e: React.MouseEvent) => {
+    if (disabled) return;
     e.preventDefault();
     onCountChange(count + 1);
   };
 
   // Decrement handler - prevents going below 0
   const handleDecrement = (e?: React.MouseEvent) => {
+    if (disabled) return;
     if (e) e.preventDefault();
     if (count > 0) {
       onCountChange(count - 1);
@@ -51,18 +54,21 @@ export const CompletionMenu = ({ date, count, onCountChange, colorClass, gridVie
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
+      <DropdownMenuTrigger asChild disabled={disabled}>
         {/* Main completion button with color feedback */}
         <button
           className={`${
             gridView ? "aspect-square w-full" : "w-6 h-6"
-          } rounded-sm transition-colors hover:opacity-80 relative ${bgColor}`}
+          } rounded-sm transition-colors hover:opacity-80 relative ${bgColor} ${
+            disabled ? "opacity-50 cursor-not-allowed" : ""
+          }`}
           title={`${new Date(date).toLocaleDateString(undefined, {
             month: "short",
             day: "numeric",
           })}: ${count} completion${count !== 1 ? "s" : ""}`}
           onClick={handleIncrement}
           onContextMenu={handleDecrement}
+          disabled={disabled}
         >
           {/* Day number display with dynamic text color */}
           <span
@@ -77,11 +83,23 @@ export const CompletionMenu = ({ date, count, onCountChange, colorClass, gridVie
       {/* Dropdown for precise count control */}
       <DropdownMenuContent align="center" className="w-24">
         <div className="flex items-center justify-between p-2">
-          <Button variant="default" size="icon" className="h-6 w-6" onClick={() => handleDecrement()}>
+          <Button
+            variant="default"
+            size="icon"
+            className="h-6 w-6"
+            onClick={() => handleDecrement()}
+            disabled={disabled}
+          >
             <Minus className="h-4 w-4" />
           </Button>
           <span className="font-medium">{count}</span>
-          <Button variant="default" size="icon" className="h-6 w-6" onClick={(e) => handleIncrement(e)}>
+          <Button
+            variant="default"
+            size="icon"
+            className="h-6 w-6"
+            onClick={(e) => handleIncrement(e)}
+            disabled={disabled}
+          >
             <Plus className="h-4 w-4" />
           </Button>
         </div>

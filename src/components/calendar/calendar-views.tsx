@@ -138,7 +138,8 @@ export const CalendarView = ({ habit, color, days, completions, onToggle, view }
                 ))}
                 {/* Calendar days with completion tracking */}
                 {monthDays.map((dateStr) => {
-                  const count = getCompletionCount(dateStr);
+                  const isInRange = days.includes(dateStr);
+                  const count = isInRange ? getCompletionCount(dateStr) : 0;
 
                   return (
                     <CompletionMenu
@@ -149,6 +150,7 @@ export const CalendarView = ({ habit, color, days, completions, onToggle, view }
                       onCountChange={(newCount) => onToggle(habit._id, dateStr, newCount)}
                       colorClass={color}
                       gridView={true}
+                      disabled={!isInRange}
                     />
                   );
                 })}
