@@ -14,6 +14,15 @@ type ToasterToast = ToastProps & {
   action?: ToastActionElement;
 };
 
+type ActionTypes = {
+  ADD_TOAST: "ADD_TOAST";
+  UPDATE_TOAST: "UPDATE_TOAST";
+  DISMISS_TOAST: "DISMISS_TOAST";
+  REMOVE_TOAST: "REMOVE_TOAST";
+};
+
+type ActionType = ActionTypes;
+
 let count = 0;
 
 function genId() {
@@ -23,20 +32,20 @@ function genId() {
 
 type Action =
   | {
-      type: "ADD_TOAST";
+      type: ActionType["ADD_TOAST"];
       toast: ToasterToast;
     }
   | {
-      type: "UPDATE_TOAST";
+      type: ActionType["UPDATE_TOAST"];
       toast: Partial<ToasterToast>;
     }
   | {
-      type: "DISMISS_TOAST";
-      toastId?: string;
+      type: ActionType["DISMISS_TOAST"];
+      toastId?: ToasterToast["id"];
     }
   | {
-      type: "REMOVE_TOAST";
-      toastId?: string;
+      type: ActionType["REMOVE_TOAST"];
+      toastId?: ToasterToast["id"];
     };
 
 interface State {

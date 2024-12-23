@@ -8,13 +8,25 @@ import {
 } from "@/components/calendar/calendar-dialogs";
 import { CalendarItem } from "@/components/calendar/calendar-item";
 import { CalendarSkeleton } from "@/components/calendar/calendar-skeleton";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useToast } from "@/components/ui/use-toast";
 import { SignInButton, SignedIn, SignedOut } from "@clerk/nextjs";
 import { useMutation, useQuery } from "convex/react";
 import { useConvexAuth } from "convex/react";
-import { PlusCircle } from "lucide-react";
+import { format } from "date-fns";
+import { ArrowUpDown, Download, PlusCircle, Upload } from "lucide-react";
 import { useMemo, useState } from "react";
 
 import { api } from "@server/convex/_generated/api";
@@ -44,6 +56,7 @@ const getDatesForRange = (daysBack: number) => {
 
 // Main calendar page component for managing habit tracking calendars and completions
 export default function CalendarsPage() {
+  const { toast } = useToast();
   // Generate 30-day date range for calendar view
   const { today, startDate, days } = useMemo(() => getDatesForRange(30), []);
   const [calendarView, setCalendarView] = useState<CalendarView>("monthRow");
@@ -91,6 +104,12 @@ export default function CalendarsPage() {
   const [editHabitName, setEditHabitName] = useState("");
   const [isNewCalendarOpen, setIsNewCalendarOpen] = useState(false);
   const [isNewHabitOpen, setIsNewHabitOpen] = useState(false);
+  const [showImportExportDialog, setShowImportExportDialog] = useState(false);
+  const [showExportDialog, setShowExportDialog] = useState(false);
+  const [showImportDialog, setShowImportDialog] = useState(false);
+  const [importFile, setImportFile] = useState<File | null>(null);
+  const exportData = useQuery(api.calendars.exportData);
+  const importData = useMutation(api.calendars.importData);
 
   // Safely access query results with fallback to empty arrays
   const calendars = calendarsQuery ?? [];
@@ -170,6 +189,52 @@ export default function CalendarsPage() {
     }
   };
 
+  const handleExportConfirm = () => {
+    setShowExportDialog(false);
+    if (!exportData) return;
+
+    const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `streak-calendar-export-${format(new Date(), "yyyy-MM-dd")}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
+  const handleImportSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setImportFile(file);
+      setShowImportDialog(true);
+    }
+    e.target.value = "";
+  };
+
+  const handleImportConfirm = async () => {
+    if (!importFile) return;
+
+    try {
+      const text = await importFile.text();
+      const data = JSON.parse(text);
+      await importData({ data });
+      toast({
+        title: "Import successful",
+        description: "Your data has been imported",
+      });
+    } catch {
+      toast({
+        title: "Import failed",
+        description: "Invalid file format",
+        variant: "destructive",
+      });
+    }
+    setImportFile(null);
+    setShowImportDialog(false);
+  };
+
   return (
     <div className="container max-w-7xl px-4 py-8">
       {/* Authentication-gated content */}
@@ -191,14 +256,16 @@ export default function CalendarsPage() {
                   </SelectContent>
                 </Select>
               </div>
-              <Dialog open={isNewCalendarOpen} onOpenChange={setIsNewCalendarOpen}>
-                <DialogTrigger asChild>
-                  <Button>
-                    <PlusCircle className="mr-2 h-4 w-4" />
-                    Add Calendar
-                  </Button>
-                </DialogTrigger>
-              </Dialog>
+              <div className="flex gap-2">
+                <Dialog open={isNewCalendarOpen} onOpenChange={setIsNewCalendarOpen}>
+                  <DialogTrigger asChild>
+                    <Button>
+                      <PlusCircle className="mr-2 h-4 w-4" />
+                      Add Calendar
+                    </Button>
+                  </DialogTrigger>
+                </Dialog>
+              </div>
             </div>
 
             {/* Empty state or calendar list */}
@@ -242,6 +309,73 @@ export default function CalendarsPage() {
                 ))}
               </div>
             )}
+
+            {/* Import/Export UI */}
+            <div className="mt-8 flex justify-center">
+              <Dialog open={showImportExportDialog} onOpenChange={setShowImportExportDialog}>
+                <DialogTrigger asChild>
+                  <Button variant="outline">
+                    <ArrowUpDown className="mr-2 h-4 w-4" />
+                    Import/Export
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Import/Export</DialogTitle>
+                  </DialogHeader>
+                  <div className="space-y-4">
+                    <div className="flex flex-col gap-4">
+                      <Button onClick={() => setShowExportDialog(true)}>
+                        <Download className="mr-2 h-4 w-4" />
+                        Export
+                      </Button>
+                      <Button asChild>
+                        <label className="cursor-pointer flex items-center justify-center">
+                          <Upload className="mr-2 h-4 w-4" />
+                          Import
+                          <input type="file" accept=".json" className="hidden" onChange={handleImportSelect} />
+                        </label>
+                      </Button>
+                    </div>
+                    <div className="flex justify-end">
+                      <Button variant="outline" onClick={() => setShowImportExportDialog(false)}>
+                        Cancel
+                      </Button>
+                    </div>
+                  </div>
+                </DialogContent>
+              </Dialog>
+
+              <AlertDialog open={showExportDialog} onOpenChange={setShowExportDialog}>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Export</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      This will export all your calendars, habits, and completion history.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction onClick={handleExportConfirm}>Continue</AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+
+              <AlertDialog open={showImportDialog} onOpenChange={setShowImportDialog}>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Import</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      This will import calendars, habits, and completion history from the selected file.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel onClick={() => setImportFile(null)}>Cancel</AlertDialogCancel>
+                    <AlertDialogAction onClick={handleImportConfirm}>Continue</AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            </div>
           </>
         )}
       </SignedIn>

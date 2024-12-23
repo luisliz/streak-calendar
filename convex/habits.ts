@@ -60,25 +60,33 @@ export const markComplete = mutation({
     }
 
     // Get all completions for this habit on this date
+    const date = new Date(args.completedAt);
+    date.setHours(0, 0, 0, 0);
+    const startOfDay = date.getTime();
+    date.setHours(23, 59, 59, 999);
+    const endOfDay = date.getTime();
+
     const existingCompletions = await ctx.db
       .query("completions")
       .filter((q) => q.eq(q.field("habitId"), args.habitId))
-      .filter((q) => q.eq(q.field("completedAt"), args.completedAt))
+      .filter((q) => q.and(q.gte(q.field("completedAt"), startOfDay), q.lte(q.field("completedAt"), endOfDay)))
       .collect();
 
     const currentCount = existingCompletions.length;
-    const targetCount = args.count ?? (currentCount > 0 ? 0 : 1); // Toggle behavior if no count specified
+    // If count is provided, use it directly. Otherwise increment by 1
+    const targetCount = args.count ?? currentCount + 1;
 
     if (targetCount < currentCount) {
-      // Remove excess completions
-      const toRemove = existingCompletions.slice(0, currentCount - targetCount);
+      // Remove completions from the end until we reach target count
+      const numToRemove = currentCount - targetCount;
+      const toRemove = existingCompletions.slice(-numToRemove);
       await Promise.all(toRemove.map((completion) => ctx.db.delete(completion._id)));
     } else if (targetCount > currentCount) {
       // Add new completions
       const newCompletions = Array.from({ length: targetCount - currentCount }, () => ({
         habitId: args.habitId,
         userId: identity.subject,
-        completedAt: args.completedAt,
+        completedAt: startOfDay, // Use start of day for consistency
       }));
       await Promise.all(newCompletions.map((completion) => ctx.db.insert("completions", completion)));
     }

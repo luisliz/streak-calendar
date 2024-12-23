@@ -1,7 +1,15 @@
 /**
  * CalendarView Component
- * Renders a calendar visualization for habit tracking in either a row or grid layout.
- * Supports displaying completion status and handling completion toggles.
+ *
+ * A flexible calendar visualization component that supports two display modes:
+ * 1. Month Row: A horizontal strip showing consecutive days
+ * 2. Month Grid: A traditional calendar grid layout showing 3 months
+ *
+ * The component handles:
+ * - Completion tracking for habits
+ * - Date range visualization
+ * - Responsive layout switching
+ * - Completion count calculation
  */
 import { format } from "date-fns";
 
@@ -23,29 +31,43 @@ interface CalendarViewProps {
     _id: Id<"habits">;
     name: string;
   };
-  color: string;
-  days: string[];
+  color: string; // Base color theme for completion visualization
+  days: string[]; // Array of ISO date strings to display
   completions: Array<{
     habitId: Id<"habits">;
-    completedAt: number;
+    completedAt: number; // Unix timestamp of completion
   }>;
   onToggle: (habitId: Id<"habits">, date: string, count: number) => void;
-  view: "monthRow" | "monthGrid";
+  view: "monthRow" | "monthGrid"; // Display mode selection
 }
 
 export const CalendarView = ({ habit, color, days, completions, onToggle, view }: CalendarViewProps) => {
   /**
-   * Calculates the number of times a habit was completed on a specific date
-   * @param date - The date string to check completions for
-   * @returns The count of completions for the given date
+   * Calculates the number of completions for a specific date
+   * Considers the full day range (00:00:00 to 23:59:59)
+   *
+   * @param date - ISO date string to check
+   * @returns Number of completions on that date
    */
   const getCompletionCount = (date: string) => {
-    const timestamp = new Date(date).getTime();
-    return completions.filter((completion) => completion.habitId === habit._id && completion.completedAt === timestamp)
-      .length;
+    // Set up time range for the entire day
+    const dayStart = new Date(date);
+    dayStart.setHours(0, 0, 0, 0);
+    const dayEnd = new Date(date);
+    dayEnd.setHours(23, 59, 59, 999);
+    const dayStartTime = dayStart.getTime();
+    const dayEndTime = dayEnd.getTime();
+
+    // Count completions that match the habit and fall within the day
+    return completions.filter(
+      (completion) =>
+        completion.habitId === habit._id &&
+        completion.completedAt >= dayStartTime &&
+        completion.completedAt <= dayEndTime
+    ).length;
   };
 
-  // Render horizontal row view
+  // Render horizontal row view - simple consecutive day display
   if (view === "monthRow") {
     return (
       <div data-habit-id={habit._id} className="overflow-x-auto flex">
@@ -66,30 +88,32 @@ export const CalendarView = ({ habit, color, days, completions, onToggle, view }
     );
   }
 
-  // Render calendar grid view
+  // Render calendar grid view - traditional month calendar layout
   if (view === "monthGrid") {
     // Find the most recent date and generate 3 months back
     const mostRecentDate = new Date(Math.max(...days.map((d) => new Date(d).getTime())));
     const months: Record<string, string[]> = {};
 
-    // Generate 3 months of dates
+    // Generate dates for 3 months, working backwards from most recent
     for (let i = 0; i < 3; i++) {
       const currentDate = new Date(mostRecentDate.getFullYear(), mostRecentDate.getMonth() - i, 1);
       const monthKey = format(currentDate, "yyyy-MM");
       const daysInMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
 
+      // Create array of ISO date strings for each day in the month
       months[monthKey] = Array.from({ length: daysInMonth }, (_, j) => {
         const day = new Date(currentDate.getFullYear(), currentDate.getMonth(), j + 1);
         return format(day, "yyyy-MM-dd");
       });
     }
 
-    // Sort months in ascending order
+    // Sort months chronologically
     const sortedMonths = Object.entries(months).sort(([a], [b]) => a.localeCompare(b));
 
     return (
       <div data-habit-id={habit._id} className="w-full space-y-8 md:space-y-0 md:grid md:grid-cols-3 md:gap-8">
         {sortedMonths.map(([monthKey, monthDays]) => {
+          // Calculate padding for proper day alignment
           const firstDay = new Date(monthDays[0]);
           const lastDay = new Date(monthDays[monthDays.length - 1]);
           const startPadding = firstDay.getDay();
@@ -102,14 +126,17 @@ export const CalendarView = ({ habit, color, days, completions, onToggle, view }
             <div key={monthKey} className="w-full max-w-[350px] mx-auto space-y-4">
               <h3 className="font-medium">{format(firstDay, "MMMM yyyy")}</h3>
               <div className="grid grid-cols-7 gap-px">
+                {/* Day of week labels */}
                 {dayLabels.map((label) => (
                   <div key={label} className="text-center text-sm text-muted-foreground">
                     {label}
                   </div>
                 ))}
+                {/* Empty cells for start of month alignment */}
                 {emptyStartDays.map((_, index) => (
                   <div key={`empty-start-${index}`} className="h-9 w-9" />
                 ))}
+                {/* Calendar days with completion tracking */}
                 {monthDays.map((dateStr) => {
                   const count = getCompletionCount(dateStr);
 
@@ -125,6 +152,7 @@ export const CalendarView = ({ habit, color, days, completions, onToggle, view }
                     />
                   );
                 })}
+                {/* Empty cells for end of month alignment */}
                 {emptyEndDays.map((_, index) => (
                   <div key={`empty-end-${index}`} className="h-9 w-9" />
                 ))}
