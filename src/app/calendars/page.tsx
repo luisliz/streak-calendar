@@ -9,7 +9,6 @@ import {
 import { CalendarItem } from "@/components/calendar/calendar-item";
 import { CalendarSkeleton } from "@/components/calendar/calendar-skeleton";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { SignInButton, SignedIn, SignedOut } from "@clerk/nextjs";
@@ -172,135 +171,133 @@ export default function CalendarsPage() {
   };
 
   return (
-    <Card className="shadow-xl rounded-2xl p-6">
-      <div className="container max-w-7xl px-4 py-8">
-        {/* Authentication-gated content */}
-        <SignedIn>
-          {calendarsQuery === undefined ? (
-            <CalendarSkeleton />
-          ) : (
-            <>
-              <div className="flex justify-between items-center mb-8">
-                <div className="flex items-center gap-4">
-                  <h1 className="text-3xl font-bold">Your Calendars</h1>
-                  <Select value={calendarView} onValueChange={(value: CalendarView) => setCalendarView(value)}>
-                    <SelectTrigger className="w-[180px]">
-                      <SelectValue placeholder="Select view" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="monthRow">Monthly Row</SelectItem>
-                      <SelectItem value="monthGrid">Monthly Grid</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <Dialog open={isNewCalendarOpen} onOpenChange={setIsNewCalendarOpen}>
-                  <DialogTrigger asChild>
-                    <Button>
-                      <PlusCircle className="mr-2 h-4 w-4" />
-                      Add Calendar
-                    </Button>
-                  </DialogTrigger>
-                </Dialog>
+    <div className="container max-w-7xl px-4 py-8">
+      {/* Authentication-gated content */}
+      <SignedIn>
+        {calendarsQuery === undefined ? (
+          <CalendarSkeleton />
+        ) : (
+          <>
+            <div className="flex justify-between items-center mb-8">
+              <div className="flex items-center gap-4">
+                <h1 className="text-3xl font-bold">Your Calendars</h1>
+                <Select value={calendarView} onValueChange={(value: CalendarView) => setCalendarView(value)}>
+                  <SelectTrigger className="w-[180px]">
+                    <SelectValue placeholder="Select view" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="monthRow">Monthly Row</SelectItem>
+                    <SelectItem value="monthGrid">Monthly Grid</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
+              <Dialog open={isNewCalendarOpen} onOpenChange={setIsNewCalendarOpen}>
+                <DialogTrigger asChild>
+                  <Button>
+                    <PlusCircle className="mr-2 h-4 w-4" />
+                    Add Calendar
+                  </Button>
+                </DialogTrigger>
+              </Dialog>
+            </div>
 
-              {/* Empty state or calendar list */}
-              {calendars.length === 0 ? (
-                <div className="text-center py-12 text-muted-foreground">
-                  <p>You haven&apos;t created any calendars yet.</p>
-                  <p className="mt-2">Create one to start tracking your habits!</p>
-                </div>
-              ) : (
-                <div className="space-y-8">
-                  {calendars.map((calendar) => (
-                    <CalendarItem
-                      key={calendar._id}
-                      calendar={calendar}
-                      habits={habits.filter((h) => h.calendarId === calendar._id)}
-                      days={days}
-                      completions={completions}
-                      onAddHabit={() => {
-                        setSelectedCalendar(calendar);
-                        setIsNewHabitOpen(true);
-                      }}
-                      onEditCalendar={() => {
-                        setEditingCalendar(calendar);
-                        setEditCalendarName(calendar.name);
-                        setEditCalendarColor(calendar.colorTheme);
-                      }}
-                      onEditHabit={(habit) => {
-                        setEditingHabit(habit);
-                        setEditHabitName(habit.name);
-                      }}
-                      onToggleHabit={(habitId, date, count) => {
-                        const timestamp = new Date(date).getTime();
-                        markComplete({
-                          habitId,
-                          completedAt: timestamp,
-                          count,
-                        });
-                      }}
-                      view={calendarView}
-                    />
-                  ))}
-                </div>
-              )}
-            </>
-          )}
-        </SignedIn>
+            {/* Empty state or calendar list */}
+            {calendars.length === 0 ? (
+              <div className="text-center py-12 text-muted-foreground">
+                <p>You haven&apos;t created any calendars yet.</p>
+                <p className="mt-2">Create one to start tracking your habits!</p>
+              </div>
+            ) : (
+              <div className="space-y-8">
+                {calendars.map((calendar) => (
+                  <CalendarItem
+                    key={calendar._id}
+                    calendar={calendar}
+                    habits={habits.filter((h) => h.calendarId === calendar._id)}
+                    days={days}
+                    completions={completions}
+                    onAddHabit={() => {
+                      setSelectedCalendar(calendar);
+                      setIsNewHabitOpen(true);
+                    }}
+                    onEditCalendar={() => {
+                      setEditingCalendar(calendar);
+                      setEditCalendarName(calendar.name);
+                      setEditCalendarColor(calendar.colorTheme);
+                    }}
+                    onEditHabit={(habit) => {
+                      setEditingHabit(habit);
+                      setEditHabitName(habit.name);
+                    }}
+                    onToggleHabit={(habitId, date, count) => {
+                      const timestamp = new Date(date).getTime();
+                      markComplete({
+                        habitId,
+                        completedAt: timestamp,
+                        count,
+                      });
+                    }}
+                    view={calendarView}
+                  />
+                ))}
+              </div>
+            )}
+          </>
+        )}
+      </SignedIn>
 
-        {/* Sign-in prompt for unauthenticated users */}
-        <SignedOut>
-          <div className="flex flex-col items-center justify-center min-h-[50vh] gap-4">
-            <h2 className="text-xl font-semibold">Please sign in to view your calendars</h2>
-            <SignInButton mode="modal">
-              <button className="rounded-md bg-primary px-4 py-2 text-primary-foreground hover:bg-primary/90">
-                Sign In
-              </button>
-            </SignInButton>
-          </div>
-        </SignedOut>
+      {/* Sign-in prompt for unauthenticated users */}
+      <SignedOut>
+        <div className="flex flex-col items-center justify-center min-h-[50vh] gap-4">
+          <h2 className="text-xl font-semibold">Please sign in to view your calendars</h2>
+          <SignInButton mode="modal">
+            <button className="rounded-md bg-primary px-4 py-2 text-primary-foreground hover:bg-primary/90">
+              Sign In
+            </button>
+          </SignInButton>
+        </div>
+      </SignedOut>
 
-        {/* Dialog components for creating/editing calendars and habits */}
-        <NewCalendarDialog
-          isOpen={isNewCalendarOpen}
-          onOpenChange={setIsNewCalendarOpen}
-          name={newCalendarName}
-          onNameChange={setNewCalendarName}
-          color={newCalendarColor}
-          onColorChange={setNewCalendarColor}
-          onSubmit={handleAddCalendar}
-          onKeyDown={handleCalendarKeyDown}
-        />
+      {/* Dialog components for creating/editing calendars and habits */}
+      <NewCalendarDialog
+        isOpen={isNewCalendarOpen}
+        onOpenChange={setIsNewCalendarOpen}
+        name={newCalendarName}
+        onNameChange={setNewCalendarName}
+        color={newCalendarColor}
+        onColorChange={setNewCalendarColor}
+        onSubmit={handleAddCalendar}
+        onKeyDown={handleCalendarKeyDown}
+      />
 
-        <NewHabitDialog
-          isOpen={isNewHabitOpen}
-          onOpenChange={setIsNewHabitOpen}
-          name={newHabitName}
-          onNameChange={setNewHabitName}
-          onSubmit={handleAddHabit}
-          onKeyDown={handleHabitKeyDown}
-        />
+      <NewHabitDialog
+        isOpen={isNewHabitOpen}
+        onOpenChange={setIsNewHabitOpen}
+        name={newHabitName}
+        onNameChange={setNewHabitName}
+        onSubmit={handleAddHabit}
+        onKeyDown={handleHabitKeyDown}
+      />
 
-        <EditCalendarDialog
-          isOpen={!!editingCalendar}
-          onOpenChange={() => setEditingCalendar(null)}
-          name={editCalendarName}
-          onNameChange={setEditCalendarName}
-          color={editCalendarColor}
-          onColorChange={setEditCalendarColor}
-          onSubmit={handleEditCalendar}
-          onDelete={handleDeleteCalendar}
-        />
+      <EditCalendarDialog
+        isOpen={!!editingCalendar}
+        onOpenChange={() => setEditingCalendar(null)}
+        name={editCalendarName}
+        onNameChange={setEditCalendarName}
+        color={editCalendarColor}
+        onColorChange={setEditCalendarColor}
+        onSubmit={handleEditCalendar}
+        onDelete={handleDeleteCalendar}
+      />
 
-        <EditHabitDialog
-          isOpen={!!editingHabit}
-          onOpenChange={() => setEditingHabit(null)}
-          name={editHabitName}
-          onNameChange={setEditHabitName}
-          onSubmit={handleEditHabit}
-          onDelete={handleDeleteHabit}
-        />
-      </div>
-    </Card>
+      <EditHabitDialog
+        isOpen={!!editingHabit}
+        onOpenChange={() => setEditingHabit(null)}
+        name={editHabitName}
+        onNameChange={setEditHabitName}
+        onSubmit={handleEditHabit}
+        onDelete={handleDeleteHabit}
+      />
+    </div>
   );
 }

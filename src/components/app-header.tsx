@@ -24,11 +24,11 @@ export function AppHeader() {
         </nav>
 
         <div className="flex items-center gap-4">
+          <ThemeToggle />
           <SignedOut>
             <SignInButton />
           </SignedOut>
           <SignedIn>
-            <ThemeToggle />
             <UserButton />
           </SignedIn>
         </div>

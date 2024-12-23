@@ -57,11 +57,11 @@ export const CompletionMenu = ({ date, count, onCountChange, colorClass, gridVie
             handleDecrement();
           }}
         >
-          {gridView && (
-            <span className="absolute inset-0 flex items-center justify-center text-xs font-medium">
-              {new Date(date).getDate()}
-            </span>
-          )}
+          <span
+            className={`absolute inset-0 flex items-center justify-center text-xs font-medium ${gridView ? "" : "scale-75"}`}
+          >
+            {new Date(date).getDate()}
+          </span>
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="center" className="w-24">

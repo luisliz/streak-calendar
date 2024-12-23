@@ -48,8 +48,8 @@ export const CalendarView = ({ habit, color, days, completions, onToggle, view }
   // Render horizontal row view
   if (view === "monthRow") {
     return (
-      <div data-habit-id={habit._id} className="flex-1 overflow-x-auto">
-        <div className="inline-flex gap-px bg-background rounded-md p-1">
+      <div data-habit-id={habit._id} className="overflow-x-auto bg-red-300 items-center justify-center">
+        <div className="inline-flex gap-px bg-card">
           {days.map((date) => (
             <CompletionMenu
               key={date}
@@ -58,6 +58,7 @@ export const CalendarView = ({ habit, color, days, completions, onToggle, view }
               count={getCompletionCount(date)}
               onCountChange={(newCount) => onToggle(habit._id, date, newCount)}
               colorClass={color}
+              gridView={false}
             />
           ))}
         </div>
@@ -67,44 +68,70 @@ export const CalendarView = ({ habit, color, days, completions, onToggle, view }
 
   // Render calendar grid view
   if (view === "monthGrid") {
-    // Calculate padding for the first week of the month
-    const firstDay = new Date(days[0]);
-    const startPadding = firstDay.getDay();
-    const emptyDays = Array(startPadding).fill(null);
-    const dayLabels = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    // Find the most recent date and generate 3 months back
+    const mostRecentDate = new Date(Math.max(...days.map((d) => new Date(d).getTime())));
+    const months: Record<string, string[]> = {};
+
+    // Generate 3 months of dates
+    for (let i = 0; i < 3; i++) {
+      const currentDate = new Date(mostRecentDate.getFullYear(), mostRecentDate.getMonth() - i, 1);
+      const monthKey = format(currentDate, "yyyy-MM");
+      const daysInMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
+
+      months[monthKey] = Array.from({ length: daysInMonth }, (_, j) => {
+        const day = new Date(currentDate.getFullYear(), currentDate.getMonth(), j + 1);
+        return format(day, "yyyy-MM-dd");
+      });
+    }
+
+    // Sort months in ascending order
+    const sortedMonths = Object.entries(months).sort(([a], [b]) => a.localeCompare(b));
 
     return (
-      <div data-habit-id={habit._id} className="mx-auto w-[500px] space-y-2">
-        {/* Display month and year header */}
-        <h3 className="truncate text-sm font-medium">{format(firstDay, "MMMM yyyy")}</h3>
-        <div className="grid grid-cols-7 gap-1">
-          {/* Render day of week labels */}
-          {dayLabels.map((label) => (
-            <div key={label} className="text-center text-xs text-muted-foreground">
-              {label}
-            </div>
-          ))}
-          {/* Add empty cells for days before the month starts */}
-          {emptyDays.map((_, index) => (
-            <div key={`empty-${index}`} className="aspect-square" />
-          ))}
-          {/* Render calendar days with completion status */}
-          {days.map((dateStr) => {
-            const count = getCompletionCount(dateStr);
+      <div data-habit-id={habit._id} className="w-full space-y-8 md:space-y-0 md:grid md:grid-cols-3 md:gap-8">
+        {sortedMonths.map(([monthKey, monthDays]) => {
+          const firstDay = new Date(monthDays[0]);
+          const lastDay = new Date(monthDays[monthDays.length - 1]);
+          const startPadding = firstDay.getDay();
+          const endPadding = 6 - lastDay.getDay();
+          const emptyStartDays = Array(startPadding).fill(null);
+          const emptyEndDays = Array(endPadding).fill(null);
+          const dayLabels = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
-            return (
-              <CompletionMenu
-                key={dateStr}
-                habitId={habit._id}
-                date={dateStr}
-                count={count}
-                onCountChange={(newCount) => onToggle(habit._id, dateStr, newCount)}
-                colorClass={color}
-                gridView={true}
-              />
-            );
-          })}
-        </div>
+          return (
+            <div key={monthKey} className="w-full max-w-[350px] mx-auto space-y-4">
+              <h3 className="font-medium">{format(firstDay, "MMMM yyyy")}</h3>
+              <div className="grid grid-cols-7 gap-4">
+                {dayLabels.map((label) => (
+                  <div key={label} className="text-center text-sm text-muted-foreground">
+                    {label}
+                  </div>
+                ))}
+                {emptyStartDays.map((_, index) => (
+                  <div key={`empty-start-${index}`} className="h-9 w-9" />
+                ))}
+                {monthDays.map((dateStr) => {
+                  const count = getCompletionCount(dateStr);
+
+                  return (
+                    <CompletionMenu
+                      key={dateStr}
+                      habitId={habit._id}
+                      date={dateStr}
+                      count={count}
+                      onCountChange={(newCount) => onToggle(habit._id, dateStr, newCount)}
+                      colorClass={color}
+                      gridView={true}
+                    />
+                  );
+                })}
+                {emptyEndDays.map((_, index) => (
+                  <div key={`empty-end-${index}`} className="h-9 w-9" />
+                ))}
+              </div>
+            </div>
+          );
+        })}
       </div>
     );
   }
