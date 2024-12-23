@@ -18,6 +18,7 @@ import { useDateRange } from "@/hooks/use-date-range";
 import { useHabitState } from "@/hooks/use-habit-state";
 import { SignInButton, SignedIn, SignedOut } from "@clerk/nextjs";
 import { PlusCircle } from "lucide-react";
+import { memo, useCallback, useState } from "react";
 
 type CalendarView = "monthRow" | "monthGrid";
 
@@ -69,6 +70,8 @@ export default function CalendarsPage() {
 
   const { completions: yearlyCompletions } = useCalendarData(yearlyStartDate, yearlyToday);
 
+  const [, setIsViewChanging] = useState(false);
+
   // Keyboard event handlers for form submission
   const handleCalendarKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
@@ -87,6 +90,29 @@ export default function CalendarsPage() {
     }
   };
 
+  // Memoize the tab change handler
+  const handleViewChange = useCallback(
+    (value: string) => {
+      setIsViewChanging(true);
+      requestAnimationFrame(() => {
+        setCalendarView(value as CalendarView);
+        setIsViewChanging(false);
+      });
+    },
+    [setCalendarView]
+  );
+
+  // Memoize the tabs component
+  const ViewTabs = memo(() => (
+    <Tabs value={calendarView} onValueChange={handleViewChange}>
+      <TabsList>
+        <TabsTrigger value="monthRow">Days View</TabsTrigger>
+        <TabsTrigger value="monthGrid">Months View</TabsTrigger>
+      </TabsList>
+    </Tabs>
+  ));
+  ViewTabs.displayName = "ViewTabs";
+
   return (
     <div className="container max-w-7xl px-4 py-8">
       {/* Authentication-gated content */}
@@ -101,12 +127,7 @@ export default function CalendarsPage() {
             {/* Calendar View Controls */}
             <div className="flex justify-between items-center mb-8">
               <div className="flex items-center gap-4">
-                <Tabs value={calendarView} onValueChange={(value) => setCalendarView(value as CalendarView)}>
-                  <TabsList>
-                    <TabsTrigger value="monthRow">Days View</TabsTrigger>
-                    <TabsTrigger value="monthGrid">Months View</TabsTrigger>
-                  </TabsList>
-                </Tabs>
+                <ViewTabs />
               </div>
               <div className="flex gap-2">
                 <Button onClick={() => setIsNewCalendarOpen(true)}>
