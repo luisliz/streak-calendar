@@ -45,7 +45,8 @@ export const CalendarItem = ({
 }: CalendarItemProps) => {
   return (
     // Main container with rounded borders and padding
-    <div className="rounded-xl shadow-md border p-6">
+    // TODO: 2024-12-23 remove empty div
+    <div className="">
       {/* Header section with calendar name and add habit button */}
       <div className="flex justify-between items-center mb-6">
         {/* Calendar title with hover-reveal edit button */}
@@ -73,6 +74,7 @@ export const CalendarItem = ({
         <p className="text-sm text-muted-foreground">No habits added yet. Add one to start tracking!</p>
       ) : (
         // List of habits with their yearly overviews
+        // TODO: 2024-12-23 remove empty div
         <div className="">
           {habits.map((habit) => (
             <div key={habit._id} className="flex items-center gap-4">
