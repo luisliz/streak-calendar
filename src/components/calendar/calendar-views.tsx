@@ -48,8 +48,8 @@ export const CalendarView = ({ habit, color, days, completions, onToggle, view }
   // Render horizontal row view
   if (view === "monthRow") {
     return (
-      <div data-habit-id={habit._id} className="overflow-x-auto bg-red-300 items-center justify-center">
-        <div className="inline-flex gap-px bg-card">
+      <div data-habit-id={habit._id} className="overflow-x-auto flex">
+        <div className="inline-flex gap-px bg-card h-[25px]">
           {days.map((date) => (
             <CompletionMenu
               key={date}
@@ -101,7 +101,7 @@ export const CalendarView = ({ habit, color, days, completions, onToggle, view }
           return (
             <div key={monthKey} className="w-full max-w-[350px] mx-auto space-y-4">
               <h3 className="font-medium">{format(firstDay, "MMMM yyyy")}</h3>
-              <div className="grid grid-cols-7 gap-4">
+              <div className="grid grid-cols-7 gap-px">
                 {dayLabels.map((label) => (
                   <div key={label} className="text-center text-sm text-muted-foreground">
                     {label}

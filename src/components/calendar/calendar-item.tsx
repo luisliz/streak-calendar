@@ -53,7 +53,7 @@ export const CalendarItem = ({
           <h2 className="text-2xl font-semibold">{calendar.name}</h2>
           <Button
             variant="ghost"
-            size="icon"
+            size="sm"
             className="opacity-0 group-hover:opacity-100 transition-opacity"
             onClick={onEditCalendar}
           >
@@ -81,7 +81,7 @@ export const CalendarItem = ({
                 <h3 className="font-medium text-base">{habit.name}</h3>
                 <Button
                   variant="ghost"
-                  size="icon"
+                  size="sm"
                   className="opacity-0 group-hover:opacity-100 transition-opacity"
                   onClick={() => onEditHabit(habit)}
                 >
