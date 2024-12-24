@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { SignInButton, SignedIn, SignedOut } from "@clerk/nextjs";
 import { Check } from "lucide-react";
+import Link from "next/link";
 
 export default function PricingPage() {
   return (
@@ -46,8 +47,8 @@ export default function PricingPage() {
               </SignInButton>
             </SignedOut>
             <SignedIn>
-              <Button size="lg" className="w-full" disabled>
-                Current Plan
+              <Button size="lg" className="w-full" asChild>
+                <Link href="/calendars">Go to Calendars</Link>
               </Button>
             </SignedIn>
           </CardFooter>
