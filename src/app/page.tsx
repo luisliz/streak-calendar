@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { SignedIn, SignedOut } from "@clerk/nextjs";
 import Link from "next/link";
 
 export default function Home() {
@@ -15,9 +16,16 @@ export default function Home() {
         Start your streak today and stay motivated today!
       </p>
       <div className="mt-8">
-        <Button asChild size="lg">
-          <Link href="/pricing">Get Started</Link>
-        </Button>
+        <SignedIn>
+          <Button asChild size="lg">
+            <Link href="/calendars">Go to Calendars</Link>
+          </Button>
+        </SignedIn>
+        <SignedOut>
+          <Button asChild size="lg">
+            <Link href="/pricing">Get Started</Link>
+          </Button>
+        </SignedOut>
       </div>
     </div>
   );
