@@ -1,28 +1,21 @@
+import { Calendar, EditingCalendar } from "@/types";
 import { useState } from "react";
-
-import { Id } from "@server/convex/_generated/dataModel";
 
 type CalendarView = "monthRow" | "monthGrid";
 
 export function useCalendarState() {
-  const [selectedCalendar, setSelectedCalendar] = useState<{
-    _id: Id<"calendars">;
-    name: string;
-    colorTheme: string;
-  } | null>(null);
+  const [calendarView, setCalendarView] = useState<CalendarView>("monthRow");
+  const [selectedCalendar, setSelectedCalendar] = useState<Calendar | null>(null);
   const [newCalendarName, setNewCalendarName] = useState("");
   const [newCalendarColor, setNewCalendarColor] = useState("bg-red-500");
-  const [editingCalendar, setEditingCalendar] = useState<{
-    _id: Id<"calendars">;
-    name: string;
-    colorTheme: string;
-  } | null>(null);
+  const [editingCalendar, setEditingCalendar] = useState<EditingCalendar | null>(null);
   const [editCalendarName, setEditCalendarName] = useState("");
-  const [editCalendarColor, setEditCalendarColor] = useState("");
+  const [editCalendarColor, setEditCalendarColor] = useState("bg-red-500");
   const [isNewCalendarOpen, setIsNewCalendarOpen] = useState(false);
-  const [calendarView, setCalendarView] = useState<CalendarView>("monthRow");
 
   return {
+    calendarView,
+    setCalendarView,
     selectedCalendar,
     setSelectedCalendar,
     newCalendarName,
@@ -37,7 +30,5 @@ export function useCalendarState() {
     setEditCalendarColor,
     isNewCalendarOpen,
     setIsNewCalendarOpen,
-    calendarView,
-    setCalendarView,
   };
 }
