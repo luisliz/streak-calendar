@@ -47,11 +47,9 @@ export const CalendarItem = ({
   const colorTheme = calendar.colorTheme.startsWith("bg-") ? calendar.colorTheme : `bg-${calendar.colorTheme}-500`;
 
   return (
-    // TODO: 2024-12-23 - remove empty div
     <div className="">
       {/* Header section with calendar name and add habit button */}
       <div className="flex justify-between items-center mb-6">
-        {/* Calendar title with hover-reveal edit button */}
         <div
           className="flex items-center gap-2 group cursor-pointer hover:text-muted-foreground transition-colors"
           onClick={onEditCalendar}
@@ -61,7 +59,6 @@ export const CalendarItem = ({
             <Pencil className="h-4 w-4" />
           </span>
         </div>
-        {/* Add habit button */}
         <Button size="sm" variant="link" onClick={onAddHabit}>
           <PlusCircle className="h-4 w-4 fill-red-500" />
         </Button>
@@ -69,15 +66,12 @@ export const CalendarItem = ({
 
       {/* Conditional rendering based on habits existence */}
       {habits.length === 0 ? (
-        // Empty state message when no habits exist
         <p className="text-sm text-muted-foreground">No habits added yet. Add one to start tracking!</p>
-      ) : (
-        // List of habits with their yearly overviews
-        // TODO: 2024-12-23 - remove empty div
+      ) : view === "monthRow" ? (
+        // Month Row View - habits on the left
         <div className="">
           {habits.map((habit) => (
             <div key={habit._id} className="flex items-start gap-4">
-              {/* Habit name with hover-reveal edit button */}
               <div
                 className="flex w-48 group items-start cursor-pointer hover:text-muted-foreground transition-colors"
                 onClick={() => onEditHabit(habit)}
@@ -87,7 +81,31 @@ export const CalendarItem = ({
                   <Pencil className="h-4 w-4" />
                 </span>
               </div>
-              {/* Yearly overview grid showing habit completion status */}
+              <HabitItem
+                habit={habit}
+                color={colorTheme}
+                days={days}
+                completions={completions}
+                onToggle={onToggleHabit}
+                view={view}
+              />
+            </div>
+          ))}
+        </div>
+      ) : (
+        // Month Grid View - habits above calendars
+        <div className="space-y-8">
+          {habits.map((habit) => (
+            <div key={habit._id} className="space-y-4">
+              <div
+                className="flex items-center gap-2 group cursor-pointer hover:text-muted-foreground transition-colors"
+                onClick={() => onEditHabit(habit)}
+              >
+                <h3 className="font-medium text-base">{habit.name}</h3>
+                <span className="opacity-0 group-hover:opacity-100 transition-opacity">
+                  <Pencil className="h-4 w-4" />
+                </span>
+              </div>
               <HabitItem
                 habit={habit}
                 color={colorTheme}
