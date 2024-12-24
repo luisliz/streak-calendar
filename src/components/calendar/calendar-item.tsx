@@ -55,7 +55,7 @@ export const CalendarItem = ({
         <div className="flex items-center gap-2 group">
           <h2 className="text-2xl font-semibold">{calendar.name}</h2>
           <Button
-            variant="ghost"
+            variant="link"
             size="sm"
             className="opacity-0 group-hover:opacity-100 transition-opacity"
             onClick={onEditCalendar}
@@ -64,7 +64,7 @@ export const CalendarItem = ({
           </Button>
         </div>
         {/* Add habit button */}
-        <Button size="sm" variant="ghost" onClick={onAddHabit}>
+        <Button size="sm" variant="link" onClick={onAddHabit}>
           <PlusCircle className="h-4 w-4 fill-red-500" />
         </Button>
       </div>
@@ -83,9 +83,9 @@ export const CalendarItem = ({
               <div className="flex w-48 group items-start">
                 <h3 className="font-medium text-base">{habit.name}</h3>
                 <Button
-                  variant="ghost"
+                  variant="link"
                   size="sm"
-                  className="opacity-0 group-hover:opacity-100 transition-opacity"
+                  className="mx-2 opacity-0 group-hover:opacity-100 transition-opacity"
                   onClick={() => onEditHabit(habit)}
                 >
                   <MoreHorizontal className="h-4 w-4" />
