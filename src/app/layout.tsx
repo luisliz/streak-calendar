@@ -1,5 +1,4 @@
-import { AppFooter } from "@/components/app-footer";
-import { AppHeader } from "@/components/app-header";
+import { RootWrapper } from "@/components/root-wrapper";
 import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
@@ -46,23 +45,16 @@ export const metadata: Metadata = {
   manifest: "/manifest.json",
 };
 
-// Root layout component that wraps all pages
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    // suppressHydrationWarning prevents warnings from theme provider
     <html lang="en" suppressHydrationWarning>
       <body className={cn(inter.variable, "min-h-screen bg-background font-sans antialiased")}>
         <Providers>
-          {/* Main layout container with max width and flex column structure */}
-          <div className="flex min-h-screen max-w-7xl mx-auto flex-col">
-            <AppHeader />
-            <main className="flex-1">{children}</main>
-            <AppFooter />
-          </div>
+          <RootWrapper>{children}</RootWrapper>
         </Providers>
       </body>
     </html>
