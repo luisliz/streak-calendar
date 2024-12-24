@@ -95,51 +95,55 @@ export const YearlyOverview = ({ completions }: YearlyOverviewProps) => {
 
   // Extract grid cell to separate component for better performance
   const GridCell = memo(({ day }: { day: string | null }) => {
-    if (!day) return <div className="w-4 h-4" />;
+    if (!day) return <div className="aspect-square w-[15px] max-w-full sm:w-4" />;
 
     const count = completionCounts[day] || 0;
     return (
       <div
-        className={`w-4 h-4 rounded-sm transition-colors hover:opacity-80 relative ${getColorClass(count)}`}
+        className={`aspect-square w-[15px] max-w-full sm:w-4 rounded-sm transition-colors hover:opacity-80 relative ${getColorClass(count)}`}
         title={`${format(new Date(day), "MMM d, yyyy")}: ${count} completions`}
       />
     );
   });
   GridCell.displayName = "GridCell";
 
+  // Add this near other useMemo calculations
+  const totalCompletions = useMemo(() => {
+    return Object.values(completionCounts).reduce((sum, count) => sum + count, 0);
+  }, [completionCounts]);
+
   return (
-    <div className="w-full flex justify-center">
-      <Card className="m-14 rounded-xl shadow-md p-2 sm:p-4 inline-block max-w-full">
-        <div ref={scrollRef} className="overflow-x-auto px-1 sm:px-2">
-          <div className="flex flex-col min-w-[800px]">
+    // TODO: 2024-12-24 - make this responsive
+    <div className="max-w-5xl mx-auto">
+      <div className="mt-4 text-muted-foreground mb-2">{totalCompletions} things done in the last year</div>
+      <Card className="mb-16 rounded-xl shadow-md sm:p-4 overflow-hidden">
+        <div ref={scrollRef} className=" overflow-x-auto -mr-1 sm:-mr-4">
+          <div className="flex flex-col">
             {/* Month labels */}
-            <div className="flex mb-2">
-              <div className="w-10" /> {/* Spacer for day labels */}
-              <div className="flex text-xs sm:text-sm text-muted-foreground">
-                {monthLabels.map((month, index) => (
-                  <div key={month.key} className={index === 0 ? "mr-8" : "mr-12"}>
-                    {month.label}
-                  </div>
+            <div className="flex mb-1 sm:mb-2 ">
+              <div className="pl-12 gap-12 flex justify-between text-[8px] sm:text-xs text-muted-foreground">
+                {monthLabels.map((month) => (
+                  <div key={month.key}>{month.label}</div>
                 ))}
               </div>
             </div>
 
             {/* Day labels and contribution grid */}
-            <div className="flex">
+            <div className="flex ">
               {/* Day labels */}
               <div className="flex flex-col gap-px mr-2">
                 <div className="h-4" /> {/* Empty space for alignment */}
-                <div className="text-xs sm:text-sm text-muted-foreground h-4">Mon</div>
-                <div className="h-4" /> {/* Empty space for alignment */}
-                <div className="text-xs sm:text-sm text-muted-foreground h-4">Wed</div>
-                <div className="h-4" /> {/* Empty space for alignment */}
-                <div className="text-xs sm:text-sm text-muted-foreground h-4">Fri</div>
+                <div className="text-muted-foreground h-2 sm:h-3">Mon</div>
+                <div className="h-4" />
+                <div className="text-muted-foreground h-2 sm:h-3">Wed</div>
+                <div className="h-4" />
+                <div className="text-muted-foreground h-2 sm:h-3">Fri</div>
               </div>
 
               {/* Contribution grid */}
               <div className="flex gap-px">
                 {weeks.map((week, weekIndex) => (
-                  <div key={weekIndex} className="flex flex-col gap-px">
+                  <div key={weekIndex} className="flex flex-col gap-[1px] flex-1">
                     {week.map((day, dayIndex) => (
                       <GridCell key={day || `empty-${weekIndex}-${dayIndex}`} day={day} />
                     ))}
