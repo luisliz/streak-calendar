@@ -12,7 +12,7 @@ export function AppHeader() {
         </Link>
 
         <nav className="hidden md:flex items-center gap-6 absolute left-1/2 -translate-x-1/2">
-          <Link href="/get-started" className="text-sm font-medium hover:text-muted-foreground">
+          <Link href="/pricing" className="text-sm font-medium hover:text-muted-foreground">
             Pricing
           </Link>
           <Link href="/calendars" className="text-sm font-medium hover:text-muted-foreground">
