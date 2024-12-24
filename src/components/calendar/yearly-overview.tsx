@@ -109,7 +109,7 @@ export const YearlyOverview = ({ completions }: YearlyOverviewProps) => {
 
   return (
     <div className="w-full flex justify-center">
-      <Card className="mb-8 rounded-xl shadow-md p-2 sm:p-4 inline-block max-w-full">
+      <Card className="m-14 rounded-xl shadow-md p-2 sm:p-4 inline-block max-w-full">
         <div ref={scrollRef} className="overflow-x-auto px-1 sm:px-2">
           <div className="flex flex-col min-w-[800px]">
             {/* Month labels */}

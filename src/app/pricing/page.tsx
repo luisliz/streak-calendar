@@ -5,7 +5,7 @@ import { Check } from "lucide-react";
 
 export default function PricingPage() {
   return (
-    <div className="container max-w-5xl py-16 px-4">
+    <div className="container max-w-5xl py-16 px-4 mx-auto">
       <div className="text-center mb-12">
         <h1 className="text-4xl font-bold mb-4">Simple, Transparent Pricing</h1>
         <p className="text-muted-foreground text-lg">Choose the plan that works best for you</p>
@@ -64,7 +64,7 @@ export default function PricingPage() {
           </CardHeader>
           <CardContent className="flex-grow">
             <div className="text-4xl font-bold mb-6">
-              $5<span className="text-lg font-normal text-muted-foreground">/month</span>
+              $2.99<span className="text-lg font-normal text-muted-foreground">/month</span>
             </div>
             <ul className="space-y-3">
               <li className="flex items-center gap-2">
