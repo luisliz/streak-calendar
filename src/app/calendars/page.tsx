@@ -7,7 +7,6 @@ import {
   NewHabitDialog,
 } from "@/components/calendar/calendar-dialogs";
 import { CalendarItem } from "@/components/calendar/calendar-item";
-import { CalendarSkeleton } from "@/components/calendar/calendar-skeleton";
 import { ImportExport } from "@/components/calendar/import-export";
 import { YearlyOverview } from "@/components/calendar/yearly-overview";
 import { Button } from "@/components/ui/button";
@@ -19,7 +18,7 @@ import { useHabitState } from "@/hooks/use-habit-state";
 import { SignInButton, SignedIn, SignedOut } from "@clerk/nextjs";
 import { AnimatePresence, motion } from "framer-motion";
 import { PlusCircle } from "lucide-react";
-import { useCallback, useMemo, useTransition } from "react";
+import { useCallback, useEffect, useMemo, useState, useTransition } from "react";
 
 type CalendarView = "monthRow" | "monthGrid";
 
@@ -27,6 +26,7 @@ type CalendarView = "monthRow" | "monthGrid";
 export default function CalendarsPage() {
   const [isPending, startTransition] = useTransition();
   const { calendarView, setCalendarView, ...calendarState } = useCalendarState();
+  const [isLoading, setIsLoading] = useState(true);
 
   // Pre-fetch data for both views
   const monthData = useDateRange(30);
@@ -41,6 +41,15 @@ export default function CalendarsPage() {
   // Prefetch both views' data
   const monthViewData = useCalendarData(monthData.startDate, monthData.today);
   const yearViewData = useCalendarData(yearData.startDate, yearData.today);
+
+  // Update loading state based on data availability
+  useEffect(() => {
+    setIsLoading(!monthViewData.calendars || !monthViewData.habits || !monthViewData.completions);
+  }, [monthViewData.calendars, monthViewData.habits, monthViewData.completions]);
+
+  // Add this temporarily to see the loading state
+  console.log("Loading state:", isLoading);
+  console.log("Calendar data:", monthViewData);
 
   // Use appropriate data based on view
   const {
@@ -168,77 +177,73 @@ export default function CalendarsPage() {
     <div className="container max-w-7xl px-4 py-8">
       {/* Authentication-gated content */}
       <SignedIn>
-        {calendars === undefined ? (
-          <CalendarSkeleton />
-        ) : (
-          <>
-            {/* Yearly Overview Section */}
-            <YearlyOverview completions={yearViewData.completions || []} habits={habits} calendars={calendars} />
+        <>
+          {/* Yearly Overview Section */}
+          <YearlyOverview completions={yearViewData.completions || []} habits={habits} calendars={calendars} />
 
-            {/* Calendar View Controls */}
-            <div className="flex justify-between items-center mb-8">
-              <div className="flex items-center gap-4">
-                <Tabs
-                  value={calendarView}
-                  onValueChange={(value) => {
-                    startTransition(() => {
-                      setCalendarView(value as CalendarView);
-                    });
-                  }}
-                >
-                  <TabsList className="relative">
-                    <motion.div
-                      className="absolute inset-0 bg-background pointer-events-none"
-                      animate={{ opacity: isPending ? 0.5 : 0 }}
-                      transition={{ duration: 0.15 }}
-                    />
-                    <TabsTrigger value="monthRow" className="relative z-10">
-                      Days View
-                    </TabsTrigger>
-                    <TabsTrigger value="monthGrid" className="relative z-10">
-                      Months View
-                    </TabsTrigger>
-                  </TabsList>
-                </Tabs>
-              </div>
-              <div className="flex gap-2">
-                <Button onClick={() => setIsNewCalendarOpen(true)}>
-                  <PlusCircle className="mr-2 h-4 w-4" />
-                  Add Calendar
-                </Button>
-              </div>
+          {/* Calendar View Controls */}
+          <div className="flex justify-between items-center mb-8">
+            <div className="flex items-center gap-4">
+              <Tabs
+                value={calendarView}
+                onValueChange={(value) => {
+                  startTransition(() => {
+                    setCalendarView(value as CalendarView);
+                  });
+                }}
+              >
+                <TabsList className="relative">
+                  <motion.div
+                    className="absolute inset-0 bg-background pointer-events-none"
+                    animate={{ opacity: isPending ? 0.5 : 0 }}
+                    transition={{ duration: 0.15 }}
+                  />
+                  <TabsTrigger value="monthRow" className="relative z-10">
+                    Days View
+                  </TabsTrigger>
+                  <TabsTrigger value="monthGrid" className="relative z-10">
+                    Months View
+                  </TabsTrigger>
+                </TabsList>
+              </Tabs>
             </div>
-
-            {/* Empty state or calendar list */}
-            {calendars.length === 0 ? (
-              <div className="text-center py-12 text-muted-foreground">
-                <p>You haven&apos;t created any calendars yet.</p>
-                <p className="mt-2">Create one to start tracking your habits!</p>
-              </div>
-            ) : (
-              <AnimatePresence mode="wait" initial={false}>
-                <motion.div
-                  key={calendarView}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{
-                    duration: 0.2,
-                    ease: "easeInOut",
-                  }}
-                  className="space-y-8"
-                >
-                  {calendarList}
-                </motion.div>
-              </AnimatePresence>
-            )}
-
-            {/* Import/Export UI */}
-            <div className="mt-8 flex justify-center">
-              <ImportExport />
+            <div className="flex gap-2">
+              <Button onClick={() => setIsNewCalendarOpen(true)}>
+                <PlusCircle className="mr-2 h-4 w-4" />
+                Add Calendar
+              </Button>
             </div>
-          </>
-        )}
+          </div>
+
+          {/* Empty state or calendar list */}
+          {calendars.length === 0 ? (
+            <div className="text-center py-12 text-muted-foreground">
+              <p>You haven&apos;t created any calendars yet.</p>
+              <p className="mt-2">Create one to start tracking your habits!</p>
+            </div>
+          ) : (
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.div
+                key={calendarView}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{
+                  duration: 0.2,
+                  ease: "easeInOut",
+                }}
+                className="space-y-8"
+              >
+                {calendarList}
+              </motion.div>
+            </AnimatePresence>
+          )}
+
+          {/* Import/Export UI */}
+          <div className="mt-8 flex justify-center">
+            <ImportExport />
+          </div>
+        </>
       </SignedIn>
 
       {/* Sign-in prompt for unauthenticated users */}
