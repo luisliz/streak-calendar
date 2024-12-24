@@ -78,9 +78,9 @@ export const CalendarItem = ({
         // TODO: 2024-12-23 - remove empty div
         <div className="">
           {habits.map((habit) => (
-            <div key={habit._id} className="flex items-center gap-4">
+            <div key={habit._id} className="flex items-start gap-4">
               {/* Habit name with hover-reveal edit button */}
-              <div className="flex items-center gap-2 w-48 group">
+              <div className="flex w-48 group items-start">
                 <h3 className="font-medium text-base">{habit.name}</h3>
                 <Button
                   variant="ghost"
