@@ -18,14 +18,24 @@ import { useDateRange } from "@/hooks/use-date-range";
 import { useHabitState } from "@/hooks/use-habit-state";
 import { SignInButton, SignedIn, SignedOut } from "@clerk/nextjs";
 import { PlusCircle } from "lucide-react";
+import { useCallback, useMemo } from "react";
 
 type CalendarView = "monthRow" | "monthGrid";
 
 // Main calendar page component for managing habit tracking calendars and completions
 export default function CalendarsPage() {
   const { calendarView, setCalendarView, ...calendarState } = useCalendarState();
-  const { today, startDate, days } = useDateRange(calendarView === "monthRow" ? 30 : 365);
-  const { today: yearlyToday, startDate: yearlyStartDate } = useDateRange(365);
+
+  // Pre-fetch data for both views
+  const monthData = useDateRange(30);
+  const yearData = useDateRange(365);
+
+  // Use appropriate data based on view
+  const { today, startDate, days } = useMemo(
+    () => (calendarView === "monthRow" ? monthData : yearData),
+    [calendarView, monthData, yearData]
+  );
+
   const {
     selectedCalendar,
     setSelectedCalendar,
@@ -67,7 +77,66 @@ export default function CalendarsPage() {
     handleToggleHabit,
   } = useCalendarData(startDate, today);
 
-  const { completions: yearlyCompletions } = useCalendarData(yearlyStartDate, yearlyToday);
+  const { completions: yearlyCompletions } = useCalendarData(yearData.startDate, yearData.today);
+
+  // Memoize filtered habits by calendar to prevent re-computation
+  const habitsByCalendar = useMemo(() => {
+    if (!habits || !calendars) return new Map();
+
+    return new Map(calendars.map((calendar) => [calendar._id, habits.filter((h) => h.calendarId === calendar._id)]));
+  }, [habits, calendars]);
+
+  // Memoize handlers to prevent re-renders
+  const handleEditCalendarMemo = useCallback(
+    (calendar: (typeof calendars)[0]) => {
+      setEditingCalendar(calendar);
+      setEditCalendarName(calendar.name);
+      setEditCalendarColor(calendar.colorTheme);
+    },
+    [setEditingCalendar, setEditCalendarName, setEditCalendarColor]
+  );
+
+  const handleEditHabitMemo = useCallback(
+    (habit: { _id: (typeof habits)[0]["_id"]; name: string }) => {
+      setEditingHabit(habit);
+      setEditHabitName(habit.name);
+    },
+    [setEditingHabit, setEditHabitName]
+  );
+
+  // Memoize the calendar list with optimized handlers and data access
+  const calendarList = useMemo(() => {
+    if (!calendars) return null;
+
+    return calendars.map((calendar) => (
+      <CalendarItem
+        key={calendar._id}
+        calendar={calendar}
+        habits={habitsByCalendar.get(calendar._id) || []}
+        days={days}
+        completions={completions}
+        onAddHabit={() => {
+          setSelectedCalendar(calendar);
+          setIsNewHabitOpen(true);
+        }}
+        onEditCalendar={() => handleEditCalendarMemo(calendar)}
+        onEditHabit={handleEditHabitMemo}
+        onToggleHabit={handleToggleHabit}
+        view={calendarView}
+      />
+    ));
+  }, [
+    calendars,
+    habitsByCalendar,
+    days,
+    completions,
+    calendarView,
+    handleEditCalendarMemo,
+    handleEditHabitMemo,
+    handleToggleHabit,
+    setSelectedCalendar,
+    setIsNewHabitOpen,
+  ]);
 
   // Keyboard event handlers for form submission
   const handleCalendarKeyDown = (e: React.KeyboardEvent) => {
@@ -96,12 +165,19 @@ export default function CalendarsPage() {
         ) : (
           <>
             {/* Yearly Overview Section */}
-            <YearlyOverview completions={yearlyCompletions} habits={habits} calendars={calendars} />
+            <YearlyOverview completions={yearlyCompletions || []} habits={habits} calendars={calendars} />
 
             {/* Calendar View Controls */}
             <div className="flex justify-between items-center mb-8">
               <div className="flex items-center gap-4">
-                <Tabs value={calendarView} onValueChange={(value) => setCalendarView(value as CalendarView)}>
+                <Tabs
+                  value={calendarView}
+                  onValueChange={(value) => {
+                    requestAnimationFrame(() => {
+                      setCalendarView(value as CalendarView);
+                    });
+                  }}
+                >
                   <TabsList>
                     <TabsTrigger value="monthRow">Days View</TabsTrigger>
                     <TabsTrigger value="monthGrid">Months View</TabsTrigger>
@@ -123,32 +199,7 @@ export default function CalendarsPage() {
                 <p className="mt-2">Create one to start tracking your habits!</p>
               </div>
             ) : (
-              <div className="space-y-8">
-                {calendars.map((calendar) => (
-                  <CalendarItem
-                    key={calendar._id}
-                    calendar={calendar}
-                    habits={habits.filter((h) => h.calendarId === calendar._id)}
-                    days={days}
-                    completions={completions}
-                    onAddHabit={() => {
-                      setSelectedCalendar(calendar);
-                      setIsNewHabitOpen(true);
-                    }}
-                    onEditCalendar={() => {
-                      setEditingCalendar(calendar);
-                      setEditCalendarName(calendar.name);
-                      setEditCalendarColor(calendar.colorTheme);
-                    }}
-                    onEditHabit={(habit) => {
-                      setEditingHabit(habit);
-                      setEditHabitName(habit.name);
-                    }}
-                    onToggleHabit={handleToggleHabit}
-                    view={calendarView}
-                  />
-                ))}
-              </div>
+              <div className="space-y-8">{calendarList}</div>
             )}
 
             {/* Import/Export UI */}
