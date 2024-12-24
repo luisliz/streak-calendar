@@ -174,7 +174,7 @@ export default function CalendarsPage() {
   };
 
   return (
-    <div className="container max-w-7xl px-4 py-8">
+    <div className="container max-w-7xl px-4">
       {/* Authentication-gated content */}
       <SignedIn>
         <>
@@ -232,7 +232,7 @@ export default function CalendarsPage() {
                   duration: 0.2,
                   ease: "easeInOut",
                 }}
-                className="space-y-8 p-8 rounded-xl shadow-lg border"
+                className="space-y-8 p-8 rounded-xl shadow-md border"
               >
                 {calendarList}
               </motion.div>
