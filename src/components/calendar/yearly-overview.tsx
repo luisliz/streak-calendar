@@ -87,10 +87,10 @@ export const YearlyOverview = ({ completions }: YearlyOverviewProps) => {
   // Memoize color class function
   const getColorClass = useCallback((count: number) => {
     if (count === 0) return "bg-neutral-100 dark:bg-neutral-800";
-    if (count <= 2) return "bg-emerald-200 dark:bg-emerald-900";
-    if (count <= 5) return "bg-emerald-300 dark:bg-emerald-800";
+    if (count <= 2) return "bg-emerald-200 dark:bg-emerald-500";
+    if (count <= 5) return "bg-emerald-300 dark:bg-emerald-600";
     if (count <= 10) return "bg-emerald-400 dark:bg-emerald-700";
-    return "bg-emerald-500 dark:bg-emerald-600";
+    return "bg-emerald-500 dark:bg-emerald-800";
   }, []);
 
   // Extract grid cell to separate component for better performance
