@@ -65,7 +65,7 @@ export const CalendarItem = ({
           </Button>
         </div>
         {/* Add habit button */}
-        <Button variant="default" onClick={onAddHabit}>
+        <Button variant="outline" onClick={onAddHabit}>
           <PlusCircle className="mr-2 h-4 w-4" />
           Add Habit
         </Button>
