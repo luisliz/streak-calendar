@@ -55,7 +55,7 @@ const ViewControls = ({
   startTransition: (callback: () => void) => void;
 }) => {
   return (
-    <div className="flex justify-between items-center mb-2">
+    <div className="flex justify-between items-center mb-3">
       <div className="flex items-center gap-4">
         <Tabs
           value={calendarView}
