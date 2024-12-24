@@ -32,10 +32,31 @@ export default function CalendarsPage() {
   const monthData = useDateRange(30);
   const yearData = useDateRange(365);
 
-  // Use appropriate data based on view
-  const { today, startDate, days } = useMemo(
+  // Use appropriate data based on view with deferred loading
+  const { days } = useMemo(
     () => (calendarView === "monthRow" ? monthData : yearData),
     [calendarView, monthData, yearData]
+  );
+
+  // Prefetch both views' data
+  const monthViewData = useCalendarData(monthData.startDate, monthData.today);
+  const yearViewData = useCalendarData(yearData.startDate, yearData.today);
+
+  // Use appropriate data based on view
+  const {
+    calendars,
+    habits,
+    completions,
+    handleAddCalendar,
+    handleAddHabit,
+    handleEditCalendar,
+    handleEditHabit,
+    handleDeleteCalendar,
+    handleDeleteHabit,
+    handleToggleHabit,
+  } = useMemo(
+    () => (calendarView === "monthRow" ? monthViewData : yearViewData),
+    [calendarView, monthViewData, yearViewData]
   );
 
   const {
@@ -65,21 +86,6 @@ export default function CalendarsPage() {
     isNewHabitOpen,
     setIsNewHabitOpen,
   } = useHabitState();
-
-  const {
-    calendars,
-    habits,
-    completions,
-    handleAddCalendar,
-    handleAddHabit,
-    handleEditCalendar,
-    handleEditHabit,
-    handleDeleteCalendar,
-    handleDeleteHabit,
-    handleToggleHabit,
-  } = useCalendarData(startDate, today);
-
-  const { completions: yearlyCompletions } = useCalendarData(yearData.startDate, yearData.today);
 
   // Memoize filtered habits by calendar to prevent re-computation
   const habitsByCalendar = useMemo(() => {
@@ -167,7 +173,7 @@ export default function CalendarsPage() {
         ) : (
           <>
             {/* Yearly Overview Section */}
-            <YearlyOverview completions={yearlyCompletions || []} habits={habits} calendars={calendars} />
+            <YearlyOverview completions={yearViewData.completions || []} habits={habits} calendars={calendars} />
 
             {/* Calendar View Controls */}
             <div className="flex justify-between items-center mb-8">
@@ -180,11 +186,16 @@ export default function CalendarsPage() {
                     });
                   }}
                 >
-                  <TabsList>
-                    <TabsTrigger value="monthRow" disabled={isPending}>
+                  <TabsList className="relative">
+                    <motion.div
+                      className="absolute inset-0 bg-background pointer-events-none"
+                      animate={{ opacity: isPending ? 0.5 : 0 }}
+                      transition={{ duration: 0.15 }}
+                    />
+                    <TabsTrigger value="monthRow" className="relative z-10">
                       Days View
                     </TabsTrigger>
-                    <TabsTrigger value="monthGrid" disabled={isPending}>
+                    <TabsTrigger value="monthGrid" className="relative z-10">
                       Months View
                     </TabsTrigger>
                   </TabsList>
@@ -205,13 +216,16 @@ export default function CalendarsPage() {
                 <p className="mt-2">Create one to start tracking your habits!</p>
               </div>
             ) : (
-              <AnimatePresence mode="wait">
+              <AnimatePresence mode="wait" initial={false}>
                 <motion.div
                   key={calendarView}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.2 }}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{
+                    duration: 0.2,
+                    ease: "easeInOut",
+                  }}
                   className="space-y-8"
                 >
                   {calendarList}
