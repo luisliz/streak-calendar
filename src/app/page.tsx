@@ -13,7 +13,7 @@ export default function Home() {
       <p className="mx-auto mt-6 max-w-[600px] text-muted-foreground md:text-xl">
         You become what you do, again and again.
         <br />
-        Start your streak today and stay motivated!
+        Start your streak today and stay motivated to succeed.
       </p>
       <div className="mt-8">
         <SignedIn>
