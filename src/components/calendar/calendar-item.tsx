@@ -47,7 +47,6 @@ export const CalendarItem = ({
   const colorTheme = calendar.colorTheme.startsWith("bg-") ? calendar.colorTheme : `bg-${calendar.colorTheme}-500`;
 
   return (
-    // Main container with rounded borders and padding
     // TODO: 2024-12-23 - remove empty div
     <div className="">
       {/* Header section with calendar name and add habit button */}
@@ -65,9 +64,8 @@ export const CalendarItem = ({
           </Button>
         </div>
         {/* Add habit button */}
-        <Button variant="outline" onClick={onAddHabit}>
-          <PlusCircle className="mr-2 h-4 w-4" />
-          Add Habit
+        <Button size="sm" variant="ghost" onClick={onAddHabit}>
+          <PlusCircle className="h-4 w-4 fill-red-500" />
         </Button>
       </div>
 

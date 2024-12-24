@@ -182,7 +182,7 @@ export default function CalendarsPage() {
           <YearlyOverview completions={yearViewData.completions || []} habits={habits} calendars={calendars} />
 
           {/* Calendar View Controls */}
-          <div className="flex justify-between items-center mb-8">
+          <div className="flex justify-between items-center mb-2">
             <div className="flex items-center gap-4">
               <Tabs
                 value={calendarView}
@@ -232,7 +232,7 @@ export default function CalendarsPage() {
                   duration: 0.2,
                   ease: "easeInOut",
                 }}
-                className="space-y-8"
+                className="space-y-8 p-8 rounded-xl shadow-lg border"
               >
                 {calendarList}
               </motion.div>
