@@ -1,5 +1,6 @@
+import { Card } from "@/components/ui/card";
 import { eachDayOfInterval, format, getDay, subYears } from "date-fns";
-import { memo, useCallback, useMemo } from "react";
+import { memo, useCallback, useEffect, useMemo, useRef } from "react";
 
 import { Id } from "@server/convex/_generated/dataModel";
 
@@ -21,6 +22,14 @@ interface YearlyOverviewProps {
 }
 
 export const YearlyOverview = ({ completions }: YearlyOverviewProps) => {
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollLeft = scrollRef.current.scrollWidth;
+    }
+  }, []);
+
   // Memoize date calculations that don't need to change
   const { weeks, monthLabels } = useMemo(() => {
     const today = new Date();
@@ -49,7 +58,15 @@ export const YearlyOverview = ({ completions }: YearlyOverviewProps) => {
     }
 
     // Get month labels
-    const monthLabels = Array.from(new Set(days.map((day) => format(new Date(day), "MMM"))));
+    const monthLabels = [];
+    for (let i = 0; i <= 12; i++) {
+      const date = new Date(yearAgo);
+      date.setMonth(date.getMonth() + i);
+      monthLabels.push({
+        key: format(date, "MMM yyyy"),
+        label: format(date, "MMM"),
+      });
+    }
 
     return { weeks, monthLabels };
   }, []); // Empty deps since these only need to calculate once
@@ -91,45 +108,48 @@ export const YearlyOverview = ({ completions }: YearlyOverviewProps) => {
   GridCell.displayName = "GridCell";
 
   return (
-    <div className="w-full mb-12">
-      <h2 className="text-2xl font-semibold mb-8">Yearly Overview</h2>
-      <div className="w-full overflow-x-auto">
-        <div className="inline-flex flex-col min-w-full">
-          {/* Month labels */}
-          <div className="flex mb-2">
-            <div className="w-4" /> {/* Spacer for day labels */}
-            <div className="flex gap-8 text-sm text-muted-foreground">
-              {monthLabels.map((month) => (
-                <div key={month}>{month}</div>
-              ))}
-            </div>
-          </div>
-
-          {/* Day labels and contribution grid */}
-          <div className="flex">
-            {/* Day labels */}
-            <div className="flex flex-col gap-px mr-2">
-              <div className="h-4" /> {/* Empty space for alignment */}
-              <div className="text-sm text-muted-foreground h-4">Mon</div>
-              <div className="h-4" /> {/* Empty space for alignment */}
-              <div className="text-sm text-muted-foreground h-4">Wed</div>
-              <div className="h-4" /> {/* Empty space for alignment */}
-              <div className="text-sm text-muted-foreground h-4">Fri</div>
+    <div className="w-full flex justify-center">
+      <Card className="mb-12 rounded-xl shadow-lg p-2 sm:p-4 inline-block max-w-full">
+        <div ref={scrollRef} className="overflow-x-auto px-1 sm:px-2">
+          <div className="flex flex-col min-w-[800px]">
+            {/* Month labels */}
+            <div className="flex mb-2">
+              <div className="w-10" /> {/* Spacer for day labels */}
+              <div className="flex text-xs sm:text-sm text-muted-foreground">
+                {monthLabels.map((month, index) => (
+                  <div key={month.key} className={index === 0 ? "mr-8" : "mr-12"}>
+                    {month.label}
+                  </div>
+                ))}
+              </div>
             </div>
 
-            {/* Contribution grid */}
-            <div className="flex gap-px">
-              {weeks.map((week, weekIndex) => (
-                <div key={weekIndex} className="flex flex-col gap-px">
-                  {week.map((day, dayIndex) => (
-                    <GridCell key={day || `empty-${weekIndex}-${dayIndex}`} day={day} />
-                  ))}
-                </div>
-              ))}
+            {/* Day labels and contribution grid */}
+            <div className="flex">
+              {/* Day labels */}
+              <div className="flex flex-col gap-px mr-2">
+                <div className="h-4" /> {/* Empty space for alignment */}
+                <div className="text-xs sm:text-sm text-muted-foreground h-4">Mon</div>
+                <div className="h-4" /> {/* Empty space for alignment */}
+                <div className="text-xs sm:text-sm text-muted-foreground h-4">Wed</div>
+                <div className="h-4" /> {/* Empty space for alignment */}
+                <div className="text-xs sm:text-sm text-muted-foreground h-4">Fri</div>
+              </div>
+
+              {/* Contribution grid */}
+              <div className="flex gap-px">
+                {weeks.map((week, weekIndex) => (
+                  <div key={weekIndex} className="flex flex-col gap-px">
+                    {week.map((day, dayIndex) => (
+                      <GridCell key={day || `empty-${weekIndex}-${dayIndex}`} day={day} />
+                    ))}
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </Card>
     </div>
   );
 };
