@@ -17,13 +17,15 @@ import { useCalendarState } from "@/hooks/use-calendar-state";
 import { useDateRange } from "@/hooks/use-date-range";
 import { useHabitState } from "@/hooks/use-habit-state";
 import { SignInButton, SignedIn, SignedOut } from "@clerk/nextjs";
+import { AnimatePresence, motion } from "framer-motion";
 import { PlusCircle } from "lucide-react";
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useTransition } from "react";
 
 type CalendarView = "monthRow" | "monthGrid";
 
 // Main calendar page component for managing habit tracking calendars and completions
 export default function CalendarsPage() {
+  const [isPending, startTransition] = useTransition();
   const { calendarView, setCalendarView, ...calendarState } = useCalendarState();
 
   // Pre-fetch data for both views
@@ -173,14 +175,18 @@ export default function CalendarsPage() {
                 <Tabs
                   value={calendarView}
                   onValueChange={(value) => {
-                    requestAnimationFrame(() => {
+                    startTransition(() => {
                       setCalendarView(value as CalendarView);
                     });
                   }}
                 >
                   <TabsList>
-                    <TabsTrigger value="monthRow">Days View</TabsTrigger>
-                    <TabsTrigger value="monthGrid">Months View</TabsTrigger>
+                    <TabsTrigger value="monthRow" disabled={isPending}>
+                      Days View
+                    </TabsTrigger>
+                    <TabsTrigger value="monthGrid" disabled={isPending}>
+                      Months View
+                    </TabsTrigger>
                   </TabsList>
                 </Tabs>
               </div>
@@ -199,7 +205,18 @@ export default function CalendarsPage() {
                 <p className="mt-2">Create one to start tracking your habits!</p>
               </div>
             ) : (
-              <div className="space-y-8">{calendarList}</div>
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={calendarView}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="space-y-8"
+                >
+                  {calendarList}
+                </motion.div>
+              </AnimatePresence>
             )}
 
             {/* Import/Export UI */}
