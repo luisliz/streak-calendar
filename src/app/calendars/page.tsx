@@ -80,7 +80,7 @@ const ViewControls = ({
           </TabsList>
         </Tabs>
       </div>
-      <div className="flex gap-2">
+      <div className="hidden md:flex gap-2">
         <Button variant="outline" onClick={() => setIsNewCalendarOpen(true)}>
           <PlusCircle className="mr-2 h-4 w-4" />
           Add Calendar
