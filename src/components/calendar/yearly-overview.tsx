@@ -87,10 +87,10 @@ export const YearlyOverview = ({ completions }: YearlyOverviewProps) => {
   // Memoize color class function
   const getColorClass = useCallback((count: number) => {
     if (count === 0) return "bg-neutral-100 dark:bg-neutral-800";
-    if (count <= 2) return "bg-emerald-200 dark:bg-emerald-500";
-    if (count <= 5) return "bg-emerald-300 dark:bg-emerald-600";
-    if (count <= 10) return "bg-emerald-400 dark:bg-emerald-700";
-    return "bg-emerald-500 dark:bg-emerald-800";
+    if (count <= 2) return "fill-red-300 dark:fill-red-500";
+    if (count <= 5) return "fill-red-400 dark:fill-red-600";
+    if (count <= 10) return "fill-red-500 dark:fill-red-700";
+    return "fill-red-600 dark:fill-red-800";
   }, []);
 
   // Extract grid cell to separate component for better performance
@@ -98,11 +98,26 @@ export const YearlyOverview = ({ completions }: YearlyOverviewProps) => {
     if (!day) return <div className="aspect-square w-[15px] max-w-full sm:w-4" />;
 
     const count = completionCounts[day] || 0;
+    const colorClass = getColorClass(count);
+
+    if (count === 0) {
+      return (
+        <div
+          className={`aspect-square w-[15px] max-w-full sm:w-4 rounded-sm ${colorClass}`}
+          title={`${format(new Date(day), "MMM d, yyyy")}: ${count} completions`}
+        />
+      );
+    }
+
     return (
       <div
-        className={`aspect-square w-[15px] max-w-full sm:w-4 rounded-sm transition-colors hover:opacity-80 relative ${getColorClass(count)}`}
+        className="aspect-square w-[15px] max-w-full sm:w-4 relative hover:opacity-80 transition-colors rounded-sm"
         title={`${format(new Date(day), "MMM d, yyyy")}: ${count} completions`}
-      />
+      >
+        <svg viewBox="0 0 15 15" className={`w-full h-full ${colorClass}`}>
+          <path d="M14.12 9.87a3.024 3.024 0 0 1 0 4.26c-.6.57-1.35.87-2.13.87s-1.53-.3-2.13-.87l-2.37-2.37-2.37 2.37c-.6.57-1.35.87-2.13.87s-1.53-.3-2.13-.87a3.024 3.024 0 0 1 0-4.26L3.23 7.5.88 5.13C-.29 3.97-.29 2.05.88.88a3.012 3.012 0 0 1 4.25 0L7.5 3.25 9.87.88a3.024 3.024 0 0 1 4.26 0 3.024 3.024 0 0 1 0 4.26l-2.37 2.37 2.37 2.37Z" />
+        </svg>
+      </div>
     );
   });
   GridCell.displayName = "GridCell";
