@@ -134,7 +134,7 @@ const CalendarList = ({
           duration: 0.2,
           ease: "easeInOut",
         }}
-        className="space-y-8 p-8 rounded-xl shadow-md border"
+        className="space-y-8 p-4 md:p-8 rounded-xl shadow-md border"
       >
         {calendars.map((calendar) => (
           <CalendarItem
@@ -416,7 +416,7 @@ export default function CalendarsPage() {
   };
 
   return (
-    <div className="container max-w-7xl px-4">
+    <div className="container max-w-7xl px-2 md:px-8">
       {/* Authentication-gated content */}
       <AuthenticationWrapper>
         <>
