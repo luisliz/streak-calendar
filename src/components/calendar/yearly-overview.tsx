@@ -95,7 +95,7 @@ export const YearlyOverview = ({ completions }: YearlyOverviewProps) => {
 
   // Extract grid cell to separate component for better performance
   const GridCell = memo(({ day }: { day: string | null }) => {
-    if (!day) return <div className="aspect-square w-[15px] max-w-full sm:w-4" />;
+    if (!day) return <div className="aspect-square w-[12px] max-w-full md:w-4" />;
 
     const count = completionCounts[day] || 0;
     const colorClass = getColorClass(count);
@@ -103,7 +103,7 @@ export const YearlyOverview = ({ completions }: YearlyOverviewProps) => {
     if (count === 0) {
       return (
         <div
-          className={`aspect-square w-[15px] max-w-full sm:w-4 rounded-sm ${colorClass}`}
+          className={`aspect-square w-[12px] max-w-full md:w-4 rounded-sm ${colorClass}`}
           title={`${format(new Date(day), "MMM d, yyyy")}: ${count} completions`}
         />
       );
@@ -111,7 +111,7 @@ export const YearlyOverview = ({ completions }: YearlyOverviewProps) => {
 
     return (
       <div
-        className="aspect-square w-[15px] max-w-full sm:w-4 relative hover:opacity-80 transition-colors rounded-sm"
+        className="aspect-square w-[12px] max-w-full md:w-4 relative hover:opacity-80 transition-colors rounded-sm"
         title={`${format(new Date(day), "MMM d, yyyy")}: ${count} completions`}
       >
         <svg viewBox="0 0 15 15" className={`w-full h-full ${colorClass}`}>
@@ -134,12 +134,12 @@ export const YearlyOverview = ({ completions }: YearlyOverviewProps) => {
         <span className="font-bold">Yearly Overview</span>{" "}
         <span className="text-muted-foreground/75">({totalCompletions} things done last year)</span>
       </div>
-      <Card className="mb-16 rounded-xl shadow-md sm:p-4 overflow-hidden">
-        <div ref={scrollRef} className=" overflow-x-auto -mr-1 sm:-mr-4">
+      <Card className="mb-16 rounded-xl shadow-md p-2 md:p-4 overflow-hidden">
+        <div ref={scrollRef} className="overflow-x-hidden -mr-2 md:-mr-4 pr-8 md:pr-12">
           <div className="flex flex-col">
             {/* Month labels */}
-            <div className="flex mb-1 sm:mb-2 ">
-              <div className="pl-12 gap-12 flex justify-between text-[8px] sm:text-xs text-muted-foreground">
+            <div className="flex mb-1 md:mb-2">
+              <div className="pl-12 gap-[38px] md:gap-12 flex justify-between text-[8px] md:text-xs text-muted-foreground">
                 {monthLabels.map((month) => (
                   <div key={month.key}>{month.label}</div>
                 ))}
@@ -151,15 +151,15 @@ export const YearlyOverview = ({ completions }: YearlyOverviewProps) => {
               {/* Day labels */}
               <div className="flex flex-col gap-px mr-2">
                 <div className="h-4" /> {/* Empty space for alignment */}
-                <div className="text-muted-foreground h-2 sm:h-3">Mon</div>
+                <div className="text-muted-foreground text-[8px] md:text-xs">Mon</div>
                 <div className="h-4" />
-                <div className="text-muted-foreground h-2 sm:h-3">Wed</div>
+                <div className="text-muted-foreground text-[8px] md:text-xs">Wed</div>
                 <div className="h-4" />
-                <div className="text-muted-foreground h-2 sm:h-3">Fri</div>
+                <div className="text-muted-foreground text-[8px] md:text-xs">Fri</div>
               </div>
 
               {/* Contribution grid */}
-              <div className="flex gap-px">
+              <div className="flex gap-px pr-4 md:pr-8">
                 {weeks.map((week, weekIndex) => (
                   <div key={weekIndex} className="flex flex-col gap-[1px] flex-1">
                     {week.map((day, dayIndex) => (
