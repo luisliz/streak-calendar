@@ -69,14 +69,14 @@ export const CalendarItem = ({
         <p className="text-sm text-muted-foreground">No habits added yet. Add one to start tracking!</p>
       ) : view === "monthRow" ? (
         // Month Row View - habits on the left
-        <div className="">
+        <div className="overflow-hidden">
           {habits.map((habit) => (
             <div key={habit._id} className="flex items-start gap-4">
               <div
-                className="flex min-w-24 md:min-w-48 w-32 md:w-48 group items-start cursor-pointer hover:text-muted-foreground transition-colors"
+                className="flex min-w-24 md:min-w-48 w-32 md:w-48 group items-start cursor-pointer hover:text-muted-foreground transition-colors overflow-hidden"
                 onClick={() => onEditHabit(habit)}
               >
-                <div className="truncate">
+                <div className="truncate flex-1">
                   <h3 className="font-medium text-base">{habit.name}</h3>
                 </div>
                 <span className="mx-2 mt-1 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">

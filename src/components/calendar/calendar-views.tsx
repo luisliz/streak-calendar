@@ -70,7 +70,10 @@ export const CalendarView = ({ habit, color, days, completions, onToggle, view }
   // Render horizontal row view - simple consecutive day display
   if (view === "monthRow") {
     return (
-      <div data-habit-id={habit._id} className="overflow-x-auto flex">
+      <div
+        data-habit-id={habit._id}
+        className="overflow-x-auto flex [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+      >
         <div className="inline-flex gap-px bg-card h-[25px]">
           {days.map((date) => (
             <CompletionMenu
