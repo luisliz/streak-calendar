@@ -55,7 +55,7 @@ export default function PricingPage() {
         </Card>
 
         {/* Premium Tier */}
-        <Card className="flex flex-col border-2 border-primary relative">
+        <Card className="flex flex-col border-2 border-primary relative opacity-40">
           <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground px-3 py-1 rounded-full text-sm">
             Coming Soon
           </div>
