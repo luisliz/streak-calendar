@@ -22,7 +22,7 @@ export function AppHeader() {
               height={20}
               className="h-6 w-6 text-primary-foreground"
             />
-            Streak Calendar
+            <span className="drop-shadow-lg">Streak Calendar</span>
           </Link>
         </div>
 
