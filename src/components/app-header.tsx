@@ -1,5 +1,6 @@
 import { SignedIn, UserButton } from "@clerk/nextjs";
 import { Menu, X } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -13,7 +14,14 @@ export function AppHeader() {
     <header className="top-0 z-50 w-full">
       <div className="container mx-auto flex h-16 items-center px-4 relative">
         <div className="w-[200px] shrink-0">
-          <Link href="/" className="text-xl font-bold">
+          <Link href="/" className="text-xl font-bold flex items-center gap-2">
+            <Image
+              src="/x-logo.png"
+              alt="Track your habits and improve your life"
+              width={20}
+              height={20}
+              className="h-6 w-6 text-primary-foreground"
+            />
             Streak Calendar
           </Link>
         </div>
