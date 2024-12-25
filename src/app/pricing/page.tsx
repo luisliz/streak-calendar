@@ -42,7 +42,7 @@ export default function PricingPage() {
             <SignedOut>
               <SignInButton mode="modal">
                 <Button size="lg" className="w-full">
-                  Get Started
+                  Sign In
                 </Button>
               </SignInButton>
             </SignedOut>
