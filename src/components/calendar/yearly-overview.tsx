@@ -132,7 +132,7 @@ export const YearlyOverview = ({ completions }: YearlyOverviewProps) => {
     <div className="max-w-5xl mx-auto">
       <div className="mt-4 ml-1 text-sm text-muted-foreground mb-2">
         <span className="font-bold">Yearly Overview</span>{" "}
-        <span className="text-muted-foreground/75">({totalCompletions} things done in the last year)</span>
+        <span className="text-muted-foreground/75">({totalCompletions} things done last year)</span>
       </div>
       <Card className="mb-16 rounded-xl shadow-md sm:p-4 overflow-hidden">
         <div ref={scrollRef} className=" overflow-x-auto -mr-1 sm:-mr-4">
