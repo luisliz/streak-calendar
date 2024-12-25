@@ -73,7 +73,7 @@ export const CalendarItem = ({
           {habits.map((habit) => (
             <div key={habit._id} className="flex items-start gap-4">
               <div
-                className="flex min-w-32 md:min-w-48 w-32 md:w-48 group items-start cursor-pointer hover:text-muted-foreground transition-colors"
+                className="flex min-w-24 md:min-w-48 w-32 md:w-48 group items-start cursor-pointer hover:text-muted-foreground transition-colors"
                 onClick={() => onEditHabit(habit)}
               >
                 <div className="truncate">
