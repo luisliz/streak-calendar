@@ -30,6 +30,7 @@ interface CompletionMenuProps {
 }
 
 export const CompletionMenu = ({ date, count, onCountChange, colorClass, gridView, disabled }: CompletionMenuProps) => {
+  // TODO: 2024-12-25 - remove this
   // Increment handler - no upper limit on completions
   const handleIncrement = (e: React.MouseEvent) => {
     if (disabled) return;
