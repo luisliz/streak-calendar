@@ -43,7 +43,7 @@ export function AppHeader() {
         <div className="flex items-center gap-1 md:gap-4 absolute right-4">
           <Button
             variant="ghost"
-            size="icon"
+            size="sm"
             className="md:hidden"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           >
