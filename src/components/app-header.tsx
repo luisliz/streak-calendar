@@ -40,7 +40,7 @@ export function AppHeader() {
           </Link>
         </nav>
 
-        <div className="flex items-center gap-4 absolute right-4">
+        <div className="flex items-center gap-1 md:gap-4 absolute right-4">
           <Button
             variant="ghost"
             size="icon"
