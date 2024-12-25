@@ -76,12 +76,12 @@ export const CalendarItem = ({
                 className="flex min-w-24 md:min-w-48 w-32 md:w-48 group items-start cursor-pointer hover:text-muted-foreground transition-colors overflow-hidden"
                 onClick={() => onEditHabit(habit)}
               >
-                <div className="truncate flex-1">
+                <div className="truncate flex items-center gap-2">
                   <h3 className="font-medium text-base">{habit.name}</h3>
+                  <span className="opacity-0 group-hover:opacity-100 transition-opacity">
+                    <Pencil className="h-4 w-4" />
+                  </span>
                 </div>
-                <span className="mx-2 mt-1 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
-                  <Pencil className="h-4 w-4" />
-                </span>
               </div>
               <HabitItem
                 habit={habit}
