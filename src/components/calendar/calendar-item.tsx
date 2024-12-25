@@ -73,11 +73,13 @@ export const CalendarItem = ({
           {habits.map((habit) => (
             <div key={habit._id} className="flex items-start gap-4">
               <div
-                className="flex w-48 group items-start cursor-pointer hover:text-muted-foreground transition-colors"
+                className="flex min-w-32 md:min-w-48 w-32 md:w-48 group items-start cursor-pointer hover:text-muted-foreground transition-colors"
                 onClick={() => onEditHabit(habit)}
               >
-                <h3 className="font-medium text-base truncate">{habit.name}</h3>
-                <span className="mx-2 mt-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                <div className="truncate">
+                  <h3 className="font-medium text-base">{habit.name}</h3>
+                </div>
+                <span className="mx-2 mt-1 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
                   <Pencil className="h-4 w-4" />
                 </span>
               </div>
