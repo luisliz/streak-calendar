@@ -87,10 +87,10 @@ export const YearlyOverview = ({ completions }: YearlyOverviewProps) => {
   // Memoize color class function
   const getColorClass = useCallback((count: number) => {
     if (count === 0) return "bg-neutral-100 dark:bg-neutral-800";
-    if (count <= 2) return "fill-red-500/25 dark:fill-red-500/25";
-    if (count <= 5) return "fill-red-500/50 dark:fill-red-500/50";
-    if (count <= 10) return "fill-red-500/75 dark:fill-red-500/75";
-    return "fill-red-500 dark:fill-red-500";
+    if (count <= 2) return "fill-red-500/50 dark:fill-red-500/50";
+    if (count <= 5) return "fill-red-500/65 dark:fill-red-500/65";
+    if (count <= 10) return "fill-red-600/80 dark:fill-red-600/80";
+    return "fill-red-600 dark:fill-red-600";
   }, []);
 
   // Extract grid cell to separate component for better performance

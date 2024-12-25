@@ -12,7 +12,7 @@ export default {
     // Preserve all color variations for habit completion squares
     {
       pattern:
-        /bg-(red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-(200|300|400|500|600)/,
+        /(bg|fill)-(red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-(200|300|400|500|600)(\/[0-9]+)?/,
       variants: ["dark"],
     },
   ],

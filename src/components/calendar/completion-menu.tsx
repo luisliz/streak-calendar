@@ -6,11 +6,6 @@
  * 1. Left click: Increment count
  * 2. Right click: Decrement count
  * 3. Dropdown menu: Fine-grained control with +/- buttons
- *
- * Visual feedback is provided through color intensity:
- * - No completions: Neutral background
- * - 1-3 completions: Increasing color intensity based on count
- * - Text color changes to white when there are completions
  */
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -30,15 +25,12 @@ interface CompletionMenuProps {
 }
 
 export const CompletionMenu = ({ date, count, onCountChange, colorClass, gridView, disabled }: CompletionMenuProps) => {
-  // TODO: 2024-12-25 - remove this
-  // Increment handler - no upper limit on completions
   const handleIncrement = (e: React.MouseEvent) => {
     if (disabled) return;
     e.preventDefault();
     onCountChange(count + 1);
   };
 
-  // Decrement handler - prevents going below 0
   const handleDecrement = (e?: React.MouseEvent) => {
     if (disabled) return;
     if (e) e.preventDefault();
@@ -47,22 +39,19 @@ export const CompletionMenu = ({ date, count, onCountChange, colorClass, gridVie
     }
   };
 
-  // Compute visual styles based on completion state
-  // TODO: 2024-12-23 - fix to work with bg-card
-  const bgColor = count === 0 ? "bg-neutral-100 dark:bg-neutral-800" : getCompletionColorClass(colorClass, count);
-  // Use white text for darker backgrounds (count >= 2)
-  const textColor = "text-neutral-900 dark:text-neutral-100";
+  // Extract color name and create fill class
+  const colorMatch = colorClass.match(/bg-(\w+)-500/);
+  const fillClass = count > 0 && colorMatch ? getCompletionColorClass(colorClass, count) : "";
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild disabled={disabled}>
-        {/* Main completion button with color feedback */}
         <button
           className={`${
             gridView ? "aspect-square w-full" : "w-6 h-6"
-          } rounded-sm transition-colors hover:opacity-80 relative ${bgColor} ${
-            disabled ? "opacity-50 cursor-not-allowed" : ""
-          }`}
+          } rounded-sm transition-colors hover:opacity-80 relative ${
+            count === 0 ? "bg-neutral-100 dark:bg-neutral-800" : ""
+          } ${disabled ? "opacity-50 cursor-not-allowed" : ""}`}
           title={`${new Date(date).toLocaleDateString(undefined, {
             month: "short",
             day: "numeric",
@@ -71,17 +60,21 @@ export const CompletionMenu = ({ date, count, onCountChange, colorClass, gridVie
           onContextMenu={handleDecrement}
           disabled={disabled}
         >
-          {/* Day number display with dynamic text color */}
-          <span
-            className={`absolute inset-0 flex items-center justify-center text-xs font-medium ${textColor} ${
-              gridView ? "" : "scale-75"
-            }`}
-          >
-            {new Date(date).getDate()}
-          </span>
+          {count > 0 ? (
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15 15" className={`w-full h-full ${fillClass}`}>
+              <path d="M14.12 9.87a3.024 3.024 0 0 1 0 4.26c-.6.57-1.35.87-2.13.87s-1.53-.3-2.13-.87l-2.37-2.37-2.37 2.37c-.6.57-1.35.87-2.13.87s-1.53-.3-2.13-.87a3.024 3.024 0 0 1 0-4.26L3.23 7.5.88 5.13C-.29 3.97-.29 2.05.88.88a3.012 3.012 0 0 1 4.25 0L7.5 3.25 9.87.88a3.024 3.024 0 0 1 4.26 0 3.024 3.024 0 0 1 0 4.26l-2.37 2.37 2.37 2.37Z" />
+            </svg>
+          ) : (
+            <span
+              className={`absolute inset-0 flex items-center justify-center text-xs font-medium text-neutral-900 dark:text-neutral-100 ${
+                gridView ? "" : "scale-75"
+              }`}
+            >
+              {new Date(date).getDate()}
+            </span>
+          )}
         </button>
       </DropdownMenuTrigger>
-      {/* Dropdown for precise count control */}
       <DropdownMenuContent align="center" className="w-24">
         <div className="flex items-center justify-between p-2">
           <Button
