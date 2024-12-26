@@ -11,7 +11,7 @@ export default function AboutPage() {
               Streak Calendar empowers you to build habits and stay consistent with your goals. Inspired by Jerry
               Seinfeld&#039;s &quot;Don&#039;t Break the Chain&quot; method, it turns habit tracking into a visual
               motivator. Each day you stick to a habit, you mark an &#039;
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15 15" className="inline w-5 h-5 fill-red-500">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15 15" className="inline w-4 h-4 fill-red-500">
                 <path d="M14.12 9.87a3.024 3.024 0 0 1 0 4.26c-.6.57-1.35.87-2.13.87s-1.53-.3-2.13-.87l-2.37-2.37-2.37 2.37c-.6.57-1.35.87-2.13.87s-1.53-.3-2.13-.87a3.024 3.024 0 0 1 0-4.26L3.23 7.5.88 5.13C-.29 3.97-.29 2.05.88.88a3.012 3.012 0 0 1 4.25 0L7.5 3.25 9.87.88a3.024 3.024 0 0 1 4.26 0 3.024 3.024 0 0 1 0 4.26l-2.37 2.37 2.37 2.37Z" />
               </svg>
               &#039; on the calendar, creating an unbroken chain that showcases your progress. This simple yet powerful
