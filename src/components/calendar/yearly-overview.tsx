@@ -103,7 +103,7 @@ export const YearlyOverview = ({ completions }: YearlyOverviewProps) => {
     if (count === 0) {
       return (
         <div
-          className={`aspect-square w-[12px] max-w-full md:w-4 rounded-sm ${colorClass}`}
+          className={`aspect-square w-[12px] max-w-full md:w-4 rounded-full ${colorClass}`}
           title={`${format(new Date(day), "MMM d, yyyy")}: ${count} completions`}
         />
       );
@@ -111,7 +111,7 @@ export const YearlyOverview = ({ completions }: YearlyOverviewProps) => {
 
     return (
       <div
-        className="aspect-square w-[12px] max-w-full md:w-4 relative hover:opacity-80 transition-colors rounded-sm"
+        className="aspect-square w-[12px] max-w-full md:w-4 relative hover:opacity-80 transition-colors"
         title={`${format(new Date(day), "MMM d, yyyy")}: ${count} completions`}
       >
         <svg viewBox="0 0 15 15" className={`w-full h-full ${colorClass}`}>
