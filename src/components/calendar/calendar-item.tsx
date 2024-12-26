@@ -102,7 +102,7 @@ export const CalendarItem = ({
                   <ConfettiButton
                     variant="default"
                     size="sm"
-                    className="h-6 w-20 ml-auto"
+                    className="h-6 min-w-20 ml-auto"
                     onClick={() => onToggleHabit(habit._id, today, 1)}
                     options={{
                       get angle() {
