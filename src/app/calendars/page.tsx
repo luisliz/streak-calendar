@@ -105,6 +105,10 @@ const CalendarList = ({
   handleToggleHabit,
   setSelectedCalendar,
   setIsNewHabitOpen,
+  setCalendarView,
+  isPending,
+  setIsNewCalendarOpen,
+  startTransition,
 }: {
   calendars: Calendar[];
   calendarView: CalendarView;
@@ -116,6 +120,10 @@ const CalendarList = ({
   handleToggleHabit: (habitId: Id<"habits">, date: string, count: number) => Promise<void>;
   setSelectedCalendar: (calendar: Calendar) => void;
   setIsNewHabitOpen: (open: boolean) => void;
+  setCalendarView: (view: CalendarView) => void;
+  isPending: boolean;
+  setIsNewCalendarOpen: (open: boolean) => void;
+  startTransition: (callback: () => void) => void;
 }) => {
   if (calendars.length === 0) {
     return (
@@ -137,25 +145,34 @@ const CalendarList = ({
           duration: 0.2,
           ease: "easeInOut",
         }}
-        className="space-y-8 p-4 md:p-8 rounded-xl shadow-md border"
+        className="space-y-8 rounded-xl shadow-md border p-3"
       >
-        {calendars.map((calendar) => (
-          <CalendarItem
-            key={calendar._id}
-            calendar={calendar}
-            habits={habitsByCalendar.get(calendar._id) || []}
-            days={days}
-            completions={completions}
-            onAddHabit={() => {
-              setSelectedCalendar(calendar);
-              setIsNewHabitOpen(true);
-            }}
-            onEditCalendar={() => handleEditCalendarMemo(calendar)}
-            onEditHabit={handleEditHabitMemo}
-            onToggleHabit={handleToggleHabit}
-            view={calendarView}
-          />
-        ))}
+        <ViewControls
+          calendarView={calendarView}
+          setCalendarView={setCalendarView}
+          isPending={isPending}
+          setIsNewCalendarOpen={setIsNewCalendarOpen}
+          startTransition={startTransition}
+        />
+        <div className="px-4 md:px-8">
+          {calendars.map((calendar) => (
+            <CalendarItem
+              key={calendar._id}
+              calendar={calendar}
+              habits={habitsByCalendar.get(calendar._id) || []}
+              days={days}
+              completions={completions}
+              onAddHabit={() => {
+                setSelectedCalendar(calendar);
+                setIsNewHabitOpen(true);
+              }}
+              onEditCalendar={() => handleEditCalendarMemo(calendar)}
+              onEditHabit={handleEditHabitMemo}
+              onToggleHabit={handleToggleHabit}
+              view={calendarView}
+            />
+          ))}
+        </div>
       </MotionCard>
     </AnimatePresence>
   );
@@ -426,16 +443,7 @@ export default function CalendarsPage() {
           {/* Yearly Overview Section */}
           <YearlyOverview completions={yearViewData.completions || []} habits={habits} calendars={calendars} />
 
-          {/* Calendar View Controls */}
-          <ViewControls
-            calendarView={calendarView}
-            setCalendarView={setCalendarView}
-            isPending={isPending}
-            setIsNewCalendarOpen={setIsNewCalendarOpen}
-            startTransition={startTransition}
-          />
-
-          {/* Empty state or calendar list */}
+          {/* Calendar list with view controls inside */}
           <CalendarList
             calendars={calendars}
             calendarView={calendarView}
@@ -447,6 +455,10 @@ export default function CalendarsPage() {
             handleToggleHabit={handleToggleHabit}
             setSelectedCalendar={setSelectedCalendar}
             setIsNewHabitOpen={setIsNewHabitOpen}
+            setCalendarView={setCalendarView}
+            isPending={isPending}
+            setIsNewCalendarOpen={setIsNewCalendarOpen}
+            startTransition={startTransition}
           />
 
           {/* Import/Export UI */}
