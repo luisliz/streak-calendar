@@ -40,8 +40,13 @@ export function AppHeader() {
           </Link>
         </nav>
 
-        <div className="flex items-center gap-1 md:gap-4 absolute right-4">
-          <Button variant="link" size="sm" className="md:hidden" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+        <div className="flex items-center md:gap-4 absolute right-4">
+          <Button
+            variant="link"
+            size="icon"
+            className="md:hidden"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          >
             {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             <span className="sr-only">Toggle menu</span>
           </Button>

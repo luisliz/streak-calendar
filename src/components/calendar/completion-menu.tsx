@@ -8,7 +8,7 @@
  * 3. Dropdown menu: Fine-grained control with +/- buttons
  */
 import { Button } from "@/components/ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { getCompletionColorClass } from "@/lib/colors";
 import { Minus, Plus } from "lucide-react";
 
@@ -44,9 +44,10 @@ export const CompletionMenu = ({ date, count, onCountChange, colorClass, gridVie
   const fillClass = count > 0 && colorMatch ? getCompletionColorClass(colorClass, count) : "";
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild disabled={disabled}>
+    <Popover>
+      <PopoverTrigger>
         <button
+          type="button"
           className={`${
             gridView ? "aspect-square w-full" : "w-6 h-6"
           } rounded-sm transition-colors hover:opacity-80 relative ${
@@ -56,8 +57,6 @@ export const CompletionMenu = ({ date, count, onCountChange, colorClass, gridVie
             month: "short",
             day: "numeric",
           })}: ${count} completion${count !== 1 ? "s" : ""}`}
-          onClick={handleIncrement}
-          onContextMenu={handleDecrement}
           disabled={disabled}
         >
           {count > 0 ? (
@@ -74,8 +73,8 @@ export const CompletionMenu = ({ date, count, onCountChange, colorClass, gridVie
             </span>
           )}
         </button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="center" className="w-24">
+      </PopoverTrigger>
+      <PopoverContent align="center" className="w-24">
         <div className="flex items-center justify-between p-2">
           <Button
             variant="default"
@@ -97,7 +96,7 @@ export const CompletionMenu = ({ date, count, onCountChange, colorClass, gridVie
             <Plus className="h-4 w-4" />
           </Button>
         </div>
-      </DropdownMenuContent>
-    </DropdownMenu>
+      </PopoverContent>
+    </Popover>
   );
 };
