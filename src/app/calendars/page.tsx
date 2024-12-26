@@ -145,7 +145,7 @@ const CalendarList = ({
           duration: 0.2,
           ease: "easeInOut",
         }}
-        className="space-y-8 rounded-xl shadow-md border p-3"
+        className="space-y-8 rounded-xl shadow-md border p-2"
       >
         <ViewControls
           calendarView={calendarView}
