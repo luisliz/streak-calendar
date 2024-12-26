@@ -30,7 +30,7 @@ const AuthenticationWrapper = ({ children }: { children: React.ReactNode }) => {
     <>
       <SignedIn>{children}</SignedIn>
       <SignedOut>
-        <div className="flex flex-col items-center justify-center min-h-[50vh] gap-4">
+        <div className="flex flex-col   items-center justify-center min-h-[50vh] gap-4">
           <h2 className="text-xl font-semibold">Please sign in to view your calendars</h2>
           <SignInButton mode="modal">
             <button className="rounded-md bg-primary px-4 py-2 text-primary-foreground hover:bg-primary/90">
@@ -95,19 +95,19 @@ const ViewControls = ({
 
 // Calendar list component
 const CalendarList = ({
-  calendars,
   calendarView,
-  habitsByCalendar,
-  days,
+  calendars,
   completions,
+  days,
+  habitsByCalendar,
   handleEditCalendarMemo,
   handleEditHabitMemo,
   handleToggleHabit,
-  setSelectedCalendar,
-  setIsNewHabitOpen,
-  setCalendarView,
   isPending,
+  setCalendarView,
   setIsNewCalendarOpen,
+  setIsNewHabitOpen,
+  setSelectedCalendar,
   startTransition,
 }: {
   calendars: Calendar[];
@@ -180,65 +180,65 @@ const CalendarList = ({
 
 // Dialog components wrapper
 const DialogComponents = ({
-  isNewCalendarOpen,
-  setIsNewCalendarOpen,
-  newCalendarName,
-  setNewCalendarName,
-  newCalendarColor,
-  setNewCalendarColor,
-  handleAddCalendar,
-  isNewHabitOpen,
-  setIsNewHabitOpen,
-  newHabitName,
-  setNewHabitName,
-  selectedCalendar,
-  handleAddHabit,
-  editingCalendar,
-  setEditingCalendar,
-  editCalendarName,
-  setEditCalendarName,
   editCalendarColor,
-  setEditCalendarColor,
-  handleEditCalendar,
-  handleDeleteCalendar,
-  editingHabit,
-  setEditingHabit,
+  editCalendarName,
   editHabitName,
-  setEditHabitName,
-  handleEditHabit,
-  handleDeleteHabit,
+  editingCalendar,
+  editingHabit,
+  handleAddCalendar,
+  handleAddHabit,
   handleCalendarKeyDown,
+  handleDeleteCalendar,
+  handleDeleteHabit,
+  handleEditCalendar,
+  handleEditHabit,
   handleHabitKeyDown,
+  isNewCalendarOpen,
+  isNewHabitOpen,
+  newCalendarColor,
+  newCalendarName,
+  newHabitName,
+  selectedCalendar,
+  setEditCalendarColor,
+  setEditCalendarName,
+  setEditHabitName,
+  setEditingCalendar,
+  setEditingHabit,
+  setIsNewCalendarOpen,
+  setIsNewHabitOpen,
+  setNewCalendarColor,
+  setNewCalendarName,
+  setNewHabitName,
 }: {
-  isNewCalendarOpen: boolean;
-  setIsNewCalendarOpen: (open: boolean) => void;
-  newCalendarName: string;
-  setNewCalendarName: (name: string) => void;
-  newCalendarColor: string;
-  setNewCalendarColor: (color: string) => void;
-  handleAddCalendar: (name: string, color: string) => Promise<void>;
-  isNewHabitOpen: boolean;
-  setIsNewHabitOpen: (open: boolean) => void;
-  newHabitName: string;
-  setNewHabitName: (name: string) => void;
-  selectedCalendar: Calendar | null;
-  handleAddHabit: (name: string, calendarId: Id<"calendars">) => Promise<void>;
-  editingCalendar: EditingCalendar | null;
-  setEditingCalendar: (calendar: EditingCalendar | null) => void;
-  editCalendarName: string;
-  setEditCalendarName: (name: string) => void;
   editCalendarColor: string;
-  setEditCalendarColor: (color: string) => void;
-  handleEditCalendar: (id: Id<"calendars">, name: string, color: string) => Promise<void>;
-  handleDeleteCalendar: (id: Id<"calendars">) => Promise<void>;
-  editingHabit: EditingHabit | null;
-  setEditingHabit: (habit: EditingHabit | null) => void;
+  editCalendarName: string;
   editHabitName: string;
-  setEditHabitName: (name: string) => void;
-  handleEditHabit: (id: Id<"habits">, name: string) => Promise<void>;
-  handleDeleteHabit: (id: Id<"habits">) => Promise<void>;
+  editingCalendar: EditingCalendar | null;
+  editingHabit: EditingHabit | null;
+  handleAddCalendar: (name: string, color: string) => Promise<void>;
+  handleAddHabit: (name: string, calendarId: Id<"calendars">) => Promise<void>;
   handleCalendarKeyDown: (e: React.KeyboardEvent) => void;
+  handleDeleteCalendar: (id: Id<"calendars">) => Promise<void>;
+  handleDeleteHabit: (id: Id<"habits">) => Promise<void>;
+  handleEditCalendar: (id: Id<"calendars">, name: string, color: string) => Promise<void>;
+  handleEditHabit: (id: Id<"habits">, name: string) => Promise<void>;
   handleHabitKeyDown: (e: React.KeyboardEvent) => void;
+  isNewCalendarOpen: boolean;
+  isNewHabitOpen: boolean;
+  newCalendarColor: string;
+  newCalendarName: string;
+  newHabitName: string;
+  selectedCalendar: Calendar | null;
+  setEditCalendarColor: (color: string) => void;
+  setEditCalendarName: (name: string) => void;
+  setEditHabitName: (name: string) => void;
+  setEditingCalendar: (calendar: EditingCalendar | null) => void;
+  setEditingHabit: (habit: EditingHabit | null) => void;
+  setIsNewCalendarOpen: (open: boolean) => void;
+  setIsNewHabitOpen: (open: boolean) => void;
+  setNewCalendarColor: (color: string) => void;
+  setNewCalendarName: (name: string) => void;
+  setNewHabitName: (name: string) => void;
 }) => {
   return (
     <>
@@ -445,19 +445,19 @@ export default function CalendarsPage() {
 
           {/* Calendar list with view controls inside */}
           <CalendarList
-            calendars={calendars}
             calendarView={calendarView}
-            habitsByCalendar={habitsByCalendar}
-            days={days}
+            calendars={calendars}
             completions={completions}
+            days={days}
+            habitsByCalendar={habitsByCalendar}
             handleEditCalendarMemo={handleEditCalendarMemo}
             handleEditHabitMemo={handleEditHabitMemo}
             handleToggleHabit={handleToggleHabit}
-            setSelectedCalendar={setSelectedCalendar}
-            setIsNewHabitOpen={setIsNewHabitOpen}
-            setCalendarView={setCalendarView}
             isPending={isPending}
+            setCalendarView={setCalendarView}
             setIsNewCalendarOpen={setIsNewCalendarOpen}
+            setIsNewHabitOpen={setIsNewHabitOpen}
+            setSelectedCalendar={setSelectedCalendar}
             startTransition={startTransition}
           />
 
@@ -470,35 +470,35 @@ export default function CalendarsPage() {
 
       {/* Dialog components for creating/editing calendars and habits */}
       <DialogComponents
-        isNewCalendarOpen={isNewCalendarOpen}
-        setIsNewCalendarOpen={setIsNewCalendarOpen}
-        newCalendarName={newCalendarName}
-        setNewCalendarName={setNewCalendarName}
-        newCalendarColor={newCalendarColor}
-        setNewCalendarColor={setNewCalendarColor}
-        handleAddCalendar={handleAddCalendar}
-        isNewHabitOpen={isNewHabitOpen}
-        setIsNewHabitOpen={setIsNewHabitOpen}
-        newHabitName={newHabitName}
-        setNewHabitName={setNewHabitName}
-        selectedCalendar={selectedCalendar}
-        handleAddHabit={handleAddHabit}
-        editingCalendar={editingCalendar}
-        setEditingCalendar={setEditingCalendar}
-        editCalendarName={editCalendarName}
-        setEditCalendarName={setEditCalendarName}
         editCalendarColor={editCalendarColor}
-        setEditCalendarColor={setEditCalendarColor}
-        handleEditCalendar={handleEditCalendar}
-        handleDeleteCalendar={handleDeleteCalendar}
-        editingHabit={editingHabit}
-        setEditingHabit={setEditingHabit}
+        editCalendarName={editCalendarName}
         editHabitName={editHabitName}
-        setEditHabitName={setEditHabitName}
-        handleEditHabit={handleEditHabit}
-        handleDeleteHabit={handleDeleteHabit}
+        editingCalendar={editingCalendar}
+        editingHabit={editingHabit}
+        handleAddCalendar={handleAddCalendar}
+        handleAddHabit={handleAddHabit}
         handleCalendarKeyDown={handleCalendarKeyDown}
+        handleDeleteCalendar={handleDeleteCalendar}
+        handleDeleteHabit={handleDeleteHabit}
+        handleEditCalendar={handleEditCalendar}
+        handleEditHabit={handleEditHabit}
         handleHabitKeyDown={handleHabitKeyDown}
+        isNewCalendarOpen={isNewCalendarOpen}
+        isNewHabitOpen={isNewHabitOpen}
+        newCalendarColor={newCalendarColor}
+        newCalendarName={newCalendarName}
+        newHabitName={newHabitName}
+        selectedCalendar={selectedCalendar}
+        setEditCalendarColor={setEditCalendarColor}
+        setEditCalendarName={setEditCalendarName}
+        setEditHabitName={setEditHabitName}
+        setEditingCalendar={setEditingCalendar}
+        setEditingHabit={setEditingHabit}
+        setIsNewCalendarOpen={setIsNewCalendarOpen}
+        setIsNewHabitOpen={setIsNewHabitOpen}
+        setNewCalendarColor={setNewCalendarColor}
+        setNewCalendarName={setNewCalendarName}
+        setNewHabitName={setNewHabitName}
       />
     </div>
   );
