@@ -46,11 +46,11 @@ export const CompletionMenu = ({ date, count, onCountChange, colorClass, gridVie
   return (
     <Popover>
       <PopoverTrigger>
-        <button
-          type="button"
+        <Button
+          variant="ghost"
           className={`${
             gridView ? "aspect-square w-full" : "w-6 h-6"
-          } rounded-sm transition-colors hover:opacity-80 relative ${
+          } rounded-full transition-colors hover:opacity-80 relative p-0 ${
             count === 0 ? "bg-neutral-100 dark:bg-neutral-800" : ""
           } ${disabled ? "opacity-50 cursor-not-allowed" : ""}`}
           title={`${new Date(date).toLocaleDateString(undefined, {
@@ -72,7 +72,7 @@ export const CompletionMenu = ({ date, count, onCountChange, colorClass, gridVie
               {new Date(date).getDate()}
             </span>
           )}
-        </button>
+        </Button>
       </PopoverTrigger>
       <PopoverContent align="center" className="w-24">
         <div className="flex items-center justify-between p-2">
