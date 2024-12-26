@@ -10,6 +10,7 @@ import { CalendarItem } from "@/components/calendar/calendar-item";
 import { ImportExport } from "@/components/calendar/import-export";
 import { YearlyOverview } from "@/components/calendar/yearly-overview";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useCalendarData } from "@/hooks/use-calendar-data";
 import { useCalendarState } from "@/hooks/use-calendar-state";
@@ -20,6 +21,8 @@ import { SignInButton, SignedIn, SignedOut } from "@clerk/nextjs";
 import { AnimatePresence, motion } from "framer-motion";
 import { PlusCircle } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState, useTransition } from "react";
+
+const MotionCard = motion(Card);
 
 // Authentication wrapper component
 const AuthenticationWrapper = ({ children }: { children: React.ReactNode }) => {
@@ -125,7 +128,7 @@ const CalendarList = ({
 
   return (
     <AnimatePresence mode="wait" initial={false}>
-      <motion.div
+      <MotionCard
         key={calendarView}
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
@@ -153,7 +156,7 @@ const CalendarList = ({
             view={calendarView}
           />
         ))}
-      </motion.div>
+      </MotionCard>
     </AnimatePresence>
   );
 };
