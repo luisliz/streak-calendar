@@ -1,6 +1,7 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { ConfettiButton } from "@/components/ui/confetti";
-import confetti from "canvas-confetti";
 import { Minus, Plus } from "lucide-react";
 
 const xLogoShape = confetti.shapeFromPath(
