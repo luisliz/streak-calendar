@@ -45,7 +45,7 @@ export const CompletionMenu = ({ date, count, onCountChange, colorClass, gridVie
 
   return (
     <Popover>
-      <PopoverTrigger>
+      <PopoverTrigger asChild>
         <Button
           variant="ghost"
           className={`${
