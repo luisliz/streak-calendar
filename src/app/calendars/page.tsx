@@ -19,7 +19,7 @@ import { useHabitState } from "@/hooks/use-habit-state";
 import { Calendar, Completion, Day, EditingCalendar, EditingHabit, Habit, Id } from "@/types";
 import { SignInButton, SignedIn, SignedOut } from "@clerk/nextjs";
 import { AnimatePresence, motion } from "framer-motion";
-import { PlusCircle } from "lucide-react";
+import { CalendarDays, GripHorizontal, PlusCircle } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState, useTransition } from "react";
 
 const MotionCard = motion(Card);
@@ -74,11 +74,13 @@ const ViewControls = ({
               animate={{ opacity: isPending ? 0.5 : 0 }}
               transition={{ duration: 0.15 }}
             />
-            <TabsTrigger value="monthRow" className="relative z-10">
-              Days View
-            </TabsTrigger>
             <TabsTrigger value="monthGrid" className="relative z-10">
-              Months View
+              <CalendarDays className="mr-2 h-4 w-4" />
+              Monthly View
+            </TabsTrigger>
+            <TabsTrigger value="monthRow" className="relative z-10">
+              <GripHorizontal className="mr-2 h-4 w-4" />
+              Daily View
             </TabsTrigger>
           </TabsList>
         </Tabs>
