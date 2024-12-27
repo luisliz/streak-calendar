@@ -7,14 +7,14 @@ export default function Home() {
   return (
     <div className="flex flex-col items-center justify-center px-4 text-center">
       <p className="mx-auto mt-20 max-w-[500px] text-muted-foreground md:text-2xl">
-        <span className="italic">“You are what you repeatedly do.”</span>
+        <span className="italic font-medium">“You are what you repeatedly do.”</span>
         <br />
-        Start your streak today and prove you <span className="font-bold italic  inline-block">can</span> actually stick
-        to something for once.
+        Start your streak today and prove you <span className="font-semibold inline-block">can</span> actually stick to
+        something for once.
       </p>
       <Card className="p-4 mt-24 max-w-4xl shadow-md rounded-xl">
         <CardHeader>
-          <h1 className="my-4 font-heading text-4xl font-bold md:text-6xl">
+          <h1 className="mt-4 mb-12 font-heading text-4xl font-bold md:text-6xl">
             Build Your Habits,
             <br />
             Track Your Streaks
