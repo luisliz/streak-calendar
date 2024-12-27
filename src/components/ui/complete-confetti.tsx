@@ -4,10 +4,9 @@ import { Button } from "@/components/ui/button";
 import { ConfettiButton } from "@/components/ui/confetti";
 import confettiLib from "canvas-confetti";
 import { Minus, Plus } from "lucide-react";
+import { useEffect, useState } from "react";
 
-const xLogoShape = confettiLib.shapeFromPath(
-  `M14.12 9.87a3.024 3.024 0 0 1 0 4.26c-.6.57-1.35.87-2.13.87s-1.53-.3-2.13-.87l-2.37-2.37-2.37 2.37c-.6.57-1.35.87-2.13.87s-1.53-.3-2.13-.87a3.024 3.024 0 0 1 0-4.26L3.23 7.5.88 5.13C-.29 3.97-.29 2.05.88.88a3.012 3.012 0 0 1 4.25 0L7.5 3.25 9.87.88a3.024 3.024 0 0 1 4.26 0 3.024 3.024 0 0 1 0 4.26l-2.37 2.37 2.37 2.37Z`
-);
+const xLogoPath = `M14.12 9.87a3.024 3.024 0 0 1 0 4.26c-.6.57-1.35.87-2.13.87s-1.53-.3-2.13-.87l-2.37-2.37-2.37 2.37c-.6.57-1.35.87-2.13.87s-1.53-.3-2.13-.87a3.024 3.024 0 0 1 0-4.26L3.23 7.5.88 5.13C-.29 3.97-.29 2.05.88.88a3.012 3.012 0 0 1 4.25 0L7.5 3.25 9.87.88a3.024 3.024 0 0 1 4.26 0 3.024 3.024 0 0 1 0 4.26l-2.37 2.37 2.37 2.37Z`;
 
 interface CompleteConfettiProps {
   count: number;
@@ -17,19 +16,23 @@ interface CompleteConfettiProps {
   showText?: boolean;
 }
 
-const confettiOptions = {
-  angle: 45,
-  particleCount: 50,
-  spread: 70,
-  startVelocity: 30,
-  gravity: 0.5,
-  ticks: 300,
-  shapes: [xLogoShape],
-  colors: ["#FF0000", "#FFA500", "#FFFF00", "#00FF00", "#00FFFF", "#0000FF", "#FF00FF"],
-  scalar: 1.2,
-};
-
 export const CompleteConfetti = ({ count, onIncrement, onDecrement, variant = "default" }: CompleteConfettiProps) => {
+  const [confettiOptions, setConfettiOptions] = useState({
+    angle: 45,
+    particleCount: 50,
+    spread: 70,
+    startVelocity: 30,
+    gravity: 0.5,
+    ticks: 300,
+    colors: ["#FF0000", "#FFA500", "#FFFF00", "#00FF00", "#00FFFF", "#0000FF", "#FF00FF"],
+    scalar: 1.2,
+  });
+
+  useEffect(() => {
+    const shape = confettiLib.shapeFromPath(xLogoPath);
+    setConfettiOptions((prev) => ({ ...prev, shapes: [shape] }));
+  }, []);
+
   if (count === 0) {
     return (
       <ConfettiButton
