@@ -10,10 +10,10 @@ export default function Home() {
         <br />
         Track Your Streaks
       </h1>
-      <p className="mx-auto mt-6 max-w-[600px] text-muted-foreground md:text-xl">
-        You become what you do, again and again.
+      <p className="mx-auto mt-6 max-w-[800px] text-muted-foreground md:text-xl">
+        You are what you repeatedly do.
         <br />
-        Start your streak today and stay motivated to succeed.
+        Start your streak today and take the first step toward lasting success.
       </p>
       <div className="mt-8">
         <SignedIn>
