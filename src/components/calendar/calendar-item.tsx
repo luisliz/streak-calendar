@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
-import { ConfettiButton } from "@/components/ui/confetti";
-import { Minus, Pencil, Plus, PlusCircle } from "lucide-react";
+import { CompleteConfetti } from "@/components/ui/complete-confetti";
+import { Pencil, PlusCircle } from "lucide-react";
 
 import { Id } from "@server/convex/_generated/dataModel";
 
@@ -71,176 +71,81 @@ export const CalendarItem = ({
       ) : view === "monthRow" ? (
         // Month Row View - habits on the left
         <div className="overflow-hidden">
-          {habits.map((habit) => (
-            <div key={habit._id} className="flex items-start gap-4">
-              <div
-                className="flex min-w-24 md:min-w-48 w-32 md:w-48 group items-start cursor-pointer hover:text-muted-foreground transition-colors overflow-hidden"
-                onClick={() => onEditHabit(habit)}
-              >
-                <div className="truncate flex items-center gap-2">
+          {habits.map((habit) => {
+            const today = new Date().toISOString().split("T")[0];
+            const todayCount = completions.filter(
+              (c) => c.habitId === habit._id && new Date(c.completedAt).toISOString().split("T")[0] === today
+            ).length;
+
+            return (
+              <div key={habit._id} className="flex items-start gap-4">
+                <div
+                  className="flex min-w-24 md:min-w-48 w-32 md:w-48 group items-start cursor-pointer hover:text-muted-foreground transition-colors overflow-hidden"
+                  onClick={() => onEditHabit(habit)}
+                >
+                  <div className="truncate flex items-center gap-2">
+                    <h3 className="font-medium text-base">{habit.name}</h3>
+                    <span className="opacity-0 group-hover:opacity-100 transition-opacity">
+                      <Pencil className="h-4 w-4" />
+                    </span>
+                  </div>
+                </div>
+                <HabitItem
+                  habit={habit}
+                  color={colorTheme}
+                  days={days}
+                  completions={completions}
+                  onToggle={onToggleHabit}
+                  view={view}
+                />
+                <CompleteConfetti
+                  count={todayCount}
+                  onIncrement={() => onToggleHabit(habit._id, today, todayCount + 1)}
+                  onDecrement={() => onToggleHabit(habit._id, today, todayCount - 1)}
+                  variant="default"
+                />
+              </div>
+            );
+          })}
+        </div>
+      ) : (
+        // Month Grid View - habits above calendars
+        <div className="space-y-8">
+          {habits.map((habit) => {
+            const today = new Date().toISOString().split("T")[0];
+            const todayCount = completions.filter(
+              (c) => c.habitId === habit._id && new Date(c.completedAt).toISOString().split("T")[0] === today
+            ).length;
+
+            return (
+              <div key={habit._id} className="space-y-4">
+                <div
+                  className="flex items-center gap-2 group cursor-pointer hover:text-muted-foreground transition-colors"
+                  onClick={() => onEditHabit(habit)}
+                >
                   <h3 className="font-medium text-base">{habit.name}</h3>
                   <span className="opacity-0 group-hover:opacity-100 transition-opacity">
                     <Pencil className="h-4 w-4" />
                   </span>
                 </div>
+                <HabitItem
+                  habit={habit}
+                  color={colorTheme}
+                  days={days}
+                  completions={completions}
+                  onToggle={onToggleHabit}
+                  view={view}
+                />
+                <CompleteConfetti
+                  count={todayCount}
+                  onIncrement={() => onToggleHabit(habit._id, today, todayCount + 1)}
+                  onDecrement={() => onToggleHabit(habit._id, today, todayCount - 1)}
+                  variant="ghost"
+                  showText
+                />
               </div>
-              <HabitItem
-                habit={habit}
-                color={colorTheme}
-                days={days}
-                completions={completions}
-                onToggle={onToggleHabit}
-                view={view}
-              />
-              {(() => {
-                const today = new Date().toISOString().split("T")[0];
-                const todayCount = completions.filter(
-                  (c) => c.habitId === habit._id && new Date(c.completedAt).toISOString().split("T")[0] === today
-                ).length;
-
-                return todayCount === 0 ? (
-                  <ConfettiButton
-                    variant="default"
-                    size="sm"
-                    className="h-6 min-w-20 ml-auto"
-                    onClick={() => onToggleHabit(habit._id, today, 1)}
-                    options={{
-                      get angle() {
-                        return Math.random() * 90 + 45;
-                      },
-                      particleCount: 50,
-                      spread: 70,
-                      startVelocity: 30,
-                      gravity: 0.5,
-                      ticks: 300,
-                      colors: ["#FF0000", "#FFA500", "#FFFF00", "#00FF00", "#00FFFF", "#0000FF", "#FF00FF"],
-                      scalar: 1.2,
-                    }}
-                  >
-                    <Plus className="h-4 w-4" />
-                  </ConfettiButton>
-                ) : (
-                  <div className="flex items-center gap-1 ml-auto">
-                    <Button
-                      variant="default"
-                      size="icon"
-                      className="h-6 w-6"
-                      onClick={() => onToggleHabit(habit._id, today, todayCount - 1)}
-                    >
-                      <Minus className="h-4 w-4" />
-                    </Button>
-                    <span className="w-6 text-center font-medium">{todayCount}</span>
-                    <ConfettiButton
-                      variant="default"
-                      size="icon"
-                      className="h-6 w-6"
-                      onClick={() => onToggleHabit(habit._id, today, todayCount + 1)}
-                      options={{
-                        get angle() {
-                          return Math.random() * 90 + 45;
-                        },
-                        particleCount: 25,
-                        spread: 45,
-                        startVelocity: 25,
-                        gravity: 0.5,
-                        ticks: 200,
-                        colors: ["#FF0000", "#FFA500", "#FFFF00", "#00FF00", "#00FFFF", "#0000FF", "#FF00FF"],
-                        scalar: 1.2,
-                      }}
-                    >
-                      <Plus className="h-4 w-4" />
-                    </ConfettiButton>
-                  </div>
-                );
-              })()}
-            </div>
-          ))}
-        </div>
-      ) : (
-        // Month Grid View - habits above calendars
-        <div className="space-y-8">
-          {habits.map((habit) => (
-            <div key={habit._id} className="space-y-4">
-              <div
-                className="flex items-center gap-2 group cursor-pointer hover:text-muted-foreground transition-colors"
-                onClick={() => onEditHabit(habit)}
-              >
-                <h3 className="font-medium text-base">{habit.name}</h3>
-                <span className="opacity-0 group-hover:opacity-100 transition-opacity">
-                  <Pencil className="h-4 w-4" />
-                </span>
-              </div>
-              <HabitItem
-                habit={habit}
-                color={colorTheme}
-                days={days}
-                completions={completions}
-                onToggle={onToggleHabit}
-                view={view}
-              />
-              {(() => {
-                const today = new Date().toISOString().split("T")[0];
-                const todayCount = completions.filter(
-                  (c) => c.habitId === habit._id && new Date(c.completedAt).toISOString().split("T")[0] === today
-                ).length;
-
-                return todayCount === 0 ? (
-                  <ConfettiButton
-                    variant="default"
-                    size="sm"
-                    className="h-6 ml-auto"
-                    onClick={() => onToggleHabit(habit._id, today, 1)}
-                    options={{
-                      get angle() {
-                        return Math.random() * 90 + 45;
-                      },
-                      particleCount: 100,
-                      spread: 70,
-                      startVelocity: 30,
-                      gravity: 0.5,
-                      ticks: 300,
-                      colors: ["#FF0000", "#FFA500", "#FFFF00", "#00FF00", "#00FFFF", "#0000FF", "#FF00FF"],
-                      scalar: 1.2,
-                    }}
-                  >
-                    Complete
-                  </ConfettiButton>
-                ) : (
-                  <div className="flex items-center gap-1 ml-auto">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-6 w-6"
-                      onClick={() => onToggleHabit(habit._id, today, todayCount - 1)}
-                    >
-                      <Minus className="h-4 w-4" />
-                    </Button>
-                    <span className="w-6 text-center font-medium">{todayCount}</span>
-                    <ConfettiButton
-                      variant="ghost"
-                      size="icon"
-                      className="h-6 w-6"
-                      onClick={() => onToggleHabit(habit._id, today, todayCount + 1)}
-                      options={{
-                        get angle() {
-                          return Math.random() * 90 + 45;
-                        },
-                        particleCount: 50,
-                        spread: 45,
-                        startVelocity: 25,
-                        gravity: 0.5,
-                        ticks: 200,
-                        colors: ["#FF0000", "#FFA500", "#FFFF00", "#00FF00", "#00FFFF", "#0000FF", "#FF00FF"],
-                        scalar: 1.2,
-                      }}
-                    >
-                      <Plus className="h-4 w-4" />
-                    </ConfettiButton>
-                  </div>
-                );
-              })()}
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
     </div>
