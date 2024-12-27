@@ -1,10 +1,12 @@
+"use client";
+
 import { Button, ButtonProps } from "@/components/ui/button";
 import type {
   GlobalOptions as ConfettiGlobalOptions,
   CreateTypes as ConfettiInstance,
   Options as ConfettiOptions,
 } from "canvas-confetti";
-import confetti from "canvas-confetti";
+import confettiLib from "canvas-confetti";
 import type { ReactNode } from "react";
 import React, { createContext, forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useRef } from "react";
 
@@ -32,7 +34,7 @@ const ConfettiComponent = forwardRef<ConfettiRef, Props>((props, ref) => {
     (node: HTMLCanvasElement) => {
       if (node !== null) {
         if (instanceRef.current) return;
-        instanceRef.current = confetti.create(node, {
+        instanceRef.current = confettiLib.create(node, {
           ...globalOptions,
           resize: true,
         });
@@ -109,7 +111,7 @@ const ConfettiButtonComponent = ({ options, children, onClick, ...props }: Confe
       onClick?.(event);
 
       // Fire confetti
-      await confetti({
+      await confettiLib({
         ...options,
         origin: {
           x: x / window.innerWidth,
