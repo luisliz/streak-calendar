@@ -9,10 +9,10 @@ export default function Home() {
       <p className="mx-auto mt-20 max-w-[500px] text-muted-foreground md:text-2xl">
         <span className="italic font-medium">“You are what you repeatedly do.”</span>
         <br />
-        Start your streak today and prove you <span className="font-semibold inline-block">can</span> actually stick to
-        something for once.
+        Build lasting habits. Start your streak today and unlock your{" "}
+        <span className="font-semibold italic">true potential</span>.
       </p>
-      <Card className="p-4 mt-24 max-w-4xl shadow-md rounded-xl">
+      <Card className="hidden p-4 mt-24 max-w-4xl shadow-md rounded-xl">
         <CardHeader>
           <h1 className="mt-4 mb-12 font-heading text-4xl font-bold md:text-6xl">
             Build Your Habits,
