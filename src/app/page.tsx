@@ -7,7 +7,7 @@ export default function Home() {
   return (
     <div className="flex flex-col items-center justify-center px-4 text-center">
       <p className="mx-auto mt-20 max-w-[500px] text-muted-foreground md:text-2xl">
-        <span className="italic font-medium">“You are what you repeatedly do.”</span>
+        <span className="font-bold">“You are what you repeatedly do.”</span>
         <br />
         Build lasting habits. Start your streak today and unlock your{" "}
         <span className="font-semibold italic">true potential</span>.
