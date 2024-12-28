@@ -52,7 +52,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={cn(inter.variable, "min-h-screen bg-background font-sans antialiased")}>
+      <body className={cn(inter.variable, "min-h-screen bg-background font-sans antialiased", "grid-background")}>
         <Providers>
           <RootWrapper>{children}</RootWrapper>
         </Providers>
