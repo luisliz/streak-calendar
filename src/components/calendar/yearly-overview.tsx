@@ -134,7 +134,7 @@ export const YearlyOverview = ({ completions }: YearlyOverviewProps) => {
         <span className="font-bold">Yearly Overview</span>{" "}
         <span className="text-muted-foreground/75">({totalCompletions} things done last year)</span>
       </div>
-      <Card className="mb-16 shadow-md p-2 md:p-4 overflow-hidden">
+      <Card className="mb-16 rounded-3xl shadow-md p-2 md:p-4 overflow-hidden">
         <div ref={scrollRef} className="overflow-x-hidden -mr-2 md:-mr-4 pr-8 md:pr-12">
           <div className="flex flex-col">
             {/* Month labels */}
