@@ -42,7 +42,7 @@ export default function PricingPage() {
             <SignedOut>
               <SignInButton mode="modal">
                 <Button size="lg" className="w-full">
-                  Sign In
+                  Sign Up for Free
                 </Button>
               </SignInButton>
             </SignedOut>

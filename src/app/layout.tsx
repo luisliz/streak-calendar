@@ -53,9 +53,12 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={cn(inter.variable, "min-h-screen bg-background font-sans antialiased", "grid-background")}>
-        <Providers>
-          <RootWrapper>{children}</RootWrapper>
-        </Providers>
+        <div className="fixed inset-0 bg-gradient-to-t from-sky-50 dark:from-sky-950 to-transparent" />
+        <div className="relative">
+          <Providers>
+            <RootWrapper>{children}</RootWrapper>
+          </Providers>
+        </div>
       </body>
     </html>
   );
