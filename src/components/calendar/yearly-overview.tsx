@@ -103,7 +103,7 @@ export const YearlyOverview = ({ completions }: YearlyOverviewProps) => {
     if (count === 0) {
       return (
         <div
-          className={`aspect-square w-[12px] max-w-full md:w-4 rounded-full ${colorClass}`}
+          className={`aspect-square w-[12px] max-w-full md:w-4 border rounded-full ${colorClass}`}
           title={`${format(new Date(day), "MMM d, yyyy")}: ${count} completions`}
         />
       );
