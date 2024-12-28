@@ -12,7 +12,7 @@ export default function Home() {
         <span className="font-semibold italic">true potential</span>.
       </p>
 
-      <div className="rounded-3xl mt-16 relative w-full max-w-xl overflow-hidden aspect-video mx-auto">
+      <div className="rounded-3xl mt-16 relative w-full max-w-2xl overflow-hidden aspect-video mx-auto">
         <iframe
           className="absolute left-0 top-0 h-full w-full"
           src="https://www.youtube.com/embed/mVQ1bzd816I?si=h-UGS9kLXH-gN2Cs"
@@ -25,7 +25,7 @@ export default function Home() {
 
       <a
         href="https://youtu.be/u98FTiCfIRg?t=685"
-        className="text-sm pr-2 text-muted-foreground text-right w-full max-w-xl underline opacity-50 hover:opacity-100 transition-opacity"
+        className="text-sm pr-2 text-muted-foreground text-right w-full max-w-2xl underline opacity-50 hover:opacity-100 transition-opacity"
         target="_blank"
         rel="noopener noreferrer"
       >
