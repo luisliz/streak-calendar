@@ -29,6 +29,7 @@
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
+    --grid-color: hsla(48, 96%, 89%, 0.3);
   }
   .dark {
     --background: 204, 80%, 8%;
@@ -55,6 +56,7 @@
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
+    --grid-color: hsla(204, 80%, 4%, 0.3);
   }
 }
 
@@ -65,4 +67,10 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+.grid-background {
+  background-image: linear-gradient(to right, var(--grid-color) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-color) 1px, transparent 1px);
+  background-size: 8px 8px;
 }
