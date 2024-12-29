@@ -64,7 +64,7 @@ export const CalendarItem = ({
 
       {/* Conditional rendering based on habits existence */}
       {habits.length === 0 ? (
-        <div className="space-y-4">
+        <div className="w-full">
           <p className="text-sm text-muted-foreground">No habits added yet. Add one to start tracking!</p>
           <Button size="sm" onClick={onAddHabit}>
             <PlusCircle className="h-4 w-4 mr-2" />
@@ -73,7 +73,7 @@ export const CalendarItem = ({
         </div>
       ) : view === "monthRow" ? (
         // Month Row View - habits on the left
-        <div className="space-y-4">
+        <div className="">
           <div className="overflow-hidden">
             {habits.map((habit) => {
               const today = new Date().toISOString().split("T")[0];
@@ -112,10 +112,11 @@ export const CalendarItem = ({
               );
             })}
           </div>
-          <Button size="sm" onClick={onAddHabit}>
-            <PlusCircle className="h-4 w-4 mr-2" />
-            Add Habit
-          </Button>
+          <div className="flex justify-end">
+            <Button className="w-20 h-6 text-xs" size="sm" onClick={onAddHabit}>
+              New Habit
+            </Button>
+          </div>
         </div>
       ) : (
         // Month Grid View - habits above calendars
