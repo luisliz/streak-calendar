@@ -26,7 +26,7 @@ export default function Home() {
       <div className="w-full max-w-2xl text-right pr-2">
         <a
           href="https://youtu.be/u98FTiCfIRg?t=685"
-          className="text-sm text-muted-foreground underline opacity-50 hover:opacity-100 transition-opacity"
+          className="text-xs text-muted-foreground underline opacity-50 hover:opacity-100 transition-opacity"
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -34,7 +34,7 @@ export default function Home() {
         </a>
       </div>
 
-      <div className="cta mt-16 mb-16">
+      <div className="mt-16 mb-16">
         <SignedIn>
           <Button asChild size="lg">
             <Link href="/calendars">Go to Calendars</Link>
