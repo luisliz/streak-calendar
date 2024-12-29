@@ -86,7 +86,7 @@ export const YearlyOverview = ({ completions }: YearlyOverviewProps) => {
 
   // Memoize color class function
   const getColorClass = useCallback((count: number) => {
-    if (count === 0) return "bg-neutral-100 dark:bg-neutral-800";
+    if (count === 0) return "bg-slate-100 dark:bg-slate-800";
     if (count <= 2) return "fill-red-500/50 dark:fill-red-500/50";
     if (count <= 5) return "fill-red-500/65 dark:fill-red-500/65";
     if (count <= 10) return "fill-red-600/80 dark:fill-red-600/80";
@@ -103,7 +103,7 @@ export const YearlyOverview = ({ completions }: YearlyOverviewProps) => {
     if (count === 0) {
       return (
         <div
-          className={`aspect-square w-[12px] max-w-full md:w-4 border rounded-full ${colorClass}`}
+          className={`aspect-square w-[12px] max-w-full md:w-4 rounded-full ${colorClass}`}
           title={`${format(new Date(day), "MMM d, yyyy")}: ${count} completions`}
         />
       );
@@ -129,8 +129,8 @@ export const YearlyOverview = ({ completions }: YearlyOverviewProps) => {
 
   return (
     // TODO: 2024-12-24 - make this responsive
-    <div className="max-w-5xl mx-auto">
-      <div className="mt-4 ml-1 text-sm text-muted-foreground mb-2">
+    <div className="max-w-5xl mx-auto mt-16">
+      <div className="ml-1 text-xs text-muted-foreground">
         <span className="font-bold">Yearly Overview</span>{" "}
         <span className="text-muted-foreground/75">({totalCompletions} things done last year)</span>
       </div>
