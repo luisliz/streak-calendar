@@ -128,45 +128,51 @@ export const YearlyOverview = ({ completions }: YearlyOverviewProps) => {
   }, [completionCounts]);
 
   return (
-    // TODO: 2024-12-24 - make this responsive
-    <div className="max-w-5xl mx-auto mt-16">
-      <div className="ml-1 text-xs text-muted-foreground">
+    <div className="mx-auto sm:mt-16 mt-2 overflow-hidden">
+      <div className="mx-auto w-[1020px] sm:scale-100 scale-50 origin-left text-xs text-muted-foreground">
         <span className="font-bold">Yearly Overview</span>{" "}
         <span className="text-muted-foreground/75">({totalCompletions} things done last year)</span>
       </div>
-      <Card className="mb-16 rounded-3xl shadow-md p-2 md:p-4 overflow-hidden">
-        <div ref={scrollRef} className="overflow-x-hidden -mr-2 md:-mr-4 pr-8 md:pr-12">
+      <Card className="mx-auto mb-16 rounded-3xl w-[1020px] sm:scale-100 scale-50 origin-left shadow-md p-2 md:p-4 overflow-hidden">
+        <div ref={scrollRef} className="overflow-x-hidden">
           <div className="flex flex-col">
             {/* Month labels */}
-            <div className="flex mb-1 md:mb-2">
+            <div className="flex">
               <div className="pl-12 gap-[38px] md:gap-12 flex justify-between text-[8px] md:text-xs text-muted-foreground">
                 {monthLabels.map((month) => (
                   <div key={month.key}>{month.label}</div>
                 ))}
               </div>
             </div>
-
             {/* Day labels and contribution grid */}
-            <div className="flex ">
-              {/* Day labels */}
-              <div className="flex flex-col gap-px mr-2">
-                <div className="h-4" /> {/* Empty space for alignment */}
-                <div className="text-muted-foreground text-[8px] md:text-xs">Mon</div>
-                <div className="h-4" />
-                <div className="text-muted-foreground text-[8px] md:text-xs">Wed</div>
-                <div className="h-4" />
-                <div className="text-muted-foreground text-[8px] md:text-xs">Fri</div>
+            <div className="flex w-[1000px]">
+              <div className="w-[30px] mr-1 flex-col">
+                <div className="h-[18px]" /> {/* Empty space for alignment */}
+                <div className="text-muted-foreground text-[8px] md:text-xs text-right">Mon</div>
+                <div className="h-[18px]" />
+                <div className="text-muted-foreground text-[8px] md:text-xs text-right">Wed</div>
+                <div className="h-[18px]" />
+                <div className="text-muted-foreground text-[8px] md:text-xs text-right">Fri</div>
               </div>
-
-              {/* Contribution grid */}
-              <div className="flex gap-px pr-4 md:pr-8">
-                {weeks.map((week, weekIndex) => (
-                  <div key={weekIndex} className="flex flex-col gap-[1px] flex-1">
-                    {week.map((day, dayIndex) => (
-                      <GridCell key={day || `empty-${weekIndex}-${dayIndex}`} day={day} />
-                    ))}
-                  </div>
-                ))}
+              <div className="inline-block">
+                {/* Contribution grid */}
+                <div className="flex gap-px">
+                  {weeks.map((week, weekIndex) => (
+                    <div key={weekIndex} className="flex flex-col gap-px">
+                      {week.map((day, dayIndex) => (
+                        <GridCell key={day || `empty-${weekIndex}-${dayIndex}`} day={day} />
+                      ))}
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="w-[30px] ml-1 flex-col">
+                <div className="h-[18px]" /> {/* Empty space for alignment */}
+                <div className="text-muted-foreground text-[8px] md:text-xs text-left">Mon</div>
+                <div className="h-[18px]" />
+                <div className="text-muted-foreground text-[8px] md:text-xs text-left">Wed</div>
+                <div className="h-[18px]" />
+                <div className="text-muted-foreground text-[8px] md:text-xs text-left">Fri</div>
               </div>
             </div>
           </div>
