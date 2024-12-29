@@ -34,7 +34,7 @@ export default function Home() {
         </a>
       </div>
 
-      <div className="cta mt-16">
+      <div className="cta mt-16 mb-16">
         <SignedIn>
           <Button asChild size="lg">
             <Link href="/calendars">Go to Calendars</Link>
