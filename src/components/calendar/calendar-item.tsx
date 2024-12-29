@@ -48,7 +48,7 @@ export const CalendarItem = ({
   const colorTheme = calendar.colorTheme.startsWith("bg-") ? calendar.colorTheme : `bg-${calendar.colorTheme}-500`;
 
   return (
-    <div className="">
+    <div className="pt-8">
       {/* Header section with calendar name and add habit button */}
       <div className="flex justify-between items-center mb-6">
         <div
@@ -60,57 +60,66 @@ export const CalendarItem = ({
             <Pencil className="h-4 w-4" />
           </span>
         </div>
-        <Button size="sm" variant="link" onClick={onAddHabit}>
-          <PlusCircle className="h-4 w-4 fill-red-500" />
-        </Button>
       </div>
 
       {/* Conditional rendering based on habits existence */}
       {habits.length === 0 ? (
-        <p className="text-sm text-muted-foreground">No habits added yet. Add one to start tracking!</p>
+        <div className="space-y-4">
+          <p className="text-sm text-muted-foreground">No habits added yet. Add one to start tracking!</p>
+          <Button size="sm" onClick={onAddHabit}>
+            <PlusCircle className="h-4 w-4 mr-2" />
+            Add Habit
+          </Button>
+        </div>
       ) : view === "monthRow" ? (
         // Month Row View - habits on the left
-        <div className="overflow-hidden">
-          {habits.map((habit) => {
-            const today = new Date().toISOString().split("T")[0];
-            const todayCount = completions.filter(
-              (c) => c.habitId === habit._id && new Date(c.completedAt).toISOString().split("T")[0] === today
-            ).length;
+        <div className="space-y-4">
+          <div className="overflow-hidden">
+            {habits.map((habit) => {
+              const today = new Date().toISOString().split("T")[0];
+              const todayCount = completions.filter(
+                (c) => c.habitId === habit._id && new Date(c.completedAt).toISOString().split("T")[0] === today
+              ).length;
 
-            return (
-              <div key={habit._id} className="flex items-start gap-4">
-                <div
-                  className="flex min-w-24 md:min-w-48 w-32 md:w-48 group items-start cursor-pointer hover:text-muted-foreground transition-colors overflow-hidden"
-                  onClick={() => onEditHabit(habit)}
-                >
-                  <div className="truncate flex items-center gap-2">
-                    <h3 className="font-medium text-base">{habit.name}</h3>
-                    <span className="opacity-0 group-hover:opacity-100 transition-opacity">
-                      <Pencil className="h-4 w-4" />
-                    </span>
+              return (
+                <div key={habit._id} className="flex items-start gap-4">
+                  <div
+                    className="flex min-w-24 md:min-w-48 w-32 md:w-48 group items-start cursor-pointer hover:text-muted-foreground transition-colors overflow-hidden"
+                    onClick={() => onEditHabit(habit)}
+                  >
+                    <div className="truncate flex items-center gap-2">
+                      <h3 className="font-medium text-base">{habit.name}</h3>
+                      <span className="opacity-0 group-hover:opacity-100 transition-opacity">
+                        <Pencil className="h-4 w-4" />
+                      </span>
+                    </div>
                   </div>
+                  <HabitItem
+                    habit={habit}
+                    color={colorTheme}
+                    days={days}
+                    completions={completions}
+                    onToggle={onToggleHabit}
+                    view={view}
+                  />
+                  <CompleteConfetti
+                    count={todayCount}
+                    onIncrement={() => onToggleHabit(habit._id, today, todayCount + 1)}
+                    onDecrement={() => onToggleHabit(habit._id, today, todayCount - 1)}
+                    variant="default"
+                  />
                 </div>
-                <HabitItem
-                  habit={habit}
-                  color={colorTheme}
-                  days={days}
-                  completions={completions}
-                  onToggle={onToggleHabit}
-                  view={view}
-                />
-                <CompleteConfetti
-                  count={todayCount}
-                  onIncrement={() => onToggleHabit(habit._id, today, todayCount + 1)}
-                  onDecrement={() => onToggleHabit(habit._id, today, todayCount - 1)}
-                  variant="default"
-                />
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
+          <Button size="sm" onClick={onAddHabit}>
+            <PlusCircle className="h-4 w-4 mr-2" />
+            Add Habit
+          </Button>
         </div>
       ) : (
         // Month Grid View - habits above calendars
-        <div className="space-y-8">
+        <div className="space-y-4">
           {habits.map((habit) => {
             const today = new Date().toISOString().split("T")[0];
             const todayCount = completions.filter(
@@ -146,6 +155,10 @@ export const CalendarItem = ({
               </div>
             );
           })}
+          <Button size="sm" onClick={onAddHabit}>
+            <PlusCircle className="h-4 w-4 mr-2" />
+            Add Habit
+          </Button>
         </div>
       )}
     </div>
