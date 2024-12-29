@@ -30,7 +30,7 @@ export function AppHeader() {
         isVisible ? "translate-y-0" : "-translate-y-full"
       }`}
     >
-      <div className="bg-sky-50/70 dark:bg-sky-950/70">
+      <div className="bg-white/70 dark:bg-sky-950/70">
         <div className="container mx-auto flex h-16 items-center px-4 relative">
           <div className="w-[200px] shrink-0">
             <Link href="/" className="text-xl font-bold flex items-center gap-2">
