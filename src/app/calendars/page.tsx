@@ -47,9 +47,7 @@ const AuthenticationWrapper = ({ children }: { children: React.ReactNode }) => {
 const ViewControls = ({
   calendarView,
   setCalendarView,
-  isPending,
   setIsNewCalendarOpen,
-  startTransition,
 }: {
   calendarView: CalendarView;
   setCalendarView: (view: CalendarView) => void;
