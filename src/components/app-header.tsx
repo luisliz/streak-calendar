@@ -1,16 +1,35 @@
 import { SignedIn, UserButton } from "@clerk/nextjs";
 import { Menu, X } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { ThemeToggle } from "./theme-toggle";
 import { Button } from "./ui/button";
 
 export function AppHeader() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
+  const [prevScrollPos, setPrevScrollPos] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollPos = window.scrollY;
+      const isScrollingDown = currentScrollPos > prevScrollPos;
+
+      setIsVisible(!isScrollingDown || currentScrollPos < 10);
+      setPrevScrollPos(currentScrollPos);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [prevScrollPos]);
 
   return (
-    <header className="sticky top-0 z-50 w-full backdrop-blur-sm supports-[backdrop-filter]:bg-background/60 shadow-sm">
+    <header
+      className={`sticky top-0 z-50 w-full backdrop-blur-sm supports-[backdrop-filter]:bg-background/60 shadow-sm transition-transform duration-300 ease-in-out ${
+        isVisible ? "translate-y-0" : "-translate-y-full"
+      }`}
+    >
       <div className="bg-sky-50/70 dark:bg-sky-950/70">
         <div className="container mx-auto flex h-16 items-center px-4 relative">
           <div className="w-[200px] shrink-0">
