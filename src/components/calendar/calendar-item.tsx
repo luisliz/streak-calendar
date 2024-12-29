@@ -113,8 +113,8 @@ export const CalendarItem = ({
             })}
           </div>
           <div className="flex justify-end">
-            <Button className="w-20 h-6 text-xs" size="sm" onClick={onAddHabit}>
-              New Habit
+            <Button className="w-20 h-[24px] text-xs" size="sm" onClick={onAddHabit}>
+              New
             </Button>
           </div>
         </div>
