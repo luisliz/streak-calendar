@@ -12,7 +12,7 @@ export default function Home() {
         <span className="font-semibold italic">true potential</span>.
       </p>
 
-      <div className="rounded-3xl mt-16 relative w-full max-w-2xl overflow-hidden aspect-video mx-auto">
+      <div className="shadow-lg border-4 border-red-500 rounded-3xl mt-16 relative w-full max-w-2xl overflow-hidden aspect-video mx-auto transition-[border-width,border-color] ease-in hover:border-[8px] hover:border-red-400">
         <iframe
           className="absolute left-0 top-0 h-full w-full"
           src="https://www.youtube.com/embed/mVQ1bzd816I?si=h-UGS9kLXH-gN2Cs"
@@ -23,14 +23,16 @@ export default function Home() {
         />
       </div>
 
-      <a
-        href="https://youtu.be/u98FTiCfIRg?t=685"
-        className="text-sm pr-2 text-muted-foreground text-right w-full max-w-2xl underline opacity-50 hover:opacity-100 transition-opacity"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        Full video
-      </a>
+      <div className="w-full max-w-2xl text-right pr-2">
+        <a
+          href="https://youtu.be/u98FTiCfIRg?t=685"
+          className="text-sm text-muted-foreground underline opacity-50 hover:opacity-100 transition-opacity"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Full video
+        </a>
+      </div>
 
       <div className="cta mt-16">
         <SignedIn>
