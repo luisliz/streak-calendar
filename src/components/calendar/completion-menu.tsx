@@ -48,10 +48,10 @@ export const CompletionMenu = ({ date, count, onCountChange, colorClass, gridVie
       <PopoverTrigger asChild>
         <Button
           variant="ghost"
-          className={`${
-            gridView ? "aspect-square w-full" : "w-6 h-6"
-          } rounded-full border bg-white dark:bg-neutral-800 transition-colors hover:opacity-80 relative p-0 ${
-            count === 0 ? "bg-neutral-100 dark:bg-neutral-800" : ""
+          className={`${gridView ? "aspect-square w-full" : "w-6 h-6"} rounded-full ${
+            count === 0 ? "bg-slate-100 dark:bg-slate-800" : ""
+          } transition-colors hover:opacity-80 relative p-0 ${
+            count === 0 ? "" : ""
           } ${disabled ? "opacity-50 cursor-not-allowed" : ""}`}
           title={`${new Date(date).toLocaleDateString(undefined, {
             month: "short",
@@ -60,12 +60,12 @@ export const CompletionMenu = ({ date, count, onCountChange, colorClass, gridVie
           disabled={disabled}
         >
           {count > 0 ? (
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15 15" className={`w-full h-full ${fillClass}`}>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15 15" className={`!w-[24px] !h-[24px] ${fillClass}`}>
               <path d="M14.12 9.87a3.024 3.024 0 0 1 0 4.26c-.6.57-1.35.87-2.13.87s-1.53-.3-2.13-.87l-2.37-2.37-2.37 2.37c-.6.57-1.35.87-2.13.87s-1.53-.3-2.13-.87a3.024 3.024 0 0 1 0-4.26L3.23 7.5.88 5.13C-.29 3.97-.29 2.05.88.88a3.012 3.012 0 0 1 4.25 0L7.5 3.25 9.87.88a3.024 3.024 0 0 1 4.26 0 3.024 3.024 0 0 1 0 4.26l-2.37 2.37 2.37 2.37Z" />
             </svg>
           ) : (
             <span
-              className={`absolute inset-0 flex items-center justify-center text-xs font-medium text-neutral-900 dark:text-neutral-100 ${
+              className={`absolute inset-0 flex items-center justify-center text-xs font-medium text-slate-900 dark:text-slate-100 ${
                 gridView ? "" : "scale-75"
               }`}
             >
