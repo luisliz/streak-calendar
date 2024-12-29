@@ -7,7 +7,7 @@ import { AnimatePresence } from "framer-motion";
 
 export function RootWrapper({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex min-h-screen max-w-7xl mx-auto flex-col">
+    <div className="flex min-h-screen w-full flex-col">
       <AppHeader />
       <AnimatePresence mode="wait">
         <MotionWrapper>{children}</MotionWrapper>

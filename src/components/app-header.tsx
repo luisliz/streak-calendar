@@ -10,7 +10,7 @@ export function AppHeader() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
-    <header className="top-0 z-50 w-full">
+    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 shadow-sm">
       <div className="container mx-auto flex h-16 items-center px-4 relative">
         <div className="w-[200px] shrink-0">
           <Link href="/" className="text-xl font-bold flex items-center gap-2">

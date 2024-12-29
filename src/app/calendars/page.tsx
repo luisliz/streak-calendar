@@ -438,7 +438,7 @@ export default function CalendarsPage() {
   };
 
   return (
-    <div className="container max-w-7xl px-2 md:px-8">
+    <div className="container max-w-7xl w-full mx-auto">
       {/* Authentication-gated content */}
       <AuthenticationWrapper>
         <>
