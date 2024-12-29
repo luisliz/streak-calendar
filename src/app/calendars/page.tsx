@@ -60,25 +60,13 @@ const ViewControls = ({
   return (
     <div className="flex justify-between items-center mb-3">
       <div className="flex items-center gap-4">
-        <Tabs
-          value={calendarView}
-          onValueChange={(value) => {
-            startTransition(() => {
-              setCalendarView(value as CalendarView);
-            });
-          }}
-        >
-          <TabsList className="relative">
-            <motion.div
-              className="absolute inset-0 bg-background pointer-events-none"
-              animate={{ opacity: isPending ? 0.5 : 0 }}
-              transition={{ duration: 0.15 }}
-            />
-            <TabsTrigger value="monthGrid" className="relative z-10">
+        <Tabs value={calendarView} onValueChange={(value) => setCalendarView(value as CalendarView)}>
+          <TabsList>
+            <TabsTrigger value="monthGrid">
               <CalendarDays className="mr-2 h-4 w-4" />
               Monthly View
             </TabsTrigger>
-            <TabsTrigger value="monthRow" className="relative z-10">
+            <TabsTrigger value="monthRow">
               <GripHorizontal className="mr-2 h-4 w-4" />
               Daily View
             </TabsTrigger>
