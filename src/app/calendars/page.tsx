@@ -47,7 +47,6 @@ const AuthenticationWrapper = ({ children }: { children: React.ReactNode }) => {
 const ViewControls = ({
   calendarView,
   setCalendarView,
-  setIsNewCalendarOpen,
 }: {
   calendarView: CalendarView;
   setCalendarView: (view: CalendarView) => void;
@@ -70,12 +69,6 @@ const ViewControls = ({
             </TabsTrigger>
           </TabsList>
         </Tabs>
-      </div>
-      <div className="hidden md:flex gap-2">
-        <Button variant="outline" onClick={() => setIsNewCalendarOpen(true)}>
-          <PlusCircle className="mr-2 h-4 w-4" />
-          Add Calendar
-        </Button>
       </div>
     </div>
   );
@@ -160,6 +153,12 @@ const CalendarList = ({
               view={calendarView}
             />
           ))}
+        </div>
+        <div className="flex justify-center pb-4">
+          <Button variant="outline" onClick={() => setIsNewCalendarOpen(true)}>
+            <PlusCircle className="mr-2 h-4 w-4" />
+            Add Calendar
+          </Button>
         </div>
       </MotionCard>
     </AnimatePresence>
