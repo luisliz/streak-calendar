@@ -98,7 +98,7 @@ export const YearlyOverview = ({ completions }: YearlyOverviewProps) => {
     if (count === 0) {
       return (
         <div
-          className={`aspect-square w-[6px] sm:w-[8px] md:w-4 rounded-full ${colorClass}`}
+          className={`aspect-square w-[5px] sm:w-[8px] md:w-4 rounded-full ${colorClass}`}
           title={`${format(new Date(day), "MMM d, yyyy")}: ${count} completions`}
         />
       );
@@ -106,7 +106,7 @@ export const YearlyOverview = ({ completions }: YearlyOverviewProps) => {
 
     return (
       <div
-        className="aspect-square w-[6px] sm:w-[8px] md:w-4 relative hover:opacity-80 transition-colors"
+        className="aspect-square w-[5px] sm:w-[8px] md:w-4 relative hover:opacity-80 transition-colors"
         title={`${format(new Date(day), "MMM d, yyyy")}: ${count} completions`}
       >
         <svg viewBox="0 0 15 15" className={`w-full h-full ${colorClass}`}>
@@ -128,10 +128,10 @@ export const YearlyOverview = ({ completions }: YearlyOverviewProps) => {
         <span className="font-bold">Yearly Overview</span>{" "}
         <span className="text-muted-foreground/75">({totalCompletions} things done last year)</span>
       </div>
-      <Card className="mx-auto mb-16 rounded-3xl max-w-full md:w-[min(1000px,95vw)] shadow-md p-1 md:p-2 overflow-hidden">
+      <Card className="mx-auto mb-4 md:mb-16 rounded-3xl max-w-full md:w-[min(1000px,95vw)] shadow-md p-1 md:p-2 overflow-hidden">
         <div className="mx-auto">
           {/* Month labels */}
-          <div className="flex justify-center opacity-50">
+          <div className="hidden md:flex justify-center opacity-50">
             <div className="flex justify-between gap-[24px] sm:gap-[28px] md:gap-12 text-[8px] md:text-xs text-muted-foreground">
               {monthLabels.map((month) => (
                 <div key={month.key}>{month.label}</div>
@@ -152,12 +152,12 @@ export const YearlyOverview = ({ completions }: YearlyOverviewProps) => {
                 ))}
               </div>
             </div>
-            <div className="w-[30px] ml-1 flex-col opacity-50">
-              <div className="h-[18px]" /> {/* Empty space for alignment */}
+            <div className="hidden md:flexw-[30px] ml-1 flex-col opacity-50">
+              <div className="h-[4px] md:h-[18px]" /> {/* Empty space for alignment */}
               <div className="text-muted-foreground text-[8px] md:text-xs text-left">Mon</div>
-              <div className="h-[18px]" />
+              <div className="h-[4px] md:h-[18px]" />
               <div className="text-muted-foreground text-[8px] md:text-xs text-left">Wed</div>
-              <div className="h-[18px]" />
+              <div className="h-[4px] md:h-[18px]" />
               <div className="text-muted-foreground text-[8px] md:text-xs text-left">Fri</div>
             </div>
           </div>
