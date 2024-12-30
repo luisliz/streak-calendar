@@ -59,7 +59,7 @@ export const NewCalendarDialog = ({
         <DialogHeader>
           <DialogTitle>Create New Calendar</DialogTitle>
         </DialogHeader>
-        <div className="grid gap-4 py-4">
+        <div className="grid gap-4">
           <div>
             <Label htmlFor="calendar-name">Calendar Name</Label>
             <Input
@@ -93,7 +93,14 @@ export const NewCalendarDialog = ({
               </SelectContent>
             </Select>
           </div>
-          <Button onClick={onSubmit}>Create Calendar</Button>
+          <div className="flex gap-2">
+            <Button variant="outline" onClick={() => onOpenChange(false)} className="flex-1">
+              Cancel
+            </Button>
+            <Button onClick={onSubmit} className="flex-1">
+              Create Calendar
+            </Button>
+          </div>
         </div>
       </DialogContent>
     </Dialog>
@@ -127,7 +134,7 @@ export const NewHabitDialog = ({
         <DialogHeader>
           <DialogTitle>Add New Habit</DialogTitle>
         </DialogHeader>
-        <div className="grid gap-4 py-4">
+        <div className="grid gap-4">
           <div>
             <Label htmlFor="habit-name">Habit Name</Label>
             <Input
@@ -138,7 +145,14 @@ export const NewHabitDialog = ({
               placeholder="e.g., Morning Run"
             />
           </div>
-          <Button onClick={onSubmit}>Add Habit</Button>
+          <div className="flex gap-2">
+            <Button variant="outline" onClick={() => onOpenChange(false)} className="flex-1">
+              Cancel
+            </Button>
+            <Button onClick={onSubmit} className="flex-1">
+              Add Habit
+            </Button>
+          </div>
         </div>
       </DialogContent>
     </Dialog>
@@ -176,7 +190,7 @@ export const EditCalendarDialog = ({
         <DialogHeader>
           <DialogTitle>Edit Calendar</DialogTitle>
         </DialogHeader>
-        <div className="grid gap-4 py-4">
+        <div className="grid gap-4">
           <div>
             <Label htmlFor="edit-calendar-name">Calendar Name</Label>
             <Input id="edit-calendar-name" value={name} onChange={(e) => onNameChange(e.target.value)} />
@@ -205,11 +219,14 @@ export const EditCalendarDialog = ({
             </Select>
           </div>
           <div className="flex gap-2">
-            <Button onClick={onSubmit} className="flex-1">
-              Save Changes
+            <Button variant="outline" onClick={() => onOpenChange(false)} className="flex-1">
+              Cancel
             </Button>
             <Button variant="destructive" onClick={onDelete}>
               Delete
+            </Button>
+            <Button onClick={onSubmit} className="flex-1">
+              Save Changes
             </Button>
           </div>
         </div>
@@ -245,17 +262,20 @@ export const EditHabitDialog = ({
         <DialogHeader>
           <DialogTitle>Edit Habit</DialogTitle>
         </DialogHeader>
-        <div className="grid gap-4 py-4">
+        <div className="grid gap-4">
           <div>
             <Label htmlFor="edit-habit-name">Habit Name</Label>
             <Input id="edit-habit-name" value={name} onChange={(e) => onNameChange(e.target.value)} />
           </div>
           <div className="flex gap-2">
-            <Button onClick={onSubmit} className="flex-1">
-              Save Changes
+            <Button variant="outline" onClick={() => onOpenChange(false)} className="flex-1">
+              Cancel
             </Button>
             <Button variant="destructive" onClick={onDelete}>
               Delete
+            </Button>
+            <Button onClick={onSubmit} className="flex-1">
+              Save Changes
             </Button>
           </div>
         </div>
