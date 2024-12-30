@@ -141,9 +141,11 @@ export const YearlyOverview = ({ completions }: YearlyOverviewProps) => {
             </div>
             <div className="flex-1">
               {/* Month labels */}
-              <div className="opacity-50 flex justify-between text-[8px] md:text-xs text-muted-foreground mb-2">
-                {monthLabels.map((month) => (
-                  <div key={month.key}>{month.label}</div>
+              <div className="opacity-50 flex text-[8px] md:text-xs text-muted-foreground mb-2">
+                {monthLabels.map((month, index) => (
+                  <div key={month.key} className={`${index === 0 ? "mr-auto pl-1" : "flex-1 text-center"}`}>
+                    {month.label}
+                  </div>
                 ))}
               </div>
               {/* Contribution grid */}
