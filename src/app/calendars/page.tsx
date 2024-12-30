@@ -477,7 +477,7 @@ export default function CalendarsPage() {
   }, [isPending, isLoading]);
 
   return (
-    <div className="container max-w-7xl py-4 space-y-8">
+    <div className="container max-w-7xl mx-auto">
       <AuthenticationWrapper>
         <>
           <YearlyOverview completions={yearViewData.completions || []} habits={habits} calendars={calendars} />
