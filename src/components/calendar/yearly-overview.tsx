@@ -1,9 +1,15 @@
+/**
+ * YearlyOverview Component
+ * Displays a GitHub-style contribution graph showing habit completions over the past year.
+ * The graph uses different shades of red to indicate completion intensity per day.
+ */
 import { Card } from "@/components/ui/card";
 import { eachDayOfInterval, format, getDay, subYears } from "date-fns";
 import { memo, useCallback, useMemo } from "react";
 
 import { Id } from "@server/convex/_generated/dataModel";
 
+// Type definitions for the component's props
 interface YearlyOverviewProps {
   completions: Array<{
     habitId: Id<"habits">;
@@ -22,18 +28,21 @@ interface YearlyOverviewProps {
 }
 
 export const YearlyOverview = ({ completions }: YearlyOverviewProps) => {
-  // Memoize date calculations that don't need to change
+  // Calculate and memoize the calendar grid structure and month labels
+  // This only needs to be calculated once since it's based on static dates
   const { weeks, monthLabels } = useMemo(() => {
     const today = new Date();
     const yearAgo = subYears(today, 1);
+    // Generate array of dates for the past year in yyyy-MM-dd format
     const days = eachDayOfInterval({ start: yearAgo, end: today }).map((date) => format(date, "yyyy-MM-dd"));
 
-    // Calculate weeks
+    // Create week arrays with padding for proper calendar alignment
     const firstDayOfWeek = getDay(yearAgo);
     const emptyStartDays = Array(firstDayOfWeek).fill(null);
     const weeks: (string | null)[][] = [];
     let currentWeek: (string | null)[] = [...emptyStartDays];
 
+    // Group days into weeks of 7
     days.forEach((day) => {
       if (currentWeek.length === 7) {
         weeks.push(currentWeek);
@@ -42,6 +51,7 @@ export const YearlyOverview = ({ completions }: YearlyOverviewProps) => {
       currentWeek.push(day);
     });
 
+    // Pad the last week with null values if needed
     if (currentWeek.length > 0) {
       while (currentWeek.length < 7) {
         currentWeek.push(null);
@@ -49,10 +59,10 @@ export const YearlyOverview = ({ completions }: YearlyOverviewProps) => {
       weeks.push(currentWeek);
     }
 
-    // Get month labels
+    // Generate month labels for the calendar header
     const monthLabels = [];
     const firstMonth = new Date(yearAgo);
-    firstMonth.setDate(1); // Set to first day of month
+    firstMonth.setDate(1);
 
     let currentDate = firstMonth;
     while (monthLabels.length <= 12) {
@@ -64,9 +74,9 @@ export const YearlyOverview = ({ completions }: YearlyOverviewProps) => {
     }
 
     return { weeks, monthLabels };
-  }, []); // Empty deps since these only need to calculate once
+  }, []);
 
-  // Memoize completion counts to avoid recalculating on every render
+  // Calculate and memoize the number of completions per day
   const completionCounts = useMemo(() => {
     const counts: Record<string, number> = {};
 
@@ -79,7 +89,7 @@ export const YearlyOverview = ({ completions }: YearlyOverviewProps) => {
     return counts;
   }, [completions]);
 
-  // Memoize color class function
+  // Determine the color intensity based on the number of completions
   const getColorClass = useCallback((count: number) => {
     if (count === 0) return "bg-slate-100 dark:bg-slate-800";
     if (count <= 2) return "fill-red-500/50 dark:fill-red-500/50";
@@ -88,13 +98,15 @@ export const YearlyOverview = ({ completions }: YearlyOverviewProps) => {
     return "fill-red-600 dark:fill-red-600";
   }, []);
 
-  // Extract grid cell to separate component for better performance
+  // Memoized grid cell component for better performance
+  // Renders either an empty cell, a blank day, or a completion indicator
   const GridCell = memo(({ day }: { day: string | null }) => {
     if (!day) return <div className="aspect-square w-[6px] sm:w-[8px] md:w-4" />;
 
     const count = completionCounts[day] || 0;
     const colorClass = getColorClass(count);
 
+    // Render empty cell for days with no completions
     if (count === 0) {
       return (
         <div
@@ -104,6 +116,7 @@ export const YearlyOverview = ({ completions }: YearlyOverviewProps) => {
       );
     }
 
+    // Render completion indicator for days with completions
     return (
       <div
         className="aspect-square w-[5px] sm:w-[8px] md:w-4 relative hover:opacity-80 transition-colors"
@@ -117,22 +130,26 @@ export const YearlyOverview = ({ completions }: YearlyOverviewProps) => {
   });
   GridCell.displayName = "GridCell";
 
-  // Add this near other useMemo calculations
+  // Calculate total number of completions for the year
   const totalCompletions = useMemo(() => {
     return Object.values(completionCounts).reduce((sum, count) => sum + count, 0);
   }, [completionCounts]);
 
   return (
     <div className="mx-auto sm:mt-16 mt-2">
+      {/* Header showing total completions */}
       <div className="mx-auto pl-2 pb-1 max-w-full md:w-[min(1000px,95vw)] text-xs text-muted-foreground">
         <span className="font-bold">Yearly Overview</span>{" "}
         <span className="text-muted-foreground/75">({totalCompletions} things done last year)</span>
       </div>
+      {/* Main calendar card */}
       <Card className="mx-auto mb-4 md:mb-16 rounded-3xl max-w-full md:w-[min(1000px,95vw)] shadow-md p-1 md:p-2 md:pb-4 overflow-hidden">
         <div className="mx-auto">
           <div className="flex">
-            <div className="opacity-50 hidden md:flex w-[30px] flex-col justify-around h-full mt-6">
+            {/* Left day labels (Mon/Wed/Fri) */}
+            <div className="opacity-50 flex flex-col mt-6">
               <div className="h-[4px] md:h-[18px]" />
+              {/* Required for alignment */}
               <div className="text-muted-foreground text-[8px] md:text-xs text-right">Mon</div>
               <div className="h-[4px] md:h-[18px]" />
               <div className="text-muted-foreground text-[8px] md:text-xs text-right">Wed</div>
@@ -140,16 +157,16 @@ export const YearlyOverview = ({ completions }: YearlyOverviewProps) => {
               <div className="text-muted-foreground text-[8px] md:text-xs text-right">Fri</div>
             </div>
             <div className="flex-1">
-              {/* Month labels */}
-              <div className="opacity-50 flex text-[8px] md:text-xs text-muted-foreground mb-2">
+              {/* Month labels row */}
+              <div className="opacity-50 flex text-[8px] text-xs text-muted-foreground pb-2 justify-center mx-auto">
                 {monthLabels.map((month, index) => (
                   <div key={month.key} className={`${index === 0 ? "mr-auto pl-1" : "flex-1 text-center"}`}>
                     {month.label}
                   </div>
                 ))}
               </div>
-              {/* Contribution grid */}
-              <div className="flex gap-[1px]">
+              {/* Main contribution grid */}
+              <div className="flex gap-[1px] justify-center">
                 {weeks.map((week, weekIndex) => (
                   <div key={weekIndex} className="flex flex-col gap-[1px]">
                     {week.map((day, dayIndex) => (
@@ -159,8 +176,10 @@ export const YearlyOverview = ({ completions }: YearlyOverviewProps) => {
                 ))}
               </div>
             </div>
-            <div className="opacity-50 hidden md:flex w-[30px] flex-col justify-around h-full mt-6">
+            {/* Right day labels (Mon/Wed/Fri) */}
+            <div className="opacity-50 flex flex-col mt-6">
               <div className="h-[4px] md:h-[18px]" />
+              {/* Required for alignment */}
               <div className="text-muted-foreground text-[8px] md:text-xs text-left">Mon</div>
               <div className="h-[4px] md:h-[18px]" />
               <div className="text-muted-foreground text-[8px] md:text-xs text-left">Wed</div>
