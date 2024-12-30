@@ -50,9 +50,7 @@ export const CompletionMenu = ({ date, count, onCountChange, colorClass, gridVie
           variant="ghost"
           className={`${gridView ? "aspect-square w-full" : "w-6 h-6"} rounded-full ${
             count === 0 ? "bg-slate-100 dark:bg-slate-800" : ""
-          } transition-colors hover:opacity-80 relative p-0 ${
-            count === 0 ? "" : ""
-          } ${disabled ? "opacity-50 cursor-not-allowed" : ""}`}
+          } relative p-0 ${disabled ? "opacity-50 cursor-not-allowed" : ""} hover:bg-transparent`}
           title={`${new Date(date).toLocaleDateString(undefined, {
             month: "short",
             day: "numeric",
