@@ -12,7 +12,7 @@ export default function Home() {
         <span className="font-semibold italic">true potential</span>.
       </p>
 
-      <div className="shadow-lg border-4 border-red-500 rounded-3xl relative w-full max-w-2xl overflow-hidden aspect-video mx-auto transition-[border-color] hover:border-red-400">
+      <div className="shadow-lg rounded-[8px] relative w-full max-w-2xl overflow-hidden aspect-video mx-auto ">
         <iframe
           className="absolute left-0 top-0 h-full w-full"
           src="https://www.youtube.com/embed/mVQ1bzd816I?si=h-UGS9kLXH-gN2Cs"
