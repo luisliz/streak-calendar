@@ -128,19 +128,24 @@ export const YearlyOverview = ({ completions }: YearlyOverviewProps) => {
         <span className="font-bold">Yearly Overview</span>{" "}
         <span className="text-muted-foreground/75">({totalCompletions} things done last year)</span>
       </div>
-      <Card className="mx-auto mb-4 md:mb-16 rounded-3xl max-w-full md:w-[min(1000px,95vw)] shadow-md p-1 md:p-2 overflow-hidden">
+      <Card className="mx-auto mb-4 md:mb-16 rounded-3xl max-w-full md:w-[min(1000px,95vw)] shadow-md p-1 md:p-2 md:pb-4 overflow-hidden">
         <div className="mx-auto">
-          {/* Month labels */}
-          <div className="hidden md:flex justify-center opacity-50">
-            <div className="flex justify-between gap-[24px] sm:gap-[28px] md:gap-12 text-[8px] md:text-xs text-muted-foreground">
-              {monthLabels.map((month) => (
-                <div key={month.key}>{month.label}</div>
-              ))}
+          <div className="flex">
+            <div className="opacity-50 hidden md:flex w-[30px] flex-col justify-around h-full mt-6">
+              <div className="h-[4px] md:h-[18px]" />
+              <div className="text-muted-foreground text-[8px] md:text-xs text-right">Mon</div>
+              <div className="h-[4px] md:h-[18px]" />
+              <div className="text-muted-foreground text-[8px] md:text-xs text-right">Wed</div>
+              <div className="h-[4px] md:h-[18px]" />
+              <div className="text-muted-foreground text-[8px] md:text-xs text-right">Fri</div>
             </div>
-          </div>
-          {/* Day labels and contribution grid */}
-          <div className="flex justify-center">
-            <div className="">
+            <div className="flex-1">
+              {/* Month labels */}
+              <div className="opacity-50 flex justify-between text-[8px] md:text-xs text-muted-foreground mb-2">
+                {monthLabels.map((month) => (
+                  <div key={month.key}>{month.label}</div>
+                ))}
+              </div>
               {/* Contribution grid */}
               <div className="flex gap-[1px]">
                 {weeks.map((week, weekIndex) => (
@@ -152,8 +157,8 @@ export const YearlyOverview = ({ completions }: YearlyOverviewProps) => {
                 ))}
               </div>
             </div>
-            <div className="hidden md:flexw-[30px] ml-1 flex-col opacity-50">
-              <div className="h-[4px] md:h-[18px]" /> {/* Empty space for alignment */}
+            <div className="opacity-50 hidden md:flex w-[30px] flex-col justify-around h-full mt-6">
+              <div className="h-[4px] md:h-[18px]" />
               <div className="text-muted-foreground text-[8px] md:text-xs text-left">Mon</div>
               <div className="h-[4px] md:h-[18px]" />
               <div className="text-muted-foreground text-[8px] md:text-xs text-left">Wed</div>
