@@ -1,6 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { eachDayOfInterval, format, getDay, subYears } from "date-fns";
-import { memo, useCallback, useEffect, useMemo, useRef } from "react";
+import { memo, useCallback, useMemo } from "react";
 
 import { Id } from "@server/convex/_generated/dataModel";
 
@@ -22,14 +22,6 @@ interface YearlyOverviewProps {
 }
 
 export const YearlyOverview = ({ completions }: YearlyOverviewProps) => {
-  const scrollRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollLeft = scrollRef.current.scrollWidth;
-    }
-  }, []);
-
   // Memoize date calculations that don't need to change
   const { weeks, monthLabels } = useMemo(() => {
     const today = new Date();
@@ -59,13 +51,16 @@ export const YearlyOverview = ({ completions }: YearlyOverviewProps) => {
 
     // Get month labels
     const monthLabels = [];
-    for (let i = 0; i <= 12; i++) {
-      const date = new Date(yearAgo);
-      date.setMonth(date.getMonth() + i);
+    const firstMonth = new Date(yearAgo);
+    firstMonth.setDate(1); // Set to first day of month
+
+    let currentDate = firstMonth;
+    while (monthLabels.length <= 12) {
       monthLabels.push({
-        key: format(date, "MMM yyyy"),
-        label: format(date, "MMM"),
+        key: `${format(currentDate, "MMM yyyy")}-${monthLabels.length}`,
+        label: format(currentDate, "MMM"),
       });
+      currentDate = new Date(currentDate.setMonth(currentDate.getMonth() + 1));
     }
 
     return { weeks, monthLabels };
@@ -95,7 +90,7 @@ export const YearlyOverview = ({ completions }: YearlyOverviewProps) => {
 
   // Extract grid cell to separate component for better performance
   const GridCell = memo(({ day }: { day: string | null }) => {
-    if (!day) return <div className="aspect-square w-[12px] max-w-full md:w-4" />;
+    if (!day) return <div className="aspect-square w-[6px] sm:w-[8px] md:w-4" />;
 
     const count = completionCounts[day] || 0;
     const colorClass = getColorClass(count);
@@ -103,7 +98,7 @@ export const YearlyOverview = ({ completions }: YearlyOverviewProps) => {
     if (count === 0) {
       return (
         <div
-          className={`aspect-square w-[12px] max-w-full md:w-4 rounded-full ${colorClass}`}
+          className={`aspect-square w-[6px] sm:w-[8px] md:w-4 rounded-full ${colorClass}`}
           title={`${format(new Date(day), "MMM d, yyyy")}: ${count} completions`}
         />
       );
@@ -111,7 +106,7 @@ export const YearlyOverview = ({ completions }: YearlyOverviewProps) => {
 
     return (
       <div
-        className="aspect-square w-[12px] max-w-full md:w-4 relative hover:opacity-80 transition-colors"
+        className="aspect-square w-[6px] sm:w-[8px] md:w-4 relative hover:opacity-80 transition-colors"
         title={`${format(new Date(day), "MMM d, yyyy")}: ${count} completions`}
       >
         <svg viewBox="0 0 15 15" className={`w-full h-full ${colorClass}`}>
@@ -128,52 +123,42 @@ export const YearlyOverview = ({ completions }: YearlyOverviewProps) => {
   }, [completionCounts]);
 
   return (
-    <div className="mx-auto sm:mt-16 mt-2 overflow-hidden">
-      <div className="mx-auto w-[1020px] sm:scale-100 scale-50 origin-left text-xs text-muted-foreground">
+    <div className="mx-auto sm:mt-16 mt-2">
+      <div className="mx-auto pl-2 pb-1 max-w-full md:w-[min(1000px,95vw)] text-xs text-muted-foreground">
         <span className="font-bold">Yearly Overview</span>{" "}
         <span className="text-muted-foreground/75">({totalCompletions} things done last year)</span>
       </div>
-      <Card className="mx-auto mb-16 rounded-3xl w-[1020px] sm:scale-100 scale-50 origin-left shadow-md p-2 md:p-4 overflow-hidden">
-        <div ref={scrollRef} className="overflow-x-hidden">
-          <div className="flex flex-col">
-            {/* Month labels */}
-            <div className="flex">
-              <div className="pl-12 gap-[38px] md:gap-12 flex justify-between text-[8px] md:text-xs text-muted-foreground">
-                {monthLabels.map((month) => (
-                  <div key={month.key}>{month.label}</div>
+      <Card className="mx-auto mb-16 rounded-3xl max-w-full md:w-[min(1000px,95vw)] shadow-md p-1 md:p-2 overflow-hidden">
+        <div className="mx-auto">
+          {/* Month labels */}
+          <div className="flex justify-center opacity-50">
+            <div className="flex justify-between gap-[24px] sm:gap-[28px] md:gap-12 text-[8px] md:text-xs text-muted-foreground">
+              {monthLabels.map((month) => (
+                <div key={month.key}>{month.label}</div>
+              ))}
+            </div>
+          </div>
+          {/* Day labels and contribution grid */}
+          <div className="flex justify-center">
+            <div className="">
+              {/* Contribution grid */}
+              <div className="flex gap-[1px]">
+                {weeks.map((week, weekIndex) => (
+                  <div key={weekIndex} className="flex flex-col gap-[1px]">
+                    {week.map((day, dayIndex) => (
+                      <GridCell key={day || `empty-${weekIndex}-${dayIndex}`} day={day} />
+                    ))}
+                  </div>
                 ))}
               </div>
             </div>
-            {/* Day labels and contribution grid */}
-            <div className="flex w-[1000px]">
-              <div className="w-[30px] mr-1 flex-col">
-                <div className="h-[18px]" /> {/* Empty space for alignment */}
-                <div className="text-muted-foreground text-[8px] md:text-xs text-right">Mon</div>
-                <div className="h-[18px]" />
-                <div className="text-muted-foreground text-[8px] md:text-xs text-right">Wed</div>
-                <div className="h-[18px]" />
-                <div className="text-muted-foreground text-[8px] md:text-xs text-right">Fri</div>
-              </div>
-              <div className="inline-block">
-                {/* Contribution grid */}
-                <div className="flex gap-px">
-                  {weeks.map((week, weekIndex) => (
-                    <div key={weekIndex} className="flex flex-col gap-px">
-                      {week.map((day, dayIndex) => (
-                        <GridCell key={day || `empty-${weekIndex}-${dayIndex}`} day={day} />
-                      ))}
-                    </div>
-                  ))}
-                </div>
-              </div>
-              <div className="w-[30px] ml-1 flex-col">
-                <div className="h-[18px]" /> {/* Empty space for alignment */}
-                <div className="text-muted-foreground text-[8px] md:text-xs text-left">Mon</div>
-                <div className="h-[18px]" />
-                <div className="text-muted-foreground text-[8px] md:text-xs text-left">Wed</div>
-                <div className="h-[18px]" />
-                <div className="text-muted-foreground text-[8px] md:text-xs text-left">Fri</div>
-              </div>
+            <div className="w-[30px] ml-1 flex-col opacity-50">
+              <div className="h-[18px]" /> {/* Empty space for alignment */}
+              <div className="text-muted-foreground text-[8px] md:text-xs text-left">Mon</div>
+              <div className="h-[18px]" />
+              <div className="text-muted-foreground text-[8px] md:text-xs text-left">Wed</div>
+              <div className="h-[18px]" />
+              <div className="text-muted-foreground text-[8px] md:text-xs text-left">Fri</div>
             </div>
           </div>
         </div>
