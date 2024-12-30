@@ -49,9 +49,9 @@ export const CalendarItem = ({
   const colorTheme = calendar.colorTheme.startsWith("bg-") ? calendar.colorTheme : `bg-${calendar.colorTheme}-500`;
 
   return (
-    <div className="pt-8">
+    <div className="">
       {/* Header section with calendar name and add habit button */}
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex justify-between items-center">
         <div
           className="flex items-center gap-2 group cursor-pointer hover:text-muted-foreground transition-colors"
           onClick={onEditCalendar}
