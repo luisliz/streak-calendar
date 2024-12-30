@@ -20,18 +20,18 @@ interface CalendarItemProps {
   habits: Array<{
     _id: Id<"habits">;
     name: string;
+    timerDuration?: number;
   }>;
-  days: string[]; // Array of dates to display in the yearly overview
+  days: string[];
   completions: Array<{
     habitId: Id<"habits">;
     completedAt: number;
   }>;
-  onAddHabit: () => void; // Callback when user wants to add a new habit
-  onEditCalendar: () => void; // Callback when user wants to edit calendar settings
-  onEditHabit: (habit: { _id: Id<"habits">; name: string }) => void; // Callback when user wants to edit a habit
-  onToggleHabit: (habitId: Id<"habits">, date: string, count: number) => void; // Callback when user toggles habit completion
+  onAddHabit: () => void;
+  onEditCalendar: () => void;
+  onEditHabit: (habit: { _id: Id<"habits">; name: string; timerDuration?: number }) => void;
+  onToggleHabit: (habitId: Id<"habits">, date: string, count: number) => void;
   view: "monthRow" | "monthGrid";
-  isPending: boolean;
 }
 
 export const CalendarItem = ({
@@ -127,6 +127,7 @@ export const CalendarItem = ({
                     onIncrement={() => onToggleHabit(habit._id, today, todayCount + 1)}
                     onDecrement={() => onToggleHabit(habit._id, today, todayCount - 1)}
                     variant="default"
+                    timerDuration={habit.timerDuration}
                   />
                 </div>
               );
@@ -171,7 +172,7 @@ export const CalendarItem = ({
                   onIncrement={() => onToggleHabit(habit._id, today, todayCount + 1)}
                   onDecrement={() => onToggleHabit(habit._id, today, todayCount - 1)}
                   variant="ghost"
-                  showText
+                  timerDuration={habit.timerDuration}
                 />
               </div>
             );

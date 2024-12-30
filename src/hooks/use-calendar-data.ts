@@ -38,11 +38,12 @@ export function useCalendarData(startDate: Date, endDate: Date) {
     });
   };
 
-  const handleAddHabit = async (name: string, calendarId: Id<"calendars">) => {
+  const handleAddHabit = async (name: string, calendarId: Id<"calendars">, timerDuration?: number) => {
     if (!name.trim()) return;
     await createHabit({
       name,
       calendarId,
+      timerDuration,
     });
   };
 
@@ -55,11 +56,12 @@ export function useCalendarData(startDate: Date, endDate: Date) {
     });
   };
 
-  const handleEditHabit = async (id: Id<"habits">, name: string) => {
+  const handleEditHabit = async (id: Id<"habits">, name: string, timerDuration?: number) => {
     if (!name.trim()) return;
     await updateHabit({
       id,
       name,
+      timerDuration,
     });
   };
 

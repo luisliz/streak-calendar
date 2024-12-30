@@ -19,8 +19,9 @@ import { useHabitState } from "@/hooks/use-habit-state";
 import { Calendar, Completion, Day, EditingCalendar, EditingHabit, Habit, Id } from "@/types";
 import { SignInButton, SignedIn, SignedOut } from "@clerk/nextjs";
 import { AnimatePresence, motion } from "framer-motion";
-import { CalendarDays, GripHorizontal, Loader2, PlusCircle } from "lucide-react";
+import { CalendarDays, GripHorizontal, PlusCircle } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState, useTransition } from "react";
+import { toast } from "react-hot-toast";
 
 const MotionCard = motion(Card);
 
@@ -46,17 +47,15 @@ const AuthenticationWrapper = ({ children }: { children: React.ReactNode }) => {
 // View controls component
 const ViewControls = ({
   calendarView,
-  setCalendarView,
-  isPending,
+  onViewChange,
 }: {
   calendarView: CalendarView;
-  setCalendarView: (view: CalendarView) => void;
-  isPending: boolean;
+  onViewChange: (view: CalendarView) => void;
 }) => {
   return (
     <div className="flex justify-between items-center mb-3">
       <div className="flex items-center gap-4">
-        <Tabs value={calendarView} onValueChange={(value) => setCalendarView(value as CalendarView)}>
+        <Tabs value={calendarView} onValueChange={(value) => onViewChange(value as CalendarView)}>
           <TabsList>
             <TabsTrigger value="monthRow">
               <GripHorizontal className="mr-2 h-4 w-4" />
@@ -69,9 +68,6 @@ const ViewControls = ({
           </TabsList>
         </Tabs>
       </div>
-      <div className="w-10 h-10 flex items-center justify-center">
-        {isPending && <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />}
-      </div>
     </div>
   );
 };
@@ -82,30 +78,27 @@ const CalendarList = ({
   calendars,
   completions,
   days,
-  habitsByCalendar,
-  handleEditCalendarMemo,
-  handleEditHabitMemo,
-  handleToggleHabit,
-  isPending,
-  setCalendarView,
-  setIsNewCalendarOpen,
-  setIsNewHabitOpen,
-  setSelectedCalendar,
+  habits,
+  onAddHabit,
+  onEditCalendar,
+  onEditHabit,
+  onToggleHabit,
+  onViewChange,
+  onNewCalendar,
+  view,
 }: {
-  calendars: Calendar[];
   calendarView: CalendarView;
-  habitsByCalendar: Map<Id<"calendars">, Habit[]>;
-  days: Day[];
+  calendars: Calendar[];
   completions: Completion[];
-  handleEditCalendarMemo: (calendar: Calendar) => void;
-  handleEditHabitMemo: (habit: EditingHabit) => void;
-  handleToggleHabit: (habitId: Id<"habits">, date: string, count: number) => Promise<void>;
-  setSelectedCalendar: (calendar: Calendar) => void;
-  setIsNewHabitOpen: (open: boolean) => void;
-  setCalendarView: (view: CalendarView) => void;
-  isPending: boolean;
-  setIsNewCalendarOpen: (open: boolean) => void;
-  startTransition: (callback: () => void) => void;
+  days: Day[];
+  habits: Habit[];
+  onAddHabit: (calendar: Calendar) => void;
+  onEditCalendar: (calendar: Calendar) => void;
+  onEditHabit: (habit: EditingHabit) => void;
+  onToggleHabit: (habitId: Id<"habits">, date: string, count: number) => void;
+  onViewChange: (view: CalendarView) => void;
+  onNewCalendar: () => void;
+  view: CalendarView;
 }) => {
   if (calendars.length === 0) {
     return (
@@ -129,29 +122,28 @@ const CalendarList = ({
         }}
         className="space-y-8 shadow-md border p-2"
       >
-        <ViewControls calendarView={calendarView} setCalendarView={setCalendarView} isPending={isPending} />
+        <ViewControls calendarView={calendarView} onViewChange={onViewChange} />
         <div className="px-4 md:px-8">
-          {calendars.map((calendar) => (
-            <CalendarItem
-              key={calendar._id}
-              calendar={calendar}
-              habits={habitsByCalendar.get(calendar._id) || []}
-              days={days}
-              completions={completions}
-              onAddHabit={() => {
-                setSelectedCalendar(calendar);
-                setIsNewHabitOpen(true);
-              }}
-              onEditCalendar={() => handleEditCalendarMemo(calendar)}
-              onEditHabit={handleEditHabitMemo}
-              onToggleHabit={handleToggleHabit}
-              view={calendarView}
-              isPending={isPending}
-            />
-          ))}
+          {calendars.map((calendar) => {
+            const calendarHabits = habits.filter((h) => h.calendarId === calendar._id);
+            return (
+              <CalendarItem
+                key={calendar._id}
+                calendar={calendar}
+                habits={calendarHabits}
+                days={days}
+                completions={completions}
+                onAddHabit={() => onAddHabit(calendar)}
+                onEditCalendar={() => onEditCalendar(calendar)}
+                onEditHabit={onEditHabit}
+                onToggleHabit={onToggleHabit}
+                view={view}
+              />
+            );
+          })}
         </div>
         <div className="flex justify-center pb-4">
-          <Button variant="outline" onClick={() => setIsNewCalendarOpen(true)}>
+          <Button variant="outline" onClick={onNewCalendar}>
             <PlusCircle className="mr-2 h-4 w-4" />
             Add Calendar
           </Button>
@@ -166,6 +158,7 @@ const DialogComponents = ({
   editCalendarColor,
   editCalendarName,
   editHabitName,
+  editHabitTimerDuration,
   editingCalendar,
   editingHabit,
   handleAddCalendar,
@@ -181,10 +174,12 @@ const DialogComponents = ({
   newCalendarColor,
   newCalendarName,
   newHabitName,
+  newHabitTimerDuration,
   selectedCalendar,
   setEditCalendarColor,
   setEditCalendarName,
   setEditHabitName,
+  setEditHabitTimerDuration,
   setEditingCalendar,
   setEditingHabit,
   setIsNewCalendarOpen,
@@ -192,29 +187,33 @@ const DialogComponents = ({
   setNewCalendarColor,
   setNewCalendarName,
   setNewHabitName,
+  setNewHabitTimerDuration,
 }: {
   editCalendarColor: string;
   editCalendarName: string;
   editHabitName: string;
+  editHabitTimerDuration: number | undefined;
   editingCalendar: EditingCalendar | null;
   editingHabit: EditingHabit | null;
   handleAddCalendar: (name: string, color: string) => Promise<void>;
-  handleAddHabit: (name: string, calendarId: Id<"calendars">) => Promise<void>;
+  handleAddHabit: (name: string, calendarId: Id<"calendars">, timerDuration?: number) => Promise<void>;
   handleCalendarKeyDown: (e: React.KeyboardEvent) => void;
   handleDeleteCalendar: (id: Id<"calendars">) => Promise<void>;
   handleDeleteHabit: (id: Id<"habits">) => Promise<void>;
   handleEditCalendar: (id: Id<"calendars">, name: string, color: string) => Promise<void>;
-  handleEditHabit: (id: Id<"habits">, name: string) => Promise<void>;
+  handleEditHabit: (id: Id<"habits">, name: string, timerDuration?: number) => Promise<void>;
   handleHabitKeyDown: (e: React.KeyboardEvent) => void;
   isNewCalendarOpen: boolean;
   isNewHabitOpen: boolean;
   newCalendarColor: string;
   newCalendarName: string;
   newHabitName: string;
+  newHabitTimerDuration: number | undefined;
   selectedCalendar: Calendar | null;
   setEditCalendarColor: (color: string) => void;
   setEditCalendarName: (name: string) => void;
   setEditHabitName: (name: string) => void;
+  setEditHabitTimerDuration: (duration: number | undefined) => void;
   setEditingCalendar: (calendar: EditingCalendar | null) => void;
   setEditingHabit: (habit: EditingHabit | null) => void;
   setIsNewCalendarOpen: (open: boolean) => void;
@@ -222,6 +221,7 @@ const DialogComponents = ({
   setNewCalendarColor: (color: string) => void;
   setNewCalendarName: (name: string) => void;
   setNewHabitName: (name: string) => void;
+  setNewHabitTimerDuration: (duration: number | undefined) => void;
 }) => {
   return (
     <>
@@ -246,10 +246,13 @@ const DialogComponents = ({
         onOpenChange={setIsNewHabitOpen}
         name={newHabitName}
         onNameChange={setNewHabitName}
+        timerDuration={newHabitTimerDuration}
+        onTimerDurationChange={setNewHabitTimerDuration}
         onSubmit={() => {
           if (selectedCalendar) {
-            handleAddHabit(newHabitName, selectedCalendar._id);
+            handleAddHabit(newHabitName, selectedCalendar._id, newHabitTimerDuration);
             setNewHabitName("");
+            setNewHabitTimerDuration(undefined);
             setIsNewHabitOpen(false);
           }
         }}
@@ -282,9 +285,11 @@ const DialogComponents = ({
         onOpenChange={() => setEditingHabit(null)}
         name={editHabitName}
         onNameChange={setEditHabitName}
+        timerDuration={editHabitTimerDuration}
+        onTimerDurationChange={setEditHabitTimerDuration}
         onSubmit={() => {
           if (editingHabit) {
-            handleEditHabit(editingHabit._id, editHabitName);
+            handleEditHabit(editingHabit._id, editHabitName, editHabitTimerDuration);
             setEditingHabit(null);
           }
         }}
@@ -327,10 +332,14 @@ export default function CalendarsPage() {
   const {
     newHabitName,
     setNewHabitName,
+    newHabitTimerDuration,
+    setNewHabitTimerDuration,
     editingHabit,
     setEditingHabit,
     editHabitName,
     setEditHabitName,
+    editHabitTimerDuration,
+    setEditHabitTimerDuration,
     isNewHabitOpen,
     setIsNewHabitOpen,
   } = useHabitState();
@@ -354,7 +363,12 @@ export default function CalendarsPage() {
     setIsLoading(!monthViewData.calendars || !monthViewData.habits || !monthViewData.completions);
   }, [monthViewData.calendars, monthViewData.habits, monthViewData.completions]);
 
-  // Wrap all state updates in startTransition
+  // Use appropriate data based on view
+  const { calendars, habits } = useMemo(
+    () => (calendarView === "monthRow" ? monthViewData : yearViewData),
+    [calendarView, monthViewData, yearViewData]
+  );
+
   const wrappedHandleAddCalendar = useCallback(
     async (name: string, color: string) => {
       startTransition(async () => {
@@ -368,14 +382,20 @@ export default function CalendarsPage() {
   );
 
   const wrappedHandleAddHabit = useCallback(
-    async (name: string, calendarId: Id<"calendars">) => {
+    async (name: string, calendarId: Id<"calendars">, timerDuration?: number) => {
       startTransition(async () => {
-        await monthViewData.handleAddHabit(name, calendarId);
-        setNewHabitName("");
-        setIsNewHabitOpen(false);
+        try {
+          await monthViewData.handleAddHabit(name, calendarId, timerDuration);
+          setNewHabitName("");
+          setNewHabitTimerDuration(undefined);
+          setIsNewHabitOpen(false);
+        } catch (error) {
+          console.error(error);
+          toast.error("Failed to add habit");
+        }
       });
     },
-    [monthViewData, setNewHabitName, setIsNewHabitOpen]
+    [monthViewData, setNewHabitName, setNewHabitTimerDuration, setIsNewHabitOpen]
   );
 
   const wrappedHandleEditCalendar = useCallback(
@@ -389,10 +409,15 @@ export default function CalendarsPage() {
   );
 
   const wrappedHandleEditHabit = useCallback(
-    async (id: Id<"habits">, name: string) => {
+    async (id: Id<"habits">, name: string, timerDuration?: number) => {
       startTransition(async () => {
-        await monthViewData.handleEditHabit(id, name);
-        setEditingHabit(null);
+        try {
+          await monthViewData.handleEditHabit(id, name, timerDuration);
+          setEditingHabit(null);
+        } catch (error) {
+          console.error(error);
+          toast.error("Failed to edit habit");
+        }
       });
     },
     [monthViewData, setEditingHabit]
@@ -420,50 +445,20 @@ export default function CalendarsPage() {
 
   const wrappedHandleToggleHabit = useCallback(
     async (habitId: Id<"habits">, date: string, count: number) => {
-      startTransition(() => {
-        monthViewData.handleToggleHabit(habitId, date, count);
-      });
+      await monthViewData.handleToggleHabit(habitId, date, count);
     },
     [monthViewData]
   );
 
-  // Add console logs to track loading states
-  useEffect(() => {
-    console.log("Loading States:", { isPending, isLoading });
-  }, [isPending, isLoading]);
-
-  // Use appropriate data based on view
-  const { calendars, habits, completions } = useMemo(
-    () => (calendarView === "monthRow" ? monthViewData : yearViewData),
-    [calendarView, monthViewData, yearViewData]
-  );
-
-  // Memoize filtered habits by calendar to prevent re-computation
-  const habitsByCalendar = useMemo(() => {
-    if (!habits || !calendars) return new Map();
-
-    return new Map(calendars.map((calendar) => [calendar._id, habits.filter((h) => h.calendarId === calendar._id)]));
-  }, [habits, calendars]);
-
-  // Memoize handlers to prevent re-renders
-  const handleEditCalendarMemo = useCallback(
-    (calendar: (typeof calendars)[0]) => {
-      setEditingCalendar(calendar);
-      setEditCalendarName(calendar.name);
-      setEditCalendarColor(calendar.colorTheme);
-    },
-    [setEditingCalendar, setEditCalendarName, setEditCalendarColor]
-  );
-
-  const handleEditHabitMemo = useCallback(
-    (habit: { _id: (typeof habits)[0]["_id"]; name: string }) => {
+  const handleEditHabitClick = useCallback(
+    (habit: { _id: Id<"habits">; name: string; timerDuration?: number }) => {
       setEditingHabit(habit);
       setEditHabitName(habit.name);
+      setEditHabitTimerDuration(habit.timerDuration);
     },
-    [setEditingHabit, setEditHabitName]
+    [setEditingHabit, setEditHabitName, setEditHabitTimerDuration]
   );
 
-  // Keyboard event handlers for form submission
   const handleCalendarKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
       wrappedHandleAddCalendar(newCalendarName, newCalendarColor);
@@ -472,68 +467,81 @@ export default function CalendarsPage() {
 
   const handleHabitKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && selectedCalendar) {
-      wrappedHandleAddHabit(newHabitName, selectedCalendar._id);
+      wrappedHandleAddHabit(newHabitName, selectedCalendar._id, newHabitTimerDuration);
     }
   };
 
+  // Add console logs to track loading states
+  useEffect(() => {
+    console.log("Loading States:", { isPending, isLoading });
+  }, [isPending, isLoading]);
+
   return (
-    <div className="container max-w-7xl w-full mx-auto">
+    <div className="container max-w-7xl py-4 space-y-8">
       <AuthenticationWrapper>
         <>
           <YearlyOverview completions={yearViewData.completions || []} habits={habits} calendars={calendars} />
           <CalendarList
             calendarView={calendarView}
-            calendars={calendars}
-            completions={completions}
+            calendars={monthViewData.calendars || []}
+            completions={monthViewData.completions || []}
             days={days}
-            habitsByCalendar={habitsByCalendar}
-            handleEditCalendarMemo={handleEditCalendarMemo}
-            handleEditHabitMemo={handleEditHabitMemo}
-            handleToggleHabit={wrappedHandleToggleHabit}
-            isPending={isPending}
-            setCalendarView={setCalendarView}
+            habits={monthViewData.habits || []}
+            onAddHabit={(calendar) => {
+              setSelectedCalendar(calendar);
+              setIsNewHabitOpen(true);
+            }}
+            onEditCalendar={(calendar) => {
+              setEditingCalendar(calendar);
+              setEditCalendarName(calendar.name);
+              setEditCalendarColor(calendar.colorTheme);
+            }}
+            onEditHabit={handleEditHabitClick}
+            onToggleHabit={wrappedHandleToggleHabit}
+            onViewChange={setCalendarView}
+            onNewCalendar={() => setIsNewCalendarOpen(true)}
+            view={calendarView}
+          />
+          <DialogComponents
+            editCalendarColor={editCalendarColor}
+            editCalendarName={editCalendarName}
+            editHabitName={editHabitName}
+            editHabitTimerDuration={editHabitTimerDuration}
+            editingCalendar={editingCalendar}
+            editingHabit={editingHabit}
+            handleAddCalendar={wrappedHandleAddCalendar}
+            handleAddHabit={wrappedHandleAddHabit}
+            handleCalendarKeyDown={handleCalendarKeyDown}
+            handleDeleteCalendar={wrappedHandleDeleteCalendar}
+            handleDeleteHabit={wrappedHandleDeleteHabit}
+            handleEditCalendar={wrappedHandleEditCalendar}
+            handleEditHabit={wrappedHandleEditHabit}
+            handleHabitKeyDown={handleHabitKeyDown}
+            isNewCalendarOpen={isNewCalendarOpen}
+            isNewHabitOpen={isNewHabitOpen}
+            newCalendarColor={newCalendarColor}
+            newCalendarName={newCalendarName}
+            newHabitName={newHabitName}
+            newHabitTimerDuration={newHabitTimerDuration}
+            selectedCalendar={selectedCalendar}
+            setEditCalendarColor={setEditCalendarColor}
+            setEditCalendarName={setEditCalendarName}
+            setEditHabitName={setEditHabitName}
+            setEditHabitTimerDuration={setEditHabitTimerDuration}
+            setEditingCalendar={setEditingCalendar}
+            setEditingHabit={setEditingHabit}
             setIsNewCalendarOpen={setIsNewCalendarOpen}
             setIsNewHabitOpen={setIsNewHabitOpen}
-            setSelectedCalendar={setSelectedCalendar}
-            startTransition={startTransition}
+            setNewCalendarColor={setNewCalendarColor}
+            setNewCalendarName={setNewCalendarName}
+            setNewHabitName={setNewHabitName}
+            setNewHabitTimerDuration={setNewHabitTimerDuration}
           />
           <div className="mt-8 flex justify-center">
             <ImportExport />
           </div>
         </>
       </AuthenticationWrapper>
-
-      <DialogComponents
-        editCalendarColor={editCalendarColor}
-        editCalendarName={editCalendarName}
-        editHabitName={editHabitName}
-        editingCalendar={editingCalendar}
-        editingHabit={editingHabit}
-        handleAddCalendar={wrappedHandleAddCalendar}
-        handleAddHabit={wrappedHandleAddHabit}
-        handleCalendarKeyDown={handleCalendarKeyDown}
-        handleDeleteCalendar={wrappedHandleDeleteCalendar}
-        handleDeleteHabit={wrappedHandleDeleteHabit}
-        handleEditCalendar={wrappedHandleEditCalendar}
-        handleEditHabit={wrappedHandleEditHabit}
-        handleHabitKeyDown={handleHabitKeyDown}
-        isNewCalendarOpen={isNewCalendarOpen}
-        isNewHabitOpen={isNewHabitOpen}
-        newCalendarColor={newCalendarColor}
-        newCalendarName={newCalendarName}
-        newHabitName={newHabitName}
-        selectedCalendar={selectedCalendar}
-        setEditCalendarColor={setEditCalendarColor}
-        setEditCalendarName={setEditCalendarName}
-        setEditHabitName={setEditHabitName}
-        setEditingCalendar={setEditingCalendar}
-        setEditingHabit={setEditingHabit}
-        setIsNewCalendarOpen={setIsNewCalendarOpen}
-        setIsNewHabitOpen={setIsNewHabitOpen}
-        setNewCalendarColor={setNewCalendarColor}
-        setNewCalendarName={setNewCalendarName}
-        setNewHabitName={setNewHabitName}
-      />
     </div>
   );
 }

@@ -114,10 +114,12 @@ export const NewCalendarDialog = ({
 interface NewHabitDialogProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
-  name: string; // Current habit name input value
-  onNameChange: (name: string) => void; // Callback when name changes
-  onSubmit: () => void; // Callback when form is submitted
-  onKeyDown: (e: React.KeyboardEvent) => void; // Keyboard event handler
+  name: string;
+  onNameChange: (name: string) => void;
+  timerDuration: number | undefined;
+  onTimerDurationChange: (duration: number | undefined) => void;
+  onSubmit: () => void;
+  onKeyDown: (e: React.KeyboardEvent) => void;
 }
 
 export const NewHabitDialog = ({
@@ -125,6 +127,8 @@ export const NewHabitDialog = ({
   onOpenChange,
   name,
   onNameChange,
+  timerDuration,
+  onTimerDurationChange,
   onSubmit,
   onKeyDown,
 }: NewHabitDialogProps) => {
@@ -143,6 +147,23 @@ export const NewHabitDialog = ({
               onChange={(e) => onNameChange(e.target.value)}
               onKeyDown={onKeyDown}
               placeholder="e.g., Morning Run"
+            />
+          </div>
+          <div>
+            <Label htmlFor="timer-duration">Timer Duration (minutes)</Label>
+            <Input
+              id="timer-duration"
+              type="number"
+              min={1}
+              max={120}
+              value={timerDuration || ""}
+              onChange={(e) => {
+                const val = e.target.value ? parseInt(e.target.value) : undefined;
+                if (!val || (val >= 1 && val <= 120)) {
+                  onTimerDurationChange(val);
+                }
+              }}
+              placeholder="Optional timer duration"
             />
           </div>
           <div className="flex gap-2">
@@ -242,10 +263,12 @@ export const EditCalendarDialog = ({
 interface EditHabitDialogProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
-  name: string; // Current habit name
-  onNameChange: (name: string) => void; // Callback when name changes
-  onSubmit: () => void; // Callback to save changes
-  onDelete: () => void; // Callback to delete habit
+  name: string;
+  onNameChange: (name: string) => void;
+  timerDuration: number | undefined;
+  onTimerDurationChange: (duration: number | undefined) => void;
+  onSubmit: () => void;
+  onDelete: () => void;
 }
 
 export const EditHabitDialog = ({
@@ -253,6 +276,8 @@ export const EditHabitDialog = ({
   onOpenChange,
   name,
   onNameChange,
+  timerDuration,
+  onTimerDurationChange,
   onSubmit,
   onDelete,
 }: EditHabitDialogProps) => {
@@ -266,6 +291,23 @@ export const EditHabitDialog = ({
           <div>
             <Label htmlFor="edit-habit-name">Habit Name</Label>
             <Input id="edit-habit-name" value={name} onChange={(e) => onNameChange(e.target.value)} />
+          </div>
+          <div>
+            <Label htmlFor="edit-timer-duration">Timer Duration (minutes)</Label>
+            <Input
+              id="edit-timer-duration"
+              type="number"
+              min={1}
+              max={120}
+              value={timerDuration || ""}
+              onChange={(e) => {
+                const val = e.target.value ? parseInt(e.target.value) : undefined;
+                if (!val || (val >= 1 && val <= 120)) {
+                  onTimerDurationChange(val);
+                }
+              }}
+              placeholder="Optional timer duration"
+            />
           </div>
           <div className="flex gap-2">
             <Button variant="outline" onClick={() => onOpenChange(false)} className="flex-1">

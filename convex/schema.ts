@@ -12,6 +12,7 @@ export default defineSchema({
     name: v.string(),
     userId: v.string(),
     calendarId: v.id("calendars"),
+    timerDuration: v.optional(v.number()),
   }).index("by_calendar", ["calendarId"]),
 
   completions: defineTable({

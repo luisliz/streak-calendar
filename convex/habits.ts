@@ -24,6 +24,7 @@ export const create = mutation({
   args: {
     name: v.string(),
     calendarId: v.id("calendars"),
+    timerDuration: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
@@ -39,6 +40,7 @@ export const create = mutation({
       name: args.name,
       userId: identity.subject,
       calendarId: args.calendarId,
+      timerDuration: args.timerDuration,
     });
   },
 });
@@ -113,7 +115,11 @@ export const getCompletions = query({
 });
 
 export const update = mutation({
-  args: { id: v.id("habits"), name: v.string() },
+  args: {
+    id: v.id("habits"),
+    name: v.string(),
+    timerDuration: v.optional(v.number()),
+  },
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) throw new Error("Unauthenticated");
@@ -125,6 +131,7 @@ export const update = mutation({
 
     await ctx.db.patch(args.id, {
       name: args.name,
+      timerDuration: args.timerDuration,
     });
   },
 });
