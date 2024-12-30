@@ -59,13 +59,13 @@ const ViewControls = ({
       <div className="flex items-center gap-4">
         <Tabs value={calendarView} onValueChange={(value) => setCalendarView(value as CalendarView)}>
           <TabsList>
-            <TabsTrigger value="monthGrid">
-              <CalendarDays className="mr-2 h-4 w-4" />
-              Monthly View
-            </TabsTrigger>
             <TabsTrigger value="monthRow">
               <GripHorizontal className="mr-2 h-4 w-4" />
-              Daily View
+              Rows View
+            </TabsTrigger>
+            <TabsTrigger value="monthGrid">
+              <CalendarDays className="mr-2 h-4 w-4" />
+              Grids View
             </TabsTrigger>
           </TabsList>
         </Tabs>
