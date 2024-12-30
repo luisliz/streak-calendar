@@ -19,7 +19,7 @@ import { useHabitState } from "@/hooks/use-habit-state";
 import { Calendar, Completion, Day, EditingCalendar, EditingHabit, Habit, Id } from "@/types";
 import { SignInButton, SignedIn, SignedOut } from "@clerk/nextjs";
 import { AnimatePresence, motion } from "framer-motion";
-import { CalendarDays, GripHorizontal, PlusCircle } from "lucide-react";
+import { CalendarDays, GripHorizontal, Loader2, PlusCircle } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState, useTransition } from "react";
 
 const MotionCard = motion(Card);
@@ -47,12 +47,11 @@ const AuthenticationWrapper = ({ children }: { children: React.ReactNode }) => {
 const ViewControls = ({
   calendarView,
   setCalendarView,
+  isPending,
 }: {
   calendarView: CalendarView;
   setCalendarView: (view: CalendarView) => void;
   isPending: boolean;
-  setIsNewCalendarOpen: (open: boolean) => void;
-  startTransition: (callback: () => void) => void;
 }) => {
   return (
     <div className="flex justify-between items-center mb-3">
@@ -69,6 +68,9 @@ const ViewControls = ({
             </TabsTrigger>
           </TabsList>
         </Tabs>
+      </div>
+      <div className="w-10 h-10 flex items-center justify-center">
+        {isPending && <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />}
       </div>
     </div>
   );
@@ -89,7 +91,6 @@ const CalendarList = ({
   setIsNewCalendarOpen,
   setIsNewHabitOpen,
   setSelectedCalendar,
-  startTransition,
 }: {
   calendars: Calendar[];
   calendarView: CalendarView;
@@ -128,13 +129,7 @@ const CalendarList = ({
         }}
         className="space-y-8 shadow-md border p-2"
       >
-        <ViewControls
-          calendarView={calendarView}
-          setCalendarView={setCalendarView}
-          isPending={isPending}
-          setIsNewCalendarOpen={setIsNewCalendarOpen}
-          startTransition={startTransition}
-        />
+        <ViewControls calendarView={calendarView} setCalendarView={setCalendarView} isPending={isPending} />
         <div className="px-4 md:px-8">
           {calendars.map((calendar) => (
             <CalendarItem
@@ -151,6 +146,7 @@ const CalendarList = ({
               onEditHabit={handleEditHabitMemo}
               onToggleHabit={handleToggleHabit}
               view={calendarView}
+              isPending={isPending}
             />
           ))}
         </div>
@@ -311,46 +307,6 @@ export default function CalendarsPage() {
   const { calendarView, setCalendarView, ...calendarState } = useCalendarState();
   const [isLoading, setIsLoading] = useState(true);
 
-  // Pre-fetch data for both views
-  const monthData = useDateRange(30);
-  const yearData = useDateRange(365);
-
-  // Use appropriate data based on view with deferred loading
-  const { days } = useMemo(
-    () => (calendarView === "monthRow" ? monthData : yearData),
-    [calendarView, monthData, yearData]
-  );
-
-  // Prefetch both views' data
-  const monthViewData = useCalendarData(monthData.startDate, monthData.today);
-  const yearViewData = useCalendarData(yearData.startDate, yearData.today);
-
-  // Update loading state based on data availability
-  useEffect(() => {
-    setIsLoading(!monthViewData.calendars || !monthViewData.habits || !monthViewData.completions);
-  }, [monthViewData.calendars, monthViewData.habits, monthViewData.completions]);
-
-  // Add this temporarily to see the loading state
-  console.log("Loading state:", isLoading);
-  console.log("Calendar data:", monthViewData);
-
-  // Use appropriate data based on view
-  const {
-    calendars,
-    habits,
-    completions,
-    handleAddCalendar,
-    handleAddHabit,
-    handleEditCalendar,
-    handleEditHabit,
-    handleDeleteCalendar,
-    handleDeleteHabit,
-    handleToggleHabit,
-  } = useMemo(
-    () => (calendarView === "monthRow" ? monthViewData : yearViewData),
-    [calendarView, monthViewData, yearViewData]
-  );
-
   const {
     selectedCalendar,
     setSelectedCalendar,
@@ -378,6 +334,109 @@ export default function CalendarsPage() {
     isNewHabitOpen,
     setIsNewHabitOpen,
   } = useHabitState();
+
+  // Pre-fetch data for both views
+  const monthData = useDateRange(30);
+  const yearData = useDateRange(365);
+
+  // Use appropriate data based on view with deferred loading
+  const { days } = useMemo(
+    () => (calendarView === "monthRow" ? monthData : yearData),
+    [calendarView, monthData, yearData]
+  );
+
+  // Prefetch both views' data
+  const monthViewData = useCalendarData(monthData.startDate, monthData.today);
+  const yearViewData = useCalendarData(yearData.startDate, yearData.today);
+
+  // Update loading state based on data availability
+  useEffect(() => {
+    setIsLoading(!monthViewData.calendars || !monthViewData.habits || !monthViewData.completions);
+  }, [monthViewData.calendars, monthViewData.habits, monthViewData.completions]);
+
+  // Wrap all state updates in startTransition
+  const wrappedHandleAddCalendar = useCallback(
+    async (name: string, color: string) => {
+      startTransition(async () => {
+        await monthViewData.handleAddCalendar(name, color);
+        setNewCalendarName("");
+        setNewCalendarColor("bg-red-500");
+        setIsNewCalendarOpen(false);
+      });
+    },
+    [monthViewData, setNewCalendarName, setNewCalendarColor, setIsNewCalendarOpen]
+  );
+
+  const wrappedHandleAddHabit = useCallback(
+    async (name: string, calendarId: Id<"calendars">) => {
+      startTransition(async () => {
+        await monthViewData.handleAddHabit(name, calendarId);
+        setNewHabitName("");
+        setIsNewHabitOpen(false);
+      });
+    },
+    [monthViewData, setNewHabitName, setIsNewHabitOpen]
+  );
+
+  const wrappedHandleEditCalendar = useCallback(
+    async (id: Id<"calendars">, name: string, color: string) => {
+      startTransition(async () => {
+        await monthViewData.handleEditCalendar(id, name, color);
+        setEditingCalendar(null);
+      });
+    },
+    [monthViewData, setEditingCalendar]
+  );
+
+  const wrappedHandleEditHabit = useCallback(
+    async (id: Id<"habits">, name: string) => {
+      startTransition(async () => {
+        await monthViewData.handleEditHabit(id, name);
+        setEditingHabit(null);
+      });
+    },
+    [monthViewData, setEditingHabit]
+  );
+
+  const wrappedHandleDeleteCalendar = useCallback(
+    async (id: Id<"calendars">) => {
+      startTransition(async () => {
+        await monthViewData.handleDeleteCalendar(id);
+        setEditingCalendar(null);
+      });
+    },
+    [monthViewData, setEditingCalendar]
+  );
+
+  const wrappedHandleDeleteHabit = useCallback(
+    async (id: Id<"habits">) => {
+      startTransition(async () => {
+        await monthViewData.handleDeleteHabit(id);
+        setEditingHabit(null);
+      });
+    },
+    [monthViewData, setEditingHabit]
+  );
+
+  const wrappedHandleToggleHabit = useCallback(
+    async (habitId: Id<"habits">, date: string, count: number) => {
+      startTransition(() => {
+        monthViewData.handleToggleHabit(habitId, date, count);
+      });
+    },
+    [monthViewData]
+  );
+
+  // Add console logs to track loading states
+  useEffect(() => {
+    console.log("Loading States:", { isPending, isLoading });
+  }, [isPending, isLoading]);
+
+  // Use appropriate data based on view
+  const { calendars, habits, completions } = useMemo(
+    () => (calendarView === "monthRow" ? monthViewData : yearViewData),
+    [calendarView, monthViewData, yearViewData]
+  );
 
   // Memoize filtered habits by calendar to prevent re-computation
   const habitsByCalendar = useMemo(() => {
@@ -407,30 +466,21 @@ export default function CalendarsPage() {
   // Keyboard event handlers for form submission
   const handleCalendarKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
-      handleAddCalendar(newCalendarName, newCalendarColor);
-      setNewCalendarName("");
-      setNewCalendarColor("bg-red-500");
-      setIsNewCalendarOpen(false);
+      wrappedHandleAddCalendar(newCalendarName, newCalendarColor);
     }
   };
 
   const handleHabitKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && selectedCalendar) {
-      handleAddHabit(newHabitName, selectedCalendar._id);
-      setNewHabitName("");
-      setIsNewHabitOpen(false);
+      wrappedHandleAddHabit(newHabitName, selectedCalendar._id);
     }
   };
 
   return (
     <div className="container max-w-7xl w-full mx-auto">
-      {/* Authentication-gated content */}
       <AuthenticationWrapper>
         <>
-          {/* Yearly Overview Section */}
           <YearlyOverview completions={yearViewData.completions || []} habits={habits} calendars={calendars} />
-
-          {/* Calendar list with view controls inside */}
           <CalendarList
             calendarView={calendarView}
             calendars={calendars}
@@ -439,7 +489,7 @@ export default function CalendarsPage() {
             habitsByCalendar={habitsByCalendar}
             handleEditCalendarMemo={handleEditCalendarMemo}
             handleEditHabitMemo={handleEditHabitMemo}
-            handleToggleHabit={handleToggleHabit}
+            handleToggleHabit={wrappedHandleToggleHabit}
             isPending={isPending}
             setCalendarView={setCalendarView}
             setIsNewCalendarOpen={setIsNewCalendarOpen}
@@ -447,28 +497,25 @@ export default function CalendarsPage() {
             setSelectedCalendar={setSelectedCalendar}
             startTransition={startTransition}
           />
-
-          {/* Import/Export UI */}
           <div className="mt-8 flex justify-center">
             <ImportExport />
           </div>
         </>
       </AuthenticationWrapper>
 
-      {/* Dialog components for creating/editing calendars and habits */}
       <DialogComponents
         editCalendarColor={editCalendarColor}
         editCalendarName={editCalendarName}
         editHabitName={editHabitName}
         editingCalendar={editingCalendar}
         editingHabit={editingHabit}
-        handleAddCalendar={handleAddCalendar}
-        handleAddHabit={handleAddHabit}
+        handleAddCalendar={wrappedHandleAddCalendar}
+        handleAddHabit={wrappedHandleAddHabit}
         handleCalendarKeyDown={handleCalendarKeyDown}
-        handleDeleteCalendar={handleDeleteCalendar}
-        handleDeleteHabit={handleDeleteHabit}
-        handleEditCalendar={handleEditCalendar}
-        handleEditHabit={handleEditHabit}
+        handleDeleteCalendar={wrappedHandleDeleteCalendar}
+        handleDeleteHabit={wrappedHandleDeleteHabit}
+        handleEditCalendar={wrappedHandleEditCalendar}
+        handleEditHabit={wrappedHandleEditHabit}
         handleHabitKeyDown={handleHabitKeyDown}
         isNewCalendarOpen={isNewCalendarOpen}
         isNewHabitOpen={isNewHabitOpen}

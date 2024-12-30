@@ -1,10 +1,10 @@
 import { Button } from "@/components/ui/button";
-import { CompleteConfetti } from "@/components/ui/complete-confetti";
+import { CompleteControls } from "@/components/ui/complete-controls";
 import { Pencil, PlusCircle } from "lucide-react";
 
 import { Id } from "@server/convex/_generated/dataModel";
 
-import { HabitItem } from "./habit-item";
+import { CalendarView } from "./calendar-views";
 
 /**
  * CalendarItem represents a single calendar view with its habits and their completion tracking.
@@ -31,6 +31,7 @@ interface CalendarItemProps {
   onEditHabit: (habit: { _id: Id<"habits">; name: string }) => void; // Callback when user wants to edit a habit
   onToggleHabit: (habitId: Id<"habits">, date: string, count: number) => void; // Callback when user toggles habit completion
   view: "monthRow" | "monthGrid";
+  isPending: boolean;
 }
 
 export const CalendarItem = ({
@@ -74,6 +75,25 @@ export const CalendarItem = ({
       ) : view === "monthRow" ? (
         // Month Row View - habits on the left
         <div className="">
+          {/* Calendar header */}
+          <div className="flex">
+            <div className="min-w-24 md:min-w-48 w-32 md:w-48" />
+            <div className="flex-1 flex gap-px overflow-hidden">
+              <div className="flex gap-px justify-end w-full">
+                {days.map((day) => (
+                  <div key={day} className="w-6">
+                    <div className="w-6 h-6 relative">
+                      <span className="absolute inset-0 flex items-center justify-center text-xs font-medium text-slate-900 dark:text-slate-100 scale-75">
+                        {new Date(day).toLocaleDateString("en-US", { weekday: "narrow" })}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="w-20" />
+          </div>
+
           <div className="overflow-hidden">
             {habits.map((habit) => {
               const today = new Date().toISOString().split("T")[0];
@@ -82,7 +102,7 @@ export const CalendarItem = ({
               ).length;
 
               return (
-                <div key={habit._id} className="flex items-start gap-4">
+                <div key={habit._id} className="flex items-start">
                   <div
                     className="flex min-w-24 md:min-w-48 w-32 md:w-48 group items-start cursor-pointer hover:text-muted-foreground transition-colors overflow-hidden"
                     onClick={() => onEditHabit(habit)}
@@ -94,7 +114,7 @@ export const CalendarItem = ({
                       </span>
                     </div>
                   </div>
-                  <HabitItem
+                  <CalendarView
                     habit={habit}
                     color={colorTheme}
                     days={days}
@@ -102,7 +122,7 @@ export const CalendarItem = ({
                     onToggle={onToggleHabit}
                     view={view}
                   />
-                  <CompleteConfetti
+                  <CompleteControls
                     count={todayCount}
                     onIncrement={() => onToggleHabit(habit._id, today, todayCount + 1)}
                     onDecrement={() => onToggleHabit(habit._id, today, todayCount - 1)}
@@ -138,7 +158,7 @@ export const CalendarItem = ({
                     <Pencil className="h-4 w-4" />
                   </span>
                 </div>
-                <HabitItem
+                <CalendarView
                   habit={habit}
                   color={colorTheme}
                   days={days}
@@ -146,7 +166,7 @@ export const CalendarItem = ({
                   onToggle={onToggleHabit}
                   view={view}
                 />
-                <CompleteConfetti
+                <CompleteControls
                   count={todayCount}
                   onIncrement={() => onToggleHabit(habit._id, today, todayCount + 1)}
                   onDecrement={() => onToggleHabit(habit._id, today, todayCount - 1)}

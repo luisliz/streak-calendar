@@ -8,9 +8,9 @@
  * 3. Dropdown menu: Fine-grained control with +/- buttons
  */
 import { Button } from "@/components/ui/button";
+import { CompleteControls } from "@/components/ui/complete-controls";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { getCompletionColorClass } from "@/lib/colors";
-import { Minus, Plus } from "lucide-react";
 
 import { Id } from "@server/convex/_generated/dataModel";
 
@@ -25,15 +25,13 @@ interface CompletionMenuProps {
 }
 
 export const CompletionMenu = ({ date, count, onCountChange, colorClass, gridView, disabled }: CompletionMenuProps) => {
-  const handleIncrement = (e: React.MouseEvent) => {
+  const handleIncrement = () => {
     if (disabled) return;
-    e.preventDefault();
     onCountChange(count + 1);
   };
 
-  const handleDecrement = (e?: React.MouseEvent) => {
+  const handleDecrement = () => {
     if (disabled) return;
-    if (e) e.preventDefault();
     if (count > 0) {
       onCountChange(count - 1);
     }
@@ -50,7 +48,7 @@ export const CompletionMenu = ({ date, count, onCountChange, colorClass, gridVie
           variant="ghost"
           className={`${gridView ? "aspect-square w-full" : "w-6 h-6"} rounded-full ${
             count === 0 ? "bg-slate-100 dark:bg-slate-800" : ""
-          } relative p-0 ${disabled ? "opacity-50 cursor-not-allowed" : ""} hover:bg-transparent`}
+          } relative p-0 overflow-visible ${disabled ? "opacity-50 cursor-not-allowed" : ""} hover:bg-transparent`}
           title={`${new Date(date).toLocaleDateString(undefined, {
             month: "short",
             day: "numeric",
@@ -58,14 +56,16 @@ export const CompletionMenu = ({ date, count, onCountChange, colorClass, gridVie
           disabled={disabled}
         >
           {count > 0 ? (
-            <svg
-              key={`${count}-${fillClass}`}
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 15 15"
-              className={`!w-[24px] !h-[24px] ${fillClass} animate-completion`}
-            >
-              <path d="M14.12 9.87a3.024 3.024 0 0 1 0 4.26c-.6.57-1.35.87-2.13.87s-1.53-.3-2.13-.87l-2.37-2.37-2.37 2.37c-.6.57-1.35.87-2.13.87s-1.53-.3-2.13-.87a3.024 3.024 0 0 1 0-4.26L3.23 7.5.88 5.13C-.29 3.97-.29 2.05.88.88a3.012 3.012 0 0 1 4.25 0L7.5 3.25 9.87.88a3.024 3.024 0 0 1 4.26 0 3.024 3.024 0 0 1 0 4.26l-2.37 2.37 2.37 2.37Z" />
-            </svg>
+            <div className="absolute inset-0 overflow-visible flex items-center justify-center">
+              <svg
+                key={`${count}-${fillClass}`}
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 15 15"
+                className={`!w-[24px] !h-[24px] ${fillClass} animate-completion relative`}
+              >
+                <path d="M14.12 9.87a3.024 3.024 0 0 1 0 4.26c-.6.57-1.35.87-2.13.87s-1.53-.3-2.13-.87l-2.37-2.37-2.37 2.37c-.6.57-1.35.87-2.13.87s-1.53-.3-2.13-.87a3.024 3.024 0 0 1 0-4.26L3.23 7.5.88 5.13C-.29 3.97-.29 2.05.88.88a3.012 3.012 0 0 1 4.25 0L7.5 3.25 9.87.88a3.024 3.024 0 0 1 4.26 0 3.024 3.024 0 0 1 0 4.26l-2.37 2.37 2.37 2.37Z" />
+              </svg>
+            </div>
           ) : (
             <span
               className={`absolute inset-0 flex items-center justify-center text-xs font-medium text-slate-900 dark:text-slate-100 ${
@@ -77,27 +77,16 @@ export const CompletionMenu = ({ date, count, onCountChange, colorClass, gridVie
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent align="center" className="w-24">
-        <div className="flex items-center justify-between p-2">
-          <Button
-            variant="default"
-            size="icon"
-            className="h-6 w-6"
-            onClick={() => handleDecrement()}
-            disabled={disabled}
-          >
-            <Minus className="h-4 w-4" />
-          </Button>
-          <span className="font-medium">{count}</span>
-          <Button
-            variant="default"
-            size="icon"
-            className="h-6 w-6"
-            onClick={(e) => handleIncrement(e)}
-            disabled={disabled}
-          >
-            <Plus className="h-4 w-4" />
-          </Button>
+      <PopoverContent align="center" className="w-auto px-4 py-2 rounded-[15px]">
+        <div className="flex flex-col items-center gap-2">
+          <div className="text-xs">
+            {new Date(date).toLocaleDateString(undefined, {
+              weekday: "long",
+              month: "long",
+              day: "numeric",
+            })}
+          </div>
+          <CompleteControls count={count} onIncrement={handleIncrement} onDecrement={handleDecrement} />
         </div>
       </PopoverContent>
     </Popover>
