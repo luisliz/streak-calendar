@@ -141,11 +141,11 @@ export const YearlyOverview = ({ completions }: YearlyOverviewProps) => {
         <span className="font-bold">Yearly Overview</span>{" "}
         <span className="text-muted-foreground/75">({totalCompletions} things done last year)</span>
       </div>
-      <Card className="mx-auto mb-4 md:mb-16 rounded-3xl max-w-full md:w-[1000px] shadow-md p-1 md:p-2 md:pb-4">
+      <Card className="mx-auto w-fit mb-4 md:mb-16 rounded-3xl md:w-[1000px] shadow-md p-1 md:p-2 md:pb-4">
         <div className="w-full">
           <div className="flex justify-end">
             {/* Left day labels (Mon/Wed/Fri) */}
-            <div className="opacity-50 flex flex-col mt-4 md:mt-6 pr-1">
+            <div className="opacity-50 flex flex-col mt-3 md:mt-6 pr-1">
               <div className="h-[3px] md:h-[18px]" />
               <div className="text-muted-foreground text-[5px] sm:text-[7px] md:text-xs text-right">Mon</div>
               <div className="h-[3px] md:h-[18px]" />
@@ -155,7 +155,7 @@ export const YearlyOverview = ({ completions }: YearlyOverviewProps) => {
             </div>
             <div className="flex-1">
               {/* Month labels row */}
-              <div className="opacity-50 flex text-[5px] sm:text-[7px] md:text-xs text-muted-foreground pb-1 md:pb-2 justify-center mx-auto">
+              <div className="opacity-50 flex text-[5px] sm:text-[7px] md:text-xs text-muted-foreground pb-[2px] md:pb-2 justify-center mx-auto">
                 {monthLabels.map((month, index) => (
                   <div key={month.key} className={`${index === 0 ? "mr-auto pl-1" : "flex-1 text-center"}`}>
                     {month.label}
@@ -174,7 +174,7 @@ export const YearlyOverview = ({ completions }: YearlyOverviewProps) => {
               </div>
             </div>
             {/* Right day labels (Mon/Wed/Fri) */}
-            <div className="opacity-50 flex flex-col mt-4 md:mt-6 pl-1">
+            <div className="opacity-50 flex flex-col mt-3 md:mt-6 pl-1">
               <div className="h-[3px] md:h-[18px]" />
               <div className="text-muted-foreground text-[5px] sm:text-[7px] md:text-xs text-left">Mon</div>
               <div className="h-[3px] md:h-[18px]" />
