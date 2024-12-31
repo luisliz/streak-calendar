@@ -4,6 +4,7 @@
  * The graph uses different shades of red to indicate completion intensity per day.
  */
 import { Card } from "@/components/ui/card";
+import { XLogo } from "@/components/ui/x-logo";
 import { eachDayOfInterval, format, getDay, subYears } from "date-fns";
 import { memo, useCallback, useMemo } from "react";
 
@@ -123,7 +124,7 @@ export const YearlyOverview = ({ completions }: YearlyOverviewProps) => {
         title={`${format(new Date(day), "MMM d, yyyy")}: ${count} completions`}
       >
         <svg viewBox="0 0 15 15" className={`w-full h-full ${colorClass}`}>
-          <path d="M14.12 9.87a3.024 3.024 0 0 1 0 4.26c-.6.57-1.35.87-2.13.87s-1.53-.3-2.13-.87l-2.37-2.37-2.37 2.37c-.6.57-1.35.87-2.13.87s-1.53-.3-2.13-.87a3.024 3.024 0 0 1 0-4.26L3.23 7.5.88 5.13C-.29 3.97-.29 2.05.88.88a3.012 3.012 0 0 1 4.25 0L7.5 3.25 9.87.88a3.024 3.024 0 0 1 4.26 0 3.024 3.024 0 0 1 0 4.26l-2.37 2.37 2.37 2.37Z" />
+          <XLogo />
         </svg>
       </div>
     );

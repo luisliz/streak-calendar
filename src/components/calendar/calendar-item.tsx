@@ -7,10 +7,31 @@ import { Id } from "@server/convex/_generated/dataModel";
 import { CalendarView } from "./calendar-views";
 
 /**
- * CalendarItem represents a single calendar view with its habits and their completion tracking.
- * It displays a calendar's name, color theme, and a list of habits with their yearly progress.
+ * CalendarItem Component
+ *
+ * A comprehensive calendar view component that displays habits and their completion tracking.
+ * Supports two view modes: monthRow (horizontal) and monthGrid (vertical grid layout).
+ *
+ * Features:
+ * - Calendar header with editable name
+ * - Habit list with completion status
+ * - Daily tracking controls
+ * - Support for timer-based habits
+ * - Interactive controls for adding/editing habits and calendars
  */
 
+/**
+ * Props interface for the CalendarItem component
+ * @property calendar - Calendar metadata including ID, name, and color theme
+ * @property habits - Array of habit objects with names and optional timer durations
+ * @property days - Array of date strings to display in the calendar
+ * @property completions - Array of habit completion records
+ * @property onAddHabit - Callback for adding a new habit
+ * @property onEditCalendar - Callback for editing calendar settings
+ * @property onEditHabit - Callback for editing an existing habit
+ * @property onToggleHabit - Callback for toggling habit completion status
+ * @property view - Display mode: "monthRow" or "monthGrid"
+ */
 interface CalendarItemProps {
   calendar: {
     _id: Id<"calendars">;
@@ -45,13 +66,14 @@ export const CalendarItem = ({
   onToggleHabit,
   view,
 }: CalendarItemProps) => {
-  // Ensure the color theme has the correct format
+  // Normalize color theme format by ensuring it has the 'bg-' prefix
   const colorTheme = calendar.colorTheme.startsWith("bg-") ? calendar.colorTheme : `bg-${calendar.colorTheme}-500`;
 
   return (
     <div className="">
-      {/* Header section with calendar name and add habit button */}
+      {/* Calendar Header Section */}
       <div className="flex justify-between items-center pb-8">
+        {/* Editable calendar name with hover effect */}
         <div
           className="flex w-full justify-center items-center gap-2 group cursor-pointer hover:text-muted-foreground transition-colors"
           onClick={onEditCalendar}
@@ -63,8 +85,9 @@ export const CalendarItem = ({
         </div>
       </div>
 
-      {/* Conditional rendering based on habits existence */}
+      {/* Main Calendar Content */}
       {habits.length === 0 ? (
+        // Empty state when no habits exist
         <div className="w-full flex flex-col items-center justify-center">
           <p className="text-sm text-muted-foreground pb-8">No habits added yet. Add one to start tracking!</p>
           <Button size="sm" onClick={onAddHabit}>
@@ -73,15 +96,15 @@ export const CalendarItem = ({
           </Button>
         </div>
       ) : view === "monthRow" ? (
-        // Month Row View - habits on the left
+        // Horizontal Month Row Layout
         <div className="">
-          {/* Calendar header */}
+          {/* Calendar Header with Day Labels */}
           <div className="flex relative">
-            {/* Filler */}
+            {/* Left spacing for habit names */}
             <div className="w-16 md:w-32 bg-card" />
-            {/* Gradient */}
+            {/* Gradient fade effect for overflow */}
             <div className="ml-16 md:ml-32 w-12 h-6 bg-gradient-to-r from-card to-transparent absolute z-10" />
-            {/* Days */}
+            {/* Day name labels (Mo, Tu, We, etc.) */}
             <div className="flex-1 flex gap-px overflow-hidden mr-2">
               <div className="flex gap-px justify-end w-full">
                 {days.map((day) => (
@@ -99,8 +122,10 @@ export const CalendarItem = ({
             <div className="w-24" />
           </div>
 
+          {/* Habit Rows Section */}
           <div className="overflow-hidden">
             {habits.map((habit) => {
+              // Calculate today's completion count for the habit
               const today = new Date().toISOString().split("T")[0];
               const todayCount = completions.filter(
                 (c) => c.habitId === habit._id && new Date(c.completedAt).toISOString().split("T")[0] === today
@@ -108,6 +133,7 @@ export const CalendarItem = ({
 
               return (
                 <div key={habit._id} className="flex items-start relative">
+                  {/* Calendar view grid for the habit */}
                   <CalendarView
                     habit={habit}
                     color={colorTheme}
@@ -116,6 +142,7 @@ export const CalendarItem = ({
                     onToggle={onToggleHabit}
                     view={view}
                   />
+                  {/* Editable habit name with hover effects */}
                   <div
                     className="absolute left-0 flex group items-start cursor-pointer hover:text-muted-foreground transition-colors w-24 md:w-48"
                     onClick={() => onEditHabit(habit)}
@@ -134,6 +161,7 @@ export const CalendarItem = ({
                       </span>
                     </div>
                   </div>
+                  {/* Habit completion controls for today */}
                   <CompleteControls
                     count={todayCount}
                     onIncrement={() => onToggleHabit(habit._id, today, todayCount + 1)}
@@ -152,9 +180,10 @@ export const CalendarItem = ({
           </div>
         </div>
       ) : (
-        // Month Grid View - habits above calendars
+        // Vertical Month Grid Layout
         <div className="space-y-4">
           {habits.map((habit) => {
+            // Calculate today's completion count for the habit
             const today = new Date().toISOString().split("T")[0];
             const todayCount = completions.filter(
               (c) => c.habitId === habit._id && new Date(c.completedAt).toISOString().split("T")[0] === today
@@ -162,6 +191,7 @@ export const CalendarItem = ({
 
             return (
               <div key={habit._id} className="space-y-4">
+                {/* Editable habit name */}
                 <div
                   className="flex justify-center items-center gap-2 group cursor-pointer hover:text-muted-foreground transition-colors"
                   onClick={() => onEditHabit(habit)}
@@ -176,6 +206,7 @@ export const CalendarItem = ({
                     <Pencil className="h-4 w-4" />
                   </span>
                 </div>
+                {/* Centered completion controls */}
                 <div className="flex justify-center -translate-x-3 -translate-y-3 scale-125">
                   <CompleteControls
                     count={todayCount}
@@ -185,6 +216,7 @@ export const CalendarItem = ({
                     timerDuration={habit.timerDuration}
                   />
                 </div>
+                {/* Calendar grid view */}
                 <CalendarView
                   habit={habit}
                   color={colorTheme}

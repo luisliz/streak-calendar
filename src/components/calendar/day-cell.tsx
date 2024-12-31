@@ -1,11 +1,28 @@
+/**
+ * DayCell Component
+ * Renders an interactive cell representing a single day in a habit tracking calendar.
+ * Features a popover menu for updating completion counts and visual feedback for completion status.
+ */
 import { Button } from "@/components/ui/button";
 import { CompleteControls } from "@/components/ui/complete-controls";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { XLogo } from "@/components/ui/x-logo";
 import { getCompletionColorClass } from "@/lib/colors";
 import { useState } from "react";
 
 import { Id } from "@server/convex/_generated/dataModel";
 
+/**
+ * Props for the DayCell component
+ * @interface DayCellProps
+ * @property {Id<"habits">} habitId - Unique identifier for the habit
+ * @property {string} date - ISO date string representing the cell's date
+ * @property {number} count - Number of completions for this date
+ * @property {(count: number) => void} onCountChange - Callback for updating completion count
+ * @property {string} colorClass - Base color theme for visual feedback (e.g., "bg-red-500")
+ * @property {boolean} [gridView] - Optional flag for grid view display mode
+ * @property {boolean} [disabled] - Optional flag to disable interactions (e.g., for dates outside query range)
+ */
 interface DayCellProps {
   habitId: Id<"habits">;
   date: string; // ISO date string for the day this completion represents
@@ -16,14 +33,21 @@ interface DayCellProps {
   disabled?: boolean; // Whether the completion menu is disabled (outside query range)
 }
 
+/**
+ * DayCell component for displaying and managing daily habit completions
+ * Includes a clickable button that shows completion status and a popover menu for updating counts
+ */
 export const DayCell = ({ date, count, onCountChange, colorClass, gridView, disabled }: DayCellProps) => {
+  // Controls visibility of the completion controls popover
   const [isOpen, setIsOpen] = useState(false);
 
+  // Increment completion count if not disabled
   const handleIncrement = () => {
     if (disabled) return;
     onCountChange(count + 1);
   };
 
+  // Decrement completion count if not disabled and count > 0
   const handleDecrement = () => {
     if (disabled) return;
     if (count > 0) {
@@ -31,13 +55,14 @@ export const DayCell = ({ date, count, onCountChange, colorClass, gridView, disa
     }
   };
 
-  // Extract color name and create fill class
+  // Extract color name from class and determine fill color based on completion count
   const colorMatch = colorClass.match(/bg-(\w+)-500/);
   const fillClass = count > 0 && colorMatch ? getCompletionColorClass(colorClass, count) : "";
 
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger asChild>
+        {/* Main cell button with dynamic styling based on completion status and view mode */}
         <Button
           variant="ghost"
           className={`${gridView ? "w-12 h-12" : "w-6 h-6"} rounded-full ${
@@ -49,18 +74,17 @@ export const DayCell = ({ date, count, onCountChange, colorClass, gridView, disa
           })}: ${count} completion${count !== 1 ? "s" : ""}`}
           disabled={disabled}
         >
+          {/* Render either completion indicator (X shape) or date number based on completion status */}
           {count > 0 ? (
             <div className="absolute ">
-              <svg
+              {/* SVG X shape with dynamic sizing and color based on completion count */}
+              <XLogo
                 key={`${count}-${fillClass}`}
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 15 15"
                 className={`${gridView ? "!w-[48px] !h-[48px]" : "!w-[24px] !h-[24px]"} ${fillClass} animate-completion relative`}
-              >
-                <path d="M14.12 9.87a3.024 3.024 0 0 1 0 4.26c-.6.57-1.35.87-2.13.87s-1.53-.3-2.13-.87l-2.37-2.37-2.37 2.37c-.6.57-1.35.87-2.13.87s-1.53-.3-2.13-.87a3.024 3.024 0 0 1 0-4.26L3.23 7.5.88 5.13C-.29 3.97-.29 2.05.88.88a3.012 3.012 0 0 1 4.25 0L7.5 3.25 9.87.88a3.024 3.024 0 0 1 4.26 0 3.024 3.024 0 0 1 0 4.26l-2.37 2.37 2.37 2.37Z" />
-              </svg>
+              />
             </div>
           ) : (
+            // Display date number when no completions
             <span
               className={`absolute inset-0 flex items-center justify-center text-xs font-medium text-slate-900 dark:text-slate-100 ${
                 gridView ? "" : "scale-75"
@@ -71,11 +95,13 @@ export const DayCell = ({ date, count, onCountChange, colorClass, gridView, disa
           )}
         </Button>
       </PopoverTrigger>
+      {/* Popover menu for updating completion count */}
       <PopoverContent
         align="center"
         className="w-auto px-4 py-2 rounded-[15px] backdrop-blur-sm border bg-white/60 dark:bg-black/60"
       >
         <div className="flex flex-col items-center gap-2">
+          {/* Display full date in popover */}
           <div className="text-xs">
             {new Date(date).toLocaleDateString(undefined, {
               weekday: "long",
@@ -83,6 +109,7 @@ export const DayCell = ({ date, count, onCountChange, colorClass, gridView, disa
               day: "numeric",
             })}
           </div>
+          {/* Completion controls for incrementing/decrementing count */}
           <div className="flex justify-center">
             <CompleteControls
               count={count}

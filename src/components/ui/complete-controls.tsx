@@ -2,18 +2,28 @@
 
 import { Button } from "@/components/ui/button";
 import { ConfettiButton } from "@/components/ui/confetti";
+import { xLogoPath } from "@/components/ui/x-logo";
 import confettiLib from "canvas-confetti";
 import { Minus, Plus, Timer } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-const xLogoPath = `M14.12 9.87a3.024 3.024 0 0 1 0 4.26c-.6.57-1.35.87-2.13.87s-1.53-.3-2.13-.87l-2.37-2.37-2.37 2.37c-.6.57-1.35.87-2.13.87s-1.53-.3-2.13-.87a3.024 3.024 0 0 1 0-4.26L3.23 7.5.88 5.13C-.29 3.97-.29 2.05.88.88a3.012 3.012 0 0 1 4.25 0L7.5 3.25 9.87.88a3.024 3.024 0 0 1 4.26 0 3.024 3.024 0 0 1 0 4.26l-2.37 2.37 2.37 2.37Z`;
+/**
+ * A versatile control component that handles completion tracking with optional timer functionality.
+ * Supports increment/decrement operations and displays confetti animations on completion.
+ */
 
 interface CompleteControlsProps {
+  /** Current count value */
   count: number;
+  /** Callback to increment the count */
   onIncrement: () => void;
+  /** Callback to decrement the count */
   onDecrement: () => void;
+  /** Visual style variant for the buttons */
   variant?: "default" | "ghost";
+  /** Timer duration in minutes (optional) */
   timerDuration?: number;
+  /** Callback triggered on completion (increment/decrement/timer finish) */
   onComplete?: () => void;
 }
 
@@ -25,10 +35,12 @@ export function CompleteControls({
   timerDuration,
   onComplete,
 }: CompleteControlsProps) {
+  // Timer state management
   const [isTimerRunning, setIsTimerRunning] = useState(false);
   const [timeLeft, setTimeLeft] = useState(0);
   const timerButtonRef = useRef<HTMLButtonElement>(null);
 
+  // Handlers for increment/decrement with completion callback
   const handleIncrement = useCallback(() => {
     onIncrement();
     onComplete?.();
@@ -39,8 +51,13 @@ export function CompleteControls({
     onComplete?.();
   }, [onDecrement, onComplete]);
 
+  // Create custom X-shaped confetti particle
   const confettiShape = useMemo(() => confettiLib.shapeFromPath(xLogoPath), []);
 
+  /**
+   * Configures confetti animation options
+   * @param origin Optional origin point for the confetti animation
+   */
   const getConfettiOptions = useCallback(
     (origin?: { x: number; y: number }) => ({
       angle: 90 + (Math.random() - 0.5) * 90,
@@ -59,6 +76,7 @@ export function CompleteControls({
     [confettiShape]
   );
 
+  // Initialize timer with duration in minutes converted to seconds
   const startTimer = useCallback(() => {
     if (timerDuration) {
       setTimeLeft(timerDuration * 60);
@@ -66,6 +84,7 @@ export function CompleteControls({
     }
   }, [timerDuration]);
 
+  // Timer countdown effect
   useEffect(() => {
     if (!isTimerRunning || timeLeft <= 0) return;
 
@@ -73,7 +92,7 @@ export function CompleteControls({
       setTimeLeft((prev) => {
         if (prev <= 1) {
           setIsTimerRunning(false);
-          // Get the button position for confetti
+          // Trigger confetti at the timer button's position
           if (timerButtonRef.current) {
             const rect = timerButtonRef.current.getBoundingClientRect();
             const x = (rect.left + rect.width / 2) / window.innerWidth;
@@ -91,12 +110,16 @@ export function CompleteControls({
     return () => clearInterval(interval);
   }, [isTimerRunning, timeLeft, onIncrement, getConfettiOptions, onComplete]);
 
+  /**
+   * Formats seconds into MM:SS display format
+   */
   const formatTime = (seconds: number) => {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
     return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
   };
 
+  // Timer mode with count = 0: Show start button
   if (timerDuration) {
     if (count === 0) {
       return (
@@ -122,6 +145,7 @@ export function CompleteControls({
       );
     }
 
+    // Timer mode with count > 0: Show decrement and timer controls
     return (
       <div className="w-[96px] flex flex-col gap-px">
         <div className="flex items-center justify-between w-[96px]">
@@ -153,6 +177,7 @@ export function CompleteControls({
     );
   }
 
+  // Non-timer mode with count = 0: Show complete button
   if (count === 0) {
     return (
       <div className="w-[96px] flex flex-col gap-px">
@@ -169,6 +194,7 @@ export function CompleteControls({
     );
   }
 
+  // Non-timer mode with count > 0: Show increment/decrement controls
   return (
     <div className="w-[96px] flex flex-col gap-px">
       <div className="flex items-center justify-between w-[96px]">

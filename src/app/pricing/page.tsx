@@ -8,7 +8,7 @@ export default function PricingPage() {
   return (
     <div className="container max-w-5xl py-16 px-4 mx-auto">
       <div className="text-center mb-12">
-        <h1 className="text-4xl font-bold mb-4">Simple, Transparent Pricing</h1>
+        <h1 className="text-4xl font-bold mb-4">Simple, Transparent Pricing & Plans</h1>
         <p className="text-muted-foreground text-lg">Choose the plan that works best for you</p>
       </div>
 
@@ -26,15 +26,15 @@ export default function PricingPage() {
             <ul className="space-y-3">
               <li className="flex items-center gap-2">
                 <Check className="h-5 w-5 text-green-500" />
-                <span>Up to 3 habit calendars</span>
+                <span>Up to 2 habit calendars</span>
               </li>
               <li className="flex items-center gap-2">
                 <Check className="h-5 w-5 text-green-500" />
-                <span>Basic habit tracking</span>
+                <span>Up to 3 habits for each calendar</span>
               </li>
               <li className="flex items-center gap-2">
                 <Check className="h-5 w-5 text-green-500" />
-                <span>30-day history</span>
+                <span>40-day editable history</span>
               </li>
             </ul>
           </CardContent>
@@ -74,11 +74,15 @@ export default function PricingPage() {
               </li>
               <li className="flex items-center gap-2">
                 <Check className="h-5 w-5 text-green-500" />
+                <span>Unlimited habits for each calendar</span>
+              </li>
+              <li className="flex items-center gap-2">
+                <Check className="h-5 w-5 text-green-500" />
                 <span>Advanced analytics</span>
               </li>
               <li className="flex items-center gap-2">
                 <Check className="h-5 w-5 text-green-500" />
-                <span>Unlimited history</span>
+                <span>Unlimited editable history</span>
               </li>
               <li className="flex items-center gap-2">
                 <Check className="h-5 w-5 text-green-500" />

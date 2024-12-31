@@ -62,7 +62,8 @@
 .grid-background {
   background-image: linear-gradient(to right, var(--grid-color) 1px, transparent 1px),
     linear-gradient(to bottom, var(--grid-color) 1px, transparent 1px);
-  background-size: 8px 8px;
+  background-size: 32px 32px;
+  background-attachment: fixed;
 }
 
 @keyframes completion {

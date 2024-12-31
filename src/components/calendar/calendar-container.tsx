@@ -1,3 +1,9 @@
+/**
+ * CalendarContainer is the main component that manages the calendar UI and interactions.
+ * It handles calendar and habit management, including creation, editing, and deletion.
+ * The component uses a combination of dialogs for user interactions and displays calendars
+ * in either a month row or month grid view.
+ */
 import {
   EditCalendarDialog,
   EditHabitDialog,
@@ -16,9 +22,15 @@ import { toast } from "react-hot-toast";
 
 const MotionCard = motion.create(Card);
 
+/**
+ * Supported calendar view types
+ */
 type CalendarView = "monthRow" | "monthGrid";
 
-// Empty state component
+/**
+ * EmptyState component shown when no calendars exist
+ * Prompts user to create their first calendar
+ */
 const EmptyState = ({ onNewCalendar }: { onNewCalendar: () => void }) => (
   <div className="text-center py-12 text-muted-foreground">
     <p>You haven&apos;t created any calendars yet.</p>
@@ -30,6 +42,10 @@ const EmptyState = ({ onNewCalendar }: { onNewCalendar: () => void }) => (
   </div>
 );
 
+/**
+ * Interface for calendar CRUD operations and habit tracking
+ * Defines handlers for adding, editing, deleting calendars/habits and toggling habit completion
+ */
 interface CalendarData {
   handleAddCalendar: (name: string, color: string) => Promise<void>;
   handleAddHabit: (name: string, calendarId: Id<"calendars">, timerDuration?: number) => Promise<void>;
@@ -40,6 +56,9 @@ interface CalendarData {
   handleToggleHabit: (habitId: Id<"habits">, date: string, count: number) => Promise<void>;
 }
 
+/**
+ * Interface for managing calendar state including selection, creation, and editing
+ */
 interface CalendarState {
   selectedCalendar: Calendar | null;
   setSelectedCalendar: (calendar: Calendar | null) => void;
@@ -57,6 +76,9 @@ interface CalendarState {
   setIsNewCalendarOpen: (open: boolean) => void;
 }
 
+/**
+ * Interface for managing habit state including creation and editing
+ */
 interface HabitState {
   newHabitName: string;
   setNewHabitName: (name: string) => void;
@@ -72,6 +94,9 @@ interface HabitState {
   setIsNewHabitOpen: (open: boolean) => void;
 }
 
+/**
+ * Props interface for the CalendarContainer component
+ */
 interface CalendarContainerProps {
   calendarView: CalendarView;
   calendars: Calendar[];
@@ -97,6 +122,9 @@ export function CalendarContainer({
   habitState,
   onViewChange,
 }: CalendarContainerProps) {
+  /**
+   * Destructure state management props for easier access
+   */
   const {
     selectedCalendar,
     setSelectedCalendar,
@@ -129,6 +157,9 @@ export function CalendarContainer({
     setIsNewHabitOpen,
   } = habitState;
 
+  /**
+   * Handles calendar creation with validation and state reset
+   */
   const handleAddCalendar = useCallback(
     async (name: string, color: string) => {
       await monthViewData.handleAddCalendar(name, color);
@@ -139,6 +170,9 @@ export function CalendarContainer({
     [monthViewData, setNewCalendarName, setNewCalendarColor, setIsNewCalendarOpen]
   );
 
+  /**
+   * Handles habit creation with error handling and state reset
+   */
   const handleAddHabit = useCallback(
     async (name: string, calendarId: Id<"calendars">, timerDuration?: number) => {
       try {
@@ -154,6 +188,9 @@ export function CalendarContainer({
     [monthViewData, setNewHabitName, setNewHabitTimerDuration, setIsNewHabitOpen]
   );
 
+  /**
+   * Handles calendar updates and resets editing state
+   */
   const handleEditCalendar = useCallback(
     async (id: Id<"calendars">, name: string, color: string) => {
       await monthViewData.handleEditCalendar(id, name, color);
@@ -162,6 +199,9 @@ export function CalendarContainer({
     [monthViewData, setEditingCalendar]
   );
 
+  /**
+   * Handles habit updates with error handling and resets editing state
+   */
   const handleEditHabit = useCallback(
     async (id: Id<"habits">, name: string, timerDuration?: number) => {
       try {
@@ -175,6 +215,9 @@ export function CalendarContainer({
     [monthViewData, setEditingHabit]
   );
 
+  /**
+   * Handles calendar deletion and resets editing state
+   */
   const handleDeleteCalendar = useCallback(
     async (id: Id<"calendars">) => {
       await monthViewData.handleDeleteCalendar(id);
@@ -183,6 +226,9 @@ export function CalendarContainer({
     [monthViewData, setEditingCalendar]
   );
 
+  /**
+   * Handles habit deletion and resets editing state
+   */
   const handleDeleteHabit = useCallback(
     async (id: Id<"habits">) => {
       await monthViewData.handleDeleteHabit(id);
@@ -191,6 +237,9 @@ export function CalendarContainer({
     [monthViewData, setEditingHabit]
   );
 
+  /**
+   * Handles toggling habit completion for a specific date
+   */
   const handleToggleHabit = useCallback(
     async (habitId: Id<"habits">, date: string, count: number) => {
       await monthViewData.handleToggleHabit(habitId, date, count);
@@ -198,6 +247,9 @@ export function CalendarContainer({
     [monthViewData]
   );
 
+  /**
+   * Sets up habit editing state when edit is initiated
+   */
   const handleEditHabitClick = useCallback(
     (habit: { _id: Id<"habits">; name: string; timerDuration?: number }) => {
       setEditingHabit(habit);
@@ -207,6 +259,10 @@ export function CalendarContainer({
     [setEditingHabit, setEditHabitName, setEditHabitTimerDuration]
   );
 
+  /**
+   * Handles keyboard events for calendar creation/editing
+   * Submits on Enter key press
+   */
   const handleCalendarKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
       e.preventDefault();
@@ -218,6 +274,10 @@ export function CalendarContainer({
     }
   };
 
+  /**
+   * Handles keyboard events for habit creation/editing
+   * Submits on Enter key press
+   */
   const handleHabitKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
       e.preventDefault();
@@ -229,12 +289,16 @@ export function CalendarContainer({
     }
   };
 
+  /**
+   * Show empty state if no calendars exist
+   */
   if (calendars.length === 0) {
     return <EmptyState onNewCalendar={() => setIsNewCalendarOpen(true)} />;
   }
 
   return (
     <>
+      {/* Animated calendar view container */}
       <AnimatePresence mode="wait" initial={false}>
         <MotionCard
           key={calendarView}
