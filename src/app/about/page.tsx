@@ -72,8 +72,9 @@ export default function AboutPage() {
         </CardHeader>
         <CardContent>
           <p className="text-muted-foreground mb-4">
-            Transparency and collaboration are at the heart of Streak Calendar. By making our project open source, we
-            invite users to contribute, innovate, and help make the tool better for everyone.
+            Streak Calendar is open source to encourage transparency and collaboration. Contributions and innovations
+            from users are welcome, helping to continuously improve the tool and make it even more effective for
+            everyone.
           </p>
           <div className="mt-4 p-4 bg-muted rounded-lg">
             <p className="italic text-muted-foreground">
