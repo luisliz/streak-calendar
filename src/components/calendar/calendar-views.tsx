@@ -15,7 +15,7 @@ import { format } from "date-fns";
 
 import { Id } from "@server/convex/_generated/dataModel";
 
-import { CompletionMenu } from "./completion-menu";
+import { DayCell } from "./day-cell";
 
 /**
  * Props interface for the CalendarView component
@@ -73,7 +73,7 @@ export const CalendarView = ({ habit, color, days, completions, onToggle, view }
       <div data-habit-id={habit._id} className="overflow-x-auto flex w-full justify-end">
         <div className="inline-flex gap-px h-[25px]">
           {days.map((date) => (
-            <CompletionMenu
+            <DayCell
               key={date}
               habitId={habit._id}
               date={date}
@@ -142,7 +142,7 @@ export const CalendarView = ({ habit, color, days, completions, onToggle, view }
                   const count = isInRange ? getCompletionCount(dateStr) : 0;
 
                   return (
-                    <CompletionMenu
+                    <DayCell
                       key={dateStr}
                       habitId={habit._id}
                       date={dateStr}

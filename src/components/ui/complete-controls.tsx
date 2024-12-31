@@ -96,8 +96,14 @@ export function CompleteControls({
             onClick={startTimer}
             disabled={isTimerRunning}
           >
-            <Timer className="h-3 w-3 mr-1" />
-            {isTimerRunning ? formatTime(timeLeft) : `Start`}
+            {isTimerRunning ? (
+              <>
+                <Timer className="h-3 w-3" />
+                {formatTime(timeLeft)}
+              </>
+            ) : (
+              "Start"
+            )}
           </Button>
         </div>
       );

@@ -23,7 +23,7 @@ import { CalendarDays, GripHorizontal, PlusCircle } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState, useTransition } from "react";
 import { toast } from "react-hot-toast";
 
-const MotionCard = motion(Card);
+const MotionCard = motion.create(Card);
 
 // Authentication wrapper component
 const AuthenticationWrapper = ({ children }: { children: React.ReactNode }) => {

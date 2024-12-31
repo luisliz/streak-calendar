@@ -9,6 +9,8 @@ import { Providers } from "./providers";
 const inter = Inter({
   variable: "--font-inter", // CSS variable for font family
   subsets: ["latin"],
+  display: "swap",
+  preload: true,
 });
 
 export const metadata: Metadata = {
