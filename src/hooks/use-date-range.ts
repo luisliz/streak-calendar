@@ -20,7 +20,7 @@ const getDatesForRange = (daysBack: number) => {
   };
 };
 
-export function useDateRange(daysBack: number = 30) {
+export function useDateRange(daysBack: number = 40) {
   const { today, startDate, days } = useMemo(() => getDatesForRange(daysBack), [daysBack]);
 
   return {
