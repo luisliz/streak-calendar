@@ -123,17 +123,17 @@ const CalendarList = ({
         className="space-y-8 shadow-md border p-2"
       >
         <ViewControls calendarView={calendarView} onViewChange={onViewChange} />
-        <div className="w-full md:px-8">
-          <div className="md:w-full w-[200%] md:transform-none origin-top-left scale-[0.5] md:scale-100">
+        <div className="w-full md:px-8 flex">
+          <div className="md:w-full w-[133%] md:transform-none origin-top-left scale-[0.75] md:scale-100">
             {calendars.map((calendar) => {
               const calendarHabits = habits.filter((h) => h.calendarId === calendar._id);
               return (
                 <CalendarItem
-                  key={calendar._id}
                   calendar={calendar}
-                  habits={calendarHabits}
-                  days={days}
                   completions={completions}
+                  days={days}
+                  habits={calendarHabits}
+                  key={calendar._id}
                   onAddHabit={() => onAddHabit(calendar)}
                   onEditCalendar={() => onEditCalendar(calendar)}
                   onEditHabit={onEditHabit}
@@ -145,7 +145,7 @@ const CalendarList = ({
           </div>
         </div>
         <div className="flex justify-center pb-4">
-          <Button variant="outline" onClick={onNewCalendar}>
+          <Button variant="default" onClick={onNewCalendar}>
             <PlusCircle className="mr-2 h-4 w-4" />
             Add Calendar
           </Button>
@@ -347,7 +347,7 @@ export default function CalendarsPage() {
   } = useHabitState();
 
   // Pre-fetch data for both views
-  const monthData = useDateRange(30);
+  const monthData = useDateRange(40);
   const yearData = useDateRange(365);
 
   // Use appropriate data based on view with deferred loading
