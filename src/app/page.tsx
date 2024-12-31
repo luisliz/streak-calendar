@@ -7,13 +7,13 @@ export default function Home() {
   return (
     <div className="flex flex-col items-center justify-center px-4 text-center py-16 space-y-16">
       <div className="max-w-lg">
-        <h1 className="text-4xl font-bold mb-4">Build Habits That Last with Streak Calendar</h1>
+        <h1 className="text-2xl md:text-4xl font-bold mb-4">Build Habits That Last with Streak Calendar</h1>
         <p className="mx-auto max-w-[600px] text-muted-foreground md:text-lg">
           A simple, motivational productivity tool to help you achieve your goals, one day at a time.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-4xl mx-auto px-4">
+      <div className="max-w-xs md:max-w-3xl grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mx-auto px-4">
         <div className="text-center space-y-2">
           <Calendar className="w-8 h-8 mx-auto mb-2 text-primary" />
           <h3 className="font-semibold">Visual Habit Tracking</h3>
