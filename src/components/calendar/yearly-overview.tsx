@@ -101,7 +101,7 @@ export const YearlyOverview = ({ completions }: YearlyOverviewProps) => {
   // Memoized grid cell component for better performance
   // Renders either an empty cell, a blank day, or a completion indicator
   const GridCell = memo(({ day }: { day: string | null }) => {
-    if (!day) return <div className="aspect-square w-[6px] sm:w-[8px] md:w-4" />;
+    if (!day) return <div className="aspect-square w-[7px] sm:w-[9px] md:w-4" />;
 
     const count = completionCounts[day] || 0;
     const colorClass = getColorClass(count);
@@ -110,7 +110,7 @@ export const YearlyOverview = ({ completions }: YearlyOverviewProps) => {
     if (count === 0) {
       return (
         <div
-          className={`aspect-square w-[5px] sm:w-[8px] md:w-4 rounded-full ${colorClass}`}
+          className={`aspect-square w-[7px] sm:w-[9px] md:w-4 rounded-full ${colorClass}`}
           title={`${format(new Date(day), "MMM d, yyyy")}: ${count} completions`}
         />
       );
@@ -119,7 +119,7 @@ export const YearlyOverview = ({ completions }: YearlyOverviewProps) => {
     // Render completion indicator for days with completions
     return (
       <div
-        className="aspect-square w-[5px] sm:w-[8px] md:w-4 relative hover:opacity-80 transition-colors"
+        className="aspect-square w-[7px] sm:w-[9px] md:w-4 relative hover:opacity-80 transition-colors"
         title={`${format(new Date(day), "MMM d, yyyy")}: ${count} completions`}
       >
         <svg viewBox="0 0 15 15" className={`w-full h-full ${colorClass}`}>
@@ -137,28 +137,25 @@ export const YearlyOverview = ({ completions }: YearlyOverviewProps) => {
 
   return (
     <div className="mx-auto sm:mt-16 mt-2">
-      {/* Header showing total completions */}
-      <div className="mx-auto pl-2 pb-1 max-w-full md:w-[min(1000px,95vw)] text-xs text-muted-foreground">
+      <div className="mx-auto pl-2 pb-1 max-w-full md:w-[1000px] text-xs text-muted-foreground">
         <span className="font-bold">Yearly Overview</span>{" "}
         <span className="text-muted-foreground/75">({totalCompletions} things done last year)</span>
       </div>
-      {/* Main calendar card */}
-      <Card className="mx-auto mb-4 md:mb-16 rounded-3xl max-w-full md:w-[min(1000px,95vw)] shadow-md p-1 md:p-2 md:pb-4">
-        <div className="overflow-hidden">
-          <div className="flex justify-end min-w-[800px]">
+      <Card className="mx-auto mb-4 md:mb-16 rounded-3xl max-w-full md:w-[1000px] shadow-md p-1 md:p-2 md:pb-4">
+        <div className="w-full">
+          <div className="flex justify-end">
             {/* Left day labels (Mon/Wed/Fri) */}
-            <div className="opacity-50 flex flex-col mt-6">
-              <div className="h-[4px] md:h-[18px]" />
-              {/* Required for alignment */}
-              <div className="text-muted-foreground text-[8px] md:text-xs text-right">Mon</div>
-              <div className="h-[4px] md:h-[18px]" />
-              <div className="text-muted-foreground text-[8px] md:text-xs text-right">Wed</div>
-              <div className="h-[4px] md:h-[18px]" />
-              <div className="text-muted-foreground text-[8px] md:text-xs text-right">Fri</div>
+            <div className="opacity-50 flex flex-col mt-4 md:mt-6 pr-1">
+              <div className="h-[3px] md:h-[18px]" />
+              <div className="text-muted-foreground text-[5px] sm:text-[7px] md:text-xs text-right">Mon</div>
+              <div className="h-[3px] md:h-[18px]" />
+              <div className="text-muted-foreground text-[5px] sm:text-[7px] md:text-xs text-right">Wed</div>
+              <div className="h-[3px] md:h-[18px]" />
+              <div className="text-muted-foreground text-[5px] sm:text-[7px] md:text-xs text-right">Fri</div>
             </div>
             <div className="flex-1">
               {/* Month labels row */}
-              <div className="opacity-50 flex text-[8px] text-xs text-muted-foreground pb-2 justify-center mx-auto">
+              <div className="opacity-50 flex text-[5px] sm:text-[7px] md:text-xs text-muted-foreground pb-1 md:pb-2 justify-center mx-auto">
                 {monthLabels.map((month, index) => (
                   <div key={month.key} className={`${index === 0 ? "mr-auto pl-1" : "flex-1 text-center"}`}>
                     {month.label}
@@ -166,7 +163,7 @@ export const YearlyOverview = ({ completions }: YearlyOverviewProps) => {
                 ))}
               </div>
               {/* Main contribution grid */}
-              <div className="flex gap-[1px] justify-center">
+              <div className="flex gap-[1px] justify-start pl-0">
                 {weeks.map((week, weekIndex) => (
                   <div key={weekIndex} className="flex flex-col gap-[1px]">
                     {week.map((day, dayIndex) => (
@@ -177,14 +174,13 @@ export const YearlyOverview = ({ completions }: YearlyOverviewProps) => {
               </div>
             </div>
             {/* Right day labels (Mon/Wed/Fri) */}
-            <div className="opacity-50 flex flex-col mt-6">
-              <div className="h-[4px] md:h-[18px]" />
-              {/* Required for alignment */}
-              <div className="text-muted-foreground text-[8px] md:text-xs text-left">Mon</div>
-              <div className="h-[4px] md:h-[18px]" />
-              <div className="text-muted-foreground text-[8px] md:text-xs text-left">Wed</div>
-              <div className="h-[4px] md:h-[18px]" />
-              <div className="text-muted-foreground text-[8px] md:text-xs text-left">Fri</div>
+            <div className="opacity-50 flex flex-col mt-4 md:mt-6 pl-1">
+              <div className="h-[3px] md:h-[18px]" />
+              <div className="text-muted-foreground text-[5px] sm:text-[7px] md:text-xs text-left">Mon</div>
+              <div className="h-[3px] md:h-[18px]" />
+              <div className="text-muted-foreground text-[5px] sm:text-[7px] md:text-xs text-left">Wed</div>
+              <div className="h-[3px] md:h-[18px]" />
+              <div className="text-muted-foreground text-[5px] sm:text-[7px] md:text-xs text-left">Fri</div>
             </div>
           </div>
         </div>
