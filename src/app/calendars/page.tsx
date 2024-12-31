@@ -124,7 +124,7 @@ const CalendarList = ({
       >
         <ViewControls calendarView={calendarView} onViewChange={onViewChange} />
         <div className="w-full md:px-8 flex">
-          <div className="md:w-full w-[133%] md:transform-none origin-top-left scale-[0.75] md:scale-100">
+          <div className="w-full">
             {calendars.map((calendar) => {
               const calendarHabits = habits.filter((h) => h.calendarId === calendar._id);
               return (
