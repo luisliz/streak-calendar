@@ -3,6 +3,16 @@
  * It provides interfaces for creating, editing, and deleting both calendars and habits.
  * All dialogs use shadcn/ui components for consistent styling and behavior.
  */
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
@@ -234,14 +244,14 @@ export const NewHabitDialog = ({
  * Changes are only applied when explicitly saved.
  */
 interface EditCalendarDialogProps {
-  color: string; // Current color theme
+  color: string;
   isOpen: boolean;
-  name: string; // Current calendar name
-  onColorChange: (color: string) => void; // Callback when color changes
-  onDelete: () => void; // Callback to delete calendar
-  onNameChange: (name: string) => void; // Callback when name changes
+  name: string;
+  onColorChange: (color: string) => void;
+  onDelete: () => void;
+  onNameChange: (name: string) => void;
   onOpenChange: (open: boolean) => void;
-  onSubmit: () => void; // Callback to save changes
+  onSubmit: () => void;
 }
 
 export const EditCalendarDialog = ({
@@ -256,59 +266,99 @@ export const EditCalendarDialog = ({
 }: EditCalendarDialogProps) => {
   const [localName, setLocalName] = useState(name);
   const debouncedName = useDebounce(localName);
+  const [showDeleteAlert, setShowDeleteAlert] = useState(false);
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      onSubmit();
+    }
+  };
+
+  useEffect(() => {
+    setLocalName(name);
+  }, [name]);
 
   useEffect(() => {
     onNameChange(debouncedName);
   }, [debouncedName, onNameChange]);
 
   return (
-    <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Edit Calendar</DialogTitle>
-        </DialogHeader>
-        <div className="grid gap-4">
-          <div>
-            <Label htmlFor="edit-calendar-name">Calendar Name</Label>
-            <Input id="edit-calendar-name" value={localName} onChange={(e) => setLocalName(e.target.value)} />
-          </div>
-          <div>
-            <Label>Color Theme</Label>
-            <Select value={color} onValueChange={onColorChange}>
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Select a color">
-                  <div className="flex items-center gap-2">
-                    <div className={`w-4 h-4 rounded-full ${color}`} />
-                    {COLORS.find((c) => c.value === color)?.name}
-                  </div>
-                </SelectValue>
-              </SelectTrigger>
-              <SelectContent>
-                {COLORS.map((c) => (
-                  <SelectItem key={c.value} value={c.value}>
+    <>
+      <Dialog open={isOpen} onOpenChange={onOpenChange}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Edit Calendar</DialogTitle>
+          </DialogHeader>
+          <div className="grid gap-4">
+            <div>
+              <Label htmlFor="edit-calendar-name">Calendar Name</Label>
+              <Input
+                id="edit-calendar-name"
+                value={localName}
+                onChange={(e) => setLocalName(e.target.value)}
+                onKeyDown={handleKeyDown}
+              />
+            </div>
+            <div>
+              <Label>Color Theme</Label>
+              <Select value={color} onValueChange={onColorChange}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select a color">
                     <div className="flex items-center gap-2">
-                      <div className={`w-4 h-4 rounded-full ${c.value}`} />
-                      {c.name}
+                      <div className={`w-4 h-4 rounded-full ${color}`} />
+                      {COLORS.find((c) => c.value === color)?.name}
                     </div>
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+                  </SelectValue>
+                </SelectTrigger>
+                <SelectContent>
+                  {COLORS.map((c) => (
+                    <SelectItem key={c.value} value={c.value}>
+                      <div className="flex items-center gap-2">
+                        <div className={`w-4 h-4 rounded-full ${c.value}`} />
+                        {c.name}
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="flex gap-2">
+              <Button variant="outline" onClick={() => onOpenChange(false)} className="flex-1">
+                Cancel
+              </Button>
+              <Button variant="destructive" onClick={() => setShowDeleteAlert(true)}>
+                Delete
+              </Button>
+              <Button onClick={onSubmit} className="flex-1">
+                Save Changes
+              </Button>
+            </div>
           </div>
-          <div className="flex gap-2">
-            <Button variant="outline" onClick={() => onOpenChange(false)} className="flex-1">
-              Cancel
-            </Button>
-            <Button variant="destructive" onClick={onDelete}>
-              Delete
-            </Button>
-            <Button onClick={onSubmit} className="flex-1">
-              Save Changes
-            </Button>
-          </div>
-        </div>
-      </DialogContent>
-    </Dialog>
+        </DialogContent>
+      </Dialog>
+
+      <AlertDialog open={showDeleteAlert} onOpenChange={setShowDeleteAlert}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will permanently delete the calendar &ldquo;{name}&rdquo; and all its habits. This action cannot be
+              undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={onDelete}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Delete Calendar
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
   );
 };
 
@@ -344,9 +394,25 @@ export const EditHabitDialog = ({
   timerDuration,
 }: EditHabitDialogProps) => {
   const [localName, setLocalName] = useState(name);
-  const [localDuration, setLocalDuration] = useState<string>(timerDuration?.toString() || "");
+  const [localDuration, setLocalDuration] = useState(timerDuration?.toString() ?? "");
+  const [showDeleteAlert, setShowDeleteAlert] = useState(false);
   const debouncedName = useDebounce(localName);
   const debouncedDuration = useDebounce(localDuration);
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      onSubmit();
+    }
+  };
+
+  useEffect(() => {
+    setLocalName(name);
+  }, [name]);
+
+  useEffect(() => {
+    setLocalDuration(timerDuration?.toString() ?? "");
+  }, [timerDuration]);
 
   useEffect(() => {
     onNameChange(debouncedName);
@@ -360,41 +426,68 @@ export const EditHabitDialog = ({
   }, [debouncedDuration, onTimerDurationChange]);
 
   return (
-    <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Edit Habit</DialogTitle>
-        </DialogHeader>
-        <div className="grid gap-4">
-          <div>
-            <Label htmlFor="edit-habit-name">Habit Name</Label>
-            <Input id="edit-habit-name" value={localName} onChange={(e) => setLocalName(e.target.value)} />
+    <>
+      <Dialog open={isOpen} onOpenChange={onOpenChange}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Edit Habit</DialogTitle>
+          </DialogHeader>
+          <div className="grid gap-4">
+            <div>
+              <Label htmlFor="edit-habit-name">Habit Name</Label>
+              <Input
+                id="edit-habit-name"
+                value={localName}
+                onChange={(e) => setLocalName(e.target.value)}
+                onKeyDown={handleKeyDown}
+              />
+            </div>
+            <div>
+              <Label htmlFor="edit-timer-duration">Timer Duration (minutes)</Label>
+              <Input
+                id="edit-timer-duration"
+                type="number"
+                min={1}
+                max={120}
+                value={localDuration}
+                onChange={(e) => setLocalDuration(e.target.value)}
+                placeholder="Optional timer duration"
+              />
+            </div>
+            <div className="flex gap-2">
+              <Button variant="outline" onClick={() => onOpenChange(false)} className="flex-1">
+                Cancel
+              </Button>
+              <Button variant="destructive" onClick={() => setShowDeleteAlert(true)}>
+                Delete
+              </Button>
+              <Button onClick={onSubmit} className="flex-1">
+                Save Changes
+              </Button>
+            </div>
           </div>
-          <div>
-            <Label htmlFor="edit-timer-duration">Timer Duration (minutes)</Label>
-            <Input
-              id="edit-timer-duration"
-              type="number"
-              min={1}
-              max={120}
-              value={localDuration}
-              onChange={(e) => setLocalDuration(e.target.value)}
-              placeholder="Optional timer duration"
-            />
-          </div>
-          <div className="flex gap-2">
-            <Button variant="outline" onClick={() => onOpenChange(false)} className="flex-1">
-              Cancel
-            </Button>
-            <Button variant="destructive" onClick={onDelete}>
-              Delete
-            </Button>
-            <Button onClick={onSubmit} className="flex-1">
-              Save Changes
-            </Button>
-          </div>
-        </div>
-      </DialogContent>
-    </Dialog>
+        </DialogContent>
+      </Dialog>
+
+      <AlertDialog open={showDeleteAlert} onOpenChange={setShowDeleteAlert}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will permanently delete the habit &ldquo;{name}&rdquo;. This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={onDelete}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Delete Habit
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
   );
 };
