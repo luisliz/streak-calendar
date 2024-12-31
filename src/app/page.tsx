@@ -9,7 +9,7 @@ export default function Home() {
       <div className="max-w-lg">
         <h1 className="text-2xl md:text-4xl font-bold mb-4">Build Habits That Last with Streak Calendar</h1>
         <p className="mx-auto max-w-[600px] text-muted-foreground md:text-lg">
-          A simple, motivational productivity tool to help you achieve your goals, one day at a time.
+          A simple, motivational productivity tool to help you achieve your goals, one day at a time. 💪
         </p>
       </div>
 
@@ -64,7 +64,7 @@ export default function Home() {
         </SignedOut>
       </div>
 
-      <div className="w-full max-w-xl space-y-2">
+      <div className="w-full max-w-xl">
         <div className="shadow-lg rounded-[8px] relative w-full overflow-hidden aspect-video">
           <iframe
             className="absolute left-0 top-0 h-full w-full"
