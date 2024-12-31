@@ -77,7 +77,6 @@ export const CalendarItem = ({
         <div className="">
           {/* Calendar header */}
           <div className="flex">
-            <div className="min-w-24 md:min-w-48 w-32 md:w-48" />
             <div className="flex-1 flex gap-px overflow-hidden mr-2">
               <div className="flex gap-px justify-end w-full">
                 {days.map((day) => (
@@ -103,9 +102,17 @@ export const CalendarItem = ({
               ).length;
 
               return (
-                <div key={habit._id} className="flex items-start">
+                <div key={habit._id} className="flex items-start relative">
+                  <CalendarView
+                    habit={habit}
+                    color={colorTheme}
+                    days={days}
+                    completions={completions}
+                    onToggle={onToggleHabit}
+                    view={view}
+                  />
                   <div
-                    className="flex min-w-24 md:min-w-48 w-32 md:w-48 group items-start cursor-pointer hover:text-muted-foreground transition-colors overflow-hidden"
+                    className="absolute left-0 flex group items-start cursor-pointer hover:text-muted-foreground transition-colors w-48"
                     onClick={() => onEditHabit(habit)}
                   >
                     <div className="truncate flex items-center gap-2">
@@ -120,14 +127,6 @@ export const CalendarItem = ({
                       </span>
                     </div>
                   </div>
-                  <CalendarView
-                    habit={habit}
-                    color={colorTheme}
-                    days={days}
-                    completions={completions}
-                    onToggle={onToggleHabit}
-                    view={view}
-                  />
                   <CompleteControls
                     count={todayCount}
                     onIncrement={() => onToggleHabit(habit._id, today, todayCount + 1)}
