@@ -77,7 +77,10 @@ export const CompletionMenu = ({ date, count, onCountChange, colorClass, gridVie
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent align="center" className="w-auto px-4 py-2 rounded-[15px]">
+      <PopoverContent
+        align="center"
+        className="w-auto px-4 py-2 rounded-[15px] backdrop-blur-sm border bg-white/60 dark:bg-black/60"
+      >
         <div className="flex flex-col items-center gap-2">
           <div className="text-xs">
             {new Date(date).toLocaleDateString(undefined, {
@@ -86,7 +89,9 @@ export const CompletionMenu = ({ date, count, onCountChange, colorClass, gridVie
               day: "numeric",
             })}
           </div>
-          <CompleteControls count={count} onIncrement={handleIncrement} onDecrement={handleDecrement} />
+          <div className="">
+            <CompleteControls count={count} onIncrement={handleIncrement} onDecrement={handleDecrement} />
+          </div>
         </div>
       </PopoverContent>
     </Popover>

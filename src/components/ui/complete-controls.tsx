@@ -87,73 +87,86 @@ export function CompleteControls({
   if (timerDuration) {
     if (count === 0) {
       return (
-        <Button
-          ref={timerButtonRef}
-          variant={variant}
-          size="sm"
-          className="h-6 w-20 text-xs flex items-center gap-1"
-          onClick={startTimer}
-          disabled={isTimerRunning}
-        >
-          <Timer className="h-3 w-3" />
-          {isTimerRunning ? formatTime(timeLeft) : `Start ${timerDuration}m`}
-        </Button>
+        <div className="w-[96px] flex flex-col gap-px ml-2">
+          <Button
+            ref={timerButtonRef}
+            variant={variant}
+            size="sm"
+            className="h-6 w-[96px] text-xs flex items-center justify-center"
+            onClick={startTimer}
+            disabled={isTimerRunning}
+          >
+            <Timer className="h-3 w-3 mr-1" />
+            {isTimerRunning ? formatTime(timeLeft) : `Start`}
+          </Button>
+        </div>
       );
     }
 
     return (
-      <div className="flex items-center gap-1 w-20">
-        <Button variant={variant} size="icon" className="h-6 w-6" onClick={onDecrement}>
-          <Minus className="h-4 w-4" />
-        </Button>
-        <span className="w-6 text-center font-medium">{count}</span>
-        <Button
-          ref={timerButtonRef}
-          variant={variant}
-          size="sm"
-          className="h-6 w-6 p-0 flex items-center justify-center"
-          onClick={startTimer}
-          disabled={isTimerRunning}
-        >
-          {isTimerRunning ? (
-            <span className="text-[10px] font-medium">{formatTime(timeLeft)}</span>
-          ) : (
-            <Timer className="h-4 w-4" />
-          )}
-        </Button>
+      <div className="w-[96px] flex flex-col gap-px ml-2">
+        <div className="flex items-center justify-between w-[96px]">
+          <Button
+            variant={variant}
+            size="icon"
+            className="h-6 w-6 aspect-square rounded-full p-0"
+            onClick={onDecrement}
+          >
+            <Minus className="h-4 w-4" />
+          </Button>
+          <span className="w-[72px] text-center font-medium">{count}</span>
+          <Button
+            ref={timerButtonRef}
+            variant={variant}
+            size="icon"
+            className="h-6 w-6 aspect-square rounded-full p-0"
+            onClick={startTimer}
+            disabled={isTimerRunning}
+          >
+            {isTimerRunning ? (
+              <span className="text-[10px] font-medium">{formatTime(timeLeft)}</span>
+            ) : (
+              <Timer className="h-4 w-4" />
+            )}
+          </Button>
+        </div>
       </div>
     );
   }
 
   if (count === 0) {
     return (
-      <ConfettiButton
-        variant={variant}
-        size="sm"
-        className="h-6 w-20 text-xs"
-        onClick={onIncrement}
-        options={getConfettiOptions()}
-      >
-        Complete
-      </ConfettiButton>
+      <div className="w-[96px] flex flex-col gap-px ml-2">
+        <ConfettiButton
+          variant={variant}
+          size="sm"
+          className="h-6 w-[96px] text-xs"
+          onClick={onIncrement}
+          options={getConfettiOptions()}
+        >
+          Complete
+        </ConfettiButton>
+      </div>
     );
   }
 
   return (
-    <div className="flex items-center gap-1 w-20">
-      <Button variant={variant} size="icon" className="h-6 w-6" onClick={onDecrement}>
-        <Minus className="h-4 w-4" />
-      </Button>
-      <span className="w-6 text-center font-medium">{count}</span>
-      <ConfettiButton
-        variant={variant}
-        size="icon"
-        className="h-6 w-6"
-        onClick={onIncrement}
-        options={getConfettiOptions()}
-      >
-        <Plus className="h-4 w-4" />
-      </ConfettiButton>
+    <div className="w-[96px] flex flex-col gap-px ml-2">
+      <div className="flex items-center justify-between w-[96px]">
+        <Button variant={variant} size="icon" className="h-6 w-6 aspect-square rounded-full p-0" onClick={onDecrement}>
+          <Minus className="h-4 w-4" />
+        </Button>
+        <span className="w-[72px] text-center font-medium">{count}</span>
+        <ConfettiButton
+          variant={variant}
+          size="icon"
+          className="h-6 w-6 aspect-square rounded-full p-0"
+          onClick={onIncrement}
+          options={getConfettiOptions()}
+        >
+          <Plus className="h-4 w-4" />
+        </ConfettiButton>
+      </div>
     </div>
   );
 }

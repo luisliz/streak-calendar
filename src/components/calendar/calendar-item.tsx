@@ -78,7 +78,7 @@ export const CalendarItem = ({
           {/* Calendar header */}
           <div className="flex">
             <div className="min-w-24 md:min-w-48 w-32 md:w-48" />
-            <div className="flex-1 flex gap-px overflow-hidden">
+            <div className="flex-1 flex gap-px overflow-hidden mr-2">
               <div className="flex gap-px justify-end w-full">
                 {days.map((day) => (
                   <div key={day} className="w-6">
@@ -91,7 +91,8 @@ export const CalendarItem = ({
                 ))}
               </div>
             </div>
-            <div className="w-20" />
+            {/* TODO: 2024-12-31 - Add a habit here maybe? */}
+            <div className="w-24 hover:bg-red-500/50" />
           </div>
 
           <div className="overflow-hidden">
@@ -134,7 +135,7 @@ export const CalendarItem = ({
             })}
           </div>
           <div className="flex justify-end">
-            <Button className="w-20 h-[24px] text-xs" size="sm" onClick={onAddHabit}>
+            <Button className="w-24 h-[24px] text-xs" size="sm" onClick={onAddHabit}>
               New
             </Button>
           </div>

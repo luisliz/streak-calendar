@@ -143,9 +143,9 @@ export const YearlyOverview = ({ completions }: YearlyOverviewProps) => {
         <span className="text-muted-foreground/75">({totalCompletions} things done last year)</span>
       </div>
       {/* Main calendar card */}
-      <Card className="mx-auto mb-4 md:mb-16 rounded-3xl max-w-full md:w-[min(1000px,95vw)] shadow-md p-1 md:p-2 md:pb-4 overflow-hidden">
-        <div className="mx-auto">
-          <div className="flex">
+      <Card className="mx-auto mb-4 md:mb-16 rounded-3xl max-w-full md:w-[min(1000px,95vw)] shadow-md p-1 md:p-2 md:pb-4">
+        <div className="overflow-hidden">
+          <div className="flex justify-end min-w-[800px]">
             {/* Left day labels (Mon/Wed/Fri) */}
             <div className="opacity-50 flex flex-col mt-6">
               <div className="h-[4px] md:h-[18px]" />
