@@ -1,12 +1,20 @@
+/**
+ * This module contains dialog components for managing calendars and habits.
+ * It provides interfaces for creating, editing, and deleting both calendars and habits.
+ * All dialogs use shadcn/ui components for consistent styling and behavior.
+ */
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useDebounce } from "@/hooks/use-debounce";
+import { useEffect, useState } from "react";
 
 /**
- * Available color themes for calendars.
- * Each color uses Tailwind's color classes with 500 shade.
+ * Available color themes for calendars using Tailwind's color system.
+ * Each color is defined with a human-readable name and corresponding Tailwind class.
+ * All colors use the 500 shade for consistency in the UI.
  */
 export const COLORS = [
   { name: "Red", value: "bg-red-500" },
@@ -29,30 +37,49 @@ export const COLORS = [
 ];
 
 /**
- * Dialog for creating a new calendar.
- * Allows users to set a name and choose a color theme.
+ * Dialog component for creating a new calendar.
+ * Provides form fields for:
+ * - Calendar name input
+ * - Color theme selection from predefined options
+ * - Submit and cancel actions
+ *
+ * @param color - Currently selected color theme
+ * @param isOpen - Dialog visibility state
+ * @param name - Current value of calendar name input
+ * @param onColorChange - Handler for color selection changes
+ * @param onKeyDown - Keyboard event handler (e.g., for Enter key submission)
+ * @param onNameChange - Handler for name input changes
+ * @param onOpenChange - Handler for dialog open/close state
+ * @param onSubmit - Handler for form submission
  */
 interface NewCalendarDialogProps {
+  color: string;
   isOpen: boolean;
+  name: string;
+  onColorChange: (color: string) => void;
+  onKeyDown: (e: React.KeyboardEvent) => void;
+  onNameChange: (name: string) => void;
   onOpenChange: (open: boolean) => void;
-  name: string; // Current calendar name input value
-  onNameChange: (name: string) => void; // Callback when name changes
-  color: string; // Selected color theme
-  onColorChange: (color: string) => void; // Callback when color changes
-  onSubmit: () => void; // Callback when form is submitted
-  onKeyDown: (e: React.KeyboardEvent) => void; // Keyboard event handler (e.g., for Enter key)
+  onSubmit: () => void;
 }
 
 export const NewCalendarDialog = ({
-  isOpen,
-  onOpenChange,
-  name,
-  onNameChange,
   color,
+  isOpen,
+  name,
   onColorChange,
-  onSubmit,
   onKeyDown,
+  onNameChange,
+  onOpenChange,
+  onSubmit,
 }: NewCalendarDialogProps) => {
+  const [localName, setLocalName] = useState(name);
+  const debouncedName = useDebounce(localName);
+
+  useEffect(() => {
+    onNameChange(debouncedName);
+  }, [debouncedName, onNameChange]);
+
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent>
@@ -64,8 +91,8 @@ export const NewCalendarDialog = ({
             <Label htmlFor="calendar-name">Calendar Name</Label>
             <Input
               id="calendar-name"
-              value={name}
-              onChange={(e) => onNameChange(e.target.value)}
+              value={localName}
+              onChange={(e) => setLocalName(e.target.value)}
               onKeyDown={onKeyDown}
               placeholder="e.g., Fitness Goals"
             />
@@ -108,30 +135,52 @@ export const NewCalendarDialog = ({
 };
 
 /**
- * Dialog for adding a new habit to a calendar.
- * Simpler than calendar dialog - only requires a name.
+ * Dialog component for creating a new habit within a calendar.
+ * Provides form fields for:
+ * - Habit name input
+ * - Optional timer duration in minutes (1-120 range)
+ * - Submit and cancel actions
+ *
+ * The timer duration is optional and can be used for timed habits
+ * like meditation or exercise routines.
  */
 interface NewHabitDialogProps {
   isOpen: boolean;
-  onOpenChange: (open: boolean) => void;
   name: string;
-  onNameChange: (name: string) => void;
-  timerDuration: number | undefined;
-  onTimerDurationChange: (duration: number | undefined) => void;
-  onSubmit: () => void;
   onKeyDown: (e: React.KeyboardEvent) => void;
+  onNameChange: (name: string) => void;
+  onOpenChange: (open: boolean) => void;
+  onSubmit: () => void;
+  onTimerDurationChange: (duration: number | undefined) => void;
+  timerDuration: number | undefined;
 }
 
 export const NewHabitDialog = ({
   isOpen,
-  onOpenChange,
   name,
-  onNameChange,
-  timerDuration,
-  onTimerDurationChange,
-  onSubmit,
   onKeyDown,
+  onNameChange,
+  onOpenChange,
+  onSubmit,
+  onTimerDurationChange,
+  timerDuration,
 }: NewHabitDialogProps) => {
+  const [localName, setLocalName] = useState(name);
+  const [localDuration, setLocalDuration] = useState<string>(timerDuration?.toString() || "");
+  const debouncedName = useDebounce(localName);
+  const debouncedDuration = useDebounce(localDuration);
+
+  useEffect(() => {
+    onNameChange(debouncedName);
+  }, [debouncedName, onNameChange]);
+
+  useEffect(() => {
+    const val = debouncedDuration ? parseInt(debouncedDuration) : undefined;
+    if (!val || (val >= 1 && val <= 120)) {
+      onTimerDurationChange(val);
+    }
+  }, [debouncedDuration, onTimerDurationChange]);
+
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent>
@@ -143,8 +192,8 @@ export const NewHabitDialog = ({
             <Label htmlFor="habit-name">Habit Name</Label>
             <Input
               id="habit-name"
-              value={name}
-              onChange={(e) => onNameChange(e.target.value)}
+              value={localName}
+              onChange={(e) => setLocalName(e.target.value)}
               onKeyDown={onKeyDown}
               placeholder="e.g., Morning Run"
             />
@@ -156,13 +205,8 @@ export const NewHabitDialog = ({
               type="number"
               min={1}
               max={120}
-              value={timerDuration || ""}
-              onChange={(e) => {
-                const val = e.target.value ? parseInt(e.target.value) : undefined;
-                if (!val || (val >= 1 && val <= 120)) {
-                  onTimerDurationChange(val);
-                }
-              }}
+              value={localDuration}
+              onChange={(e) => setLocalDuration(e.target.value)}
               placeholder="Optional timer duration"
             />
           </div>
@@ -181,18 +225,23 @@ export const NewHabitDialog = ({
 };
 
 /**
- * Dialog for editing an existing calendar.
- * Similar to new calendar dialog but includes delete option.
+ * Dialog component for editing an existing calendar.
+ * Similar to NewCalendarDialog but includes:
+ * - Pre-filled values for name and color
+ * - Additional delete option for removing the calendar
+ * - Modified button layout with destructive delete action
+ *
+ * Changes are only applied when explicitly saved.
  */
 interface EditCalendarDialogProps {
-  isOpen: boolean;
-  onOpenChange: (open: boolean) => void;
-  name: string; // Current calendar name
-  onNameChange: (name: string) => void; // Callback when name changes
   color: string; // Current color theme
+  isOpen: boolean;
+  name: string; // Current calendar name
   onColorChange: (color: string) => void; // Callback when color changes
-  onSubmit: () => void; // Callback to save changes
   onDelete: () => void; // Callback to delete calendar
+  onNameChange: (name: string) => void; // Callback when name changes
+  onOpenChange: (open: boolean) => void;
+  onSubmit: () => void; // Callback to save changes
 }
 
 export const EditCalendarDialog = ({
@@ -205,6 +254,13 @@ export const EditCalendarDialog = ({
   onSubmit,
   onDelete,
 }: EditCalendarDialogProps) => {
+  const [localName, setLocalName] = useState(name);
+  const debouncedName = useDebounce(localName);
+
+  useEffect(() => {
+    onNameChange(debouncedName);
+  }, [debouncedName, onNameChange]);
+
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent>
@@ -214,7 +270,7 @@ export const EditCalendarDialog = ({
         <div className="grid gap-4">
           <div>
             <Label htmlFor="edit-calendar-name">Calendar Name</Label>
-            <Input id="edit-calendar-name" value={name} onChange={(e) => onNameChange(e.target.value)} />
+            <Input id="edit-calendar-name" value={localName} onChange={(e) => setLocalName(e.target.value)} />
           </div>
           <div>
             <Label>Color Theme</Label>
@@ -257,30 +313,52 @@ export const EditCalendarDialog = ({
 };
 
 /**
- * Dialog for editing an existing habit.
- * Similar to new habit dialog but includes delete option.
+ * Dialog component for editing an existing habit.
+ * Similar to NewHabitDialog but includes:
+ * - Pre-filled values for name and timer duration
+ * - Additional delete option for removing the habit
+ * - Modified button layout with destructive delete action
+ *
+ * Timer duration remains optional and validates range (1-120 minutes).
+ * Changes are only applied when explicitly saved.
  */
 interface EditHabitDialogProps {
   isOpen: boolean;
-  onOpenChange: (open: boolean) => void;
   name: string;
-  onNameChange: (name: string) => void;
-  timerDuration: number | undefined;
-  onTimerDurationChange: (duration: number | undefined) => void;
-  onSubmit: () => void;
   onDelete: () => void;
+  onNameChange: (name: string) => void;
+  onOpenChange: (open: boolean) => void;
+  onSubmit: () => void;
+  onTimerDurationChange: (duration: number | undefined) => void;
+  timerDuration: number | undefined;
 }
 
 export const EditHabitDialog = ({
   isOpen,
-  onOpenChange,
   name,
-  onNameChange,
-  timerDuration,
-  onTimerDurationChange,
-  onSubmit,
   onDelete,
+  onNameChange,
+  onOpenChange,
+  onSubmit,
+  onTimerDurationChange,
+  timerDuration,
 }: EditHabitDialogProps) => {
+  const [localName, setLocalName] = useState(name);
+  const [localDuration, setLocalDuration] = useState<string>(timerDuration?.toString() || "");
+  const debouncedName = useDebounce(localName);
+  const debouncedDuration = useDebounce(localDuration);
+
+  useEffect(() => {
+    onNameChange(debouncedName);
+  }, [debouncedName, onNameChange]);
+
+  useEffect(() => {
+    const val = debouncedDuration ? parseInt(debouncedDuration) : undefined;
+    if (!val || (val >= 1 && val <= 120)) {
+      onTimerDurationChange(val);
+    }
+  }, [debouncedDuration, onTimerDurationChange]);
+
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent>
@@ -290,7 +368,7 @@ export const EditHabitDialog = ({
         <div className="grid gap-4">
           <div>
             <Label htmlFor="edit-habit-name">Habit Name</Label>
-            <Input id="edit-habit-name" value={name} onChange={(e) => onNameChange(e.target.value)} />
+            <Input id="edit-habit-name" value={localName} onChange={(e) => setLocalName(e.target.value)} />
           </div>
           <div>
             <Label htmlFor="edit-timer-duration">Timer Duration (minutes)</Label>
@@ -299,13 +377,8 @@ export const EditHabitDialog = ({
               type="number"
               min={1}
               max={120}
-              value={timerDuration || ""}
-              onChange={(e) => {
-                const val = e.target.value ? parseInt(e.target.value) : undefined;
-                if (!val || (val >= 1 && val <= 120)) {
-                  onTimerDurationChange(val);
-                }
-              }}
+              value={localDuration}
+              onChange={(e) => setLocalDuration(e.target.value)}
               placeholder="Optional timer duration"
             />
           </div>
