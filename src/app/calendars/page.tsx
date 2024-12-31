@@ -123,8 +123,8 @@ const CalendarList = ({
         className="space-y-8 shadow-md border p-2"
       >
         <ViewControls calendarView={calendarView} onViewChange={onViewChange} />
-        <div className="w-full overflow-x-auto px-4 md:px-8">
-          <div className="min-w-[640px]">
+        <div className="w-full md:px-8">
+          <div className="md:w-full w-[200%] md:transform-none origin-top-left scale-[0.5] md:scale-100">
             {calendars.map((calendar) => {
               const calendarHabits = habits.filter((h) => h.calendarId === calendar._id);
               return (
