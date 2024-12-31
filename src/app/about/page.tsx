@@ -6,7 +6,7 @@ import Link from "next/link";
 
 export default function AboutPage() {
   return (
-    <div className="container max-w-4xl py-16 space-y-8 w-full mx-auto">
+    <div className="container max-w-2xl py-16 space-y-8 w-full mx-auto">
       <Card className="shadow p-4">
         <CardHeader>
           <h1 className="font-heading text-4xl font-bold">About Streak Calendar</h1>
@@ -139,7 +139,7 @@ export default function AboutPage() {
             </p>
 
             <div className="bg-muted p-4 rounded-sm mt-6">
-              <h4 className="font-bold">Key Principles:</h4>
+              <h4 className="font-bold flex justify-center">Key Principles:</h4>
               <ul className="list-disc pl-6 mt-2 text-muted-foreground">
                 <li>Choose a meaningful but sustainable daily task</li>
                 <li>Focus on the process, not the results</li>
@@ -154,7 +154,7 @@ export default function AboutPage() {
             Content adapted from{" "}
             <Link
               href="https://jamesclear.com/stop-procrastinating-seinfeld-strategy"
-              className="font-bold hover:underline"
+              className="font-bold hover:underline hover:text-primary"
               target="_blank"
               rel="noopener noreferrer"
             >
