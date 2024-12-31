@@ -31,15 +31,45 @@ type CalendarView = "monthRow" | "monthGrid";
  * EmptyState component shown when no calendars exist
  * Prompts user to create their first calendar
  */
-const EmptyState = ({ onNewCalendar }: { onNewCalendar: () => void }) => (
-  <div className="text-center py-12 text-muted-foreground">
-    <p>You haven&apos;t created any calendars yet.</p>
-    <p className="mt-2">Create one to start tracking your habits!</p>
-    <Button variant="default" onClick={onNewCalendar} className="mt-4">
-      <PlusCircle className="mr-2 h-4 w-4" />
-      Create Calendar
-    </Button>
-  </div>
+const EmptyState = ({
+  handleAddCalendar,
+  handleCalendarKeyDown,
+  isNewCalendarOpen,
+  newCalendarColor,
+  newCalendarName,
+  setIsNewCalendarOpen,
+  setNewCalendarColor,
+  setNewCalendarName,
+}: {
+  handleAddCalendar: (name: string, color: string) => Promise<void>;
+  handleCalendarKeyDown: (e: React.KeyboardEvent) => void;
+  isNewCalendarOpen: boolean;
+  newCalendarColor: string;
+  newCalendarName: string;
+  setIsNewCalendarOpen: (open: boolean) => void;
+  setNewCalendarColor: (color: string) => void;
+  setNewCalendarName: (name: string) => void;
+}) => (
+  <>
+    <div className="text-center py-12 text-muted-foreground">
+      <p>You haven&apos;t created any calendars yet.</p>
+      <p className="mt-2">Create one to start tracking your habits!</p>
+      <Button variant="default" onClick={() => setIsNewCalendarOpen(true)} className="mt-4">
+        <PlusCircle className="mr-2 h-4 w-4" />
+        Create Calendar
+      </Button>
+    </div>
+    <NewCalendarDialog
+      color={newCalendarColor}
+      isOpen={isNewCalendarOpen}
+      name={newCalendarName}
+      onColorChange={setNewCalendarColor}
+      onKeyDown={handleCalendarKeyDown}
+      onNameChange={setNewCalendarName}
+      onOpenChange={setIsNewCalendarOpen}
+      onSubmit={() => handleAddCalendar(newCalendarName, newCalendarColor)}
+    />
+  </>
 );
 
 /**
@@ -293,7 +323,18 @@ export function CalendarContainer({
    * Show empty state if no calendars exist
    */
   if (calendars.length === 0) {
-    return <EmptyState onNewCalendar={() => setIsNewCalendarOpen(true)} />;
+    return (
+      <EmptyState
+        isNewCalendarOpen={isNewCalendarOpen}
+        setIsNewCalendarOpen={setIsNewCalendarOpen}
+        newCalendarName={newCalendarName}
+        setNewCalendarName={setNewCalendarName}
+        newCalendarColor={newCalendarColor}
+        setNewCalendarColor={setNewCalendarColor}
+        handleAddCalendar={handleAddCalendar}
+        handleCalendarKeyDown={handleCalendarKeyDown}
+      />
+    );
   }
 
   return (
