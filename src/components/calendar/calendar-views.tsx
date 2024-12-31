@@ -70,7 +70,7 @@ export const CalendarView = ({ habit, color, days, completions, onToggle, view }
   // Render horizontal row view - simple consecutive day display
   if (view === "monthRow") {
     return (
-      <div data-habit-id={habit._id} className="overflow-x-auto flex w-full justify-end">
+      <div data-habit-id={habit._id} className="overflow-x-auto flex w-full justify-end mr-2">
         <div className="inline-flex gap-px h-[25px]">
           {days.map((date) => (
             <DayCell
