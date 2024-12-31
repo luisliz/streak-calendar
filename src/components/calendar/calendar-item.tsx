@@ -65,8 +65,8 @@ export const CalendarItem = ({
 
       {/* Conditional rendering based on habits existence */}
       {habits.length === 0 ? (
-        <div className="w-full">
-          <p className="text-sm text-muted-foreground">No habits added yet. Add one to start tracking!</p>
+        <div className="w-full flex flex-col items-center justify-center">
+          <p className="text-sm text-muted-foreground pb-8">No habits added yet. Add one to start tracking!</p>
           <Button size="sm" onClick={onAddHabit}>
             <PlusCircle className="h-4 w-4" />
             Add Habit
