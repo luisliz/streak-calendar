@@ -1,40 +1,52 @@
 import { Button } from "@/components/ui/button";
 import { SignedIn, SignedOut } from "@clerk/nextjs";
+import { Activity, Calendar, ListTodo, Timer } from "lucide-react";
 import Link from "next/link";
 
 export default function Home() {
   return (
-    <div className="flex flex-col items-center justify-center px-4 text-center">
-      <p className="mx-auto mt-16 mb-16 max-w-[500px] opacity-80 md:text-2xl">
-        <span className="font-bold">“You are what you repeatedly do.”</span>
-        <br />
-        Build lasting habits. Start your streak today and unlock your{" "}
-        <span className="font-semibold italic">true potential</span>.
-      </p>
-
-      <div className="shadow-lg rounded-[8px] relative w-full max-w-2xl overflow-hidden aspect-video mx-auto ">
-        <iframe
-          className="absolute left-0 top-0 h-full w-full"
-          src="https://www.youtube.com/embed/mVQ1bzd816I?si=h-UGS9kLXH-gN2Cs"
-          title="YouTube video player"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          referrerPolicy="strict-origin-when-cross-origin"
-          allowFullScreen
-        />
+    <div className="flex flex-col items-center justify-center px-4 text-center py-16 space-y-16">
+      <div className="max-w-lg">
+        <h1 className="text-4xl font-bold mb-4">Build Habits That Last with Streak Calendar</h1>
+        <p className="mx-auto max-w-[600px] text-muted-foreground md:text-lg">
+          A simple, motivational productivity tool to help you achieve your goals, one day at a time.
+        </p>
       </div>
 
-      <div className="w-full max-w-2xl text-right pr-2">
-        <a
-          href="https://youtu.be/u98FTiCfIRg?t=685"
-          className="text-xs text-muted-foreground underline opacity-50 hover:opacity-100 transition-opacity"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Full video
-        </a>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-4xl mx-auto px-4">
+        <div className="text-center space-y-2">
+          <Calendar className="w-8 h-8 mx-auto mb-2 text-primary" />
+          <h3 className="font-semibold">Visual Habit Tracking</h3>
+          <p className="text-sm text-muted-foreground">
+            Mark your daily accomplishments with &apos;
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15 15" className="inline w-4 h-4 fill-red-500">
+              <path d="M14.12 9.87a3.024 3.024 0 0 1 0 4.26c-.6.57-1.35.87-2.13.87s-1.53-.3-2.13-.87l-2.37-2.37-2.37 2.37c-.6.57-1.35.87-2.13.87s-1.53-.3-2.13-.87a3.024 3.024 0 0 1 0-4.26L3.23 7.5.88 5.13C-.29 3.97-.29 2.05.88.88a3.012 3.012 0 0 1 4.25 0L7.5 3.25 9.87.88a3.024 3.024 0 0 1 4.26 0 3.024 3.024 0 0 1 0 4.26l-2.37 2.37 2.37 2.37Z" />
+            </svg>
+            &apos;s and watch your streak grow
+          </p>
+        </div>
+        <div className="text-center space-y-2">
+          <ListTodo className="w-8 h-8 mx-auto mb-2 text-primary" />
+          <h3 className="font-semibold">Multi-Habit Support</h3>
+          <p className="text-sm text-muted-foreground">Track multiple habits across customizable calendars</p>
+        </div>
+        <div className="text-center space-y-2">
+          <Activity className="w-8 h-8 mx-auto mb-2 text-primary" />
+          <h3 className="font-semibold">Yearly Activity Grid</h3>
+          <p className="text-sm text-muted-foreground">Get a yearly view of your progress, inspired by GitHub</p>
+        </div>
+        <div className="text-center space-y-2">
+          <Timer className="w-8 h-8 mx-auto mb-2 text-primary" />
+          <h3 className="font-semibold">Timed Tasks</h3>
+          <p className="text-sm text-muted-foreground">Stay focused with optional timers for your habits</p>
+        </div>
       </div>
 
-      <div className="mt-16 mb-16">
+      <div className="space-y-4">
+        <p className="hidden text-xs md:text-sm text-muted-foreground">
+          Helping individuals worldwide build better habits and stay motivated every day!
+        </p>
+
         <SignedIn>
           <Button asChild size="lg">
             <Link href="/calendars">Go to Calendars</Link>
@@ -50,6 +62,29 @@ export default function Home() {
             </Button>
           </div>
         </SignedOut>
+      </div>
+
+      <div className="w-full max-w-xl space-y-2">
+        <div className="shadow-lg rounded-[8px] relative w-full overflow-hidden aspect-video">
+          <iframe
+            className="absolute left-0 top-0 h-full w-full"
+            src="https://www.youtube.com/embed/mVQ1bzd816I?si=h-UGS9kLXH-gN2Cs"
+            title="YouTube video player"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerPolicy="strict-origin-when-cross-origin"
+            allowFullScreen
+          />
+        </div>
+        <div className="w-full text-right pr-2">
+          <a
+            href="https://youtu.be/u98FTiCfIRg?t=685"
+            className="text-xs text-muted-foreground underline opacity-50 hover:opacity-100 transition-opacity"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Full video
+          </a>
+        </div>
       </div>
     </div>
   );

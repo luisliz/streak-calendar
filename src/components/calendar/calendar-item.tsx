@@ -117,7 +117,7 @@ export const CalendarItem = ({
                     view={view}
                   />
                   <div
-                    className="absolute left-0 flex group items-start cursor-pointer hover:text-muted-foreground transition-colors w-48"
+                    className="absolute left-0 flex group items-start cursor-pointer hover:text-muted-foreground transition-colors w-24 md:w-48"
                     onClick={() => onEditHabit(habit)}
                   >
                     <div className="truncate flex items-center relative">
