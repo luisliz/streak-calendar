@@ -77,6 +77,7 @@ export const CalendarItem = ({
         <div className="">
           {/* Calendar header */}
           <div className="flex">
+            <div className="w-24" />
             <div className="flex-1 flex gap-px overflow-hidden mr-2">
               <div className="flex gap-px justify-end w-full">
                 {days.map((day) => (
@@ -91,7 +92,7 @@ export const CalendarItem = ({
               </div>
             </div>
             {/* TODO: 2024-12-31 - Add a habit here maybe? */}
-            <div className="w-24 hover:bg-red-500/50" />
+            <div className="w-24" />
           </div>
 
           <div className="overflow-hidden">
@@ -115,14 +116,16 @@ export const CalendarItem = ({
                     className="absolute left-0 flex group items-start cursor-pointer hover:text-muted-foreground transition-colors w-48"
                     onClick={() => onEditHabit(habit)}
                   >
-                    <div className="truncate flex items-center gap-2">
-                      <h3 className="font-medium text-base">
-                        {habit.name}
+                    <div className="truncate flex items-center relative">
+                      <h3 className="font-medium text-base bg-card">
+                        <span className="truncate">{habit.name}</span>
                         {habit.timerDuration && (
                           <span className="text-muted-foreground/50 text-sm ml-1">({habit.timerDuration}m)</span>
                         )}
                       </h3>
-                      <span className="opacity-0 group-hover:opacity-100 transition-opacity">
+
+                      <div className="w-8 h-6 bg-gradient-to-r from-card to-transparent" />
+                      <span className="opacity-0 group-hover:opacity-100 transition-opacity absolute right-2 top-1/2 -translate-y-1/2">
                         <Pencil className="h-4 w-4" />
                       </span>
                     </div>
