@@ -123,24 +123,26 @@ const CalendarList = ({
         className="space-y-8 shadow-md border p-2"
       >
         <ViewControls calendarView={calendarView} onViewChange={onViewChange} />
-        <div className="px-4 md:px-8">
-          {calendars.map((calendar) => {
-            const calendarHabits = habits.filter((h) => h.calendarId === calendar._id);
-            return (
-              <CalendarItem
-                key={calendar._id}
-                calendar={calendar}
-                habits={calendarHabits}
-                days={days}
-                completions={completions}
-                onAddHabit={() => onAddHabit(calendar)}
-                onEditCalendar={() => onEditCalendar(calendar)}
-                onEditHabit={onEditHabit}
-                onToggleHabit={onToggleHabit}
-                view={view}
-              />
-            );
-          })}
+        <div className="w-full overflow-x-auto px-4 md:px-8">
+          <div className="min-w-[640px]">
+            {calendars.map((calendar) => {
+              const calendarHabits = habits.filter((h) => h.calendarId === calendar._id);
+              return (
+                <CalendarItem
+                  key={calendar._id}
+                  calendar={calendar}
+                  habits={calendarHabits}
+                  days={days}
+                  completions={completions}
+                  onAddHabit={() => onAddHabit(calendar)}
+                  onEditCalendar={() => onEditCalendar(calendar)}
+                  onEditHabit={onEditHabit}
+                  onToggleHabit={onToggleHabit}
+                  view={view}
+                />
+              );
+            })}
+          </div>
         </div>
         <div className="flex justify-center pb-4">
           <Button variant="outline" onClick={onNewCalendar}>
