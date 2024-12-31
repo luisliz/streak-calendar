@@ -56,7 +56,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={cn(inter.variable, "min-h-screen bg-background font-sans antialiased", "grid-background")}>
         <div className="fixed inset-0 bg-gradient-to-t from-sky-50 dark:from-sky-950 to-transparent" />
-        <div className="relative">
+        <div className="relative overflow-x-hidden">
           <Providers>
             <RootWrapper>{children}</RootWrapper>
           </Providers>
