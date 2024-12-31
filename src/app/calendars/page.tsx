@@ -301,6 +301,7 @@ const DialogComponents = ({
             setEditingHabit(null);
           }
         }}
+        onKeyDown={handleHabitKeyDown}
       />
     </>
   );
@@ -463,13 +464,31 @@ export default function CalendarsPage() {
 
   const handleCalendarKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
-      wrappedHandleAddCalendar(newCalendarName, newCalendarColor);
+      e.preventDefault();
+      if (editingCalendar) {
+        wrappedHandleEditCalendar(editingCalendar._id, editCalendarName, editCalendarColor);
+        setEditingCalendar(null);
+      } else {
+        wrappedHandleAddCalendar(newCalendarName, newCalendarColor);
+        setIsNewCalendarOpen(false);
+        setNewCalendarName("");
+        setNewCalendarColor("bg-red-500");
+      }
     }
   };
 
   const handleHabitKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" && selectedCalendar) {
-      wrappedHandleAddHabit(newHabitName, selectedCalendar._id, newHabitTimerDuration);
+    if (e.key === "Enter") {
+      e.preventDefault();
+      if (editingHabit) {
+        wrappedHandleEditHabit(editingHabit._id, editHabitName, editHabitTimerDuration);
+        setEditingHabit(null);
+      } else if (selectedCalendar) {
+        wrappedHandleAddHabit(newHabitName, selectedCalendar._id, newHabitTimerDuration);
+        setIsNewHabitOpen(false);
+        setNewHabitName("");
+        setNewHabitTimerDuration(undefined);
+      }
     }
   };
 
