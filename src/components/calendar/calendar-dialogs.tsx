@@ -217,6 +217,7 @@ export const NewHabitDialog = ({
               max={120}
               value={localDuration}
               onChange={(e) => setLocalDuration(e.target.value)}
+              onKeyDown={onKeyDown}
               placeholder="Optional timer duration"
             />
           </div>
@@ -376,6 +377,7 @@ interface EditHabitDialogProps {
   isOpen: boolean;
   name: string;
   onDelete: () => void;
+  onKeyDown: (e: React.KeyboardEvent) => void;
   onNameChange: (name: string) => void;
   onOpenChange: (open: boolean) => void;
   onSubmit: () => void;
@@ -387,6 +389,7 @@ export const EditHabitDialog = ({
   isOpen,
   name,
   onDelete,
+  onKeyDown,
   onNameChange,
   onOpenChange,
   onSubmit,
@@ -398,13 +401,6 @@ export const EditHabitDialog = ({
   const [showDeleteAlert, setShowDeleteAlert] = useState(false);
   const debouncedName = useDebounce(localName);
   const debouncedDuration = useDebounce(localDuration);
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      onSubmit();
-    }
-  };
 
   useEffect(() => {
     setLocalName(name);
@@ -439,7 +435,7 @@ export const EditHabitDialog = ({
                 id="edit-habit-name"
                 value={localName}
                 onChange={(e) => setLocalName(e.target.value)}
-                onKeyDown={handleKeyDown}
+                onKeyDown={onKeyDown}
               />
             </div>
             <div>
@@ -451,6 +447,7 @@ export const EditHabitDialog = ({
                 max={120}
                 value={localDuration}
                 onChange={(e) => setLocalDuration(e.target.value)}
+                onKeyDown={onKeyDown}
                 placeholder="Optional timer duration"
               />
             </div>
