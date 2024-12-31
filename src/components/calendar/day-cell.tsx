@@ -40,7 +40,7 @@ export const DayCell = ({ date, count, onCountChange, colorClass, gridView, disa
       <PopoverTrigger asChild>
         <Button
           variant="ghost"
-          className={`${gridView ? "w-10 h-10" : "w-6 h-6"} rounded-full ${
+          className={`${gridView ? "w-12 h-12" : "w-6 h-6"} rounded-full ${
             count === 0 ? "bg-slate-100 dark:bg-slate-800" : ""
           } relative p-0 overflow-visible ${disabled ? "opacity-50 cursor-not-allowed" : ""} hover:bg-transparent`}
           title={`${new Date(date).toLocaleDateString(undefined, {
@@ -55,7 +55,7 @@ export const DayCell = ({ date, count, onCountChange, colorClass, gridView, disa
                 key={`${count}-${fillClass}`}
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 15 15"
-                className={`${gridView ? "!w-[40px] !h-[40px]" : "!w-[24px] !h-[24px]"} ${fillClass} animate-completion relative`}
+                className={`${gridView ? "!w-[48px] !h-[48px]" : "!w-[24px] !h-[24px]"} ${fillClass} animate-completion relative`}
               >
                 <path d="M14.12 9.87a3.024 3.024 0 0 1 0 4.26c-.6.57-1.35.87-2.13.87s-1.53-.3-2.13-.87l-2.37-2.37-2.37 2.37c-.6.57-1.35.87-2.13.87s-1.53-.3-2.13-.87a3.024 3.024 0 0 1 0-4.26L3.23 7.5.88 5.13C-.29 3.97-.29 2.05.88.88a3.012 3.012 0 0 1 4.25 0L7.5 3.25 9.87.88a3.024 3.024 0 0 1 4.26 0 3.024 3.024 0 0 1 0 4.26l-2.37 2.37 2.37 2.37Z" />
               </svg>
