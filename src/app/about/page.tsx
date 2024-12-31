@@ -100,7 +100,7 @@ export default function AboutPage() {
           <h2 className="font-heading text-2xl font-bold">The Seinfeld Strategy</h2>
         </CardHeader>
         <CardContent className="space-y-6">
-          <div className="relative w-1/2 aspect-video">
+          <div className="relative w-full md:w-1/2 aspect-video">
             <Image
               src="/never-miss-twice.jpg"
               alt="Never miss twice calendar visualization"
