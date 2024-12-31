@@ -105,6 +105,10 @@ const CalendarList = ({
       <div className="text-center py-12 text-muted-foreground">
         <p>You haven&apos;t created any calendars yet.</p>
         <p className="mt-2">Create one to start tracking your habits!</p>
+        <Button variant="default" onClick={onNewCalendar} className="mt-4">
+          <PlusCircle className="mr-2 h-4 w-4" />
+          Create Calendar
+        </Button>
       </div>
     );
   }
