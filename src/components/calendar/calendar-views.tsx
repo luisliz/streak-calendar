@@ -126,7 +126,7 @@ export const CalendarView = ({ habit, color, days, completions, onToggle, view }
           const dayLabels = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
           return (
-            <div key={monthKey} className="w-[398px] mx-auto space-y-4">
+            <div key={monthKey} className="w-[286px] mx-auto space-y-4">
               <h3 className="font-medium">{format(firstDay, "MMMM yyyy")}</h3>
               <div className="grid grid-cols-7 gap-[1px]">
                 {/* Day of week labels */}
@@ -137,7 +137,7 @@ export const CalendarView = ({ habit, color, days, completions, onToggle, view }
                 ))}
                 {/* Empty cells for start of month alignment */}
                 {emptyStartDays.map((_, index) => (
-                  <div key={`empty-start-${index}`} className="w-[56px] h-[56px] p-[0.5px]">
+                  <div key={`empty-start-${index}`} className="w-[40px] h-[40px] p-0">
                     <div className="w-full h-full" />
                   </div>
                 ))}
@@ -147,7 +147,7 @@ export const CalendarView = ({ habit, color, days, completions, onToggle, view }
                   const count = isInRange ? getCompletionCount(dateStr) : 0;
 
                   return (
-                    <div key={dateStr} className="w-[56px] h-[56px] p-[0.5px]">
+                    <div key={dateStr} className="w-[40px] h-[40px] p-0">
                       <div className="w-full h-full">
                         <DayCell
                           habitId={habit._id}
@@ -164,7 +164,7 @@ export const CalendarView = ({ habit, color, days, completions, onToggle, view }
                 })}
                 {/* Empty cells for end of month alignment */}
                 {emptyEndDays.map((_, index) => (
-                  <div key={`empty-end-${index}`} className="w-[56px] h-[56px] p-[0.5px]">
+                  <div key={`empty-end-${index}`} className="w-[40px] h-[40px] p-0">
                     <div className="w-full h-full" />
                   </div>
                 ))}
