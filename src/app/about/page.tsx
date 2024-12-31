@@ -21,7 +21,7 @@ export default function AboutPage() {
         <CardContent>
           <h2 className="font-heading text-2xl font-bold">What It Is</h2>
           <p className="text-muted-foreground pt-6">
-            Streak Calendar is a productivity tool that combines habit tracking, task timing, and progress
+            Streak Calendar is an open source productivity tool that combines habit tracking, task timing, and progress
             visualization. It supports multiple calendars and habits, allowing you to customize your approach to
             personal growth. Featuring an activity grid similar to GitHub&apos;s contribution tracker, it offers a clear
             view of your achievements over time. Open source and thoughtfully developed, Streak Calendar is built to
