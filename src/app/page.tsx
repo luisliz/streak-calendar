@@ -68,7 +68,7 @@ export default function Home() {
         <div className="shadow-lg rounded-[8px] relative w-full overflow-hidden aspect-video">
           <iframe
             className="absolute left-0 top-0 h-full w-full"
-            src="https://www.youtube.com/embed/mVQ1bzd816I?si=h-UGS9kLXH-gN2Cs"
+            src="https://www.youtube.com/embed/0tlMHyUcTjg?si=YR9KDmUAHddmlSEV&amp;start=59"
             title="YouTube video player"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             referrerPolicy="strict-origin-when-cross-origin"
@@ -77,7 +77,7 @@ export default function Home() {
         </div>
         <div className="w-full text-right pr-2">
           <a
-            href="https://youtu.be/u98FTiCfIRg?t=685"
+            href="https://youtu.be/0tlMHyUcTjg"
             className="text-xs text-muted-foreground underline opacity-50 hover:opacity-100 transition-opacity"
             target="_blank"
             rel="noopener noreferrer"
