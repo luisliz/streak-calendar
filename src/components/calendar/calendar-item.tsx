@@ -76,8 +76,12 @@ export const CalendarItem = ({
         // Month Row View - habits on the left
         <div className="">
           {/* Calendar header */}
-          <div className="flex">
-            <div className="w-24" />
+          <div className="flex relative">
+            {/* Filler */}
+            <div className="w-32 bg-card" />
+            {/* Gradient */}
+            <div className="ml-32 w-12 h-6 bg-gradient-to-r from-card to-transparent absolute z-10" />
+            {/* Days */}
             <div className="flex-1 flex gap-px overflow-hidden mr-2">
               <div className="flex gap-px justify-end w-full">
                 {days.map((day) => (
@@ -124,8 +128,8 @@ export const CalendarItem = ({
                         )}
                       </h3>
 
-                      <div className="w-8 h-6 bg-gradient-to-r from-card to-transparent" />
-                      <span className="opacity-0 group-hover:opacity-100 transition-opacity absolute right-2 top-1/2 -translate-y-1/2">
+                      <div className="w-12 h-6 bg-gradient-to-r from-card to-transparent" />
+                      <span className="opacity-0 group-hover:opacity-100 transition-opacity absolute right-6 top-1/2 -translate-y-1/2">
                         <Pencil className="h-4 w-4" />
                       </span>
                     </div>
