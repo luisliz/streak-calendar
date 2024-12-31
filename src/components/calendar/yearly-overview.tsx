@@ -101,7 +101,7 @@ export const YearlyOverview = ({ completions }: YearlyOverviewProps) => {
   // Memoized grid cell component for better performance
   // Renders either an empty cell, a blank day, or a completion indicator
   const GridCell = memo(({ day }: { day: string | null }) => {
-    if (!day) return <div className="aspect-square w-[7px] sm:w-[9px] md:w-4" />;
+    if (!day) return <div className="aspect-square w-[5px] sm:w-[9px] md:w-4" />;
 
     const count = completionCounts[day] || 0;
     const colorClass = getColorClass(count);
@@ -110,7 +110,7 @@ export const YearlyOverview = ({ completions }: YearlyOverviewProps) => {
     if (count === 0) {
       return (
         <div
-          className={`aspect-square w-[7px] sm:w-[9px] md:w-4 rounded-full ${colorClass}`}
+          className={`aspect-square w-[5px] sm:w-[9px] md:w-4 rounded-full ${colorClass}`}
           title={`${format(new Date(day), "MMM d, yyyy")}: ${count} completions`}
         />
       );
@@ -119,7 +119,7 @@ export const YearlyOverview = ({ completions }: YearlyOverviewProps) => {
     // Render completion indicator for days with completions
     return (
       <div
-        className="aspect-square w-[7px] sm:w-[9px] md:w-4 relative hover:opacity-80 transition-colors"
+        className="aspect-square w-[5px] sm:w-[9px] md:w-4 relative hover:opacity-80 transition-colors"
         title={`${format(new Date(day), "MMM d, yyyy")}: ${count} completions`}
       >
         <svg viewBox="0 0 15 15" className={`w-full h-full ${colorClass}`}>
