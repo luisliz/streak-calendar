@@ -53,7 +53,7 @@ export const CalendarItem = ({
       {/* Header section with calendar name and add habit button */}
       <div className="flex justify-between items-center">
         <div
-          className="flex items-center gap-2 group cursor-pointer hover:text-muted-foreground transition-colors"
+          className="flex w-full justify-center items-center gap-2 group cursor-pointer hover:text-muted-foreground transition-colors"
           onClick={onEditCalendar}
         >
           <h2 className="text-2xl font-semibold">{calendar.name}</h2>
@@ -68,7 +68,7 @@ export const CalendarItem = ({
         <div className="w-full">
           <p className="text-sm text-muted-foreground">No habits added yet. Add one to start tracking!</p>
           <Button size="sm" onClick={onAddHabit}>
-            <PlusCircle className="h-4 w-4 mr-2" />
+            <PlusCircle className="h-4 w-4" />
             Add Habit
           </Button>
         </div>
@@ -78,9 +78,9 @@ export const CalendarItem = ({
           {/* Calendar header */}
           <div className="flex relative">
             {/* Filler */}
-            <div className="w-32 bg-card" />
+            <div className="w-16 md:w-32 bg-card" />
             {/* Gradient */}
-            <div className="ml-32 w-12 h-6 bg-gradient-to-r from-card to-transparent absolute z-10" />
+            <div className="ml-16 md:ml-32 w-12 h-6 bg-gradient-to-r from-card to-transparent absolute z-10" />
             {/* Days */}
             <div className="flex-1 flex gap-px overflow-hidden mr-2">
               <div className="flex gap-px justify-end w-full">
@@ -163,7 +163,7 @@ export const CalendarItem = ({
             return (
               <div key={habit._id} className="space-y-4">
                 <div
-                  className="flex items-center gap-2 group cursor-pointer hover:text-muted-foreground transition-colors"
+                  className="flex justify-center items-center gap-2 group cursor-pointer hover:text-muted-foreground transition-colors"
                   onClick={() => onEditHabit(habit)}
                 >
                   <h3 className="font-medium text-base">
@@ -176,6 +176,15 @@ export const CalendarItem = ({
                     <Pencil className="h-4 w-4" />
                   </span>
                 </div>
+                <div className="flex justify-center -translate-x-3 scale-125">
+                  <CompleteControls
+                    count={todayCount}
+                    onIncrement={() => onToggleHabit(habit._id, today, todayCount + 1)}
+                    onDecrement={() => onToggleHabit(habit._id, today, todayCount - 1)}
+                    variant="default"
+                    timerDuration={habit.timerDuration}
+                  />
+                </div>
                 <CalendarView
                   habit={habit}
                   color={colorTheme}
@@ -184,20 +193,15 @@ export const CalendarItem = ({
                   onToggle={onToggleHabit}
                   view={view}
                 />
-                <CompleteControls
-                  count={todayCount}
-                  onIncrement={() => onToggleHabit(habit._id, today, todayCount + 1)}
-                  onDecrement={() => onToggleHabit(habit._id, today, todayCount - 1)}
-                  variant="ghost"
-                  timerDuration={habit.timerDuration}
-                />
               </div>
             );
           })}
-          <Button size="sm" onClick={onAddHabit}>
-            <PlusCircle className="h-4 w-4 mr-2" />
-            Add Habit
-          </Button>
+          <div className="flex justify-center pb-12">
+            <Button variant="outline" size="sm" onClick={onAddHabit}>
+              <PlusCircle className="h-4 w-4" />
+              Add Habit
+            </Button>
+          </div>
         </div>
       )}
     </div>

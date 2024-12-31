@@ -14,6 +14,7 @@ interface CompleteControlsProps {
   onDecrement: () => void;
   variant?: "default" | "ghost";
   timerDuration?: number;
+  onComplete?: () => void;
 }
 
 export function CompleteControls({
@@ -22,10 +23,21 @@ export function CompleteControls({
   onDecrement,
   variant = "default",
   timerDuration,
+  onComplete,
 }: CompleteControlsProps) {
   const [isTimerRunning, setIsTimerRunning] = useState(false);
   const [timeLeft, setTimeLeft] = useState(0);
   const timerButtonRef = useRef<HTMLButtonElement>(null);
+
+  const handleIncrement = useCallback(() => {
+    onIncrement();
+    onComplete?.();
+  }, [onIncrement, onComplete]);
+
+  const handleDecrement = useCallback(() => {
+    onDecrement();
+    onComplete?.();
+  }, [onDecrement, onComplete]);
 
   const confettiShape = useMemo(() => confettiLib.shapeFromPath(xLogoPath), []);
 
@@ -69,6 +81,7 @@ export function CompleteControls({
             confettiLib(getConfettiOptions({ x, y }));
           }
           onIncrement();
+          onComplete?.();
           return 0;
         }
         return prev - 1;
@@ -76,7 +89,7 @@ export function CompleteControls({
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [isTimerRunning, timeLeft, onIncrement, getConfettiOptions]);
+  }, [isTimerRunning, timeLeft, onIncrement, getConfettiOptions, onComplete]);
 
   const formatTime = (seconds: number) => {
     const minutes = Math.floor(seconds / 60);
@@ -87,7 +100,7 @@ export function CompleteControls({
   if (timerDuration) {
     if (count === 0) {
       return (
-        <div className="w-[96px] flex flex-col gap-px ml-2">
+        <div className="w-[96px] flex flex-col gap-px">
           <Button
             ref={timerButtonRef}
             variant={variant}
@@ -110,13 +123,13 @@ export function CompleteControls({
     }
 
     return (
-      <div className="w-[96px] flex flex-col gap-px ml-2">
+      <div className="w-[96px] flex flex-col gap-px">
         <div className="flex items-center justify-between w-[96px]">
           <Button
             variant={variant}
             size="icon"
             className="h-6 w-6 aspect-square rounded-full p-0"
-            onClick={onDecrement}
+            onClick={handleDecrement}
           >
             <Minus className="h-4 w-4" />
           </Button>
@@ -142,12 +155,12 @@ export function CompleteControls({
 
   if (count === 0) {
     return (
-      <div className="w-[96px] flex flex-col gap-px ml-2">
+      <div className="w-[96px] flex flex-col gap-px">
         <ConfettiButton
           variant={variant}
           size="sm"
           className="h-6 w-[96px] text-xs"
-          onClick={onIncrement}
+          onClick={handleIncrement}
           options={getConfettiOptions()}
         >
           Complete
@@ -157,9 +170,14 @@ export function CompleteControls({
   }
 
   return (
-    <div className="w-[96px] flex flex-col gap-px ml-2">
+    <div className="w-[96px] flex flex-col gap-px">
       <div className="flex items-center justify-between w-[96px]">
-        <Button variant={variant} size="icon" className="h-6 w-6 aspect-square rounded-full p-0" onClick={onDecrement}>
+        <Button
+          variant={variant}
+          size="icon"
+          className="h-6 w-6 aspect-square rounded-full p-0"
+          onClick={handleDecrement}
+        >
           <Minus className="h-4 w-4" />
         </Button>
         <span className="w-[72px] text-center font-medium">{count}</span>
@@ -167,7 +185,7 @@ export function CompleteControls({
           variant={variant}
           size="icon"
           className="h-6 w-6 aspect-square rounded-full p-0"
-          onClick={onIncrement}
+          onClick={handleIncrement}
           options={getConfettiOptions()}
         >
           <Plus className="h-4 w-4" />

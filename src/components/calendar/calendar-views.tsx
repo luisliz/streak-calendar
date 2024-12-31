@@ -111,7 +111,10 @@ export const CalendarView = ({ habit, color, days, completions, onToggle, view }
     const sortedMonths = Object.entries(months).sort(([a], [b]) => a.localeCompare(b));
 
     return (
-      <div data-habit-id={habit._id} className="w-full space-y-8 md:space-y-0 md:grid md:grid-cols-3 md:gap-8">
+      <div
+        data-habit-id={habit._id}
+        className="w-full space-y-8 md:space-y-0 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-8"
+      >
         {sortedMonths.map(([monthKey, monthDays]) => {
           // Calculate padding for proper day alignment
           const firstDay = new Date(monthDays[0]);
@@ -123,9 +126,9 @@ export const CalendarView = ({ habit, color, days, completions, onToggle, view }
           const dayLabels = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
           return (
-            <div key={monthKey} className="w-full max-w-[350px] mx-auto space-y-4">
+            <div key={monthKey} className="w-[398px] mx-auto space-y-4">
               <h3 className="font-medium">{format(firstDay, "MMMM yyyy")}</h3>
-              <div className="grid grid-cols-7 gap-px">
+              <div className="grid grid-cols-7 gap-[1px]">
                 {/* Day of week labels */}
                 {dayLabels.map((label) => (
                   <div key={label} className="text-center text-sm text-muted-foreground">
@@ -134,7 +137,9 @@ export const CalendarView = ({ habit, color, days, completions, onToggle, view }
                 ))}
                 {/* Empty cells for start of month alignment */}
                 {emptyStartDays.map((_, index) => (
-                  <div key={`empty-start-${index}`} className="h-9 w-9" />
+                  <div key={`empty-start-${index}`} className="w-[56px] h-[56px] p-[0.5px]">
+                    <div className="w-full h-full" />
+                  </div>
                 ))}
                 {/* Calendar days with completion tracking */}
                 {monthDays.map((dateStr) => {
@@ -142,21 +147,26 @@ export const CalendarView = ({ habit, color, days, completions, onToggle, view }
                   const count = isInRange ? getCompletionCount(dateStr) : 0;
 
                   return (
-                    <DayCell
-                      key={dateStr}
-                      habitId={habit._id}
-                      date={dateStr}
-                      count={count}
-                      onCountChange={(newCount) => onToggle(habit._id, dateStr, newCount)}
-                      colorClass={color}
-                      gridView={true}
-                      disabled={!isInRange}
-                    />
+                    <div key={dateStr} className="w-[56px] h-[56px] p-[0.5px]">
+                      <div className="w-full h-full">
+                        <DayCell
+                          habitId={habit._id}
+                          date={dateStr}
+                          count={count}
+                          onCountChange={(newCount) => onToggle(habit._id, dateStr, newCount)}
+                          colorClass={color}
+                          gridView={true}
+                          disabled={!isInRange}
+                        />
+                      </div>
+                    </div>
                   );
                 })}
                 {/* Empty cells for end of month alignment */}
                 {emptyEndDays.map((_, index) => (
-                  <div key={`empty-end-${index}`} className="h-9 w-9" />
+                  <div key={`empty-end-${index}`} className="w-[56px] h-[56px] p-[0.5px]">
+                    <div className="w-full h-full" />
+                  </div>
                 ))}
               </div>
             </div>
