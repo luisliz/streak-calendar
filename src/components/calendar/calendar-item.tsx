@@ -72,13 +72,13 @@ export const CalendarItem = ({
   return (
     <div className="">
       {/* Calendar Header Section */}
-      <div className="flex justify-center pb-8 pt-8">
+      <div className="flex justify-center pb-8 pl-6 pt-8">
         {/* Editable calendar name with hover effect */}
         <div
           className="group flex cursor-pointer items-center justify-center gap-2 transition-colors hover:text-muted-foreground"
           onClick={onEditCalendar}
         >
-          <h2 className={`text-3xl font-semibold underline decoration-4 ${colorTheme.replace("bg-", "decoration-")}`}>
+          <h2 className={`text-4xl font-semibold underline decoration-4 ${colorTheme.replace("bg-", "decoration-")}`}>
             {calendar.name}
           </h2>
           <span className="opacity-0 transition-opacity group-hover:opacity-100">
@@ -192,24 +192,26 @@ export const CalendarItem = ({
             ).length;
 
             return (
-              <div key={habit._id} className="space-y-4">
+              <div key={habit._id} className="">
                 {/* Editable habit name */}
-                <div
-                  className="group flex cursor-pointer items-center justify-center gap-2 transition-colors hover:text-muted-foreground"
-                  onClick={() => onEditHabit(habit)}
-                >
-                  <h3 className="text-base font-medium">
-                    {habit.name}
-                    {habit.timerDuration && (
-                      <span className="ml-1 text-sm text-muted-foreground">({habit.timerDuration}m)</span>
-                    )}
-                  </h3>
-                  <span className="opacity-0 transition-opacity group-hover:opacity-100">
-                    <Pencil className="h-4 w-4" />
-                  </span>
+                <div className="flex justify-center pt-8">
+                  <div
+                    className="group inline-flex cursor-pointer items-center gap-2 pl-6 transition-colors hover:text-muted-foreground"
+                    onClick={() => onEditHabit(habit)}
+                  >
+                    <h3 className="text-2xl font-medium">
+                      {habit.name}
+                      {habit.timerDuration && (
+                        <span className="ml-1 text-sm text-muted-foreground">({habit.timerDuration}m)</span>
+                      )}
+                    </h3>
+                    <span className="opacity-0 transition-opacity group-hover:opacity-100">
+                      <Pencil className="h-4 w-4" />
+                    </span>
+                  </div>
                 </div>
                 {/* Centered completion controls */}
-                <div className="flex -translate-x-3 -translate-y-3 scale-125 justify-center">
+                <div className="flex justify-center pb-4">
                   <CompleteControls
                     count={todayCount}
                     onIncrement={() => onToggleHabit(habit._id, today, todayCount + 1)}
