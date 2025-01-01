@@ -26,9 +26,11 @@ export const metadata: Metadata = {
   description: "Track your daily habits, build streaks, and achieve your goals with visual progress tracking",
   // Keywords for SEO optimization
   keywords: [
+    "seinfeld calendar",
     "streak calendar",
     "streak tracker",
     "open source",
+    "procrastination",
     "anti-procrastination",
     "productivity tool",
     "web app",
@@ -43,7 +45,6 @@ export const metadata: Metadata = {
     "mac",
     "productivity app",
     "productivity",
-    "seinfeld calendar",
     "seinfeld method",
     "self-improvement",
     "streak",
