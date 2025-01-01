@@ -1,17 +1,20 @@
+import Image from "next/image";
+
 export function AppFooter() {
   return (
-    <footer className="">
+    <footer className="mt-8 border-t-2 border-black/5 dark:border-black/20">
       <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
           <p className="text-sm text-slate-600 dark:text-slate-400">
-            Built with{" "}
+            Proudly made with{" "}
+            <span className="inline-flex translate-y-[4px] items-center p-1" title="Cursor" aria-label="Cursor">
+              <Image src="/cursor-logo.png" alt="Cursor" width={20} height={20} />
+            </span>{" "}
+            and{" "}
             <span
-              className="font-extrabold text-destructive-foreground text-red-500"
+              className="text-lg font-extrabold text-destructive-foreground text-red-500"
               title="love"
               aria-label="love"
-              style={{
-                fontFamily: '"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol"',
-              }}
             >
               ♥️
             </span>{" "}
@@ -21,7 +24,7 @@ export function AppFooter() {
               className="font-semibold hover:text-slate-900 dark:hover:text-slate-200"
               target="_blank"
             >
-              ilyaizen
+              @ilyaizen
             </a>
           </p>
 
