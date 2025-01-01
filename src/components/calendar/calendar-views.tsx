@@ -1,3 +1,9 @@
+import { format } from "date-fns";
+
+import { Id } from "@server/convex/_generated/dataModel";
+
+import { DayCell } from "./day-cell";
+
 /**
  * CalendarView Component
  *
@@ -11,11 +17,6 @@
  * - Responsive layout switching
  * - Completion count calculation
  */
-import { format } from "date-fns";
-
-import { Id } from "@server/convex/_generated/dataModel";
-
-import { DayCell } from "./day-cell";
 
 /**
  * Props interface for the CalendarView component

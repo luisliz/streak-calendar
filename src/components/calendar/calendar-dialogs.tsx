@@ -1,8 +1,3 @@
-/**
- * This module contains dialog components for managing calendars and habits.
- * It provides interfaces for creating, editing, and deleting both calendars and habits.
- * All dialogs use shadcn/ui components for consistent styling and behavior.
- */
 import {
   AlertDialog,
   AlertDialogAction,
@@ -20,6 +15,12 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useDebounce } from "@/hooks/use-debounce";
 import { useEffect, useState } from "react";
+
+/**
+ * This module contains dialog components for managing calendars and habits.
+ * It provides interfaces for creating, editing, and deleting both calendars and habits.
+ * All dialogs use shadcn/ui components for consistent styling and behavior.
+ */
 
 /**
  * Available color themes for calendars using Tailwind's color system.

@@ -1,14 +1,15 @@
-/**
- * YearlyOverview Component
- * Displays a GitHub-style contribution graph showing habit completions over the past year.
- * The graph uses different shades of red to indicate completion intensity per day.
- */
 import { Card } from "@/components/ui/card";
 import { XLogo } from "@/components/ui/x-logo";
 import { eachDayOfInterval, format, getDay, subYears } from "date-fns";
 import { memo, useCallback, useMemo } from "react";
 
 import { Id } from "@server/convex/_generated/dataModel";
+
+/**
+ * YearlyOverview Component
+ * Displays a GitHub-style contribution graph showing habit completions over the past year.
+ * The graph uses different shades of red to indicate completion intensity per day.
+ */
 
 // Type definitions for the component's props
 interface YearlyOverviewProps {

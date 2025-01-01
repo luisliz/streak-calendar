@@ -1,9 +1,3 @@
-/**
- * CalendarContainer is the main component that manages the calendar UI and interactions.
- * It handles calendar and habit management, including creation, editing, and deletion.
- * The component uses a combination of dialogs for user interactions and displays calendars
- * in either a month row or month grid view.
- */
 import {
   EditCalendarDialog,
   EditHabitDialog,
@@ -19,6 +13,13 @@ import { AnimatePresence, motion } from "framer-motion";
 import { PlusCircle } from "lucide-react";
 import { useCallback } from "react";
 import { toast } from "react-hot-toast";
+
+/**
+ * CalendarContainer is the main component that manages the calendar UI and interactions.
+ * It handles calendar and habit management, including creation, editing, and deletion.
+ * The component uses a combination of dialogs for user interactions and displays calendars
+ * in either a month row or month grid view.
+ */
 
 const MotionCard = motion.create(Card);
 

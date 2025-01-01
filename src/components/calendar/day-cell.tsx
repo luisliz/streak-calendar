@@ -1,8 +1,3 @@
-/**
- * DayCell Component
- * Renders an interactive cell representing a single day in a habit tracking calendar.
- * Features a popover menu for updating completion counts and visual feedback for completion status.
- */
 import { Button } from "@/components/ui/button";
 import { CompleteControls } from "@/components/ui/complete-controls";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -11,6 +6,12 @@ import { getCompletionColorClass } from "@/lib/colors";
 import { useState } from "react";
 
 import { Id } from "@server/convex/_generated/dataModel";
+
+/**
+ * DayCell Component
+ * Renders an interactive cell representing a single day in a habit tracking calendar.
+ * Features a popover menu for updating completion counts and visual feedback for completion status.
+ */
 
 /**
  * Props for the DayCell component

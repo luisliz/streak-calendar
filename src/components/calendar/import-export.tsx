@@ -13,22 +13,32 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { useImportExport } from "@/hooks/use-import-export";
 import { ArrowUpDown, Download, Upload } from "lucide-react";
 
+/**
+ * ImportExport Component
+ * Provides UI and functionality for importing and exporting calendar data
+ * Uses a multi-dialog approach:
+ * 1. Main dialog for choosing between import/export
+ * 2. Confirmation dialogs for both import and export actions
+ */
+
 export function ImportExport() {
+  // Custom hook managing all import/export state and handlers
   const {
-    showImportExportDialog,
-    setShowImportExportDialog,
+    handleExportConfirm, // Handles the actual export operation
+    handleImportConfirm, // Handles the actual import operation
+    handleImportSelect, // Handles file selection for import
+    setImportFile, // Sets the file to be imported
+    setShowExportDialog, // Controls export confirmation dialog
+    setShowImportDialog, // Controls import confirmation dialog
+    setShowImportExportDialog, // Controls main dialog visibility
     showExportDialog,
-    setShowExportDialog,
     showImportDialog,
-    setShowImportDialog,
-    setImportFile,
-    handleExportConfirm,
-    handleImportSelect,
-    handleImportConfirm,
+    showImportExportDialog,
   } = useImportExport();
 
   return (
     <>
+      {/* Main Dialog: Initial import/export selection screen */}
       <Dialog open={showImportExportDialog} onOpenChange={setShowImportExportDialog}>
         <DialogTrigger asChild>
           <Button variant="outline">
@@ -42,10 +52,12 @@ export function ImportExport() {
           </DialogHeader>
           <div className="space-y-4">
             <div className="flex flex-col gap-4">
+              {/* Export button - Opens export confirmation dialog */}
               <Button onClick={() => setShowExportDialog(true)}>
                 <Download className="mr-2 h-4 w-4" />
                 Export
               </Button>
+              {/* Import button - Hidden file input with custom styled label */}
               <Button asChild>
                 <label className="cursor-pointer flex items-center justify-center">
                   <Upload className="mr-2 h-4 w-4" />
@@ -63,6 +75,7 @@ export function ImportExport() {
         </DialogContent>
       </Dialog>
 
+      {/* Export Confirmation Dialog */}
       <AlertDialog open={showExportDialog} onOpenChange={setShowExportDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
@@ -78,6 +91,7 @@ export function ImportExport() {
         </AlertDialogContent>
       </AlertDialog>
 
+      {/* Import Confirmation Dialog - Shown after file selection */}
       <AlertDialog open={showImportDialog} onOpenChange={setShowImportDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
