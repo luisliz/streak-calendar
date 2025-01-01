@@ -16,11 +16,11 @@ export function ViewControls({ calendarView, onViewChange }: ViewControlsProps) 
           <TabsList>
             <TabsTrigger value="monthGrid">
               <CalendarDays className="mr-2 h-4 w-4" />
-              Calendars
+              Calendar View
             </TabsTrigger>
             <TabsTrigger value="monthRow">
               <GripHorizontal className="mr-2 h-4 w-4" />
-              Rows
+              Row View
             </TabsTrigger>
           </TabsList>
         </Tabs>
