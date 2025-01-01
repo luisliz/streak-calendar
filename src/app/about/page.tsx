@@ -80,17 +80,18 @@ export default function AboutPage() {
             everyone.
           </p>
           <div className="flex items-end">
-            <Avatar className="mx-2 h-12 w-12">
-              <AvatarImage src="https://avatars.githubusercontent.com/u/8214158?s=100" />
-              <AvatarFallback>IA</AvatarFallback>
-            </Avatar>
-            <div className="mt-4 rounded-sm rounded-bl-none bg-muted p-4">
+            <div className="mt-4 rounded-sm rounded-br-none bg-muted p-4">
               <p className="italic text-muted-foreground">
                 &quot;Hi, I&apos;m Ilya Aizenberg, the creator of Streak Calendar. This project combines my passion for
                 productivity and tech to offer a simple yet powerful tool for personal growth. I hope you find it as
                 valuable as I do.&quot;
               </p>
             </div>
+
+            <Avatar className="relative top-6 ml-2 h-12 w-12">
+              <AvatarImage src="https://avatars.githubusercontent.com/u/8214158?s=100" />
+              <AvatarFallback>IA</AvatarFallback>
+            </Avatar>
           </div>
         </CardContent>
         <CardFooter className="flex gap-4">
