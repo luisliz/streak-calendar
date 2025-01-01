@@ -1,3 +1,4 @@
+import { useMobile } from "@/hooks/use-mobile";
 import { format } from "date-fns";
 
 import { Id } from "@server/convex/_generated/dataModel";
@@ -43,6 +44,8 @@ interface CalendarViewProps {
 }
 
 export const CalendarView = ({ habit, color, days, completions, onToggle, view }: CalendarViewProps) => {
+  const isMobile = useMobile();
+
   /**
    * Calculates the number of completions for a specific date
    * Considers the full day range (00:00:00 to 23:59:59)
@@ -95,13 +98,14 @@ export const CalendarView = ({ habit, color, days, completions, onToggle, view }
     const mostRecentDate = new Date(Math.max(...days.map((d) => new Date(d).getTime())));
     const months: Record<string, string[]> = {};
 
-    // Generate dates for 3 months, working backwards from most recent
-    for (let i = 0; i < 3; i++) {
+    // Generate dates for months based on screen size
+    const monthsToShow = isMobile ? 1 : 3;
+
+    for (let i = 0; i < monthsToShow; i++) {
       const currentDate = new Date(mostRecentDate.getFullYear(), mostRecentDate.getMonth() - i, 1);
       const monthKey = format(currentDate, "yyyy-MM");
       const daysInMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
 
-      // Create array of ISO date strings for each day in the month
       months[monthKey] = Array.from({ length: daysInMonth }, (_, j) => {
         const day = new Date(currentDate.getFullYear(), currentDate.getMonth(), j + 1);
         return format(day, "yyyy-MM-dd");
