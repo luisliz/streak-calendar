@@ -72,13 +72,15 @@ export const CalendarItem = ({
   return (
     <div className="">
       {/* Calendar Header Section */}
-      <div className="flex items-center justify-between pb-8">
+      <div className="flex justify-center pb-8 pt-8">
         {/* Editable calendar name with hover effect */}
         <div
-          className="group flex w-full cursor-pointer items-center justify-center gap-2 transition-colors hover:text-muted-foreground"
+          className="group flex cursor-pointer items-center justify-center gap-2 transition-colors hover:text-muted-foreground"
           onClick={onEditCalendar}
         >
-          <h2 className="text-2xl font-semibold">{calendar.name}</h2>
+          <h2 className={`text-3xl font-semibold underline decoration-4 ${colorTheme.replace("bg-", "decoration-")}`}>
+            {calendar.name}
+          </h2>
           <span className="opacity-0 transition-opacity group-hover:opacity-100">
             <Pencil className="h-4 w-4" />
           </span>
