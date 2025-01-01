@@ -1,36 +1,83 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Streak Calendar
+
+Streak Calendar is an open source productivity tool that combines habit tracking, task timing, and progress visualization. It supports multiple calendars and habits, allowing you to customize your approach to personal growth. Featuring an activity grid similar to GitHub's contribution tracker, it offers a clear view of your achievements over time.
+
+## Features
+
+- **Visual Habit Tracking**: Mark daily accomplishments with X's and keep your streak alive
+- **Multi-Habit Support**: Create multiple calendars and assign habits to each
+- **Customizable Themes**: Personalize each calendar with a unique color theme
+- **Timed Tasks**: Use the built-in timer to track task durations and mark them complete
+- **Activity Grid**: See your annual progress in a grid layout inspired by GitHub's contribution tracker
+- **Flexible Habit Duration**: Set custom durations for habits to match your needs
+- **Responsive Design**: Fully responsive UI that works seamlessly on mobile, tablet, and desktop
+- **Dark/Light Mode**: Built-in theme support for comfortable viewing in any lighting
+- **Internationalization**: Support for multiple languages and locales
+- **Open Source**: A tool built for the community, by the community
+
+## Technologies Used
+
+- [Next.js](https://nextjs.org/)
+- [React](https://react.dev/)
+- [TypeScript](https://www.typescriptlang.org/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [Convex](https://www.convex.dev/)
+- [Clerk](https://clerk.com/)
+- [Framer Motion](https://www.framer.com/motion/)
+- [Radix UI](https://www.radix-ui.com/)
+- [Lucide React](https://lucide.dev/)
+- [shadcn/ui](https://ui.shadcn.com/)
+- [date-fns](https://date-fns.org/)
+- [Canvas Confetti](https://www.kirilv.com/canvas-confetti/)
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
+# Clone the repository
+git clone https://github.com/ilyaizen/streak-calendar.git
+
+# Navigate to the project
+cd streak-calendar
+
+# Install dependencies
+npm install
+
+# Set up environment variables
+cp .env.example .env.local
+
+# Start the development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Visit `http://localhost:3000` to see the app running.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Project Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+streak-calendar/
+├── src/
+│   ├── app/             # Next.js app router pages and layouts
+│   ├── components/      # Reusable UI components
+│   │   ├── calendar/    # Calendar-specific components
+│   │   └── ui/          # Base UI components
+│   ├── hooks/           # Custom React hooks
+│   ├── lib/             # Utility functions and shared logic
+│   └── types.ts         # TypeScript type definitions
+├── public/              # Static assets
+├── convex/              # Convex backend functions and schema
+├── .env.local           # Environment variables
+└── package.json         # Project dependencies and scripts
+```
 
-## Learn More
+## Contributing
 
-To learn more about Next.js, take a look at the following resources:
+Streak Calendar is open source to encourage transparency and collaboration. Contributions and innovations from users are welcome, helping to continuously improve the tool and make it even more effective for everyone.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Links
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- [GitHub Repository](https://github.com/ilyaizen/streak-calendar)
+- Creator: [Ilya Aizenberg](https://github.com/ilyaizen)
 
-## Deploy on Vercel
+## License
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+This project is licensed under the [MIT License](LICENSE).
