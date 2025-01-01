@@ -138,8 +138,8 @@ export const YearlyOverview = ({ completions }: YearlyOverviewProps) => {
   }, [completionCounts]);
 
   return (
-    <div className="mx-auto mt-2 sm:mt-16">
-      <div className="mx-auto max-w-full pb-1 pl-2 text-xs text-muted-foreground md:w-[1000px]">
+    <div className="mt-2 flex flex-col items-center sm:mt-16">
+      <div className="w-[350px] pb-1 pl-2 text-[5px] text-muted-foreground sm:w-[400px] sm:text-[7px] md:w-[1000px] md:text-xs">
         <span className="font-bold">Yearly Overview</span>{" "}
         <span className="text-muted-foreground/75">({totalCompletions} things done last year)</span>
       </div>
