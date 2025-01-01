@@ -61,7 +61,7 @@ export function CompleteControls({
   const getConfettiOptions = useCallback(
     (origin?: { x: number; y: number }) => ({
       angle: 90 + (Math.random() - 0.5) * 90,
-      particleCount: 25,
+      particleCount: 17,
       spread: 45,
       startVelocity: 35,
       gravity: 0.7,
@@ -69,7 +69,7 @@ export function CompleteControls({
       ticks: 200,
       colors: ["#FF0000", "#FFA500", "#FFFF00", "#00FF00", "#00FFFF", "#0000FF", "#FF00FF"],
       shapes: [confettiShape],
-      scalar: 2,
+      scalar: 1.5,
       origin: origin || { x: 0.5, y: 1 },
       disableForReducedMotion: false,
     }),
