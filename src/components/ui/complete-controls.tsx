@@ -123,12 +123,12 @@ export function CompleteControls({
   if (timerDuration) {
     if (count === 0) {
       return (
-        <div className="w-[96px] flex flex-col gap-px">
+        <div className="flex w-[96px] flex-col gap-px">
           <Button
             ref={timerButtonRef}
             variant={variant}
             size="sm"
-            className="h-6 w-[96px] text-xs flex items-center justify-center"
+            className="flex h-6 w-[96px] items-center justify-center text-xs"
             onClick={startTimer}
             disabled={isTimerRunning}
           >
@@ -147,12 +147,12 @@ export function CompleteControls({
 
     // Timer mode with count > 0: Show decrement and timer controls
     return (
-      <div className="w-[96px] flex flex-col gap-px">
-        <div className="flex items-center justify-between w-[96px]">
+      <div className="flex w-[96px] flex-col gap-px">
+        <div className="flex w-[96px] items-center justify-between">
           <Button
             variant={variant}
             size="icon"
-            className="h-6 w-6 aspect-square rounded-full p-0"
+            className="aspect-square h-6 w-6 rounded-full p-0"
             onClick={handleDecrement}
           >
             <Minus className="h-4 w-4" />
@@ -162,7 +162,7 @@ export function CompleteControls({
             ref={timerButtonRef}
             variant={variant}
             size="icon"
-            className="h-6 w-6 aspect-square rounded-full p-0"
+            className="aspect-square h-6 w-6 rounded-full p-0"
             onClick={startTimer}
             disabled={isTimerRunning}
           >
@@ -180,7 +180,7 @@ export function CompleteControls({
   // Non-timer mode with count = 0: Show complete button
   if (count === 0) {
     return (
-      <div className="w-[96px] flex flex-col gap-px">
+      <div className="flex w-[96px] flex-col gap-px">
         <ConfettiButton
           variant={variant}
           size="sm"
@@ -196,12 +196,12 @@ export function CompleteControls({
 
   // Non-timer mode with count > 0: Show increment/decrement controls
   return (
-    <div className="w-[96px] flex flex-col gap-px">
-      <div className="flex items-center justify-between w-[96px]">
+    <div className="flex w-[96px] flex-col gap-px">
+      <div className="flex w-[96px] items-center justify-between">
         <Button
           variant={variant}
           size="icon"
-          className="h-6 w-6 aspect-square rounded-full p-0"
+          className="aspect-square h-6 w-6 rounded-full p-0"
           onClick={handleDecrement}
         >
           <Minus className="h-4 w-4" />
@@ -210,7 +210,7 @@ export function CompleteControls({
         <ConfettiButton
           variant={variant}
           size="icon"
-          className="h-6 w-6 aspect-square rounded-full p-0"
+          className="aspect-square h-6 w-6 rounded-full p-0"
           onClick={handleIncrement}
           options={getConfettiOptions()}
         >

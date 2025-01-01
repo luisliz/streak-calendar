@@ -12,15 +12,15 @@ export function AppHeader() {
 
   return (
     <header className="w-full">
-      <div className="container mx-auto flex h-16 items-center px-4 relative">
+      <div className="container relative mx-auto flex h-16 items-center px-4">
         <div className="w-[200px] shrink-0">
-          <Link href="/" className="text-xl font-bold flex items-center gap-2">
-            <XLogo className="h-6 w-6 drop-shadow-lg fill-red-500" />
-            <span className="drop-shadow-lg text-primary">Streak Calendar</span>
+          <Link href="/" className="flex items-center gap-2 text-xl font-bold">
+            <XLogo className="h-6 w-6 fill-red-500 drop-shadow-lg" />
+            <span className="text-primary drop-shadow-lg">Streak Calendar</span>
           </Link>
         </div>
 
-        <nav className="hidden md:flex items-center gap-6 flex-1 justify-center absolute left-1/2 -translate-x-1/2">
+        <nav className="absolute left-1/2 hidden flex-1 -translate-x-1/2 items-center justify-center gap-6 md:flex">
           <Link href="/about" className="text-sm font-medium hover:text-muted-foreground">
             About
           </Link>
@@ -32,7 +32,7 @@ export function AppHeader() {
           </Link>
         </nav>
 
-        <div className="flex items-center md:gap-4 absolute right-4">
+        <div className="absolute right-4 flex items-center md:gap-4">
           <Button
             variant="link"
             size="icon"
@@ -50,11 +50,11 @@ export function AppHeader() {
 
         {/* Mobile Menu */}
         <div
-          className={`md:hidden absolute top-16 left-0 w-full bg-background border-b ${
+          className={`absolute left-0 top-16 w-full border-b bg-background md:hidden ${
             isMobileMenuOpen ? "block" : "hidden"
           }`}
         >
-          <div className="container px-4 py-4 flex flex-col gap-4">
+          <div className="container flex flex-col gap-4 px-4 py-4">
             <Link
               href="/about"
               className="text-sm font-medium hover:text-muted-foreground"

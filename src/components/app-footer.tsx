@@ -6,7 +6,7 @@ export function AppFooter() {
           <p className="text-sm text-slate-600 dark:text-slate-400">
             Built with{" "}
             <span
-              className="text-destructive-foreground font-extrabold text-red-500"
+              className="font-extrabold text-destructive-foreground text-red-500"
               title="love"
               aria-label="love"
               style={{

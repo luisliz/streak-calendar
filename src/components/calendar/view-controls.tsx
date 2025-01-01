@@ -10,7 +10,7 @@ interface ViewControlsProps {
 
 export function ViewControls({ calendarView, onViewChange }: ViewControlsProps) {
   return (
-    <div className="flex justify-between items-center mb-3">
+    <div className="mb-3 flex items-center justify-between">
       <div className="flex items-center gap-4">
         <Tabs value={calendarView} onValueChange={(value) => onViewChange(value as CalendarView)}>
           <TabsList>

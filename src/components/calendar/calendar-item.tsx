@@ -72,14 +72,14 @@ export const CalendarItem = ({
   return (
     <div className="">
       {/* Calendar Header Section */}
-      <div className="flex justify-between items-center pb-8">
+      <div className="flex items-center justify-between pb-8">
         {/* Editable calendar name with hover effect */}
         <div
-          className="flex w-full justify-center items-center gap-2 group cursor-pointer hover:text-muted-foreground transition-colors"
+          className="group flex w-full cursor-pointer items-center justify-center gap-2 transition-colors hover:text-muted-foreground"
           onClick={onEditCalendar}
         >
           <h2 className="text-2xl font-semibold">{calendar.name}</h2>
-          <span className="opacity-0 group-hover:opacity-100 transition-opacity">
+          <span className="opacity-0 transition-opacity group-hover:opacity-100">
             <Pencil className="h-4 w-4" />
           </span>
         </div>
@@ -88,8 +88,8 @@ export const CalendarItem = ({
       {/* Main Calendar Content */}
       {habits.length === 0 ? (
         // Empty state when no habits exist
-        <div className="w-full flex flex-col items-center justify-center">
-          <p className="text-sm text-muted-foreground pb-8">No habits added yet. Add one to start tracking!</p>
+        <div className="flex w-full flex-col items-center justify-center">
+          <p className="pb-8 text-sm text-muted-foreground">No habits added yet. Add one to start tracking!</p>
           <Button size="sm" onClick={onAddHabit}>
             <PlusCircle className="h-4 w-4" />
             Add Habit
@@ -99,18 +99,18 @@ export const CalendarItem = ({
         // Horizontal Month Row Layout
         <div className="">
           {/* Calendar Header with Day Labels */}
-          <div className="flex relative">
+          <div className="relative flex">
             {/* Left spacing for habit names */}
-            <div className="w-16 md:w-32 bg-card" />
+            <div className="w-16 bg-card md:w-32" />
             {/* Gradient fade effect for overflow */}
-            <div className="ml-16 md:ml-32 w-12 h-6 bg-gradient-to-r from-card to-transparent absolute z-10" />
+            <div className="absolute z-10 ml-16 h-6 w-12 bg-gradient-to-r from-card to-transparent md:ml-32" />
             {/* Day name labels (Mo, Tu, We, etc.) */}
-            <div className="flex-1 flex gap-px overflow-hidden mr-2">
-              <div className="flex gap-px justify-end w-full">
+            <div className="mr-2 flex flex-1 gap-px overflow-hidden">
+              <div className="flex w-full justify-end gap-px">
                 {days.map((day) => (
                   <div key={day} className="w-6">
-                    <div className="w-6 h-6 relative">
-                      <span className="absolute inset-0 flex items-center justify-center text-xs font-medium text-slate-900 dark:text-slate-100 scale-75">
+                    <div className="relative h-6 w-6">
+                      <span className="absolute inset-0 flex scale-75 items-center justify-center text-xs font-medium text-slate-900 dark:text-slate-100">
                         {new Date(day).toLocaleDateString("en-US", { weekday: "short" }).slice(0, 2)}
                       </span>
                     </div>
@@ -132,7 +132,7 @@ export const CalendarItem = ({
               ).length;
 
               return (
-                <div key={habit._id} className="flex items-start relative">
+                <div key={habit._id} className="relative flex items-start">
                   {/* Calendar view grid for the habit */}
                   <CalendarView
                     habit={habit}
@@ -144,19 +144,19 @@ export const CalendarItem = ({
                   />
                   {/* Editable habit name with hover effects */}
                   <div
-                    className="absolute left-0 flex group items-start cursor-pointer hover:text-muted-foreground transition-colors w-24 md:w-48"
+                    className="group absolute left-0 flex w-24 cursor-pointer items-start transition-colors hover:text-muted-foreground md:w-48"
                     onClick={() => onEditHabit(habit)}
                   >
-                    <div className="truncate flex items-center relative">
-                      <h3 className="font-medium text-base bg-card">
+                    <div className="relative flex items-center truncate">
+                      <h3 className="bg-card text-base font-medium">
                         <span className="truncate">{habit.name}</span>
                         {habit.timerDuration && (
-                          <span className="text-muted-foreground/50 text-sm ml-1">({habit.timerDuration}m)</span>
+                          <span className="ml-1 text-sm text-muted-foreground/50">({habit.timerDuration}m)</span>
                         )}
                       </h3>
 
-                      <div className="w-12 h-6 bg-gradient-to-r from-card to-transparent" />
-                      <span className="opacity-0 group-hover:opacity-100 transition-opacity absolute right-6 top-1/2 -translate-y-1/2">
+                      <div className="h-6 w-12 bg-gradient-to-r from-card to-transparent" />
+                      <span className="absolute right-6 top-1/2 -translate-y-1/2 opacity-0 transition-opacity group-hover:opacity-100">
                         <Pencil className="h-4 w-4" />
                       </span>
                     </div>
@@ -174,7 +174,7 @@ export const CalendarItem = ({
             })}
           </div>
           <div className="flex justify-end">
-            <Button className="w-24 h-[24px] text-xs" size="sm" onClick={onAddHabit}>
+            <Button className="h-[24px] w-24 text-xs" size="sm" onClick={onAddHabit}>
               New
             </Button>
           </div>
@@ -193,21 +193,21 @@ export const CalendarItem = ({
               <div key={habit._id} className="space-y-4">
                 {/* Editable habit name */}
                 <div
-                  className="flex justify-center items-center gap-2 group cursor-pointer hover:text-muted-foreground transition-colors"
+                  className="group flex cursor-pointer items-center justify-center gap-2 transition-colors hover:text-muted-foreground"
                   onClick={() => onEditHabit(habit)}
                 >
-                  <h3 className="font-medium text-base">
+                  <h3 className="text-base font-medium">
                     {habit.name}
                     {habit.timerDuration && (
-                      <span className="text-muted-foreground text-sm ml-1">({habit.timerDuration}m)</span>
+                      <span className="ml-1 text-sm text-muted-foreground">({habit.timerDuration}m)</span>
                     )}
                   </h3>
-                  <span className="opacity-0 group-hover:opacity-100 transition-opacity">
+                  <span className="opacity-0 transition-opacity group-hover:opacity-100">
                     <Pencil className="h-4 w-4" />
                   </span>
                 </div>
                 {/* Centered completion controls */}
-                <div className="flex justify-center -translate-x-3 -translate-y-3 scale-125">
+                <div className="flex -translate-x-3 -translate-y-3 scale-125 justify-center">
                   <CompleteControls
                     count={todayCount}
                     onIncrement={() => onToggleHabit(habit._id, today, todayCount + 1)}

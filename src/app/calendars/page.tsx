@@ -15,7 +15,7 @@ const AuthenticationWrapper = ({ children }: { children: React.ReactNode }) => (
   <>
     <SignedIn>{children}</SignedIn>
     <SignedOut>
-      <div className="flex flex-col items-center justify-center min-h-[50vh] gap-4">
+      <div className="flex min-h-[50vh] flex-col items-center justify-center gap-4">
         <h2 className="text-xl font-semibold">Please sign in to view your calendars</h2>
         <SignInButton mode="modal">
           <button className="rounded-md bg-primary px-4 py-2 text-primary-foreground hover:bg-primary/90">
@@ -50,7 +50,7 @@ export default function CalendarsPage() {
   );
 
   return (
-    <div className="container max-w-7xl mx-auto">
+    <div className="container mx-auto max-w-7xl">
       <AuthenticationWrapper>
         <>
           <YearlyOverview completions={yearViewData.completions || []} habits={habits} calendars={calendars} />

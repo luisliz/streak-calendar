@@ -7,8 +7,8 @@ import Link from "next/link";
 
 export default function AboutPage() {
   return (
-    <div className="container max-w-2xl py-16 space-y-8 w-full mx-auto">
-      <Card className="shadow p-4">
+    <div className="container mx-auto w-full max-w-2xl space-y-8 py-16">
+      <Card className="p-4 shadow">
         <CardHeader>
           <h1 className="font-heading text-4xl font-bold">About Streak Calendar</h1>
         </CardHeader>
@@ -21,7 +21,7 @@ export default function AboutPage() {
         </CardContent>
         <CardContent>
           <h2 className="font-heading text-2xl font-bold">What It Is</h2>
-          <p className="text-muted-foreground pt-6">
+          <p className="pt-6 text-muted-foreground">
             Streak Calendar is an open source productivity tool that combines habit tracking, task timing, and progress
             visualization. It supports multiple calendars and habits, allowing you to customize your approach to
             personal growth. Featuring an activity grid similar to GitHub&apos;s contribution tracker, it offers a clear
@@ -31,7 +31,7 @@ export default function AboutPage() {
         </CardContent>
       </Card>
 
-      <Card className="shadow p-4">
+      <Card className="p-4 shadow">
         <CardHeader>
           <h2 className="font-heading text-2xl font-bold">Features</h2>
         </CardHeader>
@@ -69,22 +69,22 @@ export default function AboutPage() {
         </CardContent>
       </Card>
 
-      <Card className="shadow p-4">
+      <Card className="p-4 shadow">
         <CardHeader>
           <h2 className="font-heading text-2xl font-bold">Open Source Project</h2>
         </CardHeader>
         <CardContent>
-          <p className="text-muted-foreground mb-4">
+          <p className="mb-4 text-muted-foreground">
             Streak Calendar is open source to encourage transparency and collaboration. Contributions and innovations
             from users are welcome, helping to continuously improve the tool and make it even more effective for
             everyone.
           </p>
           <div className="flex items-end">
-            <Avatar className="w-12 h-12 mx-2">
+            <Avatar className="mx-2 h-12 w-12">
               <AvatarImage src="https://avatars.githubusercontent.com/u/8214158?s=100" />
               <AvatarFallback>IA</AvatarFallback>
             </Avatar>
-            <div className="mt-4 p-4 bg-muted rounded-sm rounded-bl-none">
+            <div className="mt-4 rounded-sm rounded-bl-none bg-muted p-4">
               <p className="italic text-muted-foreground">
                 &quot;Hi, I&apos;m Ilya Aizenberg, the creator of Streak Calendar. This project combines my passion for
                 productivity and tech to offer a simple yet powerful tool for personal growth. I hope you find it as
@@ -102,17 +102,17 @@ export default function AboutPage() {
         </CardFooter>
       </Card>
 
-      <Card className="shadow p-4">
+      <Card className="p-4 shadow">
         <CardHeader>
           <h2 className="font-heading text-2xl font-bold">The Seinfeld Strategy</h2>
         </CardHeader>
         <CardContent className="space-y-6">
-          <div className="relative w-full md:w-1/2 aspect-video">
+          <div className="relative aspect-video w-full md:w-1/2">
             <Image
               src="/never-miss-twice.jpg"
               alt="Never miss twice calendar visualization"
               fill
-              className="object-cover rounded-sm"
+              className="rounded-sm object-cover"
             />
           </div>
 
@@ -137,7 +137,7 @@ export default function AboutPage() {
               the chain.
             </p>
 
-            <h3 className="text-xl font-bold mt-6 mb-6">Why It Works</h3>
+            <h3 className="mb-6 mt-6 text-xl font-bold">Why It Works</h3>
             <p className="text-muted-foreground">
               The Seinfeld Strategy works because it shifts focus from individual performances to the process itself.
               Instead of worrying about how inspired you are or how brilliant your work is that day, you simply focus on
@@ -145,9 +145,9 @@ export default function AboutPage() {
               else.
             </p>
 
-            <div className="bg-muted p-4 rounded-sm mt-6">
-              <h4 className="font-bold flex justify-center">Key Principles:</h4>
-              <ul className="list-disc pl-6 mt-2 text-muted-foreground">
+            <div className="mt-6 rounded-sm bg-muted p-4">
+              <h4 className="flex justify-center font-bold">Key Principles:</h4>
+              <ul className="mt-2 list-disc pl-6 text-muted-foreground">
                 <li>Choose a meaningful but sustainable daily task</li>
                 <li>Focus on the process, not the results</li>
                 <li>Build the chain one day at a time</li>
@@ -161,7 +161,7 @@ export default function AboutPage() {
             Content adapted from{" "}
             <Link
               href="https://jamesclear.com/stop-procrastinating-seinfeld-strategy"
-              className="font-bold hover:underline hover:text-primary"
+              className="font-bold hover:text-primary hover:underline"
               target="_blank"
               rel="noopener noreferrer"
             >

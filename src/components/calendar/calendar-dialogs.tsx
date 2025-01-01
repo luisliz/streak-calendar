@@ -114,7 +114,7 @@ export const NewCalendarDialog = ({
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Select a color">
                   <div className="flex items-center gap-2">
-                    <div className={`w-4 h-4 rounded-full ${color}`} />
+                    <div className={`h-4 w-4 rounded-full ${color}`} />
                     {COLORS.find((c) => c.value === color)?.name}
                   </div>
                 </SelectValue>
@@ -123,7 +123,7 @@ export const NewCalendarDialog = ({
                 {COLORS.map((c) => (
                   <SelectItem key={c.value} value={c.value}>
                     <div className="flex items-center gap-2">
-                      <div className={`w-4 h-4 rounded-full ${c.value}`} />
+                      <div className={`h-4 w-4 rounded-full ${c.value}`} />
                       {c.name}
                     </div>
                   </SelectItem>
@@ -308,7 +308,7 @@ export const EditCalendarDialog = ({
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Select a color">
                     <div className="flex items-center gap-2">
-                      <div className={`w-4 h-4 rounded-full ${color}`} />
+                      <div className={`h-4 w-4 rounded-full ${color}`} />
                       {COLORS.find((c) => c.value === color)?.name}
                     </div>
                   </SelectValue>
@@ -317,7 +317,7 @@ export const EditCalendarDialog = ({
                   {COLORS.map((c) => (
                     <SelectItem key={c.value} value={c.value}>
                       <div className="flex items-center gap-2">
-                        <div className={`w-4 h-4 rounded-full ${c.value}`} />
+                        <div className={`h-4 w-4 rounded-full ${c.value}`} />
                         {c.name}
                       </div>
                     </SelectItem>

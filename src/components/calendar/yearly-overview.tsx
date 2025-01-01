@@ -112,7 +112,7 @@ export const YearlyOverview = ({ completions }: YearlyOverviewProps) => {
     if (count === 0) {
       return (
         <div
-          className={`aspect-square w-[5px] sm:w-[9px] md:w-4 rounded-full ${colorClass}`}
+          className={`aspect-square w-[5px] rounded-full sm:w-[9px] md:w-4 ${colorClass}`}
           title={`${format(new Date(day), "MMM d, yyyy")}: ${count} completions`}
         />
       );
@@ -121,10 +121,10 @@ export const YearlyOverview = ({ completions }: YearlyOverviewProps) => {
     // Render completion indicator for days with completions
     return (
       <div
-        className="aspect-square w-[5px] sm:w-[9px] md:w-4 relative hover:opacity-80 transition-colors"
+        className="relative aspect-square w-[5px] transition-colors hover:opacity-80 sm:w-[9px] md:w-4"
         title={`${format(new Date(day), "MMM d, yyyy")}: ${count} completions`}
       >
-        <svg viewBox="0 0 15 15" className={`w-full h-full ${colorClass}`}>
+        <svg viewBox="0 0 15 15" className={`h-full w-full ${colorClass}`}>
           <XLogo />
         </svg>
       </div>
@@ -138,26 +138,26 @@ export const YearlyOverview = ({ completions }: YearlyOverviewProps) => {
   }, [completionCounts]);
 
   return (
-    <div className="mx-auto sm:mt-16 mt-2">
-      <div className="mx-auto pl-2 pb-1 max-w-full md:w-[1000px] text-xs text-muted-foreground">
+    <div className="mx-auto mt-2 sm:mt-16">
+      <div className="mx-auto max-w-full pb-1 pl-2 text-xs text-muted-foreground md:w-[1000px]">
         <span className="font-bold">Yearly Overview</span>{" "}
         <span className="text-muted-foreground/75">({totalCompletions} things done last year)</span>
       </div>
-      <Card className="mx-auto w-fit mb-4 md:mb-16 rounded-xl md:rounded-3xl md:w-[1000px] shadow-md p-1 md:p-2 md:pb-4">
+      <Card className="mx-auto mb-4 w-fit rounded-xl p-1 shadow-md md:mb-16 md:w-[1000px] md:rounded-3xl md:p-2 md:pb-4">
         <div className="w-full">
           <div className="flex justify-end">
             {/* Left day labels (Mon/Wed/Fri) */}
-            <div className="opacity-50 flex flex-col mt-3 md:mt-6 pr-1">
+            <div className="mt-3 flex flex-col pr-1 opacity-50 md:mt-6">
               <div className="h-[3px] md:h-[18px]" />
-              <div className="text-muted-foreground text-[5px] sm:text-[7px] md:text-xs text-right">Mon</div>
+              <div className="text-right text-[5px] text-muted-foreground sm:text-[7px] md:text-xs">Mon</div>
               <div className="h-[3px] md:h-[18px]" />
-              <div className="text-muted-foreground text-[5px] sm:text-[7px] md:text-xs text-right">Wed</div>
+              <div className="text-right text-[5px] text-muted-foreground sm:text-[7px] md:text-xs">Wed</div>
               <div className="h-[3px] md:h-[18px]" />
-              <div className="text-muted-foreground text-[5px] sm:text-[7px] md:text-xs text-right">Fri</div>
+              <div className="text-right text-[5px] text-muted-foreground sm:text-[7px] md:text-xs">Fri</div>
             </div>
             <div className="flex-1">
               {/* Month labels row */}
-              <div className="opacity-50 flex text-[5px] sm:text-[7px] md:text-xs text-muted-foreground pb-[2px] md:pb-2 justify-center mx-auto">
+              <div className="mx-auto flex justify-center pb-[2px] text-[5px] text-muted-foreground opacity-50 sm:text-[7px] md:pb-2 md:text-xs">
                 {monthLabels.map((month, index) => (
                   <div key={month.key} className={`${index === 0 ? "mr-auto pl-1" : "flex-1 text-center"}`}>
                     {month.label}
@@ -165,7 +165,7 @@ export const YearlyOverview = ({ completions }: YearlyOverviewProps) => {
                 ))}
               </div>
               {/* Main contribution grid */}
-              <div className="flex gap-[1px] justify-start pl-0">
+              <div className="flex justify-start gap-[1px] pl-0">
                 {weeks.map((week, weekIndex) => (
                   <div key={weekIndex} className="flex flex-col gap-[1px]">
                     {week.map((day, dayIndex) => (
@@ -176,13 +176,13 @@ export const YearlyOverview = ({ completions }: YearlyOverviewProps) => {
               </div>
             </div>
             {/* Right day labels (Mon/Wed/Fri) */}
-            <div className="opacity-50 flex flex-col mt-3 md:mt-6 pl-1">
+            <div className="mt-3 flex flex-col pl-1 opacity-50 md:mt-6">
               <div className="h-[3px] md:h-[18px]" />
-              <div className="text-muted-foreground text-[5px] sm:text-[7px] md:text-xs text-left">Mon</div>
+              <div className="text-left text-[5px] text-muted-foreground sm:text-[7px] md:text-xs">Mon</div>
               <div className="h-[3px] md:h-[18px]" />
-              <div className="text-muted-foreground text-[5px] sm:text-[7px] md:text-xs text-left">Wed</div>
+              <div className="text-left text-[5px] text-muted-foreground sm:text-[7px] md:text-xs">Wed</div>
               <div className="h-[3px] md:h-[18px]" />
-              <div className="text-muted-foreground text-[5px] sm:text-[7px] md:text-xs text-left">Fri</div>
+              <div className="text-left text-[5px] text-muted-foreground sm:text-[7px] md:text-xs">Fri</div>
             </div>
           </div>
         </div>

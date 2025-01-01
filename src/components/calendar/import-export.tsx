@@ -42,7 +42,7 @@ export function ImportExport() {
       <Dialog open={showImportExportDialog} onOpenChange={setShowImportExportDialog}>
         <DialogTrigger asChild>
           <Button variant="outline">
-            <ArrowUpDown className="mr-2 h-4 w-4" />
+            <ArrowUpDown className="mr-2 h-4 w-4 bg-transparent" />
             Import/Export
           </Button>
         </DialogTrigger>
@@ -59,7 +59,7 @@ export function ImportExport() {
               </Button>
               {/* Import button - Hidden file input with custom styled label */}
               <Button asChild>
-                <label className="cursor-pointer flex items-center justify-center">
+                <label className="flex cursor-pointer items-center justify-center">
                   <Upload className="mr-2 h-4 w-4" />
                   Import
                   <input type="file" accept=".json" className="hidden" onChange={handleImportSelect} />

@@ -66,9 +66,9 @@ export const DayCell = ({ date, count, onCountChange, colorClass, gridView, disa
         {/* Main cell button with dynamic styling based on completion status and view mode */}
         <Button
           variant="ghost"
-          className={`${gridView ? "w-12 h-12" : "w-6 h-6"} rounded-full ${
+          className={`${gridView ? "h-12 w-12" : "h-6 w-6"} rounded-full ${
             count === 0 ? "bg-slate-100 dark:bg-slate-800" : ""
-          } relative p-0 overflow-visible ${disabled ? "opacity-50 cursor-not-allowed" : ""} hover:bg-transparent`}
+          } relative overflow-visible p-0 ${disabled ? "cursor-not-allowed opacity-50" : ""} hover:bg-transparent`}
           title={`${new Date(date).toLocaleDateString(undefined, {
             month: "short",
             day: "numeric",
@@ -77,11 +77,11 @@ export const DayCell = ({ date, count, onCountChange, colorClass, gridView, disa
         >
           {/* Render either completion indicator (X shape) or date number based on completion status */}
           {count > 0 ? (
-            <div className="absolute ">
+            <div className="absolute">
               {/* SVG X shape with dynamic sizing and color based on completion count */}
               <XLogo
                 key={`${count}-${fillClass}`}
-                className={`${gridView ? "!w-[48px] !h-[48px]" : "!w-[24px] !h-[24px]"} ${fillClass} animate-completion relative`}
+                className={`${gridView ? "!h-[48px] !w-[48px]" : "!h-[24px] !w-[24px]"} ${fillClass} animate-completion relative`}
               />
             </div>
           ) : (
@@ -99,7 +99,7 @@ export const DayCell = ({ date, count, onCountChange, colorClass, gridView, disa
       {/* Popover menu for updating completion count */}
       <PopoverContent
         align="center"
-        className="w-auto px-4 py-2 rounded-[15px] backdrop-blur-sm border bg-white/60 dark:bg-black/60"
+        className="w-auto rounded-[15px] border bg-white/60 px-4 py-2 backdrop-blur-sm dark:bg-black/60"
       >
         <div className="flex flex-col items-center gap-2">
           {/* Display full date in popover */}

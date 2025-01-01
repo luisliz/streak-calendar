@@ -52,7 +52,7 @@ const EmptyState = ({
   setNewCalendarName: (name: string) => void;
 }) => (
   <>
-    <div className="text-center py-12 text-muted-foreground">
+    <div className="py-12 text-center text-muted-foreground">
       <p>You haven&apos;t created any calendars yet.</p>
       <p className="mt-2">Create one to start tracking your habits!</p>
       <Button variant="default" onClick={() => setIsNewCalendarOpen(true)} className="mt-4">
@@ -351,10 +351,10 @@ export function CalendarContainer({
             duration: 0.2,
             ease: "easeInOut",
           }}
-          className="space-y-8 shadow-md border p-2"
+          className="space-y-8 border p-2 shadow-md"
         >
           <ViewControls calendarView={calendarView} onViewChange={onViewChange} />
-          <div className="w-full md:px-8 flex flex-col gap-4">
+          <div className="flex w-full flex-col gap-4 md:px-8">
             <div className="w-full">
               {calendars.map((calendar) => {
                 const calendarHabits = habits.filter((h) => h.calendarId === calendar._id);

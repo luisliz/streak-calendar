@@ -6,13 +6,13 @@ import Link from "next/link";
 
 export default function PricingPage() {
   return (
-    <div className="container max-w-5xl py-16 px-4 mx-auto">
-      <div className="text-center mb-12">
-        <h1 className="text-4xl font-bold mb-4">Simple, Transparent Pricing & Plans</h1>
-        <p className="text-muted-foreground text-lg">Choose the plan that works best for you</p>
+    <div className="container mx-auto max-w-5xl px-4 py-16">
+      <div className="mb-12 text-center">
+        <h1 className="mb-4 text-4xl font-bold">Simple, Transparent Pricing & Plans</h1>
+        <p className="text-lg text-muted-foreground">Choose the plan that works best for you</p>
       </div>
 
-      <div className="grid md:grid-cols-2 gap-8">
+      <div className="grid gap-8 md:grid-cols-2">
         {/* Free Tier */}
         <Card className="flex flex-col">
           <CardHeader>
@@ -20,7 +20,7 @@ export default function PricingPage() {
             <CardDescription>Perfect for getting started</CardDescription>
           </CardHeader>
           <CardContent className="flex-grow">
-            <div className="text-4xl font-bold mb-6">
+            <div className="mb-6 text-4xl font-bold">
               $0<span className="text-lg font-normal text-muted-foreground">/month</span>
             </div>
             <ul className="space-y-3">
@@ -55,8 +55,8 @@ export default function PricingPage() {
         </Card>
 
         {/* Premium Tier */}
-        <Card className="flex flex-col border-2 border-primary relative opacity-40">
-          <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground px-3 py-1 rounded-full text-sm">
+        <Card className="relative flex flex-col border-2 border-primary opacity-40">
+          <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-primary px-3 py-1 text-sm text-primary-foreground">
             Coming Soon
           </div>
           <CardHeader>
@@ -64,7 +64,7 @@ export default function PricingPage() {
             <CardDescription>For power users</CardDescription>
           </CardHeader>
           <CardContent className="flex-grow">
-            <div className="text-4xl font-bold mb-6">
+            <div className="mb-6 text-4xl font-bold">
               $2.99<span className="text-lg font-normal text-muted-foreground">/month</span>
             </div>
             <ul className="space-y-3">
