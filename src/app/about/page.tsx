@@ -7,7 +7,7 @@ import Link from "next/link";
 
 export default function AboutPage() {
   return (
-    <div className="container mx-auto w-full max-w-2xl space-y-8 py-16">
+    <div className="container mx-auto w-full max-w-3xl space-y-8 py-16">
       <Card className="p-4 shadow">
         <CardHeader>
           <h1 className="font-heading text-4xl font-bold">About Streak Calendar</h1>
@@ -108,7 +108,7 @@ export default function AboutPage() {
           <h2 className="font-heading text-2xl font-bold">The Seinfeld Strategy</h2>
         </CardHeader>
         <CardContent className="space-y-6">
-          <div className="relative aspect-video w-full md:w-1/2">
+          <div className="relative aspect-video w-full md:w-2/3">
             <Image
               src="/never-miss-twice.jpg"
               alt="Never miss twice calendar visualization"
