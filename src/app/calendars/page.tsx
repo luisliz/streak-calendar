@@ -66,7 +66,7 @@ export default function CalendarsPage() {
             habitState={habitState}
             onViewChange={setCalendarView}
           />
-          <div className="hidden mt-8 justify-center">
+          <div className="mt-8 justify-center">
             <ImportExport />
           </div>
         </>

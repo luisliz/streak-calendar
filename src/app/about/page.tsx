@@ -1,3 +1,4 @@
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { SignedIn, SignedOut } from "@clerk/nextjs";
@@ -78,12 +79,18 @@ export default function AboutPage() {
             from users are welcome, helping to continuously improve the tool and make it even more effective for
             everyone.
           </p>
-          <div className="mt-4 p-4 bg-muted rounded-sm">
-            <p className="italic text-muted-foreground">
-              &quot;Hi, I&apos;m Ilya Aizenberg, the creator of Streak Calendar. This project combines my passion for
-              productivity and tech to offer a simple yet powerful tool for personal growth. I hope you find it as
-              valuable as I do.&quot;
-            </p>
+          <div className="flex items-end">
+            <Avatar className="w-12 h-12 mx-2">
+              <AvatarImage src="https://avatars.githubusercontent.com/u/8214158?s=100" />
+              <AvatarFallback>IA</AvatarFallback>
+            </Avatar>
+            <div className="mt-4 p-4 bg-muted rounded-sm rounded-bl-none">
+              <p className="italic text-muted-foreground">
+                &quot;Hi, I&apos;m Ilya Aizenberg, the creator of Streak Calendar. This project combines my passion for
+                productivity and tech to offer a simple yet powerful tool for personal growth. I hope you find it as
+                valuable as I do.&quot;
+              </p>
+            </div>
           </div>
         </CardContent>
         <CardFooter className="flex gap-4">
