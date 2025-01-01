@@ -14,13 +14,13 @@ export function ViewControls({ calendarView, onViewChange }: ViewControlsProps) 
       <div className="flex items-center gap-4">
         <Tabs value={calendarView} onValueChange={(value) => onViewChange(value as CalendarView)}>
           <TabsList>
-            <TabsTrigger value="monthRow">
-              <GripHorizontal className="mr-2 h-4 w-4" />
-              Rows View
-            </TabsTrigger>
             <TabsTrigger value="monthGrid">
               <CalendarDays className="mr-2 h-4 w-4" />
-              Grids View
+              Calendars
+            </TabsTrigger>
+            <TabsTrigger value="monthRow">
+              <GripHorizontal className="mr-2 h-4 w-4" />
+              Rows
             </TabsTrigger>
           </TabsList>
         </Tabs>
