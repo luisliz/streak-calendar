@@ -33,7 +33,7 @@ export default function CalendarsPage() {
   const habitState = useHabitState();
 
   // Pre-fetch data for both views
-  const monthData = useDateRange(40);
+  const monthData = useDateRange(90);
   const yearData = useDateRange(365);
   const monthViewData = useCalendarData(monthData.startDate, monthData.today);
   const yearViewData = useCalendarData(yearData.startDate, yearData.today);
@@ -55,16 +55,16 @@ export default function CalendarsPage() {
         <>
           <YearlyOverview completions={yearViewData.completions || []} habits={habits} calendars={calendars} />
           <CalendarContainer
+            calendarState={calendarState}
             calendarView={calendarView}
             calendars={monthViewData.calendars || []}
             completions={monthViewData.completions || []}
             days={days}
+            habitState={habitState}
             habits={monthViewData.habits || []}
             monthViewData={monthViewData}
-            view={calendarView}
-            calendarState={calendarState}
-            habitState={habitState}
             onViewChange={setCalendarView}
+            view={calendarView}
           />
           <div className="mt-8 justify-center">
             <ImportExport />
