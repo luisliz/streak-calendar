@@ -8,9 +8,9 @@ export function useCalendarData(startDate: Date, endDate: Date) {
   const { isAuthenticated } = useConvexAuth();
 
   // Database queries
-  const calendars = useQuery(api.calendars.list, isAuthenticated ? {} : "skip");
-  const habits = useQuery(api.habits.list, isAuthenticated ? { calendarId: undefined } : "skip");
-  const completions = useQuery(
+  const calendarsQuery = useQuery(api.calendars.list, isAuthenticated ? {} : "skip");
+  const habitsQuery = useQuery(api.habits.list, isAuthenticated ? { calendarId: undefined } : "skip");
+  const completionsQuery = useQuery(
     api.habits.getCompletions,
     isAuthenticated
       ? {
@@ -82,11 +82,14 @@ export function useCalendarData(startDate: Date, endDate: Date) {
     });
   };
 
+  const isLoading = calendarsQuery === undefined || habitsQuery === undefined || completionsQuery === undefined;
+
   return {
     isAuthenticated,
-    calendars: calendars ?? [],
-    habits: habits ?? [],
-    completions: completions ?? [],
+    isLoading,
+    calendars: calendarsQuery,
+    habits: habitsQuery,
+    completions: completionsQuery,
     handleAddCalendar,
     handleAddHabit,
     handleEditCalendar,

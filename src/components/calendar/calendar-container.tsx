@@ -8,6 +8,7 @@ import { CalendarItem } from "@/components/calendar/calendar-item";
 import { ViewControls } from "@/components/calendar/view-controls";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Calendar, Completion, Day, EditingCalendar, Habit, Id } from "@/types";
 import { AnimatePresence, motion } from "framer-motion";
 import { PlusCircle } from "lucide-react";
@@ -139,6 +140,7 @@ interface CalendarContainerProps {
   calendarState: CalendarState;
   habitState: HabitState;
   onViewChange: (view: CalendarView) => void;
+  isLoading?: boolean;
 }
 
 export function CalendarContainer({
@@ -152,6 +154,7 @@ export function CalendarContainer({
   calendarState,
   habitState,
   onViewChange,
+  isLoading = false,
 }: CalendarContainerProps) {
   /**
    * Destructure state management props for easier access
@@ -320,9 +323,52 @@ export function CalendarContainer({
     }
   };
 
-  /**
-   * Show empty state if no calendars exist
-   */
+  if (isLoading) {
+    return (
+      <Card className="space-y-8 border p-2 shadow-md">
+        {/* View Controls Skeleton */}
+        <div className="flex justify-center">
+          <Skeleton className="h-10 w-48" />
+        </div>
+
+        <div className="flex w-full flex-col gap-8 md:px-8">
+          {/* Calendar Skeletons */}
+          {[1, 2].map((i) => (
+            <div key={i} className="space-y-6">
+              {/* Calendar Title */}
+              <div className="flex justify-center">
+                <Skeleton className="h-12 w-64" />
+              </div>
+
+              {/* Calendar Grid */}
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {[1, 2, 3].map((j) => (
+                  <div key={j} className="space-y-4">
+                    {/* Month Title */}
+                    <Skeleton className="h-6 w-32" />
+                    {/* Days Grid */}
+                    <div className="grid grid-cols-7 gap-1">
+                      {Array(35)
+                        .fill(0)
+                        .map((_, k) => (
+                          <Skeleton key={k} className="h-12 w-12" />
+                        ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Add Calendar Button Skeleton */}
+        <div className="flex justify-center pb-4">
+          <Skeleton className="h-10 w-32" />
+        </div>
+      </Card>
+    );
+  }
+
   if (calendars.length === 0) {
     return (
       <EmptyState

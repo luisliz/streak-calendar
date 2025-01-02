@@ -45,26 +45,35 @@ export default function CalendarsPage() {
   );
 
   const { calendars, habits } = useMemo(
-    () => (calendarView === "monthRow" ? monthViewData : yearViewData),
-    [calendarView, monthViewData, yearViewData]
+    () => ({
+      calendars: monthViewData.calendars || [],
+      habits: monthViewData.habits || [],
+    }),
+    [monthViewData.calendars, monthViewData.habits]
   );
 
   return (
     <div className="container mx-auto max-w-7xl">
       <AuthenticationWrapper>
         <>
-          <YearlyOverview completions={yearViewData.completions || []} habits={habits} calendars={calendars} />
+          <YearlyOverview
+            completions={yearViewData.completions || []}
+            habits={habits}
+            calendars={calendars}
+            isLoading={yearViewData.isLoading}
+          />
           <CalendarContainer
             calendarState={calendarState}
             calendarView={calendarView}
-            calendars={monthViewData.calendars || []}
+            calendars={calendars}
             completions={monthViewData.completions || []}
             days={days}
             habitState={habitState}
-            habits={monthViewData.habits || []}
+            habits={habits}
             monthViewData={monthViewData}
             onViewChange={setCalendarView}
             view={calendarView}
+            isLoading={monthViewData.isLoading}
           />
           <div className="mt-8 justify-center">
             <ImportExport />

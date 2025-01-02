@@ -1,4 +1,5 @@
 import { Card } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import { XLogo } from "@/components/ui/x-logo";
 import { eachDayOfInterval, format, getDay, subYears } from "date-fns";
 import { memo, useCallback, useMemo } from "react";
@@ -27,9 +28,10 @@ interface YearlyOverviewProps {
     name: string;
     colorTheme: string;
   }>;
+  isLoading?: boolean;
 }
 
-export const YearlyOverview = ({ completions }: YearlyOverviewProps) => {
+export const YearlyOverview = ({ completions, isLoading = false }: YearlyOverviewProps) => {
   // Calculate and memoize the calendar grid structure and month labels
   // This only needs to be calculated once since it's based on static dates
   const { weeks, monthLabels } = useMemo(() => {
@@ -136,6 +138,32 @@ export const YearlyOverview = ({ completions }: YearlyOverviewProps) => {
   const totalCompletions = useMemo(() => {
     return Object.values(completionCounts).reduce((sum, count) => sum + count, 0);
   }, [completionCounts]);
+
+  if (isLoading) {
+    return (
+      <div className="mt-2 flex flex-col items-center sm:mt-16">
+        <div className="w-[350px] pb-1 pl-2 sm:w-[400px] xl:w-[984px]">
+          <Skeleton className="h-4 w-48" />
+        </div>
+        <Card className="mx-auto mb-4 w-fit rounded-xl p-1 shadow-md xl:mb-16 xl:w-[984px] xl:rounded-3xl xl:p-2 xl:pb-4">
+          <div className="flex gap-1">
+            {/* Simplified grid of blocks */}
+            {Array(12)
+              .fill(0)
+              .map((_, i) => (
+                <div key={i} className="flex flex-col gap-1">
+                  {Array(7)
+                    .fill(0)
+                    .map((_, j) => (
+                      <Skeleton key={j} className="h-[5px] w-[5px] rounded-full sm:h-[9px] sm:w-[9px] xl:h-4 xl:w-4" />
+                    ))}
+                </div>
+              ))}
+          </div>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="mt-2 flex flex-col items-center sm:mt-16">
