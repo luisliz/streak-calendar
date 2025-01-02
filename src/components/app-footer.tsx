@@ -1,20 +1,67 @@
+"use client";
+
+import { locales } from "@/i18n/settings";
+import { useLocale, useTranslations } from "next-intl";
+import Image from "next/image";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+
+const flagMap = {
+  en: "us",
+  he: "il",
+  ru: "ru",
+} as const;
+
 export function AppFooter() {
+  const t = useTranslations("footer");
+  const pathname = usePathname();
+  const locale = useLocale();
+
+  const redirectedPathname = (newLocale: string) => {
+    if (!pathname) return newLocale === "en" ? "/" : `/${newLocale}`;
+
+    // Get the current path segments and remove empty ones
+    const segments = pathname.split("/").filter(Boolean);
+
+    // Get the path without any locale prefix
+    const pathWithoutLocale = segments
+      .filter((segment) => !locales.includes(segment as (typeof locales)[number]))
+      .join("/");
+
+    // For English, return path without locale prefix
+    if (newLocale === "en") {
+      return pathWithoutLocale ? `/${pathWithoutLocale}` : "/";
+    }
+
+    // For other locales, ensure we have the correct locale prefix
+    return `/${newLocale}${pathWithoutLocale ? `/${pathWithoutLocale}` : ""}`;
+  };
+
   return (
     <footer className="border-t border-border">
       <div className="container relative mx-auto flex min-h-[4rem] flex-col items-center gap-4 px-3 py-4 md:h-16 md:flex-row md:justify-between md:gap-0 md:px-4 md:py-0">
         <p className="text-center text-xs text-muted-foreground md:text-left md:text-sm">
-          Made with{" "}
+          {t("madeWith")}{" "}
           <span
             className="mx-[2px] inline-block h-4 w-4 translate-y-[3px] rounded-[4px] bg-[url('/cursor-logo.png')] bg-contain bg-center bg-no-repeat md:h-5 md:w-5 md:translate-y-[4px] md:rounded-[6px]"
             title="Cursor"
             aria-label="Cursor"
           />{" "}
-          and{" "}
-          <span className="text-base font-extrabold text-destructive md:text-lg" title="Love" aria-label="Love">
+          {t("and")}{" "}
+          <span
+            className="text-base font-extrabold text-destructive md:text-lg"
+            title={t("love")}
+            aria-label={t("love")}
+          >
             ♥️
           </span>{" "}
-          by{" "}
-          <a href="https://github.com/ilyaizen" className="font-semibold hover:text-foreground" target="_blank">
+          {t("by")}{" "}
+          <a
+            href="https://github.com/ilyaizen"
+            className="font-semibold hover:text-foreground"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             @ilyaizen
           </a>
         </p>
@@ -27,6 +74,7 @@ export function AppFooter() {
               title="Github"
               aria-label="Github"
               target="_blank"
+              rel="noopener noreferrer"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -43,6 +91,7 @@ export function AppFooter() {
               title="X (Twitter)"
               aria-label="X (Twitter)"
               target="_blank"
+              rel="noopener noreferrer"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -59,6 +108,7 @@ export function AppFooter() {
               title="Gmail"
               aria-label="Gmail"
               target="_blank"
+              rel="noopener noreferrer"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -76,24 +126,26 @@ export function AppFooter() {
             </a>
           </div>
           <div className="h-4 w-px bg-border md:h-6" />
-          <button className="p-1 text-muted-foreground hover:text-foreground md:p-1.5">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              className="size-4 md:size-5"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M4 5h7" />
-              <path d="M9 3v2c0 4.418 -2.239 8 -5 8" />
-              <path d="M5 9c0 2.144 2.952 3.908 6.7 4" />
-              <path d="M12 20l4 -9l4 9" />
-              <path d="M19.1 18h-6.2" />
-            </svg>
-          </button>
+          <div className="flex items-center gap-1">
+            {locales.map((l) => (
+              <Link
+                key={l}
+                href={redirectedPathname(l)}
+                className={`flex h-8 w-8 items-center justify-center rounded-md p-1 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground ${
+                  l === locale ? "bg-accent text-accent-foreground" : "text-muted-foreground"
+                }`}
+              >
+                <Image
+                  src={`/flag-${flagMap[l]}.png`}
+                  alt={l.toUpperCase()}
+                  className="size-5 rounded-[4px]"
+                  width={20}
+                  height={20}
+                  unoptimized
+                />
+              </Link>
+            ))}
+          </div>
         </div>
       </div>
     </footer>

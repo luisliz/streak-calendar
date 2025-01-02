@@ -1,12 +1,27 @@
 import { clerkMiddleware } from "@clerk/nextjs/server";
+import createMiddleware from "next-intl/middleware";
+import { NextRequest } from "next/server";
 
-export default clerkMiddleware();
+import { defaultLocale, locales } from "./i18n/settings";
+
+const intlMiddleware = createMiddleware({
+  locales,
+  defaultLocale,
+  localePrefix: "as-needed",
+  localeDetection: false,
+});
+
+export default clerkMiddleware((auth, req: NextRequest) => {
+  const { pathname } = req.nextUrl;
+
+  // Skip middleware for static files and Next.js internals
+  if (pathname.includes(".") || pathname.startsWith("/_next")) {
+    return;
+  }
+
+  return intlMiddleware(req);
+});
 
 export const config = {
-  matcher: [
-    // Skip Next.js internals and all static files, unless found in search params
-    "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
-    // Always run for API routes
-    "/(api|trpc)(.*)",
-  ],
+  matcher: ["/((?!.+\\.[\\w]+$|_next).*)", "/", "/(api|trpc)(.*)"],
 };

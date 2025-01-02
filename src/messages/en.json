@@ -1,0 +1,230 @@
+{
+  "app": {
+    "name": "Streak Calendar",
+    "description": "Track your habits and improve your life"
+  },
+  "nav": {
+    "home": "Home",
+    "calendar": "Calendar",
+    "about": "About",
+    "pricing": "Pricing",
+    "getStarted": "Get Started",
+    "app": {
+      "name": "Streak Calendar"
+    }
+  },
+  "home": {
+    "title": "Track your habits,\nbuild better routines",
+    "subtitle": "Simple and visual habit tracking that helps you build consistency and achieve your goals. Don't break the chain and watch your progress grow.",
+    "getStarted": "Get Started Free",
+    "goToCalendar": "Go to Calendar",
+    "learnMore": "Learn More",
+    "hero": {
+      "title": "Build Habits That Last with Streak Calendar",
+      "subtitle": "A simple, motivational productivity tool to help you achieve your goals, one day at a time. 💪",
+      "features": {
+        "visualTracking": {
+          "title": "Visual Habit Tracking",
+          "description": {
+            "part1": "Mark your daily accomplishments with an",
+            "part2": "and watch your streak grow"
+          }
+        },
+        "multiHabit": {
+          "title": "Multi-Habit Support",
+          "description": "Track multiple habits across customizable calendars"
+        },
+        "yearlyGrid": {
+          "title": "Yearly Activity Grid",
+          "description": "Get a yearly view of your progress, inspired by GitHub"
+        },
+        "timedTasks": {
+          "title": "Timed Tasks",
+          "description": "Stay focused with optional timers for your habits"
+        }
+      },
+      "motivation": "Helping individuals worldwide build better habits and stay motivated every day!"
+    }
+  },
+  "calendar": {
+    "title": "Your Calendars",
+    "addCalendar": "Add Calendar",
+    "createCalendar": "Create New Calendar",
+    "editCalendar": "Edit Calendar",
+    "deleteCalendar": "Delete Calendar",
+    "calendarName": "Name",
+    "colorTheme": "Color Theme",
+    "save": "Save Changes",
+    "cancel": "Cancel",
+    "create": "Create",
+    "loading": "Loading calendars...",
+    "noCalendars": "No calendars found. Create one to get started!",
+    "deleteSuccess": "Calendar deleted successfully",
+    "createSuccess": "Calendar created successfully",
+    "updateSuccess": "Calendar updated successfully",
+    "error": "An error occurred. Please try again.",
+    "calendarNamePlaceholder": "e.g., Work, Personal, Other...",
+    "hasBeenCreated": "has been created",
+    "delete": "Delete",
+    "deleteConfirm": "Confirm Delete",
+    "deleteCalendarConfirmText": "Are you sure you want to delete {calendarName}? All habits and completion history will be permanently deleted. This action cannot be undone.",
+    "hasBeenDeleted": "has been deleted",
+    "hasBeenUpdated": "has been updated",
+    "export": "Export",
+    "import": "Import",
+    "importSuccess": "Import Successful",
+    "dataImported": "Your data has been imported successfully",
+    "importError": "Import Failed",
+    "invalidFile": "Invalid file format. Please select a valid export file.",
+    "makeDefault": "Make Default",
+    "defaultCalendar": "This is your default calendar",
+    "isNowDefault": "is now your default calendar",
+    "exportConfirmation": "Are you sure you want to export your calendar data?",
+    "importConfirmation": "Are you sure you want to import this file? This will replace your existing data.",
+    "continue": "Continue",
+    "importExport": "Import / Export"
+  },
+  "habits": {
+    "addHabit": "Add Habit",
+    "createHabit": "Create New Habit",
+    "editHabit": "Edit Habit",
+    "deleteHabit": "Delete Habit",
+    "habitName": "Habit Name",
+    "namePlaceholder": "e.g., Exercise, Reading, Meditation...",
+    "weeklyTarget": "Weekly Target",
+    "targetPlaceholder": "Number of days per week",
+    "save": "Save Changes",
+    "cancel": "Cancel",
+    "create": "Create",
+    "loading": "Loading habits...",
+    "noHabits": "No habits found. Create one to get started!",
+    "deleteSuccess": "Habit deleted successfully",
+    "createSuccess": "Habit created successfully",
+    "updateSuccess": "Habit updated successfully",
+    "error": "An error occurred. Please try again.",
+    "hasBeenCreated": "has been created",
+    "streakInfo": {
+      "current": "Current Streak",
+      "longest": "Longest Streak",
+      "days": "days",
+      "target": "Target: {{count}} days/week"
+    },
+    "weeklyProgress": "{current}/{target}x this week",
+    "total": "Total",
+    "undo": "Undo",
+    "complete": "Complete",
+    "targetHelp": "How many times per week?",
+    "hasBeenDeleted": "has been removed from your habits",
+    "undoCompletion": "Completion undone",
+    "completionUndone": "Completion mark removed from {habitName}",
+    "delete": "Delete",
+    "deleteConfirm": "Confirm Delete",
+    "deleteHabitConfirmText": "Are you sure you want to delete {habitName}? This action cannot be undone.",
+    "daysPerWeek": "days per week",
+    "activityOverview": "Activity Overview"
+  },
+  "footer": {
+    "about": "About",
+    "privacy": "Privacy",
+    "terms": "Terms",
+    "github": "GitHub",
+    "copyright": "Streak Calendar",
+    "madeWith": "Made with",
+    "and": "and",
+    "by": "by",
+    "love": "love"
+  },
+  "about": {
+    "title": "About Streak Calendar",
+    "intro": "Inspired by Jerry Seinfeld's legendary \"Don't Break the Chain\" method, Streak Calendar is designed to help you build better habits and conquer procrastination. By making consistency fun and rewarding, it turns daily habit tracking into a simple, motivating experience.",
+    "whatItIs": {
+      "title": "What It Is",
+      "description": "Streak Calendar is an open source productivity tool that combines habit tracking, task timing, and progress visualization. It supports multiple calendars and habits, allowing you to customize your approach to personal growth. Featuring an activity grid similar to GitHub's contribution tracker, it offers a clear view of your achievements over time."
+    },
+    "features": {
+      "title": "Features",
+      "visualTracking": {
+        "title": "Visual Habit Tracking",
+        "description": "Mark daily accomplishments with X's and keep your streak alive"
+      },
+      "multiHabit": {
+        "title": "Multi-Habit Support",
+        "description": "Create multiple calendars and assign habits to each"
+      },
+      "customThemes": {
+        "title": "Customizable Themes",
+        "description": "Personalize each calendar with a unique color theme"
+      },
+      "timedTasks": {
+        "title": "Timed Tasks",
+        "description": "Use the built-in timer to track task durations and mark them complete"
+      },
+      "activityGrid": {
+        "title": "Activity Grid",
+        "description": "See your annual progress in a grid layout inspired by GitHub's contribution tracker"
+      },
+      "flexibleDuration": {
+        "title": "Flexible Habit Duration",
+        "description": "Set custom durations for habits to match your needs"
+      },
+      "openSource": {
+        "title": "Open Source",
+        "description": "A tool built for the community, by the community"
+      }
+    },
+    "openSourceProject": {
+      "title": "Open Source Project",
+      "description": "Streak Calendar is open source to encourage transparency and collaboration. Contributions and innovations from users are welcome, helping to continuously improve the tool and make it even more effective for everyone.",
+      "creatorQuote": "Hi, I'm Ilya Aizenberg, the creator of Streak Calendar. This project combines my passion for productivity and tech to offer a simple yet powerful tool for personal growth. I hope you find it as valuable as I do.",
+      "viewOnGithub": "View on GitHub"
+    },
+    "seinfeldStrategy": {
+      "title": "The Seinfeld Strategy",
+      "description": "The story behind this method comes from Brad Isaac, a young comedian who met Jerry Seinfeld backstage and asked for advice. Seinfeld told him that to be a better comic, he needed to create better jokes - and the way to create better jokes was to write every day.",
+      "quote": "He told me to get a big wall calendar that has a whole year on one page and hang it on a prominent wall. The next step was to get a big red magic marker. He said for each day that I do my task of writing, I get to put a big red X over that day. After a few days you'll have a chain. Just keep at it and the chain will grow longer every day. You'll like seeing that chain, especially when you get a few weeks under your belt. Your only job is to not break the chain.",
+      "whyItWorks": {
+        "title": "Why It Works",
+        "description": "The Seinfeld Strategy works because it shifts focus from individual performances to the process itself. Instead of worrying about how inspired you are or how brilliant your work is that day, you simply focus on showing up and not breaking the chain. This consistency is what separates top performers from everyone else.",
+        "principles": {
+          "title": "Key Principles:",
+          "items": [
+            "Choose a meaningful but sustainable daily task",
+            "Focus on the process, not the results",
+            "Build the chain one day at a time",
+            "Never break the chain"
+          ]
+        }
+      },
+      "attribution": "Content adapted from <link>James Clear's article</link> on the Seinfeld Strategy",
+      "articleUrl": "https://jamesclear.com/stop-procrastinating-seinfeld-strategy"
+    },
+    "getStarted": "Get Started",
+    "goToCalendars": "Go to Calendars"
+  },
+  "pricing": {
+    "title": "Simple, Transparent Pricing",
+    "subtitle": "Choose the plan that works best for you",
+    "billing": {
+      "monthly": "monthly",
+      "yearly": "yearly",
+      "savePercent": "Save 44%",
+      "perMonth": "${0} per month, billed annually"
+    },
+    "tiers": {
+      "free": {
+        "name": "Free",
+        "description": "Perfect for regular users",
+        "features": ["Up to 2 calendars", "Up to 2 habits per calendar", "90-day history"],
+        "cta": "Sign Up for Free"
+      },
+      "premium": {
+        "name": "Premium",
+        "description": "For power users",
+        "features": ["Unlimited calendars", "Unlimited habits per calendar", "Unlimited history", "Priority support"],
+        "cta": "Coming Soon"
+      }
+    },
+    "comingSoon": "Coming Soon",
+    "goToCalendars": "Go to Calendars"
+  }
+}
