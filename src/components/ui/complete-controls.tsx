@@ -27,6 +27,8 @@ interface CompleteControlsProps {
   timerDuration?: number;
   /** Callback triggered on completion (increment/decrement/timer finish) */
   onComplete?: () => void;
+  /** Name of the habit */
+  habitName: string;
 }
 
 export function CompleteControls({
@@ -36,6 +38,7 @@ export function CompleteControls({
   variant = "default",
   timerDuration,
   onComplete,
+  habitName,
 }: CompleteControlsProps) {
   const [isTimerModalOpen, setIsTimerModalOpen] = useState(false);
   const timerButtonRef = useRef<HTMLButtonElement>(null);
@@ -106,6 +109,7 @@ export function CompleteControls({
             setIsOpen={setIsTimerModalOpen}
             onComplete={handleTimerComplete}
             timerDuration={timerDuration}
+            habitName={habitName}
           />
         </div>
       );
@@ -140,6 +144,7 @@ export function CompleteControls({
             setIsOpen={setIsTimerModalOpen}
             onComplete={handleTimerComplete}
             timerDuration={timerDuration}
+            habitName={habitName}
           />
         </div>
       </div>

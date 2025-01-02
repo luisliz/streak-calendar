@@ -170,6 +170,7 @@ export const CalendarItem = ({
                     onDecrement={() => onToggleHabit(habit._id, today, todayCount - 1)}
                     variant="default"
                     timerDuration={habit.timerDuration}
+                    habitName={habit.name}
                   />
                 </div>
               );
@@ -218,6 +219,7 @@ export const CalendarItem = ({
                     onDecrement={() => onToggleHabit(habit._id, today, todayCount - 1)}
                     variant="default"
                     timerDuration={habit.timerDuration}
+                    habitName={habit.name}
                   />
                 </div>
                 {/* Calendar grid view */}

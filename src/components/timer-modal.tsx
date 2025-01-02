@@ -129,9 +129,10 @@ interface TimerModalProps {
   setIsOpen: (open: boolean) => void;
   onComplete?: () => void;
   timerDuration?: number; // in minutes
+  habitName: string;
 }
 
-export default function TimerModal({ isOpen, setIsOpen, onComplete, timerDuration = 25 }: TimerModalProps) {
+export default function TimerModal({ isOpen, setIsOpen, onComplete, timerDuration = 25, habitName }: TimerModalProps) {
   const [isTimerActive, setIsTimerActive] = useState(false);
   // Convert minutes to seconds for the timer
   const durationInSeconds = timerDuration * 60;
@@ -161,7 +162,7 @@ export default function TimerModal({ isOpen, setIsOpen, onComplete, timerDuratio
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-xl">
               <Clock className="h-5 w-5" />
-              {timerDuration} Minute Timer
+              {habitName} - {timerDuration} Minute Timer
             </DialogTitle>
           </DialogHeader>
         </div>
