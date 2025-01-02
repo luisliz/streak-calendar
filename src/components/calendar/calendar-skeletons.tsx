@@ -3,7 +3,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export function YearlyOverviewSkeleton() {
   return (
-    <div className="mt-2 flex flex-col items-center sm:mt-16">
+    <div className="mt-2 flex flex-col items-center sm:mt-4">
       <div className="w-[350px] pb-1 pl-2 sm:w-[400px] xl:w-[984px]">
         <Skeleton className="h-4 w-48" />
       </div>
