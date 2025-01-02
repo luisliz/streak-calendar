@@ -5,16 +5,30 @@ import { useState } from "react";
 
 import { api } from "@server/convex/_generated/api";
 
+/**
+ * Custom hook for handling calendar data import/export functionality.
+ * Manages dialog states and provides methods for importing/exporting JSON data.
+ */
+
 export function useImportExport() {
   const { toast } = useToast();
+  // Dialog visibility states
   const [showImportExportDialog, setShowImportExportDialog] = useState(false);
   const [showExportDialog, setShowExportDialog] = useState(false);
   const [showImportDialog, setShowImportDialog] = useState(false);
+  // Currently selected file for import
   const [importFile, setImportFile] = useState<File | null>(null);
 
+  // Fetch user's calendar data for export
   const exportData = useQuery(api.calendars.exportData);
+  // Mutation for importing calendar data
   const importData = useMutation(api.calendars.importData);
 
+  /**
+   * Handles the export confirmation action.
+   * Creates and downloads a JSON file containing the user's calendar data
+   * with a timestamp in the filename.
+   */
   const handleExportConfirm = () => {
     setShowExportDialog(false);
     if (!exportData) return;
@@ -30,6 +44,10 @@ export function useImportExport() {
     URL.revokeObjectURL(url);
   };
 
+  /**
+   * Handles file selection for import.
+   * Updates the importFile state and shows the import confirmation dialog.
+   */
   const handleImportSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -39,6 +57,11 @@ export function useImportExport() {
     e.target.value = "";
   };
 
+  /**
+   * Processes the selected file for import.
+   * Validates JSON format and imports data using the API.
+   * Shows success/error toast notifications based on the result.
+   */
   const handleImportConfirm = async () => {
     if (!importFile) return;
 
@@ -62,14 +85,17 @@ export function useImportExport() {
   };
 
   return {
+    // Dialog visibility controls
     showImportExportDialog,
     setShowImportExportDialog,
     showExportDialog,
     setShowExportDialog,
     showImportDialog,
     setShowImportDialog,
+    // Import file state
     importFile,
     setImportFile,
+    // Handler functions
     handleExportConfirm,
     handleImportSelect,
     handleImportConfirm,

@@ -1,8 +1,9 @@
+import { useMemo } from "react";
+
 /**
  * Custom hook for generating a date range for habit tracking
  * Provides today's date, a start date, and an array of dates in between
  */
-import { useMemo } from "react";
 
 /**
  * Generates an array of dates between today and a specified number of days in the past

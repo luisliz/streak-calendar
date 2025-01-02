@@ -2,13 +2,6 @@ import { Calendar, EditingCalendar } from "@/types";
 import { useState } from "react";
 
 /**
- * Defines the two possible calendar visualization modes:
- * - monthRow: Displays habits in a horizontal timeline view
- * - monthGrid: Shows a traditional calendar grid layout (3 months on desktop, 1 on mobile)
- */
-type CalendarView = "monthRow" | "monthGrid";
-
-/**
  * Custom hook for managing calendar-related state in the application.
  * Handles all state management for:
  * - Calendar view mode (grid vs row layout)
@@ -19,6 +12,14 @@ type CalendarView = "monthRow" | "monthGrid";
  * This hook centralizes all calendar UI state to make it easier to manage
  * across different components without prop drilling.
  */
+
+/**
+ * Defines the two possible calendar visualization modes:
+ * - monthRow: Displays habits in a horizontal timeline view
+ * - monthGrid: Shows a traditional calendar grid layout (3 months on desktop, 1 on mobile)
+ */
+type CalendarView = "monthRow" | "monthGrid";
+
 export function useCalendarState() {
   // View mode state - controls how calendars are displayed
   // Change this value to switch between default views: "monthRow" | "monthGrid"
