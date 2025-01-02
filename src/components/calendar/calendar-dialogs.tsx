@@ -48,6 +48,23 @@ export const COLORS = [
 ];
 
 /**
+ * Predefined timer durations in minutes.
+ * Starts with short durations and increases by 15-minute intervals up to 2 hours.
+ */
+export const TIMER_DURATIONS = [
+  { name: "1 minute", value: 1 },
+  { name: "2 minutes", value: 2 },
+  { name: "5 minutes", value: 5 },
+  { name: "10 minutes", value: 10 },
+  { name: "15 minutes", value: 15 },
+  { name: "30 minutes", value: 30 },
+  { name: "45 minutes", value: 45 },
+  { name: "1 hour", value: 60 },
+  { name: "1 hour 30 minutes", value: 90 },
+  { name: "2 hours", value: 120 },
+];
+
+/**
  * Dialog component for creating a new calendar.
  * Provides form fields for:
  * - Calendar name input
@@ -177,20 +194,11 @@ export const NewHabitDialog = ({
   timerDuration,
 }: NewHabitDialogProps) => {
   const [localName, setLocalName] = useState(name);
-  const [localDuration, setLocalDuration] = useState<string>(timerDuration?.toString() || "");
   const debouncedName = useDebounce(localName);
-  const debouncedDuration = useDebounce(localDuration);
 
   useEffect(() => {
     onNameChange(debouncedName);
   }, [debouncedName, onNameChange]);
-
-  useEffect(() => {
-    const val = debouncedDuration ? parseInt(debouncedDuration) : undefined;
-    if (!val || (val >= 1 && val <= 120)) {
-      onTimerDurationChange(val);
-    }
-  }, [debouncedDuration, onTimerDurationChange]);
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
@@ -210,17 +218,22 @@ export const NewHabitDialog = ({
             />
           </div>
           <div>
-            <Label htmlFor="timer-duration">Timer Duration (minutes)</Label>
-            <Input
-              id="timer-duration"
-              type="number"
-              min={1}
-              max={120}
-              value={localDuration}
-              onChange={(e) => setLocalDuration(e.target.value)}
-              onKeyDown={onKeyDown}
-              placeholder="Optional timer duration"
-            />
+            <Label>Timer Duration</Label>
+            <Select
+              value={timerDuration?.toString()}
+              onValueChange={(value) => onTimerDurationChange(value ? parseInt(value) : undefined)}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select duration (optional)" />
+              </SelectTrigger>
+              <SelectContent>
+                {TIMER_DURATIONS.map((duration) => (
+                  <SelectItem key={duration.value} value={duration.value.toString()}>
+                    {duration.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
           <div className="flex gap-2">
             <Button variant="outline" onClick={() => onOpenChange(false)} className="flex-1">
@@ -398,29 +411,16 @@ export const EditHabitDialog = ({
   timerDuration,
 }: EditHabitDialogProps) => {
   const [localName, setLocalName] = useState(name);
-  const [localDuration, setLocalDuration] = useState(timerDuration?.toString() ?? "");
   const [showDeleteAlert, setShowDeleteAlert] = useState(false);
   const debouncedName = useDebounce(localName);
-  const debouncedDuration = useDebounce(localDuration);
 
   useEffect(() => {
     setLocalName(name);
   }, [name]);
 
   useEffect(() => {
-    setLocalDuration(timerDuration?.toString() ?? "");
-  }, [timerDuration]);
-
-  useEffect(() => {
     onNameChange(debouncedName);
   }, [debouncedName, onNameChange]);
-
-  useEffect(() => {
-    const val = debouncedDuration ? parseInt(debouncedDuration) : undefined;
-    if (!val || (val >= 1 && val <= 120)) {
-      onTimerDurationChange(val);
-    }
-  }, [debouncedDuration, onTimerDurationChange]);
 
   return (
     <>
@@ -440,17 +440,22 @@ export const EditHabitDialog = ({
               />
             </div>
             <div>
-              <Label htmlFor="edit-timer-duration">Timer Duration (minutes)</Label>
-              <Input
-                id="edit-timer-duration"
-                type="number"
-                min={1}
-                max={120}
-                value={localDuration}
-                onChange={(e) => setLocalDuration(e.target.value)}
-                onKeyDown={onKeyDown}
-                placeholder="Optional timer duration"
-              />
+              <Label>Timer Duration</Label>
+              <Select
+                value={timerDuration?.toString()}
+                onValueChange={(value) => onTimerDurationChange(value ? parseInt(value) : undefined)}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select duration (optional)" />
+                </SelectTrigger>
+                <SelectContent>
+                  {TIMER_DURATIONS.map((duration) => (
+                    <SelectItem key={duration.value} value={duration.value.toString()}>
+                      {duration.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
             <div className="flex gap-2">
               <Button variant="outline" onClick={() => onOpenChange(false)} className="flex-1">
