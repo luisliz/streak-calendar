@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { ConfettiButton } from "@/components/ui/confetti";
 import { xLogoPath } from "@/components/ui/x-logo";
+import NumberFlow from "@number-flow/react";
 import confettiLib from "canvas-confetti";
 import { Minus, Plus, Timer } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -157,7 +158,9 @@ export function CompleteControls({
           >
             <Minus className="h-4 w-4" />
           </Button>
-          <span className="w-[72px] text-center font-medium">{count}</span>
+          <span className="w-[72px] text-center font-medium">
+            <NumberFlow value={count} format={{ style: "decimal" }} />
+          </span>
           <Button
             ref={timerButtonRef}
             variant={variant}
@@ -206,7 +209,9 @@ export function CompleteControls({
         >
           <Minus className="h-4 w-4" />
         </Button>
-        <span className="w-[72px] text-center font-medium">{count}</span>
+        <span className="w-[72px] text-center font-medium">
+          <NumberFlow value={count} format={{ style: "decimal" }} />
+        </span>
         <ConfettiButton
           variant={variant}
           size="icon"
