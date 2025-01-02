@@ -109,6 +109,13 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={cn(inter.variable, "min-h-screen bg-background font-sans antialiased", "grid-background")}>
+        <noscript>
+          <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-background">
+            <p className="rounded border bg-card px-6 py-4 text-center shadow-lg">
+              Please enable JavaScript to use this app.
+            </p>
+          </div>
+        </noscript>
         {/* Background gradient overlay */}
         <div className="fixed inset-0 bg-gradient-to-t from-muted to-transparent" />
 
