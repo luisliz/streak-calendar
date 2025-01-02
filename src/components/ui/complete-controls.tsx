@@ -1,12 +1,13 @@
 "use client";
 
+import TimerModal from "@/components/timer-modal";
 import { Button } from "@/components/ui/button";
 import { ConfettiButton } from "@/components/ui/confetti";
 import { xLogoPath } from "@/components/ui/x-logo";
 import NumberFlow from "@number-flow/react";
 import confettiLib from "canvas-confetti";
 import { Minus, Plus, Timer } from "lucide-react";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 
 /**
  * A versatile control component that handles completion tracking with optional timer functionality.
@@ -36,9 +37,7 @@ export function CompleteControls({
   timerDuration,
   onComplete,
 }: CompleteControlsProps) {
-  // Timer state management
-  const [isTimerRunning, setIsTimerRunning] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(0);
+  const [isTimerModalOpen, setIsTimerModalOpen] = useState(false);
   const timerButtonRef = useRef<HTMLButtonElement>(null);
 
   // Handlers for increment/decrement with completion callback
@@ -77,48 +76,16 @@ export function CompleteControls({
     [confettiShape]
   );
 
-  // Initialize timer with duration in minutes converted to seconds
-  const startTimer = useCallback(() => {
-    if (timerDuration) {
-      setTimeLeft(timerDuration * 60);
-      setIsTimerRunning(true);
+  const handleTimerComplete = useCallback(() => {
+    // Trigger confetti at the timer button's position
+    if (timerButtonRef.current) {
+      const rect = timerButtonRef.current.getBoundingClientRect();
+      const x = (rect.left + rect.width / 2) / window.innerWidth;
+      const y = rect.top / window.innerHeight;
+      confettiLib(getConfettiOptions({ x, y }));
     }
-  }, [timerDuration]);
-
-  // Timer countdown effect
-  useEffect(() => {
-    if (!isTimerRunning || timeLeft <= 0) return;
-
-    const interval = setInterval(() => {
-      setTimeLeft((prev) => {
-        if (prev <= 1) {
-          setIsTimerRunning(false);
-          // Trigger confetti at the timer button's position
-          if (timerButtonRef.current) {
-            const rect = timerButtonRef.current.getBoundingClientRect();
-            const x = (rect.left + rect.width / 2) / window.innerWidth;
-            const y = rect.top / window.innerHeight;
-            confettiLib(getConfettiOptions({ x, y }));
-          }
-          onIncrement();
-          onComplete?.();
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, [isTimerRunning, timeLeft, onIncrement, getConfettiOptions, onComplete]);
-
-  /**
-   * Formats seconds into MM:SS display format
-   */
-  const formatTime = (seconds: number) => {
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-    return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
-  };
+    handleIncrement();
+  }, [getConfettiOptions, handleIncrement]);
 
   // Timer mode with count = 0: Show start button
   if (timerDuration) {
@@ -130,18 +97,16 @@ export function CompleteControls({
             variant={variant}
             size="sm"
             className="flex h-6 w-[96px] items-center justify-center text-xs"
-            onClick={startTimer}
-            disabled={isTimerRunning}
+            onClick={() => setIsTimerModalOpen(true)}
           >
-            {isTimerRunning ? (
-              <>
-                <Timer className="h-3 w-3" />
-                {formatTime(timeLeft)}
-              </>
-            ) : (
-              "Start"
-            )}
+            Start Timer
           </Button>
+          <TimerModal
+            isOpen={isTimerModalOpen}
+            setIsOpen={setIsTimerModalOpen}
+            onComplete={handleTimerComplete}
+            timerDuration={timerDuration}
+          />
         </div>
       );
     }
@@ -166,15 +131,16 @@ export function CompleteControls({
             variant={variant}
             size="icon"
             className="aspect-square h-6 w-6 rounded-full p-0"
-            onClick={startTimer}
-            disabled={isTimerRunning}
+            onClick={() => setIsTimerModalOpen(true)}
           >
-            {isTimerRunning ? (
-              <span className="text-[10px] font-medium">{formatTime(timeLeft)}</span>
-            ) : (
-              <Timer className="h-4 w-4" />
-            )}
+            <Timer className="h-4 w-4" />
           </Button>
+          <TimerModal
+            isOpen={isTimerModalOpen}
+            setIsOpen={setIsTimerModalOpen}
+            onComplete={handleTimerComplete}
+            timerDuration={timerDuration}
+          />
         </div>
       </div>
     );
