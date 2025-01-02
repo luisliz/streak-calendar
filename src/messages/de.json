@@ -1,0 +1,158 @@
+{
+  "app": {
+    "name": "Streak Calendar",
+    "description": "Verfolge deine Gewohnheiten und verbessere dein Leben"
+  },
+  "nav": {
+    "home": "Startseite",
+    "calendar": "Kalender",
+    "about": "Über uns",
+    "pricing": "Preise",
+    "getStarted": "Loslegen",
+    "app": {
+      "name": "Streak Calendar"
+    }
+  },
+  "home": {
+    "title": "Verfolge deine Gewohnheiten,\nbaue bessere Routinen auf",
+    "subtitle": "Einfaches und visuelles Gewohnheits-Tracking, das dir hilft, Konsistenz aufzubauen und deine Ziele zu erreichen. Unterbreche nicht die Kette und beobachte deinen Fortschritt.",
+    "getStarted": "Kostenlos Starten",
+    "goToCalendar": "Zum Kalender",
+    "learnMore": "Mehr erfahren",
+    "hero": {
+      "title": "Baue dauerhafte Gewohnheiten mit Streak Calendar auf",
+      "subtitle": "Ein einfaches, motivierendes Produktivitätstool, das dir hilft, deine Ziele Tag für Tag zu erreichen. 💪",
+      "features": {
+        "visualTracking": {
+          "title": "Visuelles Gewohnheits-Tracking",
+          "description": {
+            "part1": "Markiere deine täglichen Erfolge mit einem",
+            "part2": "und beobachte, wie deine Serie wächst"
+          }
+        },
+        "multiHabit": {
+          "title": "Mehrfach-Gewohnheiten",
+          "description": "Verfolge mehrere Gewohnheiten in anpassbaren Kalendern"
+        },
+        "yearlyGrid": {
+          "title": "Jahresübersicht",
+          "description": "Erhalte eine Jahresansicht deines Fortschritts, inspiriert von GitHub"
+        },
+        "timedTasks": {
+          "title": "Zeitgesteuerte Aufgaben",
+          "description": "Bleibe fokussiert mit optionalen Timern für deine Gewohnheiten"
+        }
+      },
+      "motivation": "Hilft Menschen weltweit, bessere Gewohnheiten aufzubauen und täglich motiviert zu bleiben!"
+    }
+  },
+  "footer": {
+    "about": "Über uns",
+    "privacy": "Datenschutz",
+    "terms": "Nutzungsbedingungen",
+    "github": "GitHub",
+    "copyright": "Streak Calendar",
+    "madeWith": "Erstellt mit",
+    "and": "und",
+    "by": "von",
+    "love": "Liebe"
+  },
+  "about": {
+    "title": "Über Streak Calendar",
+    "intro": "Inspiriert von Jerry Seinfelds legendärer \"Don't Break the Chain\"-Methode wurde Streak Calendar entwickelt, um dir zu helfen, bessere Gewohnheiten aufzubauen und Prokrastination zu überwinden. Durch die Verwandlung von Konsistenz in eine unterhaltsame und lohnende Erfahrung macht es das tägliche Gewohnheits-Tracking einfach und motivierend.",
+    "whatItIs": {
+      "title": "Was es ist",
+      "description": "Streak Calendar ist ein Open-Source-Produktivitätstool, das Gewohnheits-Tracking, Zeiterfassung und Fortschrittsvisualisierung kombiniert. Es unterstützt mehrere Kalender und Gewohnheiten und ermöglicht dir, deinen Ansatz zur persönlichen Entwicklung anzupassen. Mit einem Aktivitätsraster ähnlich dem GitHub-Beitragsverfolger bietet es einen klaren Überblick über deine Erfolge im Laufe der Zeit."
+    },
+    "features": {
+      "title": "Funktionen",
+      "visualTracking": {
+        "title": "Visuelles Gewohnheits-Tracking",
+        "description": "Markiere tägliche Erfolge mit X und halte deine Serie am Leben"
+      },
+      "multiHabit": {
+        "title": "Mehrfach-Gewohnheiten",
+        "description": "Erstelle mehrere Kalender und weise ihnen Gewohnheiten zu"
+      },
+      "customThemes": {
+        "title": "Anpassbare Designs",
+        "description": "Personalisiere jeden Kalender mit einem einzigartigen Farbschema"
+      },
+      "timedTasks": {
+        "title": "Zeitgesteuerte Aufgaben",
+        "description": "Nutze den eingebauten Timer, um Aufgabendauer zu verfolgen"
+      },
+      "activityGrid": {
+        "title": "Aktivitätsraster",
+        "description": "Siehe deinen Jahresfortschritt in einem von GitHub inspirierten Rasterlayout"
+      },
+      "flexibleDuration": {
+        "title": "Flexible Gewohnheitsdauer",
+        "description": "Lege benutzerdefinierte Dauern für Gewohnheiten fest"
+      },
+      "openSource": {
+        "title": "Open Source",
+        "description": "Ein Tool von der Community für die Community"
+      }
+    },
+    "openSourceProject": {
+      "title": "Open Source Projekt",
+      "description": "Streak Calendar ist Open Source, um Transparenz und Zusammenarbeit zu fördern. Beiträge und Innovationen von Nutzern sind willkommen und helfen dabei, das Tool kontinuierlich zu verbessern und für alle noch effektiver zu machen.",
+      "creatorQuote": "Hallo, ich bin Ilya Aizenberg, der Entwickler von Streak Calendar. Dieses Projekt verbindet meine Leidenschaft für Produktivität und Technologie, um ein einfaches, aber leistungsstarkes Tool für persönliches Wachstum anzubieten. Ich hoffe, Sie finden es genauso wertvoll wie ich.",
+      "viewOnGithub": "Auf GitHub ansehen"
+    },
+    "seinfeldStrategy": {
+      "title": "Die Seinfeld-Strategie",
+      "description": "Die Geschichte dieser Methode stammt von Brad Isaac, einem jungen Comedian, der Jerry Seinfeld hinter der Bühne traf und um Rat fragte. Seinfeld sagte ihm, dass er, um ein besserer Comedian zu werden, bessere Witze schreiben müsse - und der Weg zu besseren Witzen sei es, jeden Tag zu schreiben.",
+      "quote": "Er sagte mir, ich solle einen großen Wandkalender nehmen, der ein ganzes Jahr auf einer Seite zeigt, und ihn an eine auffällige Wand hängen. Der nächste Schritt war, einen großen roten Marker zu besorgen. Er sagte, für jeden Tag, an dem ich meine Schreibaufgabe erledige, dürfe ich ein großes rotes X über diesen Tag setzen. Nach ein paar Tagen hat man eine Kette. Bleib einfach dran, und die Kette wird jeden Tag länger. Du wirst diese Kette mögen, besonders wenn du ein paar Wochen geschafft hast. Deine einzige Aufgabe ist es, die Kette nicht zu unterbrechen.",
+      "whyItWorks": {
+        "title": "Warum es funktioniert",
+        "description": "Die Seinfeld-Strategie funktioniert, weil sie den Fokus von einzelnen Leistungen auf den Prozess selbst verlagert. Anstatt sich Sorgen zu machen, wie inspiriert man ist oder wie brillant die Arbeit an diesem Tag ist, konzentriert man sich einfach darauf, präsent zu sein und die Kette nicht zu unterbrechen. Diese Beständigkeit ist es, die Spitzenleister von allen anderen unterscheidet.",
+        "principles": {
+          "title": "Kernprinzipien:",
+          "items": [
+            "Wähle eine bedeutsame, aber nachhaltige tägliche Aufgabe",
+            "Konzentriere dich auf den Prozess, nicht auf die Ergebnisse",
+            "Baue die Kette Tag für Tag auf",
+            "Unterbreche niemals die Kette"
+          ]
+        }
+      },
+      "attribution": "Inhalt adaptiert von <link>James Clears Artikel</link> über die Seinfeld-Strategie",
+      "articleUrl": "https://jamesclear.com/stop-procrastinating-seinfeld-strategy"
+    },
+    "getStarted": "Jetzt Starten",
+    "goToCalendars": "Zu den Kalendern"
+  },
+  "pricing": {
+    "title": "Einfache, transparente Preise",
+    "subtitle": "Wähle den Plan, der am besten zu dir passt",
+    "billing": {
+      "monthly": "monatlich",
+      "yearly": "jährlich",
+      "savePercent": "44% sparen",
+      "perMonth": "${0} pro Monat, jährlich abgerechnet"
+    },
+    "tiers": {
+      "free": {
+        "name": "Kostenlos",
+        "description": "Perfekt für regelmäßige Nutzer",
+        "features": ["Bis zu 2 Kalender", "Bis zu 2 Gewohnheiten pro Kalender", "90-Tage-Verlauf"],
+        "cta": "Kostenlos registrieren"
+      },
+      "premium": {
+        "name": "Premium",
+        "description": "Für Power-User",
+        "features": [
+          "Unbegrenzte Kalender",
+          "Unbegrenzte Gewohnheiten pro Kalender",
+          "Unbegrenzter Verlauf",
+          "Prioritäts-Support"
+        ],
+        "cta": "Demnächst verfügbar"
+      }
+    },
+    "comingSoon": "Demnächst verfügbar",
+    "goToCalendars": "Zu den Kalendern"
+  }
+}

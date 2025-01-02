@@ -1,16 +1,19 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
+import { Link } from "@/i18n/routing";
 import { SignedIn, SignedOut } from "@clerk/nextjs";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
-import Link from "next/link";
+import NextLink from "next/link";
 
 // About page component that provides information about the Streak Calendar application
 // Includes sections for app description, features, project info, and the Seinfeld Strategy
 
-export default function AboutPage() {
+export default function AboutPage({ params: { locale } }: { params: { locale: string } }) {
   const t = useTranslations("about");
+
+  const isRTL = locale === "he";
 
   return (
     // Main container with responsive width and vertical spacing
@@ -77,7 +80,7 @@ export default function AboutPage() {
         <CardContent>
           <p className="mb-4 text-muted-foreground">{t("openSourceProject.description")}</p>
           <div className="flex items-end">
-            <div className="mt-4 rounded-sm rounded-br-none bg-muted p-4">
+            <div className={`mt-4 rounded-3xl ${isRTL ? "rounded-bl-none" : "rounded-br-none"} bg-muted p-4`}>
               <p className="italic text-muted-foreground">{t("openSourceProject.creatorQuote")}</p>
             </div>
 
@@ -89,9 +92,9 @@ export default function AboutPage() {
         </CardContent>
         <CardFooter className="flex gap-4">
           <Button asChild variant="outline" size="lg">
-            <Link href="https://github.com/ilyaizen/streak-calendar" target="_blank" rel="noopener noreferrer">
+            <NextLink href="https://github.com/ilyaizen/streak-calendar" target="_blank" rel="noopener noreferrer">
               {t("openSourceProject.viewOnGithub")}
-            </Link>
+            </NextLink>
           </Button>
         </CardFooter>
       </Card>
@@ -108,7 +111,7 @@ export default function AboutPage() {
               src="/never-miss-twice.jpg"
               alt="Never miss twice calendar visualization"
               fill
-              className="rounded-sm object-cover"
+              className="rounded object-cover"
             />
           </div>
 
@@ -129,7 +132,7 @@ export default function AboutPage() {
             <p className="text-muted-foreground">{t("seinfeldStrategy.whyItWorks.description")}</p>
 
             {/* Key principles summary box */}
-            <div className="mt-6 rounded-sm bg-muted p-4">
+            <div className="mt-6 rounded-3xl bg-muted p-4">
               <h4 className="flex justify-center font-bold">{t("seinfeldStrategy.whyItWorks.principles.title")}</h4>
               <ul className="mt-2 list-disc pl-6 text-muted-foreground">
                 {[0, 1, 2, 3].map((index) => (
@@ -144,14 +147,14 @@ export default function AboutPage() {
           <p className="text-sm text-muted-foreground">
             {t.rich("seinfeldStrategy.attribution", {
               link: (chunks) => (
-                <Link
+                <NextLink
                   href={t("seinfeldStrategy.articleUrl")}
                   className="font-bold hover:text-primary hover:underline"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
                   {chunks}
-                </Link>
+                </NextLink>
               ),
             })}
           </p>
@@ -162,12 +165,16 @@ export default function AboutPage() {
       <div className="flex justify-center">
         <SignedIn>
           <Button asChild size="lg">
-            <Link href="/calendars">{t("goToCalendars")}</Link>
+            <Link href="/calendars" locale={locale}>
+              {t("goToCalendars")}
+            </Link>
           </Button>
         </SignedIn>
         <SignedOut>
           <Button asChild size="lg">
-            <Link href="/pricing">{t("getStarted")}</Link>
+            <Link href="/pricing" locale={locale}>
+              {t("getStarted")}
+            </Link>
           </Button>
         </SignedOut>
       </div>

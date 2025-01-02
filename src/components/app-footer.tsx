@@ -1,15 +1,23 @@
 "use client";
 
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { locales } from "@/i18n/settings";
 import { useLocale, useTranslations } from "next-intl";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-const flagMap = {
-  en: "us",
-  he: "il",
-  ru: "ru",
+const languageMap = {
+  en: { name: "English", flagSrc: "/flag-us.png" },
+  de: { name: "Deutsch", flagSrc: "/flag-de.png" },
+  ru: { name: "Русский", flagSrc: "/flag-ru.png" },
+  hi: { name: "हिन्दी", flagSrc: "/flag-in.png" },
+  he: { name: "עברית", flagSrc: "/flag-il.png" },
 } as const;
 
 export function AppFooter() {
@@ -126,26 +134,47 @@ export function AppFooter() {
             </a>
           </div>
           <div className="h-4 w-px bg-border md:h-6" />
-          <div className="flex items-center gap-1">
-            {locales.map((l) => (
-              <Link
-                key={l}
-                href={redirectedPathname(l)}
-                className={`flex h-8 w-8 items-center justify-center rounded-md p-1 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground ${
-                  l === locale ? "bg-accent text-accent-foreground" : "text-muted-foreground"
-                }`}
+          {/* language switcher */}
+          <DropdownMenu>
+            <DropdownMenuTrigger className="p-1 text-muted-foreground hover:text-foreground md:p-1.5">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                className="size-4 md:size-5"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
               >
-                <Image
-                  src={`/flag-${flagMap[l]}.png`}
-                  alt={l.toUpperCase()}
-                  className="size-5 rounded-[4px]"
-                  width={20}
-                  height={20}
-                  unoptimized
-                />
-              </Link>
-            ))}
-          </div>
+                <path d="M4 5h7" />
+                <path d="M9 3v2c0 4.418 -2.239 8 -5 8" />
+                <path d="M5 9c0 2.144 2.952 3.908 6.7 4" />
+                <path d="M12 20l4 -9l4 9" />
+                <path d="M19.1 18h-6.2" />
+              </svg>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {locales.map((l) => (
+                <DropdownMenuItem key={l} asChild>
+                  <Link
+                    href={redirectedPathname(l)}
+                    className={`flex w-full items-center gap-2 ${l === locale ? "font-medium" : ""}`}
+                  >
+                    <Image
+                      src={languageMap[l].flagSrc}
+                      alt={l.toUpperCase()}
+                      className="size-4 rounded-[3px]"
+                      width={16}
+                      height={16}
+                      unoptimized
+                    />
+                    <span>{languageMap[l].name}</span>
+                  </Link>
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
     </footer>
