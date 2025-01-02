@@ -5,9 +5,14 @@ import { SignedIn, SignedOut } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
 
+// About page component that provides information about the Streak Calendar application
+// Includes sections for app description, features, project info, and the Seinfeld Strategy
+
 export default function AboutPage() {
   return (
+    // Main container with responsive width and vertical spacing
     <div className="container mx-auto w-full max-w-3xl space-y-8 py-16">
+      {/* Introduction Card: Overview of Streak Calendar */}
       <Card className="p-4 shadow">
         <CardHeader>
           <h1 className="font-heading text-4xl font-bold">About Streak Calendar</h1>
@@ -31,11 +36,13 @@ export default function AboutPage() {
         </CardContent>
       </Card>
 
+      {/* Features Card: List of key application capabilities */}
       <Card className="p-4 shadow">
         <CardHeader>
           <h2 className="font-heading text-2xl font-bold">Features</h2>
         </CardHeader>
         <CardContent>
+          {/* Feature list with primary headings and muted descriptions */}
           <ul className="space-y-4 text-muted-foreground">
             <li>
               <strong className="text-primary">Visual Habit Tracking</strong>
@@ -69,6 +76,7 @@ export default function AboutPage() {
         </CardContent>
       </Card>
 
+      {/* Open Source Card: Project information and creator introduction */}
       <Card className="p-4 shadow">
         <CardHeader>
           <h2 className="font-heading text-2xl font-bold">Open Source Project</h2>
@@ -103,11 +111,13 @@ export default function AboutPage() {
         </CardFooter>
       </Card>
 
+      {/* Seinfeld Strategy Card: Explanation of the methodology */}
       <Card className="p-4 shadow">
         <CardHeader>
           <h2 className="font-heading text-2xl font-bold">The Seinfeld Strategy</h2>
         </CardHeader>
         <CardContent className="space-y-6">
+          {/* Visual representation of the "Never miss twice" concept */}
           <div className="relative aspect-video w-full md:w-2/3">
             <Image
               src="/never-miss-twice.jpg"
@@ -118,12 +128,14 @@ export default function AboutPage() {
           </div>
 
           <div className="">
+            {/* Strategy explanation and origin story */}
             <p className="text-muted-foreground">
               The story behind this method comes from Brad Isaac, a young comedian who met Jerry Seinfeld backstage and
               asked for advice. Seinfeld told him that to be a better comic, he needed to create better jokes - and the
               way to create better jokes was to write every day.
             </p>
 
+            {/* Direct quote from the strategy's origin */}
             <blockquote className="my-6 border-l-2 pl-6 italic text-muted-foreground">
               &quot;He told me to get a big wall calendar that has a whole year on one page and hang it on a prominent
               wall. The next step was to get a big red magic marker. He said for each day that I do my task of writing,
@@ -132,12 +144,14 @@ export default function AboutPage() {
               under your belt. Your only job is to not break the chain.&quot;
             </blockquote>
 
+            {/* Explanation of the strategy's effectiveness */}
             <p className="text-muted-foreground">
               What makes this strategy powerful is its simplicity. It doesn&apos;t matter if you&apos;re motivated or
               not. It doesn&apos;t matter if you&apos;re producing great work or not. All that matters is not breaking
               the chain.
             </p>
 
+            {/* Detailed breakdown of why the strategy is successful */}
             <h3 className="mb-6 mt-6 text-xl font-bold">Why It Works</h3>
             <p className="text-muted-foreground">
               The Seinfeld Strategy works because it shifts focus from individual performances to the process itself.
@@ -146,6 +160,7 @@ export default function AboutPage() {
               else.
             </p>
 
+            {/* Key principles summary box */}
             <div className="mt-6 rounded-sm bg-muted p-4">
               <h4 className="flex justify-center font-bold">Key Principles:</h4>
               <ul className="mt-2 list-disc pl-6 text-muted-foreground">
@@ -157,6 +172,7 @@ export default function AboutPage() {
             </div>
           </div>
         </CardContent>
+        {/* Attribution footer */}
         <CardFooter>
           <p className="text-sm text-muted-foreground">
             Content adapted from{" "}
@@ -173,6 +189,7 @@ export default function AboutPage() {
         </CardFooter>
       </Card>
 
+      {/* Call-to-action buttons - different options for signed-in vs signed-out users */}
       <div className="flex justify-center">
         <SignedIn>
           <Button asChild size="lg">

@@ -10,7 +10,20 @@ import { useHabitState } from "@/hooks/use-habit-state";
 import { SignInButton, SignedIn, SignedOut } from "@clerk/nextjs";
 import { useMemo } from "react";
 
-// Authentication wrapper component
+/**
+ * Calendar Page Component
+ *
+ * This client-side component serves as the main calendar view page, featuring:
+ * - Monthly and yearly calendar views
+ * - Authentication protection
+ * - Data prefetching for both view modes
+ * - Habit and completion tracking
+ */
+
+/**
+ * Authentication wrapper component that handles user authentication state
+ * Shows sign-in button for unauthenticated users and renders children for authenticated users
+ */
 const AuthenticationWrapper = ({ children }: { children: React.ReactNode }) => (
   <>
     <SignedIn>{children}</SignedIn>
@@ -27,23 +40,25 @@ const AuthenticationWrapper = ({ children }: { children: React.ReactNode }) => (
   </>
 );
 
-// Main calendar page component
 export default function CalendarsPage() {
+  // Initialize calendar view state and habit management
   const { calendarView, setCalendarView, ...calendarState } = useCalendarState();
   const habitState = useHabitState();
 
-  // Pre-fetch data for both views
+  // Pre-fetch data for both monthly (90 days) and yearly (365 days) views
+  // This ensures smooth transitions between views without loading states
   const monthData = useDateRange(90);
   const yearData = useDateRange(365);
   const monthViewData = useCalendarData(monthData.startDate, monthData.today);
   const yearViewData = useCalendarData(yearData.startDate, yearData.today);
 
-  // Use appropriate data based on view
+  // Dynamically select date range based on current view
   const { days } = useMemo(
     () => (calendarView === "monthRow" ? monthData : yearData),
     [calendarView, monthData, yearData]
   );
 
+  // Extract and memoize calendar and habit data to prevent unnecessary rerenders
   const { calendars, habits } = useMemo(
     () => ({
       calendars: monthViewData.calendars || [],
@@ -56,12 +71,14 @@ export default function CalendarsPage() {
     <div className="container mx-auto max-w-7xl">
       <AuthenticationWrapper>
         <>
+          {/* Yearly overview component showing habit completion heatmap */}
           <YearlyOverview
             completions={yearViewData.completions || []}
             habits={habits}
             calendars={calendars}
             isLoading={yearViewData.isLoading}
           />
+          {/* Main calendar component with month/year view toggle */}
           <CalendarContainer
             calendarState={calendarState}
             calendarView={calendarView}
@@ -75,7 +92,8 @@ export default function CalendarsPage() {
             view={calendarView}
             isLoading={monthViewData.isLoading}
           />
-          <div className="mt-8 justify-center">
+          {/* Import/Export functionality for calendar data */}
+          <div className="mx-4 my-8 justify-center">
             <ImportExport />
           </div>
         </>
