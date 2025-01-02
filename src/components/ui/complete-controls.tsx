@@ -62,7 +62,7 @@ export function CompleteControls({
     (origin?: { x: number; y: number }) => ({
       angle: 90 + (Math.random() - 0.5) * 90,
       particleCount: 17,
-      spread: 45,
+      spread: 45 + Math.random() * 75,
       startVelocity: 35,
       gravity: 0.7,
       decay: 0.9,

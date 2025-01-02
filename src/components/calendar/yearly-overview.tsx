@@ -146,7 +146,7 @@ export const YearlyOverview = ({ completions, isLoading = false }: YearlyOvervie
 
   return (
     <div className="mt-2 flex flex-col items-center sm:mt-4">
-      <div className="w-[350px] pb-1 pl-2 text-[5px] text-muted-foreground sm:w-[400px] sm:text-[7px] xl:w-[984px] xl:text-xs">
+      <div className="w-[350px] pb-1 pl-2 text-[5px] text-muted-foreground/75 sm:w-[400px] sm:text-[7px] xl:w-[984px] xl:text-xs">
         <span className="font-bold">Yearly Overview</span>{" "}
         <span className="text-muted-foreground/75">({totalCompletions} things done last year)</span>
       </div>
@@ -154,17 +154,17 @@ export const YearlyOverview = ({ completions, isLoading = false }: YearlyOvervie
         <div className="w-full">
           <div className="flex justify-end">
             {/* Left day labels (Mon/Wed/Fri) */}
-            <div className="mt-3 flex flex-col pr-1 opacity-50 xl:mt-6">
+            <div className="mt-3 flex flex-col pr-1 text-muted-foreground/75 xl:mt-6">
               <div className="h-[3px] xl:h-[18px]" />
-              <div className="text-right text-[5px] text-muted-foreground sm:text-[7px] xl:text-xs">Mon</div>
+              <div className="text-right text-[5px] text-muted-foreground/75 sm:text-[7px] xl:text-xs">Mon</div>
               <div className="h-[3px] xl:h-[18px]" />
-              <div className="text-right text-[5px] text-muted-foreground sm:text-[7px] xl:text-xs">Wed</div>
+              <div className="text-right text-[5px] text-muted-foreground/75 sm:text-[7px] xl:text-xs">Wed</div>
               <div className="h-[3px] xl:h-[18px]" />
-              <div className="text-right text-[5px] text-muted-foreground sm:text-[7px] xl:text-xs">Fri</div>
+              <div className="text-right text-[5px] text-muted-foreground/75 sm:text-[7px] xl:text-xs">Fri</div>
             </div>
             <div className="flex-1">
               {/* Month labels row */}
-              <div className="mx-auto flex justify-center pb-[2px] text-[5px] text-muted-foreground opacity-50 sm:text-[7px] xl:pb-2 xl:text-xs">
+              <div className="mx-auto flex justify-center pb-[2px] text-[5px] text-muted-foreground sm:text-[7px] xl:pb-2 xl:text-xs">
                 {monthLabels.map((month, index) => (
                   <div key={month.key} className={`${index === 0 ? "mr-auto pl-1" : "flex-1 text-center"}`}>
                     {month.label}
@@ -183,13 +183,13 @@ export const YearlyOverview = ({ completions, isLoading = false }: YearlyOvervie
               </div>
             </div>
             {/* Right day labels (Mon/Wed/Fri) */}
-            <div className="mt-3 flex flex-col pl-1 opacity-50 xl:mt-6">
+            <div className="mt-3 flex flex-col pl-1 text-muted-foreground/75 xl:mt-6">
               <div className="h-[3px] xl:h-[18px]" />
-              <div className="text-left text-[5px] text-muted-foreground sm:text-[7px] xl:text-xs">Mon</div>
+              <div className="text-left text-[5px] text-muted-foreground/75 sm:text-[7px] xl:text-xs">Mon</div>
               <div className="h-[3px] xl:h-[18px]" />
-              <div className="text-left text-[5px] text-muted-foreground sm:text-[7px] xl:text-xs">Wed</div>
+              <div className="text-left text-[5px] text-muted-foreground/75 sm:text-[7px] xl:text-xs">Wed</div>
               <div className="h-[3px] xl:h-[18px]" />
-              <div className="text-left text-[5px] text-muted-foreground sm:text-[7px] xl:text-xs">Fri</div>
+              <div className="text-left text-[5px] text-muted-foreground/75 sm:text-[7px] xl:text-xs">Fri</div>
             </div>
           </div>
         </div>
