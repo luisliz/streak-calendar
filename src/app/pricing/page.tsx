@@ -69,7 +69,7 @@ function FrequencyToggle({ frequency, onChange }: { frequency: Frequency; onChan
           <span className="relative z-10">{f}</span>
           {frequency === f && <span className="absolute inset-0 rounded-full bg-background shadow-sm" />}
           {f === "yearly" && (
-            <span className="relative z-10 rounded bg-primary/10 px-2 py-0.5 text-xs text-primary">Save 30%</span>
+            <span className="relative z-10 rounded bg-primary/10 px-2 py-0.5 text-xs text-primary">Save 44%</span>
           )}
         </button>
       ))}
