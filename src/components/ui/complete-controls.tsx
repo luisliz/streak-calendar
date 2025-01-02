@@ -99,7 +99,7 @@ export function CompleteControls({
             className="flex h-6 w-[96px] items-center justify-center text-xs"
             onClick={() => setIsTimerModalOpen(true)}
           >
-            Start Timer
+            Start
           </Button>
           <TimerModal
             isOpen={isTimerModalOpen}
