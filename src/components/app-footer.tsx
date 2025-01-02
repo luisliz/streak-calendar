@@ -26,7 +26,7 @@ export function AppFooter() {
   const locale = useLocale();
 
   const redirectedPathname = (newLocale: string) => {
-    if (!pathname) return newLocale === "en" ? "/" : `/${newLocale}`;
+    if (!pathname) return `/${newLocale}`;
 
     // Get the current path segments and remove empty ones
     const segments = pathname.split("/").filter(Boolean);
@@ -36,12 +36,7 @@ export function AppFooter() {
       .filter((segment) => !locales.includes(segment as (typeof locales)[number]))
       .join("/");
 
-    // For English, return path without locale prefix
-    if (newLocale === "en") {
-      return pathWithoutLocale ? `/${pathWithoutLocale}` : "/";
-    }
-
-    // For other locales, ensure we have the correct locale prefix
+    // Always include locale prefix
     return `/${newLocale}${pathWithoutLocale ? `/${pathWithoutLocale}` : ""}`;
   };
 

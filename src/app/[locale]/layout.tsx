@@ -20,17 +20,18 @@ export function generateStaticParams() {
 
 export default async function LocaleLayout({
   children,
-  params: { locale },
+  params,
 }: {
   children: React.ReactNode;
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }) {
+  const { locale } = await params;
+
   // Validate locale
   if (!locales.includes(locale as Locale)) {
     notFound();
   }
 
-  // Enable static rendering
   unstable_setRequestLocale(locale);
   const messages = await getMessages({ locale });
 

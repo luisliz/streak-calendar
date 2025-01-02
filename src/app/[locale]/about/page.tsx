@@ -3,16 +3,16 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Link } from "@/i18n/routing";
 import { SignedIn, SignedOut } from "@clerk/nextjs";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import Image from "next/image";
 import NextLink from "next/link";
 
 // About page component that provides information about the Streak Calendar application
 // Includes sections for app description, features, project info, and the Seinfeld Strategy
 
-export default function AboutPage({ params: { locale } }: { params: { locale: string } }) {
+export default function AboutPage() {
+  const locale = useLocale();
   const t = useTranslations("about");
-
   const isRTL = locale === "he";
 
   return (

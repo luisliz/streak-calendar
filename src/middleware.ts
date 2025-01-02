@@ -7,11 +7,10 @@ import { defaultLocale, locales } from "./i18n/settings";
 const intlMiddleware = createMiddleware({
   locales,
   defaultLocale,
-  localePrefix: "as-needed",
-  localeDetection: false,
+  localePrefix: "always",
 });
 
-export default clerkMiddleware((auth, req: NextRequest) => {
+export default clerkMiddleware(async (auth, req: NextRequest) => {
   const { pathname } = req.nextUrl;
 
   // Skip middleware for static files and Next.js internals
@@ -23,5 +22,5 @@ export default clerkMiddleware((auth, req: NextRequest) => {
 });
 
 export const config = {
-  matcher: ["/((?!.+\\.[\\w]+$|_next).*)", "/", "/(api|trpc)(.*)"],
+  matcher: ["/((?!api|_next|.*\\..*).*)"],
 };
