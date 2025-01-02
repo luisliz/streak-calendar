@@ -145,7 +145,7 @@ export const YearlyOverview = ({ completions, isLoading = false }: YearlyOvervie
   }
 
   return (
-    <div className="mt-2 flex flex-col items-center sm:mt-16">
+    <div className="mt-2 flex flex-col items-center sm:mt-4">
       <div className="w-[350px] pb-1 pl-2 text-[5px] text-muted-foreground sm:w-[400px] sm:text-[7px] xl:w-[984px] xl:text-xs">
         <span className="font-bold">Yearly Overview</span>{" "}
         <span className="text-muted-foreground/75">({totalCompletions} things done last year)</span>
