@@ -112,7 +112,7 @@ export const CalendarItem = ({
                 {days.map((day) => (
                   <div key={day} className="w-6">
                     <div className="relative h-6 w-6">
-                      <span className="absolute inset-0 flex scale-75 items-center justify-center text-xs font-medium text-slate-900 dark:text-slate-100">
+                      <span className="absolute inset-0 flex scale-75 items-center justify-center text-xs font-medium text-foreground">
                         {new Date(day).toLocaleDateString("en-US", { weekday: "short" }).slice(0, 2)}
                       </span>
                     </div>

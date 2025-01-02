@@ -34,21 +34,39 @@ export const metadata: Metadata = {
     "anti-procrastination",
     "productivity tool",
     "web app",
-    "goal tracking",
-    "daily routine",
-    "habit builder",
-    "habit tracking",
     "chrome extension",
     "chrome",
+    "consistency",
+    "daily routine",
     "don't break the chain",
+    "goal tracking",
+    "habit assistant",
+    "habit builder",
+    "habit calendar",
+    "habit logging",
+    "habit streak",
+    "habit streaks",
+    "habit tracking",
+    "habit visualization",
     "linux",
     "mac",
+    "motivation app",
+    "motivation",
+    "motivator",
     "productivity app",
     "productivity",
+    "progress tracker",
+    "routine builder",
     "seinfeld method",
+    "self-improvement app",
     "self-improvement",
+    "streak app",
+    "streak tracker",
     "streak",
     "streaks",
+    "streaks app",
+    "streaks tracker",
+    "task management",
     "tool",
     "webapp",
     "windows",
@@ -92,7 +110,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={cn(inter.variable, "min-h-screen bg-background font-sans antialiased", "grid-background")}>
         {/* Background gradient overlay */}
-        <div className="fixed inset-0 bg-gradient-to-t from-sky-50 to-transparent dark:from-sky-950" />
+        <div className="fixed inset-0 bg-gradient-to-t from-muted to-transparent" />
 
         {/* Main content container with overflow control */}
         <div className="relative overflow-x-hidden">

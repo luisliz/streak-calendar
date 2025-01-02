@@ -93,7 +93,7 @@ export const YearlyOverview = ({ completions }: YearlyOverviewProps) => {
 
   // Determine the color intensity based on the number of completions
   const getColorClass = useCallback((count: number) => {
-    if (count === 0) return "bg-slate-100 dark:bg-slate-800";
+    if (count === 0) return "bg-muted";
     if (count <= 2) return "fill-red-500/50 dark:fill-red-500/50";
     if (count <= 5) return "fill-red-500/65 dark:fill-red-500/65";
     if (count <= 10) return "fill-red-600/80 dark:fill-red-600/80";
@@ -103,7 +103,7 @@ export const YearlyOverview = ({ completions }: YearlyOverviewProps) => {
   // Memoized grid cell component for better performance
   // Renders either an empty cell, a blank day, or a completion indicator
   const GridCell = memo(({ day }: { day: string | null }) => {
-    if (!day) return <div className="aspect-square w-[5px] sm:w-[9px] md:w-4" />;
+    if (!day) return <div className="aspect-square w-[5px] sm:w-[9px] xl:w-4" />;
 
     const count = completionCounts[day] || 0;
     const colorClass = getColorClass(count);
@@ -112,7 +112,7 @@ export const YearlyOverview = ({ completions }: YearlyOverviewProps) => {
     if (count === 0) {
       return (
         <div
-          className={`aspect-square w-[5px] rounded-full sm:w-[9px] md:w-4 ${colorClass}`}
+          className={`aspect-square w-[5px] rounded-full sm:w-[9px] xl:w-4 ${colorClass}`}
           title={`${format(new Date(day), "MMM d, yyyy")}: ${count} completions`}
         />
       );
@@ -121,7 +121,7 @@ export const YearlyOverview = ({ completions }: YearlyOverviewProps) => {
     // Render completion indicator for days with completions
     return (
       <div
-        className="relative aspect-square w-[5px] transition-colors hover:opacity-80 sm:w-[9px] md:w-4"
+        className="relative aspect-square w-[5px] transition-colors hover:opacity-80 sm:w-[9px] xl:w-4"
         title={`${format(new Date(day), "MMM d, yyyy")}: ${count} completions`}
       >
         <svg viewBox="0 0 15 15" className={`h-full w-full ${colorClass}`}>
@@ -139,25 +139,25 @@ export const YearlyOverview = ({ completions }: YearlyOverviewProps) => {
 
   return (
     <div className="mt-2 flex flex-col items-center sm:mt-16">
-      <div className="w-[350px] pb-1 pl-2 text-[5px] text-muted-foreground sm:w-[400px] sm:text-[7px] md:w-[1000px] md:text-xs">
+      <div className="w-[350px] pb-1 pl-2 text-[5px] text-muted-foreground sm:w-[400px] sm:text-[7px] xl:w-[984px] xl:text-xs">
         <span className="font-bold">Yearly Overview</span>{" "}
         <span className="text-muted-foreground/75">({totalCompletions} things done last year)</span>
       </div>
-      <Card className="mx-auto mb-4 w-fit rounded-xl p-1 shadow-md md:mb-16 md:w-[1000px] md:rounded-3xl md:p-2 md:pb-4">
+      <Card className="mx-auto mb-4 w-fit rounded-xl p-1 shadow-md xl:mb-16 xl:w-[984px] xl:rounded-3xl xl:p-2 xl:pb-4">
         <div className="w-full">
           <div className="flex justify-end">
             {/* Left day labels (Mon/Wed/Fri) */}
-            <div className="mt-3 flex flex-col pr-1 opacity-50 md:mt-6">
-              <div className="h-[3px] md:h-[18px]" />
-              <div className="text-right text-[5px] text-muted-foreground sm:text-[7px] md:text-xs">Mon</div>
-              <div className="h-[3px] md:h-[18px]" />
-              <div className="text-right text-[5px] text-muted-foreground sm:text-[7px] md:text-xs">Wed</div>
-              <div className="h-[3px] md:h-[18px]" />
-              <div className="text-right text-[5px] text-muted-foreground sm:text-[7px] md:text-xs">Fri</div>
+            <div className="mt-3 flex flex-col pr-1 opacity-50 xl:mt-6">
+              <div className="h-[3px] xl:h-[18px]" />
+              <div className="text-right text-[5px] text-muted-foreground sm:text-[7px] xl:text-xs">Mon</div>
+              <div className="h-[3px] xl:h-[18px]" />
+              <div className="text-right text-[5px] text-muted-foreground sm:text-[7px] xl:text-xs">Wed</div>
+              <div className="h-[3px] xl:h-[18px]" />
+              <div className="text-right text-[5px] text-muted-foreground sm:text-[7px] xl:text-xs">Fri</div>
             </div>
             <div className="flex-1">
               {/* Month labels row */}
-              <div className="mx-auto flex justify-center pb-[2px] text-[5px] text-muted-foreground opacity-50 sm:text-[7px] md:pb-2 md:text-xs">
+              <div className="mx-auto flex justify-center pb-[2px] text-[5px] text-muted-foreground opacity-50 sm:text-[7px] xl:pb-2 xl:text-xs">
                 {monthLabels.map((month, index) => (
                   <div key={month.key} className={`${index === 0 ? "mr-auto pl-1" : "flex-1 text-center"}`}>
                     {month.label}
@@ -176,13 +176,13 @@ export const YearlyOverview = ({ completions }: YearlyOverviewProps) => {
               </div>
             </div>
             {/* Right day labels (Mon/Wed/Fri) */}
-            <div className="mt-3 flex flex-col pl-1 opacity-50 md:mt-6">
-              <div className="h-[3px] md:h-[18px]" />
-              <div className="text-left text-[5px] text-muted-foreground sm:text-[7px] md:text-xs">Mon</div>
-              <div className="h-[3px] md:h-[18px]" />
-              <div className="text-left text-[5px] text-muted-foreground sm:text-[7px] md:text-xs">Wed</div>
-              <div className="h-[3px] md:h-[18px]" />
-              <div className="text-left text-[5px] text-muted-foreground sm:text-[7px] md:text-xs">Fri</div>
+            <div className="mt-3 flex flex-col pl-1 opacity-50 xl:mt-6">
+              <div className="h-[3px] xl:h-[18px]" />
+              <div className="text-left text-[5px] text-muted-foreground sm:text-[7px] xl:text-xs">Mon</div>
+              <div className="h-[3px] xl:h-[18px]" />
+              <div className="text-left text-[5px] text-muted-foreground sm:text-[7px] xl:text-xs">Wed</div>
+              <div className="h-[3px] xl:h-[18px]" />
+              <div className="text-left text-[5px] text-muted-foreground sm:text-[7px] xl:text-xs">Fri</div>
             </div>
           </div>
         </div>

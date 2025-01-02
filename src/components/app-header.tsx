@@ -11,7 +11,7 @@ export function AppHeader() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
-    <header className="border-b-2 border-black/5 dark:border-black/20">
+    <header className="border-b border-border">
       <div className="container relative mx-auto flex h-16 items-center px-4">
         <div className="w-[200px] shrink-0">
           <Link href="/" className="flex items-center gap-2 text-xl font-bold">

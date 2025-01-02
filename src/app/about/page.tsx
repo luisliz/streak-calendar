@@ -117,7 +117,7 @@ export default function AboutPage() {
             />
           </div>
 
-          <div className="prose prose-slate max-w-none">
+          <div className="">
             <p className="text-muted-foreground">
               The story behind this method comes from Brad Isaac, a young comedian who met Jerry Seinfeld backstage and
               asked for advice. Seinfeld told him that to be a better comic, he needed to create better jokes - and the

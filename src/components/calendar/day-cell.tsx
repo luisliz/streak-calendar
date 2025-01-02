@@ -67,7 +67,7 @@ export const DayCell = ({ date, count, onCountChange, colorClass, gridView, disa
         <Button
           variant="ghost"
           className={`${gridView ? "h-12 w-12" : "h-6 w-6"} rounded-full ${
-            count === 0 ? "bg-slate-100 dark:bg-slate-800" : ""
+            count === 0 ? "bg-muted" : ""
           } relative overflow-visible p-0 ${disabled ? "cursor-not-allowed opacity-50" : ""} hover:bg-transparent`}
           title={`${new Date(date).toLocaleDateString(undefined, {
             month: "short",
@@ -87,7 +87,7 @@ export const DayCell = ({ date, count, onCountChange, colorClass, gridView, disa
           ) : (
             // Display date number when no completions
             <span
-              className={`absolute inset-0 flex items-center justify-center text-xs font-medium text-slate-900 dark:text-slate-100 ${
+              className={`absolute inset-0 flex items-center justify-center text-xs font-medium text-zinc-900 dark:text-zinc-100 ${
                 gridView ? "" : "scale-75"
               }`}
             >
