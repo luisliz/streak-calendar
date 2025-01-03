@@ -1,6 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { XLogo } from "@/components/ui/x-logo";
 import { eachDayOfInterval, format, getDay, subYears } from "date-fns";
+import { useTranslations } from "next-intl";
 import { memo, useCallback, useMemo } from "react";
 
 import { Id } from "@server/convex/_generated/dataModel";
@@ -33,6 +34,8 @@ interface YearlyOverviewProps {
 }
 
 export const YearlyOverview = ({ completions, isLoading = false }: YearlyOverviewProps) => {
+  const t = useTranslations("calendar.yearlyOverview");
+
   // Calculate and memoize the calendar grid structure and month labels
   // This only needs to be calculated once since it's based on static dates
   const { weeks, monthLabels } = useMemo(() => {
@@ -71,15 +74,16 @@ export const YearlyOverview = ({ completions, isLoading = false }: YearlyOvervie
 
     let currentDate = firstMonth;
     while (monthLabels.length <= 12) {
+      const month = format(currentDate, "MMM").toLowerCase();
       monthLabels.push({
         key: `${format(currentDate, "MMM yyyy")}-${monthLabels.length}`,
-        label: format(currentDate, "MMM"),
+        label: t(`months.${month.slice(0, 3)}`),
       });
       currentDate = new Date(currentDate.setMonth(currentDate.getMonth() + 1));
     }
 
     return { weeks, monthLabels };
-  }, []);
+  }, [t]);
 
   // Calculate and memoize the number of completions per day
   const completionCounts = useMemo(() => {
@@ -110,13 +114,14 @@ export const YearlyOverview = ({ completions, isLoading = false }: YearlyOvervie
 
     const count = completionCounts[day] || 0;
     const colorClass = getColorClass(count);
+    const date = format(new Date(day), "MMM d, yyyy");
 
     // Render empty cell for days with no completions
     if (count === 0) {
       return (
         <div
           className={`aspect-square w-[5px] rounded-full sm:w-[9px] xl:w-4 ${colorClass}`}
-          title={`${format(new Date(day), "MMM d, yyyy")}: ${count} completions`}
+          title={t("tooltip", { date, count })}
         />
       );
     }
@@ -125,7 +130,7 @@ export const YearlyOverview = ({ completions, isLoading = false }: YearlyOvervie
     return (
       <div
         className="relative aspect-square w-[5px] transition-colors hover:opacity-80 sm:w-[9px] xl:w-4"
-        title={`${format(new Date(day), "MMM d, yyyy")}: ${count} completions`}
+        title={t("tooltip", { date, count })}
       >
         <svg viewBox="0 0 15 15" className={`h-full w-full ${colorClass}`}>
           <XLogo />
@@ -147,8 +152,8 @@ export const YearlyOverview = ({ completions, isLoading = false }: YearlyOvervie
   return (
     <div className="mt-2 flex flex-col items-center sm:mt-4">
       <div className="w-[350px] pb-1 pl-2 text-[5px] text-muted-foreground/75 sm:w-[400px] sm:text-[7px] xl:w-[984px] xl:text-xs">
-        <span className="font-bold">Yearly Overview</span>{" "}
-        <span className="text-muted-foreground/75">({totalCompletions} things done last year)</span>
+        <span className="font-bold">{t("title")}</span>{" "}
+        <span className="text-muted-foreground/75">{t("thingsDone", { count: totalCompletions })}</span>
       </div>
       <Card className="mx-auto mb-4 w-fit rounded-lg p-1 shadow-md xl:mb-16 xl:w-[984px] xl:rounded-2xl xl:p-2 xl:pb-4">
         <div className="w-full">
@@ -156,11 +161,17 @@ export const YearlyOverview = ({ completions, isLoading = false }: YearlyOvervie
             {/* Left day labels (Mon/Wed/Fri) */}
             <div className="mt-3 flex flex-col pr-1 text-muted-foreground/75 xl:mt-6">
               <div className="h-[3px] xl:h-[18px]" />
-              <div className="text-right text-[5px] text-muted-foreground/75 sm:text-[7px] xl:text-xs">Mon</div>
+              <div className="text-right text-[5px] text-muted-foreground/75 sm:text-[7px] xl:text-xs">
+                {t("days.mon")}
+              </div>
               <div className="h-[3px] xl:h-[18px]" />
-              <div className="text-right text-[5px] text-muted-foreground/75 sm:text-[7px] xl:text-xs">Wed</div>
+              <div className="text-right text-[5px] text-muted-foreground/75 sm:text-[7px] xl:text-xs">
+                {t("days.wed")}
+              </div>
               <div className="h-[3px] xl:h-[18px]" />
-              <div className="text-right text-[5px] text-muted-foreground/75 sm:text-[7px] xl:text-xs">Fri</div>
+              <div className="text-right text-[5px] text-muted-foreground/75 sm:text-[7px] xl:text-xs">
+                {t("days.fri")}
+              </div>
             </div>
             <div className="flex-1">
               {/* Month labels row */}
@@ -185,11 +196,17 @@ export const YearlyOverview = ({ completions, isLoading = false }: YearlyOvervie
             {/* Right day labels (Mon/Wed/Fri) */}
             <div className="mt-3 flex flex-col pl-1 text-muted-foreground/75 xl:mt-6">
               <div className="h-[3px] xl:h-[18px]" />
-              <div className="text-left text-[5px] text-muted-foreground/75 sm:text-[7px] xl:text-xs">Mon</div>
+              <div className="text-left text-[5px] text-muted-foreground/75 sm:text-[7px] xl:text-xs">
+                {t("days.mon")}
+              </div>
               <div className="h-[3px] xl:h-[18px]" />
-              <div className="text-left text-[5px] text-muted-foreground/75 sm:text-[7px] xl:text-xs">Wed</div>
+              <div className="text-left text-[5px] text-muted-foreground/75 sm:text-[7px] xl:text-xs">
+                {t("days.wed")}
+              </div>
               <div className="h-[3px] xl:h-[18px]" />
-              <div className="text-left text-[5px] text-muted-foreground/75 sm:text-[7px] xl:text-xs">Fri</div>
+              <div className="text-left text-[5px] text-muted-foreground/75 sm:text-[7px] xl:text-xs">
+                {t("days.fri")}
+              </div>
             </div>
           </div>
         </div>

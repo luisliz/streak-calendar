@@ -161,5 +161,179 @@
     },
     "comingSoon": "Coming Soon",
     "goToCalendars": "Go to Calendars"
+  },
+  "dialogs": {
+    "calendar": {
+      "new": {
+        "title": "Create New Calendar",
+        "name": {
+          "label": "Calendar Name",
+          "placeholder": "e.g., Work, Personal, Other..."
+        },
+        "color": {
+          "label": "Color Theme"
+        },
+        "actions": {
+          "cancel": "Cancel",
+          "create": "Create Calendar"
+        }
+      },
+      "edit": {
+        "title": "Edit Calendar",
+        "name": {
+          "label": "Calendar Name"
+        },
+        "color": {
+          "label": "Color Theme"
+        },
+        "actions": {
+          "cancel": "Cancel",
+          "delete": "Delete",
+          "save": "Save Changes"
+        },
+        "deleteConfirm": {
+          "title": "Are you sure?",
+          "description": "This will permanently delete the calendar \"{name}\" and all its habits. This action cannot be undone.",
+          "cancel": "Cancel",
+          "confirm": "Delete Calendar"
+        }
+      }
+    },
+    "habit": {
+      "new": {
+        "title": "Add New Habit",
+        "name": {
+          "label": "Habit Name",
+          "placeholder": "e.g., Exercise, Meditate, Write..."
+        },
+        "timer": {
+          "label": "Timer Duration",
+          "placeholder": "Select duration (optional)"
+        },
+        "actions": {
+          "cancel": "Cancel",
+          "create": "Add Habit"
+        }
+      },
+      "edit": {
+        "title": "Edit Habit",
+        "name": {
+          "label": "Habit Name"
+        },
+        "timer": {
+          "label": "Timer Duration",
+          "placeholder": "Select duration (optional)"
+        },
+        "actions": {
+          "cancel": "Cancel",
+          "delete": "Delete",
+          "save": "Save Changes"
+        },
+        "deleteConfirm": {
+          "title": "Are you sure?",
+          "description": "This will permanently delete the habit \"{name}\". This action cannot be undone.",
+          "cancel": "Cancel",
+          "confirm": "Delete Habit"
+        }
+      }
+    },
+    "colors": {
+      "red": "Red",
+      "orange": "Orange",
+      "amber": "Amber",
+      "yellow": "Yellow",
+      "lime": "Lime",
+      "green": "Green",
+      "emerald": "Emerald",
+      "teal": "Teal",
+      "cyan": "Cyan",
+      "sky": "Sky",
+      "blue": "Blue",
+      "indigo": "Indigo",
+      "violet": "Violet",
+      "purple": "Purple",
+      "fuchsia": "Fuchsia",
+      "pink": "Pink",
+      "rose": "Rose"
+    },
+    "timers": {
+      "1min": "1 minute",
+      "2min": "2 minutes",
+      "5min": "5 minutes",
+      "10min": "10 minutes",
+      "15min": "15 minutes",
+      "30min": "30 minutes",
+      "45min": "45 minutes",
+      "1hour": "1 hour",
+      "1_5hour": "1 hour 30 minutes",
+      "2hour": "2 hours"
+    }
+  },
+  "calendar": {
+    "views": {
+      "calendar": "Calendar View",
+      "row": "Row View"
+    },
+    "yearlyOverview": {
+      "title": "Yearly Overview",
+      "thingsDone": "{count} things done last year",
+      "days": {
+        "mon": "Mon",
+        "wed": "Wed",
+        "fri": "Fri"
+      },
+      "months": {
+        "jan": "Jan",
+        "feb": "Feb",
+        "mar": "Mar",
+        "apr": "Apr",
+        "may": "May",
+        "jun": "Jun",
+        "jul": "Jul",
+        "aug": "Aug",
+        "sep": "Sep",
+        "oct": "Oct",
+        "nov": "Nov",
+        "dec": "Dec"
+      },
+      "tooltip": "{date}: {count} completions"
+    },
+    "controls": {
+      "complete": "Complete",
+      "start": "Start",
+      "timer": "Timer"
+    },
+    "weekDays": {
+      "sun": "Sun",
+      "mon": "Mon",
+      "tue": "Tue",
+      "wed": "Wed",
+      "thu": "Thu",
+      "fri": "Fri",
+      "sat": "Sat"
+    },
+    "weekDaysShort": {
+      "sun": "Su",
+      "mon": "Mo",
+      "tue": "Tu",
+      "wed": "We",
+      "thu": "Th",
+      "fri": "Fr",
+      "sat": "Sa"
+    },
+    "monthNames": {
+      "january": "January",
+      "february": "February",
+      "march": "March",
+      "april": "April",
+      "may": "May",
+      "june": "June",
+      "july": "July",
+      "august": "August",
+      "september": "September",
+      "october": "October",
+      "november": "November",
+      "december": "December"
+    }
   }
 }

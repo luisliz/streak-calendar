@@ -1,6 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { CompleteControls } from "@/components/ui/complete-controls";
+import { format } from "date-fns";
 import { Pencil, PlusCircle } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 import { Id } from "@server/convex/_generated/dataModel";
 
@@ -66,6 +68,7 @@ export const CalendarItem = ({
   onToggleHabit,
   view,
 }: CalendarItemProps) => {
+  const t = useTranslations("calendar");
   // Normalize color theme format by ensuring it has the 'bg-' prefix
   const colorTheme = calendar.colorTheme.startsWith("bg-") ? calendar.colorTheme : `bg-${calendar.colorTheme}-500`;
 
@@ -109,15 +112,18 @@ export const CalendarItem = ({
             {/* Day name labels (Mo, Tu, We, etc.) */}
             <div className="mr-2 flex flex-1 gap-px overflow-hidden">
               <div className="flex w-full justify-end gap-px">
-                {days.map((day) => (
-                  <div key={day} className="w-6">
-                    <div className="relative h-6 w-6">
-                      <span className="absolute inset-0 flex scale-75 items-center justify-center text-xs font-medium text-foreground">
-                        {new Date(day).toLocaleDateString("en-US", { weekday: "short" }).slice(0, 2)}
-                      </span>
+                {days.map((day) => {
+                  const dayOfWeek = format(new Date(day), "eee").toLowerCase();
+                  return (
+                    <div key={day} className="w-6">
+                      <div className="relative h-6 w-6">
+                        <span className="absolute inset-0 flex scale-75 items-center justify-center text-xs font-medium text-foreground">
+                          {t(`weekDaysShort.${dayOfWeek}`)}
+                        </span>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
             {/* TODO: 2024-12-31 - Add a habit here maybe? */}

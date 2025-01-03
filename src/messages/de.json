@@ -166,5 +166,179 @@
     },
     "comingSoon": "Demnächst verfügbar",
     "goToCalendars": "Zu den Kalendern"
+  },
+  "dialogs": {
+    "calendar": {
+      "new": {
+        "title": "Neuen Kalender erstellen",
+        "name": {
+          "label": "Kalendername",
+          "placeholder": "z.B. Arbeit, Privat, Sonstiges..."
+        },
+        "color": {
+          "label": "Farbthema"
+        },
+        "actions": {
+          "cancel": "Abbrechen",
+          "create": "Kalender erstellen"
+        }
+      },
+      "edit": {
+        "title": "Kalender bearbeiten",
+        "name": {
+          "label": "Kalendername"
+        },
+        "color": {
+          "label": "Farbthema"
+        },
+        "actions": {
+          "cancel": "Abbrechen",
+          "delete": "Löschen",
+          "save": "Änderungen speichern"
+        },
+        "deleteConfirm": {
+          "title": "Bist du sicher?",
+          "description": "Dies wird den Kalender \"{name}\" und alle seine Gewohnheiten dauerhaft löschen. Diese Aktion kann nicht rückgängig gemacht werden.",
+          "cancel": "Abbrechen",
+          "confirm": "Kalender löschen"
+        }
+      }
+    },
+    "habit": {
+      "new": {
+        "title": "Neue Gewohnheit hinzufügen",
+        "name": {
+          "label": "Name der Gewohnheit",
+          "placeholder": "z.B. Sport, Meditation, Schreiben..."
+        },
+        "timer": {
+          "label": "Timer-Dauer",
+          "placeholder": "Dauer auswählen (optional)"
+        },
+        "actions": {
+          "cancel": "Abbrechen",
+          "create": "Gewohnheit hinzufügen"
+        }
+      },
+      "edit": {
+        "title": "Gewohnheit bearbeiten",
+        "name": {
+          "label": "Name der Gewohnheit"
+        },
+        "timer": {
+          "label": "Timer-Dauer",
+          "placeholder": "Dauer auswählen (optional)"
+        },
+        "actions": {
+          "cancel": "Abbrechen",
+          "delete": "Löschen",
+          "save": "Änderungen speichern"
+        },
+        "deleteConfirm": {
+          "title": "Bist du sicher?",
+          "description": "Dies wird die Gewohnheit \"{name}\" dauerhaft löschen. Diese Aktion kann nicht rückgängig gemacht werden.",
+          "cancel": "Abbrechen",
+          "confirm": "Gewohnheit löschen"
+        }
+      }
+    },
+    "colors": {
+      "red": "Rot",
+      "orange": "Orange",
+      "amber": "Bernstein",
+      "yellow": "Gelb",
+      "lime": "Limette",
+      "green": "Grün",
+      "emerald": "Smaragd",
+      "teal": "Blaugrün",
+      "cyan": "Cyan",
+      "sky": "Himmelblau",
+      "blue": "Blau",
+      "indigo": "Indigo",
+      "violet": "Violett",
+      "purple": "Lila",
+      "fuchsia": "Fuchsie",
+      "pink": "Rosa",
+      "rose": "Rose"
+    },
+    "timers": {
+      "1min": "1 Minute",
+      "2min": "2 Minuten",
+      "5min": "5 Minuten",
+      "10min": "10 Minuten",
+      "15min": "15 Minuten",
+      "30min": "30 Minuten",
+      "45min": "45 Minuten",
+      "1hour": "1 Stunde",
+      "1_5hour": "1 Stunde 30 Minuten",
+      "2hour": "2 Stunden"
+    }
+  },
+  "calendar": {
+    "views": {
+      "calendar": "Kalenderansicht",
+      "row": "Zeilenansicht"
+    },
+    "yearlyOverview": {
+      "title": "Jahresübersicht",
+      "thingsDone": "{count} Dinge im letzten Jahr erledigt",
+      "days": {
+        "mon": "Mo",
+        "wed": "Mi",
+        "fri": "Fr"
+      },
+      "months": {
+        "jan": "Jan",
+        "feb": "Feb",
+        "mar": "Mär",
+        "apr": "Apr",
+        "may": "Mai",
+        "jun": "Jun",
+        "jul": "Jul",
+        "aug": "Aug",
+        "sep": "Sep",
+        "oct": "Okt",
+        "nov": "Nov",
+        "dec": "Dez"
+      },
+      "tooltip": "{date}: {count} Erledigungen"
+    },
+    "controls": {
+      "complete": "Erledigt",
+      "start": "Start",
+      "timer": "Timer"
+    },
+    "weekDays": {
+      "sun": "So",
+      "mon": "Mo",
+      "tue": "Di",
+      "wed": "Mi",
+      "thu": "Do",
+      "fri": "Fr",
+      "sat": "Sa"
+    },
+    "weekDaysShort": {
+      "sun": "So",
+      "mon": "Mo",
+      "tue": "Di",
+      "wed": "Mi",
+      "thu": "Do",
+      "fri": "Fr",
+      "sat": "Sa"
+    },
+    "monthNames": {
+      "january": "Januar",
+      "february": "Februar",
+      "march": "März",
+      "april": "April",
+      "may": "Mai",
+      "june": "Juni",
+      "july": "Juli",
+      "august": "August",
+      "september": "September",
+      "october": "Oktober",
+      "november": "November",
+      "december": "Dezember"
+    }
   }
 }

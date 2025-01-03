@@ -161,5 +161,179 @@
     },
     "comingSoon": "בקרוב",
     "goToCalendars": "עבור ללוחות שנה"
+  },
+  "dialogs": {
+    "calendar": {
+      "new": {
+        "title": "צור לוח שנה חדש",
+        "name": {
+          "label": "שם הלוח שנה",
+          "placeholder": "לדוגמה: עבודה, אישי, אחר..."
+        },
+        "color": {
+          "label": "ערכת צבעים"
+        },
+        "actions": {
+          "cancel": "ביטול",
+          "create": "צור לוח שנה"
+        }
+      },
+      "edit": {
+        "title": "ערוך לוח שנה",
+        "name": {
+          "label": "שם הלוח שנה"
+        },
+        "color": {
+          "label": "ערכת צבעים"
+        },
+        "actions": {
+          "cancel": "ביטול",
+          "delete": "מחק",
+          "save": "שמור שינויים"
+        },
+        "deleteConfirm": {
+          "title": "האם אתה בטוח?",
+          "description": "פעולה זו תמחק לצמיתות את לוח השנה \"{name}\" וכל ההרגלים שלו. לא ניתן לבטל פעולה זו.",
+          "cancel": "ביטול",
+          "confirm": "מחק לוח שנה"
+        }
+      }
+    },
+    "habit": {
+      "new": {
+        "title": "הוסף הרגל חדש",
+        "name": {
+          "label": "שם ההרגל",
+          "placeholder": "לדוגמה: התעמלות, מדיטציה, כתיבה..."
+        },
+        "timer": {
+          "label": "משך הטיימר",
+          "placeholder": "בחר משך זמן (אופציונלי)"
+        },
+        "actions": {
+          "cancel": "ביטול",
+          "create": "הוסף הרגל"
+        }
+      },
+      "edit": {
+        "title": "ערוך הרגל",
+        "name": {
+          "label": "שם ההרגל"
+        },
+        "timer": {
+          "label": "משך הטיימר",
+          "placeholder": "בחר משך זמן (אופציונלי)"
+        },
+        "actions": {
+          "cancel": "ביטול",
+          "delete": "מחק",
+          "save": "שמור שינויים"
+        },
+        "deleteConfirm": {
+          "title": "האם אתה בטוח?",
+          "description": "פעולה זו תמחק לצמיתות את ההרגל \"{name}\". לא ניתן לבטל פעולה זו.",
+          "cancel": "ביטול",
+          "confirm": "מחק הרגל"
+        }
+      }
+    },
+    "colors": {
+      "red": "אדום",
+      "orange": "כתום",
+      "amber": "ענבר",
+      "yellow": "צהוב",
+      "lime": "ליים",
+      "green": "ירוק",
+      "emerald": "ברקת",
+      "teal": "טורקיז",
+      "cyan": "ציאן",
+      "sky": "שמיים",
+      "blue": "כחול",
+      "indigo": "אינדיגו",
+      "violet": "סגול",
+      "purple": "ארגמן",
+      "fuchsia": "פוקסיה",
+      "pink": "ורוד",
+      "rose": "ורד"
+    },
+    "timers": {
+      "1min": "דקה אחת",
+      "2min": "2 דקות",
+      "5min": "5 דקות",
+      "10min": "10 דקות",
+      "15min": "15 דקות",
+      "30min": "30 דקות",
+      "45min": "45 דקות",
+      "1hour": "שעה אחת",
+      "1_5hour": "שעה וחצי",
+      "2hour": "שעתיים"
+    }
+  },
+  "calendar": {
+    "views": {
+      "calendar": "תצוגת לוח שנה",
+      "row": "תצוגת שורות"
+    },
+    "yearlyOverview": {
+      "title": "סקירה שנתית",
+      "thingsDone": "{count} דברים הושלמו בשנה שעברה",
+      "days": {
+        "mon": "שני",
+        "wed": "רבי",
+        "fri": "שיש"
+      },
+      "months": {
+        "jan": "ינו",
+        "feb": "פבר",
+        "mar": "מרץ",
+        "apr": "אפר",
+        "may": "מאי",
+        "jun": "יונ",
+        "jul": "יול",
+        "aug": "אוג",
+        "sep": "ספט",
+        "oct": "אוק",
+        "nov": "נוב",
+        "dec": "דצמ"
+      },
+      "tooltip": "{date}: {count} השלמות"
+    },
+    "controls": {
+      "complete": "השלם",
+      "start": "התחל",
+      "timer": "טיימר"
+    },
+    "weekDays": {
+      "sun": "א'",
+      "mon": "ב'",
+      "tue": "ג'",
+      "wed": "ד'",
+      "thu": "ה'",
+      "fri": "ו'",
+      "sat": "ש'"
+    },
+    "weekDaysShort": {
+      "sun": "א'",
+      "mon": "ב'",
+      "tue": "ג'",
+      "wed": "ד'",
+      "thu": "ה'",
+      "fri": "ו'",
+      "sat": "ש'"
+    },
+    "monthNames": {
+      "january": "ינואר",
+      "february": "פברואר",
+      "march": "מרץ",
+      "april": "אפריל",
+      "may": "מאי",
+      "june": "יוני",
+      "july": "יולי",
+      "august": "אוגוסט",
+      "september": "ספטמבר",
+      "october": "אוקטובר",
+      "november": "נובמבר",
+      "december": "דצמבר"
+    }
   }
 }

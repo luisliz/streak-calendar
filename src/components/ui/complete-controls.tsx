@@ -7,6 +7,7 @@ import { xLogoPath } from "@/components/ui/x-logo";
 import NumberFlow from "@number-flow/react";
 import confettiLib from "canvas-confetti";
 import { Minus, Plus, Timer } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useCallback, useMemo, useRef, useState } from "react";
 
 /**
@@ -42,6 +43,7 @@ export function CompleteControls({
 }: CompleteControlsProps) {
   const [isTimerModalOpen, setIsTimerModalOpen] = useState(false);
   const timerButtonRef = useRef<HTMLButtonElement>(null);
+  const t = useTranslations("calendar.controls");
 
   // Handlers for increment/decrement with completion callback
   const handleIncrement = useCallback(() => {
@@ -102,7 +104,7 @@ export function CompleteControls({
             className="flex h-6 w-[96px] items-center justify-center text-xs"
             onClick={() => setIsTimerModalOpen(true)}
           >
-            Start
+            {t("start")}
           </Button>
           <TimerModal
             isOpen={isTimerModalOpen}
@@ -162,7 +164,7 @@ export function CompleteControls({
           onClick={handleIncrement}
           options={getConfettiOptions()}
         >
-          Complete
+          {t("complete")}
         </ConfettiButton>
       </div>
     );

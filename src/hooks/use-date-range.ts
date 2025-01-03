@@ -35,10 +35,10 @@ const getDatesForRange = (daysBack: number) => {
 
 /**
  * React hook that memoizes date range calculations to prevent unnecessary recalculations
- * @param daysBack - Number of days to look back (defaults to 90)
+ * @param daysBack - Number of days to look back (defaults to 40)
  * @returns {Object} Memoized object containing today's date, start date, and array of dates
  */
-export function useDateRange(daysBack: number = 90) {
+export function useDateRange(daysBack: number = 40) {
   // Memoize the date range calculation to only recompute when daysBack changes
   const { today, startDate, days } = useMemo(() => getDatesForRange(daysBack), [daysBack]);
 

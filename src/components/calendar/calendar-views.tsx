@@ -1,5 +1,6 @@
 import { useMobile } from "@/hooks/use-mobile";
 import { format } from "date-fns";
+import { useTranslations } from "next-intl";
 
 import { Id } from "@server/convex/_generated/dataModel";
 
@@ -45,6 +46,7 @@ interface CalendarViewProps {
 
 export const CalendarView = ({ habit, color, days, completions, onToggle, view }: CalendarViewProps) => {
   const isMobile = useMobile();
+  const t = useTranslations("calendar");
 
   /**
    * Calculates the number of completions for a specific date
@@ -128,11 +130,15 @@ export const CalendarView = ({ habit, color, days, completions, onToggle, view }
           const endPadding = 6 - lastDay.getDay();
           const emptyStartDays = Array(startPadding).fill(null);
           const emptyEndDays = Array(endPadding).fill(null);
-          const dayLabels = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+          const dayLabels = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"].map((d) => t("weekDays." + d));
+
+          // Get translated month name
+          const monthName = t(`monthNames.${format(firstDay, "MMMM").toLowerCase()}`);
+          const year = format(firstDay, "yyyy");
 
           return (
             <div key={monthKey} className="mx-auto w-fit space-y-4">
-              <h3 className="font-medium">{format(firstDay, "MMMM yyyy")}</h3>
+              <h3 className="font-medium">{`${monthName} ${year}`}</h3>
               <div className="grid grid-cols-7 gap-[1px]">
                 {/* Day of week labels */}
                 {dayLabels.map((label) => (

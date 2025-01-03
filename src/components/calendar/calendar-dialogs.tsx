@@ -14,6 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useDebounce } from "@/hooks/use-debounce";
+import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 
 /**
@@ -27,42 +28,58 @@ import { useEffect, useState } from "react";
  * Each color is defined with a human-readable name and corresponding Tailwind class.
  * All colors use the 500 shade for consistency in the UI.
  */
-export const COLORS = [
-  { name: "Red", value: "bg-red-500" },
-  { name: "Orange", value: "bg-orange-500" },
-  { name: "Amber", value: "bg-amber-500" },
-  { name: "Yellow", value: "bg-yellow-500" },
-  { name: "Lime", value: "bg-lime-500" },
-  { name: "Green", value: "bg-green-500" },
-  { name: "Emerald", value: "bg-emerald-500" },
-  { name: "Teal", value: "bg-teal-500" },
-  { name: "Cyan", value: "bg-cyan-500" },
-  { name: "Sky", value: "bg-sky-500" },
-  { name: "Blue", value: "bg-blue-500" },
-  { name: "Indigo", value: "bg-indigo-500" },
-  { name: "Violet", value: "bg-violet-500" },
-  { name: "Purple", value: "bg-purple-500" },
-  { name: "Fuchsia", value: "bg-fuchsia-500" },
-  { name: "Pink", value: "bg-pink-500" },
-  { name: "Rose", value: "bg-rose-500" },
+const COLOR_VALUES = [
+  { key: "red", value: "bg-red-500" },
+  { key: "orange", value: "bg-orange-500" },
+  { key: "amber", value: "bg-amber-500" },
+  { key: "yellow", value: "bg-yellow-500" },
+  { key: "lime", value: "bg-lime-500" },
+  { key: "green", value: "bg-green-500" },
+  { key: "emerald", value: "bg-emerald-500" },
+  { key: "teal", value: "bg-teal-500" },
+  { key: "cyan", value: "bg-cyan-500" },
+  { key: "sky", value: "bg-sky-500" },
+  { key: "blue", value: "bg-blue-500" },
+  { key: "indigo", value: "bg-indigo-500" },
+  { key: "violet", value: "bg-violet-500" },
+  { key: "purple", value: "bg-purple-500" },
+  { key: "fuchsia", value: "bg-fuchsia-500" },
+  { key: "pink", value: "bg-pink-500" },
+  { key: "rose", value: "bg-rose-500" },
 ];
 
 /**
  * Predefined timer durations in minutes.
  * Starts with short durations and increases by 15-minute intervals up to 2 hours.
  */
-export const TIMER_DURATIONS = [
-  { name: "1 minute", value: 1 },
-  { name: "2 minutes", value: 2 },
-  { name: "5 minutes", value: 5 },
-  { name: "10 minutes", value: 10 },
-  { name: "15 minutes", value: 15 },
-  { name: "30 minutes", value: 30 },
-  { name: "45 minutes", value: 45 },
-  { name: "1 hour", value: 60 },
-  { name: "1 hour 30 minutes", value: 90 },
-  { name: "2 hours", value: 120 },
+const TIMER_VALUES = [
+  { key: "1min", value: 1 },
+  { key: "2min", value: 2 },
+  { key: "5min", value: 5 },
+  { key: "10min", value: 10 },
+  { key: "15min", value: 15 },
+  { key: "30min", value: 30 },
+  { key: "45min", value: 45 },
+  { key: "1hour", value: 60 },
+  { key: "1_5hour", value: 90 },
+  { key: "2hour", value: 120 },
 ];
+
+function useColors() {
+  const t = useTranslations("dialogs.colors");
+  return COLOR_VALUES.map(({ key, value }) => ({
+    name: t(key),
+    value,
+  }));
+}
+
+function useTimerDurations() {
+  const t = useTranslations("dialogs.timers");
+  return TIMER_VALUES.map(({ key, value }) => ({
+    name: t(key),
+    value,
+  }));
+}
 
 /**
  * Dialog component for creating a new calendar.
@@ -103,6 +120,8 @@ export const NewCalendarDialog = ({
 }: NewCalendarDialogProps) => {
   const [localName, setLocalName] = useState(name);
   const debouncedName = useDebounce(localName);
+  const t = useTranslations("dialogs");
+  const colors = useColors();
 
   useEffect(() => {
     onNameChange(debouncedName);
@@ -112,32 +131,32 @@ export const NewCalendarDialog = ({
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Create New Calendar</DialogTitle>
+          <DialogTitle>{t("calendar.new.title")}</DialogTitle>
         </DialogHeader>
         <div className="grid gap-4">
           <div>
-            <Label htmlFor="calendar-name">Calendar Name</Label>
+            <Label htmlFor="calendar-name">{t("calendar.new.name.label")}</Label>
             <Input
               id="calendar-name"
               value={localName}
               onChange={(e) => setLocalName(e.target.value)}
               onKeyDown={onKeyDown}
-              placeholder="e.g., Fitness Goals"
+              placeholder={t("calendar.new.name.placeholder")}
             />
           </div>
           <div>
-            <Label>Color Theme</Label>
+            <Label>{t("calendar.new.color.label")}</Label>
             <Select value={color} onValueChange={onColorChange}>
               <SelectTrigger className="w-full">
-                <SelectValue placeholder="Select a color">
+                <SelectValue placeholder={t("calendar.new.color.label")}>
                   <div className="flex items-center gap-2">
                     <div className={`h-4 w-4 rounded-full ${color}`} />
-                    {COLORS.find((c) => c.value === color)?.name}
+                    {colors.find((c) => c.value === color)?.name}
                   </div>
                 </SelectValue>
               </SelectTrigger>
               <SelectContent>
-                {COLORS.map((c) => (
+                {colors.map((c) => (
                   <SelectItem key={c.value} value={c.value}>
                     <div className="flex items-center gap-2">
                       <div className={`h-4 w-4 rounded-full ${c.value}`} />
@@ -150,10 +169,10 @@ export const NewCalendarDialog = ({
           </div>
           <div className="flex gap-2">
             <Button variant="outline" onClick={() => onOpenChange(false)} className="flex-1">
-              Cancel
+              {t("calendar.new.actions.cancel")}
             </Button>
             <Button onClick={onSubmit} className="flex-1">
-              Create Calendar
+              {t("calendar.new.actions.create")}
             </Button>
           </div>
         </div>
@@ -195,6 +214,8 @@ export const NewHabitDialog = ({
 }: NewHabitDialogProps) => {
   const [localName, setLocalName] = useState(name);
   const debouncedName = useDebounce(localName);
+  const t = useTranslations("dialogs");
+  const timerDurations = useTimerDurations();
 
   useEffect(() => {
     onNameChange(debouncedName);
@@ -204,30 +225,30 @@ export const NewHabitDialog = ({
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Add New Habit</DialogTitle>
+          <DialogTitle>{t("habit.new.title")}</DialogTitle>
         </DialogHeader>
         <div className="grid gap-4">
           <div>
-            <Label htmlFor="habit-name">Habit Name</Label>
+            <Label htmlFor="habit-name">{t("habit.new.name.label")}</Label>
             <Input
               id="habit-name"
               value={localName}
               onChange={(e) => setLocalName(e.target.value)}
               onKeyDown={onKeyDown}
-              placeholder="e.g., Morning Run"
+              placeholder={t("habit.new.name.placeholder")}
             />
           </div>
           <div>
-            <Label>Timer Duration</Label>
+            <Label>{t("habit.new.timer.label")}</Label>
             <Select
               value={timerDuration?.toString()}
               onValueChange={(value) => onTimerDurationChange(value ? parseInt(value) : undefined)}
             >
               <SelectTrigger>
-                <SelectValue placeholder="Select duration (optional)" />
+                <SelectValue placeholder={t("habit.new.timer.placeholder")} />
               </SelectTrigger>
               <SelectContent>
-                {TIMER_DURATIONS.map((duration) => (
+                {timerDurations.map((duration) => (
                   <SelectItem key={duration.value} value={duration.value.toString()}>
                     {duration.name}
                   </SelectItem>
@@ -237,10 +258,10 @@ export const NewHabitDialog = ({
           </div>
           <div className="flex gap-2">
             <Button variant="outline" onClick={() => onOpenChange(false)} className="flex-1">
-              Cancel
+              {t("habit.new.actions.cancel")}
             </Button>
             <Button onClick={onSubmit} className="flex-1">
-              Add Habit
+              {t("habit.new.actions.create")}
             </Button>
           </div>
         </div>
@@ -282,6 +303,8 @@ export const EditCalendarDialog = ({
   const [localName, setLocalName] = useState(name);
   const debouncedName = useDebounce(localName);
   const [showDeleteAlert, setShowDeleteAlert] = useState(false);
+  const t = useTranslations("dialogs");
+  const colors = useColors();
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
@@ -303,11 +326,11 @@ export const EditCalendarDialog = ({
       <Dialog open={isOpen} onOpenChange={onOpenChange}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Edit Calendar</DialogTitle>
+            <DialogTitle>{t("calendar.edit.title")}</DialogTitle>
           </DialogHeader>
           <div className="grid gap-4">
             <div>
-              <Label htmlFor="edit-calendar-name">Calendar Name</Label>
+              <Label htmlFor="edit-calendar-name">{t("calendar.edit.name.label")}</Label>
               <Input
                 id="edit-calendar-name"
                 value={localName}
@@ -316,18 +339,18 @@ export const EditCalendarDialog = ({
               />
             </div>
             <div>
-              <Label>Color Theme</Label>
+              <Label>{t("calendar.edit.color.label")}</Label>
               <Select value={color} onValueChange={onColorChange}>
                 <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select a color">
+                  <SelectValue placeholder={t("calendar.edit.color.label")}>
                     <div className="flex items-center gap-2">
                       <div className={`h-4 w-4 rounded-full ${color}`} />
-                      {COLORS.find((c) => c.value === color)?.name}
+                      {colors.find((c) => c.value === color)?.name}
                     </div>
                   </SelectValue>
                 </SelectTrigger>
                 <SelectContent>
-                  {COLORS.map((c) => (
+                  {colors.map((c) => (
                     <SelectItem key={c.value} value={c.value}>
                       <div className="flex items-center gap-2">
                         <div className={`h-4 w-4 rounded-full ${c.value}`} />
@@ -340,13 +363,13 @@ export const EditCalendarDialog = ({
             </div>
             <div className="flex gap-2">
               <Button variant="outline" onClick={() => onOpenChange(false)} className="flex-1">
-                Cancel
+                {t("calendar.edit.actions.cancel")}
               </Button>
               <Button variant="destructive" onClick={() => setShowDeleteAlert(true)}>
-                Delete
+                {t("calendar.edit.actions.delete")}
               </Button>
               <Button onClick={onSubmit} className="flex-1">
-                Save Changes
+                {t("calendar.edit.actions.save")}
               </Button>
             </div>
           </div>
@@ -356,19 +379,16 @@ export const EditCalendarDialog = ({
       <AlertDialog open={showDeleteAlert} onOpenChange={setShowDeleteAlert}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-            <AlertDialogDescription>
-              This will permanently delete the calendar &ldquo;{name}&rdquo; and all its habits. This action cannot be
-              undone.
-            </AlertDialogDescription>
+            <AlertDialogTitle>{t("calendar.edit.deleteConfirm.title")}</AlertDialogTitle>
+            <AlertDialogDescription>{t("calendar.edit.deleteConfirm.description", { name })}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>{t("calendar.edit.deleteConfirm.cancel")}</AlertDialogCancel>
             <AlertDialogAction
               onClick={onDelete}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
-              Delete Calendar
+              {t("calendar.edit.deleteConfirm.confirm")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -413,6 +433,8 @@ export const EditHabitDialog = ({
   const [localName, setLocalName] = useState(name);
   const [showDeleteAlert, setShowDeleteAlert] = useState(false);
   const debouncedName = useDebounce(localName);
+  const t = useTranslations("dialogs");
+  const timerDurations = useTimerDurations();
 
   useEffect(() => {
     setLocalName(name);
@@ -427,11 +449,11 @@ export const EditHabitDialog = ({
       <Dialog open={isOpen} onOpenChange={onOpenChange}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Edit Habit</DialogTitle>
+            <DialogTitle>{t("habit.edit.title")}</DialogTitle>
           </DialogHeader>
           <div className="grid gap-4">
             <div>
-              <Label htmlFor="edit-habit-name">Habit Name</Label>
+              <Label htmlFor="edit-habit-name">{t("habit.edit.name.label")}</Label>
               <Input
                 id="edit-habit-name"
                 value={localName}
@@ -440,16 +462,16 @@ export const EditHabitDialog = ({
               />
             </div>
             <div>
-              <Label>Timer Duration</Label>
+              <Label>{t("habit.edit.timer.label")}</Label>
               <Select
                 value={timerDuration?.toString()}
                 onValueChange={(value) => onTimerDurationChange(value ? parseInt(value) : undefined)}
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="Select duration (optional)" />
+                  <SelectValue placeholder={t("habit.edit.timer.placeholder")} />
                 </SelectTrigger>
                 <SelectContent>
-                  {TIMER_DURATIONS.map((duration) => (
+                  {timerDurations.map((duration) => (
                     <SelectItem key={duration.value} value={duration.value.toString()}>
                       {duration.name}
                     </SelectItem>
@@ -459,13 +481,13 @@ export const EditHabitDialog = ({
             </div>
             <div className="flex gap-2">
               <Button variant="outline" onClick={() => onOpenChange(false)} className="flex-1">
-                Cancel
+                {t("habit.edit.actions.cancel")}
               </Button>
               <Button variant="destructive" onClick={() => setShowDeleteAlert(true)}>
-                Delete
+                {t("habit.edit.actions.delete")}
               </Button>
               <Button onClick={onSubmit} className="flex-1">
-                Save Changes
+                {t("habit.edit.actions.save")}
               </Button>
             </div>
           </div>
@@ -475,18 +497,16 @@ export const EditHabitDialog = ({
       <AlertDialog open={showDeleteAlert} onOpenChange={setShowDeleteAlert}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-            <AlertDialogDescription>
-              This will permanently delete the habit &ldquo;{name}&rdquo;. This action cannot be undone.
-            </AlertDialogDescription>
+            <AlertDialogTitle>{t("habit.edit.deleteConfirm.title")}</AlertDialogTitle>
+            <AlertDialogDescription>{t("habit.edit.deleteConfirm.description", { name })}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>{t("habit.edit.deleteConfirm.cancel")}</AlertDialogCancel>
             <AlertDialogAction
               onClick={onDelete}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
-              Delete Habit
+              {t("habit.edit.deleteConfirm.confirm")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

@@ -23,6 +23,7 @@ import { Id } from "@server/convex/_generated/dataModel";
  * @property {string} colorClass - Base color theme for visual feedback (e.g., "bg-red-500")
  * @property {boolean} [gridView] - Optional flag for grid view display mode
  * @property {boolean} [disabled] - Optional flag to disable interactions (e.g., for dates outside query range)
+ * @property {string} [label] - Optional label to display instead of date number
  */
 interface DayCellProps {
   habitId: Id<"habits">;
@@ -32,13 +33,14 @@ interface DayCellProps {
   colorClass: string; // Base color theme (e.g., "bg-red-500") for visual feedback
   gridView?: boolean; // Whether to display in grid view (affects sizing)
   disabled?: boolean; // Whether the completion menu is disabled (outside query range)
+  label?: string; // Optional label to display instead of date number
 }
 
 /**
  * DayCell component for displaying and managing daily habit completions
  * Includes a clickable button that shows completion status and a popover menu for updating counts
  */
-export const DayCell = ({ date, count, onCountChange, colorClass, gridView, disabled }: DayCellProps) => {
+export const DayCell = ({ date, count, onCountChange, colorClass, gridView, disabled, label }: DayCellProps) => {
   // Controls visibility of the completion controls popover
   const [isOpen, setIsOpen] = useState(false);
 
@@ -85,13 +87,13 @@ export const DayCell = ({ date, count, onCountChange, colorClass, gridView, disa
               />
             </div>
           ) : (
-            // Display date number when no completions
+            // Display date number or label when no completions
             <span
               className={`absolute inset-0 flex items-center justify-center text-xs font-medium text-zinc-900 dark:text-zinc-100 ${
                 gridView ? "" : "scale-75"
               }`}
             >
-              {new Date(date).getDate()}
+              {label ?? new Date(date).getDate()}
             </span>
           )}
         </Button>
