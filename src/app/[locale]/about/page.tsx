@@ -127,7 +127,7 @@ export default function AboutPage() {
               <p className="italic text-muted-foreground">{t("openSourceProject.creatorQuote")}</p>
             </div>
 
-            <Avatar className="relative top-6 ml-2 h-12 w-12">
+            <Avatar className={`relative top-6 ${isRTL ? "mr-2" : "ml-2"} h-12 w-12`}>
               <AvatarImage src="https://avatars.githubusercontent.com/u/8214158?s=100" />
               <AvatarFallback>IA</AvatarFallback>
             </Avatar>
@@ -163,7 +163,9 @@ export default function AboutPage() {
             <p className="text-muted-foreground">{t("seinfeldStrategy.description")}</p>
 
             {/* Direct quote from the strategy's origin */}
-            <blockquote className="my-6 border-l-2 pl-6 italic text-muted-foreground">
+            <blockquote
+              className={`my-6 ${isRTL ? "border-r-2 pr-6" : "border-l-2 pl-6"} italic text-muted-foreground`}
+            >
               {t("seinfeldStrategy.quote")}
             </blockquote>
 
@@ -177,7 +179,7 @@ export default function AboutPage() {
             {/* Key principles summary box */}
             <div className="mt-6 rounded-3xl bg-muted p-4">
               <h4 className="flex justify-center font-bold">{t("seinfeldStrategy.whyItWorks.principles.title")}</h4>
-              <ul className="mt-2 list-disc pl-6 text-muted-foreground">
+              <ul className={`mt-2 list-disc ${isRTL ? "pr-6" : "pl-6"} text-muted-foreground`}>
                 {[0, 1, 2, 3].map((index) => (
                   <li key={index}>{t(`seinfeldStrategy.whyItWorks.principles.items.${index}`)}</li>
                 ))}
