@@ -49,9 +49,9 @@ export default function CalendarsPage() {
   const { calendarView, setCalendarView, ...calendarState } = useCalendarState();
   const habitState = useHabitState();
 
-  // Pre-fetch data for both monthly (90 days) and yearly (365 days) views
+  // Pre-fetch data for both monthly (40 days) and yearly (365 days) views
   // This ensures smooth transitions between views without loading states
-  const monthData = useDateRange(90);
+  const monthData = useDateRange(40);
   const yearData = useDateRange(365);
   const monthViewData = useCalendarData(monthData.startDate, monthData.today);
   const yearViewData = useCalendarData(yearData.startDate, yearData.today);

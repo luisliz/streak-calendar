@@ -3,6 +3,7 @@ import { CompleteControls } from "@/components/ui/complete-controls";
 import { format } from "date-fns";
 import { Pencil, PlusCircle } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { useLocale } from "next-intl";
 
 import { Id } from "@server/convex/_generated/dataModel";
 
@@ -69,7 +70,8 @@ export const CalendarItem = ({
   view,
 }: CalendarItemProps) => {
   const t = useTranslations("calendar");
-  // Normalize color theme format by ensuring it has the 'bg-' prefix
+  const locale = useLocale();
+  const isRTL = locale === "he";
   const colorTheme = calendar.colorTheme.startsWith("bg-") ? calendar.colorTheme : `bg-${calendar.colorTheme}-500`;
 
   return (
@@ -101,17 +103,22 @@ export const CalendarItem = ({
           </Button>
         </div>
       ) : view === "monthRow" ? (
-        // Horizontal Month Row Layout
-        <div className="">
+        <div className="relative">
           {/* Calendar Header with Day Labels */}
           <div className="relative flex">
-            {/* Left spacing for habit names */}
-            <div className="w-16 bg-card md:w-32" />
-            {/* Gradient fade effect for overflow */}
-            <div className="absolute z-10 ml-16 h-6 w-12 bg-gradient-to-r from-card to-transparent md:ml-32" />
+            {/* Left/Right spacing for habit names based on direction */}
+            <div className={`${isRTL ? "order-last" : "order-first"} w-16 bg-card md:w-32`} />
+            {/* Gradient fade effect for overflow - direction aware */}
+            <div
+              className={`absolute z-10 h-6 w-12 ${
+                isRTL
+                  ? "right-16 bg-gradient-to-l from-card to-transparent md:right-32"
+                  : "left-16 bg-gradient-to-r from-card to-transparent md:left-32"
+              }`}
+            />
             {/* Day name labels (Mo, Tu, We, etc.) */}
-            <div className="mr-2 flex flex-1 gap-px overflow-hidden">
-              <div className="flex w-full justify-end gap-px">
+            <div className="flex flex-1 gap-px overflow-hidden">
+              <div className={`flex w-full justify-end gap-px ${isRTL ? "pl-[96px]" : "pr-24"}`}>
                 {days.map((day) => {
                   const dayOfWeek = format(new Date(day), "eee").toLowerCase();
                   return (
@@ -126,13 +133,11 @@ export const CalendarItem = ({
                 })}
               </div>
             </div>
-            <div className="w-24" />
           </div>
 
           {/* Habit Rows Section */}
-          <div className="overflow-hidden">
+          <div className="relative space-y-px overflow-hidden">
             {habits.map((habit) => {
-              // Calculate today's completion count for the habit
               const today = new Date().toISOString().split("T")[0];
               const todayCount = completions.filter(
                 (c) => c.habitId === habit._id && new Date(c.completedAt).toISOString().split("T")[0] === today
@@ -141,47 +146,63 @@ export const CalendarItem = ({
               return (
                 <div key={habit._id} className="relative flex items-start">
                   {/* Calendar view grid for the habit */}
-                  <CalendarView
-                    habit={habit}
-                    color={colorTheme}
-                    days={days}
-                    completions={completions}
-                    onToggle={onToggleHabit}
-                    view={view}
-                  />
-                  {/* Editable habit name with hover effects */}
+                  <div className="flex-1">
+                    <CalendarView
+                      habit={habit}
+                      color={colorTheme}
+                      days={days}
+                      completions={completions}
+                      onToggle={onToggleHabit}
+                      view={view}
+                    />
+                  </div>
+                  {/* Editable habit name with hover effects - direction aware */}
                   <div
-                    className="group absolute left-0 flex w-24 cursor-pointer items-start transition-colors hover:text-muted-foreground md:w-48"
+                    className={`group absolute flex w-24 cursor-pointer items-start transition-colors hover:text-muted-foreground md:w-48 ${
+                      isRTL ? "right-0" : "left-0"
+                    }`}
                     onClick={() => onEditHabit(habit)}
                   >
                     <div className="relative flex items-center truncate">
                       <h3 className="bg-card text-base font-medium">
                         <span className="truncate">{habit.name}</span>
                         {habit.timerDuration && (
-                          <span className="ml-1 text-sm text-muted-foreground/50">({habit.timerDuration}m)</span>
+                          <span className={`${isRTL ? "mr-1" : "ml-1"} text-sm text-muted-foreground/50`}>
+                            ({habit.timerDuration}m)
+                          </span>
                         )}
                       </h3>
 
-                      <div className="h-6 w-12 bg-gradient-to-r from-card to-transparent" />
-                      <span className="absolute right-6 top-1/2 -translate-y-1/2 opacity-0 transition-opacity group-hover:opacity-100">
+                      <div
+                        className={`h-6 w-12 ${
+                          isRTL ? "bg-gradient-to-l" : "bg-gradient-to-r"
+                        } from-card to-transparent`}
+                      />
+                      <span
+                        className={`absolute top-1/2 -translate-y-1/2 opacity-0 transition-opacity group-hover:opacity-100 ${
+                          isRTL ? "left-6" : "right-6"
+                        }`}
+                      >
                         <Pencil className="h-4 w-4" />
                       </span>
                     </div>
                   </div>
                   {/* Habit completion controls for today */}
-                  <CompleteControls
-                    count={todayCount}
-                    onIncrement={() => onToggleHabit(habit._id, today, todayCount + 1)}
-                    onDecrement={() => onToggleHabit(habit._id, today, todayCount - 1)}
-                    variant="default"
-                    timerDuration={habit.timerDuration}
-                    habitName={habit.name}
-                  />
+                  <div className={`absolute ${isRTL ? "left-0" : "right-0"}`}>
+                    <CompleteControls
+                      count={todayCount}
+                      onIncrement={() => onToggleHabit(habit._id, today, todayCount + 1)}
+                      onDecrement={() => onToggleHabit(habit._id, today, todayCount - 1)}
+                      variant="default"
+                      timerDuration={habit.timerDuration}
+                      habitName={habit.name}
+                    />
+                  </div>
                 </div>
               );
             })}
           </div>
-          <div className="flex justify-end">
+          <div className={`flex ${isRTL ? "justify-start" : "justify-end"}`}>
             <Button className="h-[24px] w-24 text-xs" size="sm" onClick={onAddHabit}>
               {t("controls.new")}
             </Button>
