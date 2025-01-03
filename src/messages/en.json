@@ -90,6 +90,18 @@
         "title": "Flexible Habit Duration",
         "description": "Set custom durations for habits to match your needs"
       },
+      "responsiveDesign": {
+        "title": "Responsive Design",
+        "description": "Fully responsive UI that works seamlessly on mobile, tablet, and desktop"
+      },
+      "themeSupport": {
+        "title": "Dark/Light Mode",
+        "description": "Built-in theme support for comfortable viewing in any lighting"
+      },
+      "i18nSupport": {
+        "title": "Internationalization",
+        "description": "Support for multiple languages and locales"
+      },
       "openSource": {
         "title": "Open Source",
         "description": "A tool built for the community, by the community"

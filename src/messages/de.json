@@ -90,6 +90,18 @@
         "title": "Flexible Gewohnheitsdauer",
         "description": "Lege benutzerdefinierte Dauern für Gewohnheiten fest"
       },
+      "responsiveDesign": {
+        "title": "Responsives Design",
+        "description": "Vollständig responsive Benutzeroberfläche, die nahtlos auf Mobilgeräten, Tablets und Desktop funktioniert"
+      },
+      "themeSupport": {
+        "title": "Hell/Dunkel-Modus",
+        "description": "Integrierte Theme-Unterstützung für angenehmes Betrachten bei jeder Beleuchtung"
+      },
+      "i18nSupport": {
+        "title": "Internationalisierung",
+        "description": "Unterstützung für mehrere Sprachen und Regionen"
+      },
       "openSource": {
         "title": "Open Source",
         "description": "Ein Tool von der Community für die Community"

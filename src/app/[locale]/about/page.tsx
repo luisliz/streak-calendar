@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Link } from "@/i18n/routing";
 import { SignedIn, SignedOut } from "@clerk/nextjs";
+import { CheckCircle2 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import Image from "next/image";
 import NextLink from "next/link";
@@ -40,33 +41,75 @@ export default function AboutPage() {
         <CardContent>
           {/* Feature list with primary headings and muted descriptions */}
           <ul className="space-y-4 text-muted-foreground">
-            <li>
-              <strong className="text-primary">{t("features.visualTracking.title")}</strong>
-              <p>{t("features.visualTracking.description")}</p>
+            <li className="flex gap-3">
+              <CheckCircle2 className="h-6 w-6 flex-shrink-0 text-green-500" />
+              <div>
+                <strong className="text-primary">{t("features.visualTracking.title")}</strong>
+                <p>{t("features.visualTracking.description")}</p>
+              </div>
             </li>
-            <li>
-              <strong className="text-primary">{t("features.multiHabit.title")}</strong>
-              <p>{t("features.multiHabit.description")}</p>
+            <li className="flex gap-3">
+              <CheckCircle2 className="h-6 w-6 flex-shrink-0 text-green-500" />
+              <div>
+                <strong className="text-primary">{t("features.multiHabit.title")}</strong>
+                <p>{t("features.multiHabit.description")}</p>
+              </div>
             </li>
-            <li>
-              <strong className="text-primary">{t("features.customThemes.title")}</strong>
-              <p>{t("features.customThemes.description")}</p>
+            <li className="flex gap-3">
+              <CheckCircle2 className="h-6 w-6 flex-shrink-0 text-green-500" />
+              <div>
+                <strong className="text-primary">{t("features.customThemes.title")}</strong>
+                <p>{t("features.customThemes.description")}</p>
+              </div>
             </li>
-            <li>
-              <strong className="text-primary">{t("features.timedTasks.title")}</strong>
-              <p>{t("features.timedTasks.description")}</p>
+            <li className="flex gap-3">
+              <CheckCircle2 className="h-6 w-6 flex-shrink-0 text-green-500" />
+              <div>
+                <strong className="text-primary">{t("features.timedTasks.title")}</strong>
+                <p>{t("features.timedTasks.description")}</p>
+              </div>
             </li>
-            <li>
-              <strong className="text-primary">{t("features.activityGrid.title")}</strong>
-              <p>{t("features.activityGrid.description")}</p>
+            <li className="flex gap-3">
+              <CheckCircle2 className="h-6 w-6 flex-shrink-0 text-green-500" />
+              <div>
+                <strong className="text-primary">{t("features.activityGrid.title")}</strong>
+                <p>{t("features.activityGrid.description")}</p>
+              </div>
             </li>
-            <li>
-              <strong className="text-primary">{t("features.flexibleDuration.title")}</strong>
-              <p>{t("features.flexibleDuration.description")}</p>
+            <li className="flex gap-3">
+              <CheckCircle2 className="h-6 w-6 flex-shrink-0 text-green-500" />
+              <div>
+                <strong className="text-primary">{t("features.flexibleDuration.title")}</strong>
+                <p>{t("features.flexibleDuration.description")}</p>
+              </div>
             </li>
-            <li>
-              <strong className="text-primary">{t("features.openSource.title")}</strong>
-              <p>{t("features.openSource.description")}</p>
+            <li className="flex gap-3">
+              <CheckCircle2 className="h-6 w-6 flex-shrink-0 text-green-500" />
+              <div>
+                <strong className="text-primary">{t("features.responsiveDesign.title")}</strong>
+                <p>{t("features.responsiveDesign.description")}</p>
+              </div>
+            </li>
+            <li className="flex gap-3">
+              <CheckCircle2 className="h-6 w-6 flex-shrink-0 text-green-500" />
+              <div>
+                <strong className="text-primary">{t("features.themeSupport.title")}</strong>
+                <p>{t("features.themeSupport.description")}</p>
+              </div>
+            </li>
+            <li className="flex gap-3">
+              <CheckCircle2 className="h-6 w-6 flex-shrink-0 text-green-500" />
+              <div>
+                <strong className="text-primary">{t("features.i18nSupport.title")}</strong>
+                <p>{t("features.i18nSupport.description")}</p>
+              </div>
+            </li>
+            <li className="flex gap-3">
+              <CheckCircle2 className="h-6 w-6 flex-shrink-0 text-green-500" />
+              <div>
+                <strong className="text-primary">{t("features.openSource.title")}</strong>
+                <p>{t("features.openSource.description")}</p>
+              </div>
             </li>
           </ul>
         </CardContent>
