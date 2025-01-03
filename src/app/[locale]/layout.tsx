@@ -3,7 +3,7 @@ import { RootWrapper } from "@/components/root-wrapper";
 import { Locale, defaultLocale, locales } from "@/i18n/settings";
 import { cn } from "@/lib/utils";
 import { getMessages, unstable_setRequestLocale } from "next-intl/server";
-import { Inter } from "next/font/google";
+import { Inter, Noto_Sans, Noto_Sans_Hebrew } from "next/font/google";
 import { notFound } from "next/navigation";
 
 /**
@@ -15,6 +15,20 @@ import { notFound } from "next/navigation";
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
+  display: "swap",
+  preload: true,
+});
+
+const noto = Noto_Sans({
+  variable: "--font-noto",
+  subsets: ["latin", "latin-ext", "cyrillic", "devanagari"],
+  display: "swap",
+  preload: true,
+});
+
+const notoHebrew = Noto_Sans_Hebrew({
+  variable: "--font-noto-hebrew",
+  subsets: ["hebrew"],
   display: "swap",
   preload: true,
 });
@@ -57,6 +71,8 @@ export default async function LocaleLayout({
     <body
       className={cn(
         inter.variable,
+        noto.variable,
+        notoHebrew.variable,
         "min-h-screen bg-background font-sans antialiased",
         "grid-background",
         // Enable RTL layout for Hebrew locale
