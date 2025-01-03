@@ -11,6 +11,7 @@ export const metadata: Metadata = {
   title: "Streak Calendar - Build Better Habits",
   description: "Track your daily habits, build streaks, and achieve your goals with visual progress tracking",
   keywords: ["habit tracking", "streak calendar", "productivity", "goal tracking", "daily routine"],
+  themeColor: "#0c4a6e",
   openGraph: {
     title: "Streak Calendar - Build Better Habits",
     description: "Track your daily habits, build streaks, and achieve your goals with visual progress tracking",
