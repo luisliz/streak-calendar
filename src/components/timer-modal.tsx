@@ -18,7 +18,6 @@ interface CircularTimerProps {
 function CircularTimer({ initialTime, onComplete, className, autoStart = false, onActiveChange }: CircularTimerProps) {
   const [time, setTime] = useState(initialTime);
   const [isActive, setIsActive] = useState(autoStart);
-  const t = useTranslations();
 
   useEffect(() => {
     onActiveChange?.(isActive);
