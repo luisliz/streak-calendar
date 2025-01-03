@@ -26,7 +26,7 @@ export function AppHeader() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
-    <header className="border-b border-border">
+    <header className="border-b border-border bg-background/30">
       <div className="container mx-auto px-3 md:px-4">
         <div className="relative flex h-14 items-center justify-between md:h-16">
           {/* Logo */}
@@ -67,7 +67,7 @@ export function AppHeader() {
                 <Link href="/pricing">{t("getStarted")}</Link>
               </Button>
             </SignedOut>
-            <div className="flex scale-90 md:mx-2 md:scale-110">
+            <div className="flex scale-100 md:mx-2 md:scale-110">
               <SignedIn>
                 <UserButton />
               </SignedIn>
@@ -78,24 +78,24 @@ export function AppHeader() {
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
           <div className="border-b bg-background md:hidden">
-            <div className="flex flex-col gap-3 py-3 md:gap-4 md:py-4">
+            <div className="flex flex-col">
               <Link
                 href="/about"
-                className="text-xs font-medium hover:text-muted-foreground md:text-sm"
+                className="font-medium hover:text-muted-foreground"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 {t("about")}
               </Link>
               <Link
                 href="/calendars"
-                className="text-xs font-medium hover:text-muted-foreground md:text-sm"
+                className="font-medium hover:text-muted-foreground"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 {t("calendar")}
               </Link>
               <Link
                 href="/pricing"
-                className="text-xs font-medium hover:text-muted-foreground md:text-sm"
+                className="font-medium hover:text-muted-foreground"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 {t("pricing")}

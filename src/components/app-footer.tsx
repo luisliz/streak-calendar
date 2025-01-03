@@ -41,7 +41,7 @@ export function AppFooter() {
   };
 
   return (
-    <footer className="border-t border-border">
+    <footer className="border-t border-border bg-background/30">
       <div className="container relative mx-auto flex min-h-[4rem] flex-col items-center gap-4 px-3 py-4 md:h-16 md:flex-row md:justify-between md:gap-0 md:px-4 md:py-0">
         <p className="text-center text-xs text-muted-foreground md:text-left md:text-sm">
           {t("madeWith")}{" "}
