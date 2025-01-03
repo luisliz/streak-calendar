@@ -2,7 +2,11 @@
 
 Streak Calendar is an open source productivity tool that combines habit tracking, task timing, and progress visualization. It supports multiple calendars and habits, allowing you to customize your approach to personal growth. Featuring an activity grid similar to GitHub's contribution tracker, it offers a clear view of your achievements over time.
 
+This project is currently in its experimental/alpha stage and is solely developed by me. Any feedback, contributions, or support would be greatly appreciated as I continue to improve and refine it.
+
 ## Features
+
+Explore a range of features designed to help you stay motivated and organized:
 
 - **Visual Habit Tracking**: Mark daily accomplishments with X's and keep your streak alive
 - **Multi-Habit Support**: Create multiple calendars and assign habits to each
@@ -17,18 +21,15 @@ Streak Calendar is an open source productivity tool that combines habit tracking
 
 ## Technologies Used
 
-- [Next.js](https://nextjs.org/)
-- [React](https://react.dev/)
-- [TypeScript](https://www.typescriptlang.org/)
-- [Tailwind CSS](https://tailwindcss.com/)
-- [Convex](https://www.convex.dev/)
-- [Clerk](https://clerk.com/)
-- [Framer Motion](https://www.framer.com/motion/)
-- [Radix UI](https://www.radix-ui.com/)
-- [Lucide React](https://lucide.dev/)
-- [shadcn/ui](https://ui.shadcn.com/)
-- [date-fns](https://date-fns.org/)
-- [Canvas Confetti](https://www.kirilv.com/canvas-confetti/)
+Built with a modern tech stack to ensure efficiency, scalability, and an engaging user experience:
+
+- Framework: [Next.js](https://nextjs.org/)
+- Backend: [Convex](https://www.convex.dev/)
+- Authentication: [Clerk](https://clerk.com/)
+- Styling: [Tailwind CSS](https://tailwindcss.com/)
+- UI: [shadcn/ui](https://ui.shadcn.com/)
+
+Also used: [Canvas Confetti](https://www.kirilv.com/canvas-confetti/), [Framer Motion](https://www.framer.com/motion/), [Lucide React](https://lucide.dev/), [Radix UI](https://www.radix-ui.com/), [React](https://react.dev/), [TypeScript](https://www.typescriptlang.org/), [date-fns](https://date-fns.org/), [shadcn-pricing-page](https://github.com/aymanch-03/shadcn-pricing-page)
 
 ## Getting Started
 
@@ -81,3 +82,7 @@ Streak Calendar is open source to encourage transparency and collaboration. Cont
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
+
+---
+
+Happy tracking! 🎯
