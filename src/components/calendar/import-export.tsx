@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useImportExport } from "@/hooks/use-import-export";
 import { ArrowUpDown, Download, Upload } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 /**
  * ImportExport Component
@@ -22,6 +23,7 @@ import { ArrowUpDown, Download, Upload } from "lucide-react";
  */
 
 export function ImportExport() {
+  const t = useTranslations("calendar.importExport");
   // Custom hook managing all import/export state and handlers
   const {
     handleExportConfirm, // Handles the actual export operation
@@ -42,33 +44,33 @@ export function ImportExport() {
       <Dialog open={showImportExportDialog} onOpenChange={setShowImportExportDialog}>
         <DialogTrigger asChild>
           <Button variant="outline">
-            <ArrowUpDown className="mr-2 h-4 w-4 bg-transparent" />
-            Import/Export
+            <ArrowUpDown className="h-4 w-4 bg-transparent" />
+            {t("button")}
           </Button>
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Import/Export</DialogTitle>
+            <DialogTitle>{t("title")}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
             <div className="flex flex-col gap-4">
               {/* Export button - Opens export confirmation dialog */}
               <Button onClick={() => setShowExportDialog(true)}>
-                <Download className="mr-2 h-4 w-4" />
-                Export
+                <Download className="h-4 w-4" />
+                {t("export.button")}
               </Button>
               {/* Import button - Hidden file input with custom styled label */}
               <Button asChild>
                 <label className="flex cursor-pointer items-center justify-center">
-                  <Upload className="mr-2 h-4 w-4" />
-                  Import
+                  <Upload className="h-4 w-4" />
+                  {t("import.button")}
                   <input type="file" accept=".json" className="hidden" onChange={handleImportSelect} />
                 </label>
               </Button>
             </div>
             <div className="flex justify-end">
               <Button variant="outline" onClick={() => setShowImportExportDialog(false)}>
-                Cancel
+                {t("import.cancel")}
               </Button>
             </div>
           </div>
@@ -79,14 +81,12 @@ export function ImportExport() {
       <AlertDialog open={showExportDialog} onOpenChange={setShowExportDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Export</AlertDialogTitle>
-            <AlertDialogDescription>
-              This will export all your calendars, habits, and completion history.
-            </AlertDialogDescription>
+            <AlertDialogTitle>{t("export.title")}</AlertDialogTitle>
+            <AlertDialogDescription>{t("export.description")}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleExportConfirm}>Continue</AlertDialogAction>
+            <AlertDialogCancel>{t("export.cancel")}</AlertDialogCancel>
+            <AlertDialogAction onClick={handleExportConfirm}>{t("export.continue")}</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
@@ -95,10 +95,8 @@ export function ImportExport() {
       <AlertDialog open={showImportDialog} onOpenChange={setShowImportDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Import</AlertDialogTitle>
-            <AlertDialogDescription>
-              This will import calendars, habits, and completion history from the selected file.
-            </AlertDialogDescription>
+            <AlertDialogTitle>{t("import.title")}</AlertDialogTitle>
+            <AlertDialogDescription>{t("import.description")}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel onClick={() => setImportFile(null)}>Cancel</AlertDialogCancel>

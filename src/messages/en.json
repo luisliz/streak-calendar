@@ -267,6 +267,11 @@
       "1hour": "1 hour",
       "1_5hour": "1 hour 30 minutes",
       "2hour": "2 hours"
+    },
+    "timer": {
+      "title": "{duration} Minute Timer",
+      "cancel": "Cancel Timer",
+      "confirmCancel": "Timer is still running. Are you sure you want to cancel?"
     }
   },
   "calendar": {
@@ -274,6 +279,21 @@
       "calendar": "Calendar View",
       "row": "Row View"
     },
+    "emptyState": {
+      "noHabits": "No habits added yet. Add one to start tracking!"
+    },
+    "controls": {
+      "complete": "Complete",
+      "start": "Start",
+      "timer": "Timer",
+      "new": "New",
+      "addHabit": "Add Habit"
+    },
+    "dateFormat": {
+      "short": "{month} {day}",
+      "long": "{weekday}, {month} {day}"
+    },
+    "completions": "{count, plural, =1 {{date}: {count} completion} other {{date}: {count} completions}}",
     "yearlyOverview": {
       "title": "Yearly Overview",
       "thingsDone": "{count} things done last year",
@@ -297,11 +317,6 @@
         "dec": "Dec"
       },
       "tooltip": "{date}: {count} completions"
-    },
-    "controls": {
-      "complete": "Complete",
-      "start": "Start",
-      "timer": "Timer"
     },
     "weekDays": {
       "sun": "Sun",
@@ -334,6 +349,36 @@
       "october": "October",
       "november": "November",
       "december": "December"
+    },
+    "importExport": {
+      "button": "Import/Export",
+      "title": "Import/Export",
+      "import": {
+        "button": "Import",
+        "title": "Import",
+        "description": "This will import calendars, habits, and completion history from the selected file.",
+        "cancel": "Cancel",
+        "continue": "Continue"
+      },
+      "export": {
+        "button": "Export",
+        "title": "Export",
+        "description": "This will export all your calendars, habits, and completion history.",
+        "cancel": "Cancel",
+        "continue": "Continue"
+      }
+    },
+    "container": {
+      "emptyState": {
+        "noCalendars": "You haven't created any calendars yet.",
+        "createOne": "Create one to start tracking your habits!",
+        "createButton": "Create Calendar"
+      },
+      "addCalendar": "Add Calendar"
     }
+  },
+  "auth": {
+    "signInPrompt": "Please sign in to view your calendars",
+    "signIn": "Sign In"
   }
 }

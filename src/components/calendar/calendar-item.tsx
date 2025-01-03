@@ -94,10 +94,10 @@ export const CalendarItem = ({
       {habits.length === 0 ? (
         // Empty state when no habits exist
         <div className="flex w-full flex-col items-center justify-center">
-          <p className="pb-8 text-sm text-muted-foreground">No habits added yet. Add one to start tracking!</p>
+          <p className="pb-8 text-sm text-muted-foreground">{t("emptyState.noHabits")}</p>
           <Button size="sm" onClick={onAddHabit}>
             <PlusCircle className="h-4 w-4" />
-            Add Habit
+            {t("controls.addHabit")}
           </Button>
         </div>
       ) : view === "monthRow" ? (
@@ -126,7 +126,6 @@ export const CalendarItem = ({
                 })}
               </div>
             </div>
-            {/* TODO: 2024-12-31 - Add a habit here maybe? */}
             <div className="w-24" />
           </div>
 
@@ -184,7 +183,7 @@ export const CalendarItem = ({
           </div>
           <div className="flex justify-end">
             <Button className="h-[24px] w-24 text-xs" size="sm" onClick={onAddHabit}>
-              New
+              {t("controls.new")}
             </Button>
           </div>
         </div>
@@ -243,7 +242,7 @@ export const CalendarItem = ({
           <div className="flex justify-center pb-8">
             <Button variant="outline" size="sm" onClick={onAddHabit}>
               <PlusCircle className="h-4 w-4" />
-              Add Habit
+              {t("controls.addHabit")}
             </Button>
           </div>
         </div>

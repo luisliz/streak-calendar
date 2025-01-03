@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 import { Clock, Pause, Play, RotateCcw } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useCallback, useEffect, useState } from "react";
 
 interface CircularTimerProps {
@@ -17,6 +18,7 @@ interface CircularTimerProps {
 function CircularTimer({ initialTime, onComplete, className, autoStart = false, onActiveChange }: CircularTimerProps) {
   const [time, setTime] = useState(initialTime);
   const [isActive, setIsActive] = useState(autoStart);
+  const t = useTranslations();
 
   useEffect(() => {
     onActiveChange?.(isActive);
@@ -134,6 +136,7 @@ interface TimerModalProps {
 
 export default function TimerModal({ isOpen, setIsOpen, onComplete, timerDuration = 25, habitName }: TimerModalProps) {
   const [isTimerActive, setIsTimerActive] = useState(false);
+  const t = useTranslations();
   // Convert minutes to seconds for the timer
   const durationInSeconds = timerDuration * 60;
 
@@ -146,7 +149,7 @@ export default function TimerModal({ isOpen, setIsOpen, onComplete, timerDuratio
   const handleOpenChange = (open: boolean) => {
     if (!open && isTimerActive) {
       // If trying to close while timer is active, prevent closing
-      const shouldClose = window.confirm("Timer is still running. Are you sure you want to cancel?");
+      const shouldClose = window.confirm(t("dialogs.timer.confirmCancel"));
       if (!shouldClose) return;
     }
     setIsOpen(open);
@@ -162,7 +165,7 @@ export default function TimerModal({ isOpen, setIsOpen, onComplete, timerDuratio
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-xl">
               <Clock className="h-5 w-5" />
-              {habitName} - {timerDuration} Minute Timer
+              {habitName} - {t("dialogs.timer.title", { duration: timerDuration })}
             </DialogTitle>
           </DialogHeader>
         </div>
@@ -179,7 +182,7 @@ export default function TimerModal({ isOpen, setIsOpen, onComplete, timerDuratio
 
         <DialogFooter className="px-6 pb-6">
           <Button variant="outline" onClick={() => handleOpenChange(false)} className="w-full sm:w-auto">
-            Cancel Timer
+            {t("dialogs.timer.cancel")}
           </Button>
         </DialogFooter>
       </DialogContent>

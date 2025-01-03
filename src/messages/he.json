@@ -267,6 +267,11 @@
       "1hour": "שעה אחת",
       "1_5hour": "שעה וחצי",
       "2hour": "שעתיים"
+    },
+    "timer": {
+      "title": "טיימר ל-{duration} דקות",
+      "cancel": "בטל טיימר",
+      "confirmCancel": "הטיימר עדיין פועל. האם אתה בטוח שברצונך לבטל?"
     }
   },
   "calendar": {
@@ -274,6 +279,21 @@
       "calendar": "תצוגת לוח שנה",
       "row": "תצוגת שורות"
     },
+    "emptyState": {
+      "noHabits": "עדיין לא נוספו הרגלים. הוסף אחד כדי להתחיל לעקוב!"
+    },
+    "controls": {
+      "complete": "השלם",
+      "start": "התחל",
+      "timer": "טיימר",
+      "new": "חדש",
+      "addHabit": "הוסף הרגל"
+    },
+    "dateFormat": {
+      "short": "{day} ב{month}",
+      "long": "{weekday}, {day} ב{month}"
+    },
+    "completions": "{count, plural, =1 {{date}: השלמה {count}} =2 {{date}: {count} השלמות} many {{date}: {count} השלמות} other {{date}: {count} השלמות}}",
     "yearlyOverview": {
       "title": "סקירה שנתית",
       "thingsDone": "{count} דברים הושלמו בשנה שעברה",
@@ -297,11 +317,6 @@
         "dec": "דצמ"
       },
       "tooltip": "{date}: {count} השלמות"
-    },
-    "controls": {
-      "complete": "השלם",
-      "start": "התחל",
-      "timer": "טיימר"
     },
     "weekDays": {
       "sun": "א'",
@@ -334,6 +349,36 @@
       "october": "אוקטובר",
       "november": "נובמבר",
       "december": "דצמבר"
+    },
+    "importExport": {
+      "button": "ייבוא/ייצוא",
+      "title": "ייבוא/ייצוא",
+      "import": {
+        "button": "ייבוא",
+        "title": "ייבוא",
+        "description": "פעולה זו תייבא לוחות שנה, הרגלים והיסטוריית השלמות מהקובץ שנבחר.",
+        "cancel": "ביטול",
+        "continue": "המשך"
+      },
+      "export": {
+        "button": "ייצוא",
+        "title": "ייצוא",
+        "description": "פעולה זו תייצא את כל לוחות השנה, ההרגלים והיסטוריית ההשלמות שלך.",
+        "cancel": "ביטול",
+        "continue": "המשך"
+      }
+    },
+    "container": {
+      "emptyState": {
+        "noCalendars": "עדיין לא יצרת לוחות שנה.",
+        "createOne": "צור אחד כדי להתחיל לעקוב אחר ההרגלים שלך!",
+        "createButton": "צור לוח שנה"
+      },
+      "addCalendar": "הוסף לוח שנה"
     }
+  },
+  "auth": {
+    "signInPrompt": "אנא התחבר כדי לצפות בלוחות השנה שלך",
+    "signIn": "התחבר"
   }
 }

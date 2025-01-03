@@ -3,6 +3,8 @@ import { CompleteControls } from "@/components/ui/complete-controls";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { XLogo } from "@/components/ui/x-logo";
 import { getCompletionColorClass } from "@/lib/colors";
+import { format } from "date-fns";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 
 import { Id } from "@server/convex/_generated/dataModel";
@@ -43,6 +45,7 @@ interface DayCellProps {
 export const DayCell = ({ date, count, onCountChange, colorClass, gridView, disabled, label }: DayCellProps) => {
   // Controls visibility of the completion controls popover
   const [isOpen, setIsOpen] = useState(false);
+  const t = useTranslations("calendar");
 
   // Increment completion count if not disabled
   const handleIncrement = () => {
@@ -62,6 +65,17 @@ export const DayCell = ({ date, count, onCountChange, colorClass, gridView, disa
   const colorMatch = colorClass.match(/bg-(\w+)-500/);
   const fillClass = count > 0 && colorMatch ? getCompletionColorClass(colorClass, count) : "";
 
+  const dateObj = new Date(date);
+  const formattedDate = t("dateFormat.short", {
+    month: t(`monthNames.${format(dateObj, "MMMM").toLowerCase()}`),
+    day: dateObj.getDate(),
+  });
+
+  const completionText = t("completions", {
+    count,
+    date: formattedDate,
+  });
+
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger asChild>
@@ -71,10 +85,7 @@ export const DayCell = ({ date, count, onCountChange, colorClass, gridView, disa
           className={`${gridView ? "h-12 w-12" : "h-6 w-6"} rounded-full ${
             count === 0 ? "bg-muted" : ""
           } relative overflow-visible p-0 ${disabled ? "cursor-not-allowed opacity-50" : ""} hover:bg-transparent`}
-          title={`${new Date(date).toLocaleDateString(undefined, {
-            month: "short",
-            day: "numeric",
-          })}: ${count} completion${count !== 1 ? "s" : ""}`}
+          title={completionText}
           disabled={disabled}
         >
           {/* Render either completion indicator (X shape) or date number based on completion status */}
@@ -106,10 +117,10 @@ export const DayCell = ({ date, count, onCountChange, colorClass, gridView, disa
         <div className="flex flex-col items-center gap-2">
           {/* Display full date in popover */}
           <div className="text-xs">
-            {new Date(date).toLocaleDateString(undefined, {
-              weekday: "long",
-              month: "long",
-              day: "numeric",
+            {t("dateFormat.long", {
+              weekday: t(`weekDays.${format(dateObj, "eee").toLowerCase()}`),
+              month: t(`monthNames.${format(dateObj, "MMMM").toLowerCase()}`),
+              day: dateObj.getDate(),
             })}
           </div>
           {/* Completion controls for incrementing/decrementing count */}

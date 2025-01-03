@@ -11,6 +11,7 @@ import { Card } from "@/components/ui/card";
 import { Calendar, Completion, Day, EditingCalendar, Habit, Id } from "@/types";
 import { AnimatePresence, motion } from "framer-motion";
 import { PlusCircle } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useCallback } from "react";
 import { toast } from "react-hot-toast";
 
@@ -52,28 +53,31 @@ const EmptyState = ({
   setIsNewCalendarOpen: (open: boolean) => void;
   setNewCalendarColor: (color: string) => void;
   setNewCalendarName: (name: string) => void;
-}) => (
-  <>
-    <div className="py-12 text-center text-muted-foreground">
-      <p>You haven&apos;t created any calendars yet.</p>
-      <p className="mt-2">Create one to start tracking your habits!</p>
-      <Button variant="default" onClick={() => setIsNewCalendarOpen(true)} className="mt-4">
-        <PlusCircle className="mr-2 h-4 w-4" />
-        Create Calendar
-      </Button>
-    </div>
-    <NewCalendarDialog
-      color={newCalendarColor}
-      isOpen={isNewCalendarOpen}
-      name={newCalendarName}
-      onColorChange={setNewCalendarColor}
-      onKeyDown={handleCalendarKeyDown}
-      onNameChange={setNewCalendarName}
-      onOpenChange={setIsNewCalendarOpen}
-      onSubmit={() => handleAddCalendar(newCalendarName, newCalendarColor)}
-    />
-  </>
-);
+}) => {
+  const t = useTranslations("calendar.container.emptyState");
+  return (
+    <>
+      <div className="py-12 text-center text-muted-foreground">
+        <p>{t("noCalendars")}</p>
+        <p className="mt-2">{t("createOne")}</p>
+        <Button variant="default" onClick={() => setIsNewCalendarOpen(true)} className="mt-4">
+          <PlusCircle className="mr-2 h-4 w-4" />
+          {t("createButton")}
+        </Button>
+      </div>
+      <NewCalendarDialog
+        color={newCalendarColor}
+        isOpen={isNewCalendarOpen}
+        name={newCalendarName}
+        onColorChange={setNewCalendarColor}
+        onKeyDown={handleCalendarKeyDown}
+        onNameChange={setNewCalendarName}
+        onOpenChange={setIsNewCalendarOpen}
+        onSubmit={() => handleAddCalendar(newCalendarName, newCalendarColor)}
+      />
+    </>
+  );
+};
 
 /**
  * Interface for calendar CRUD operations and habit tracking
@@ -157,6 +161,8 @@ export function CalendarContainer({
   onViewChange,
   isLoading = false,
 }: CalendarContainerProps) {
+  const t = useTranslations("calendar.container");
+
   /**
    * Destructure state management props for easier access
    */
@@ -389,8 +395,8 @@ export function CalendarContainer({
           </div>
           <div className="flex justify-center pb-4">
             <Button variant="default" onClick={() => setIsNewCalendarOpen(true)}>
-              <PlusCircle className="mr-2 h-4 w-4" />
-              Add Calendar
+              <PlusCircle className="h-4 w-4" />
+              {t("addCalendar")}
             </Button>
           </div>
         </MotionCard>

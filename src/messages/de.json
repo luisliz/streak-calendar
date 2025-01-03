@@ -272,6 +272,11 @@
       "1hour": "1 Stunde",
       "1_5hour": "1 Stunde 30 Minuten",
       "2hour": "2 Stunden"
+    },
+    "timer": {
+      "title": "{duration} Minuten Timer",
+      "cancel": "Timer abbrechen",
+      "confirmCancel": "Timer läuft noch. Sind Sie sicher, dass Sie abbrechen möchten?"
     }
   },
   "calendar": {
@@ -279,6 +284,21 @@
       "calendar": "Kalenderansicht",
       "row": "Zeilenansicht"
     },
+    "emptyState": {
+      "noHabits": "Noch keine Gewohnheiten hinzugefügt. Füge eine hinzu, um mit dem Tracking zu beginnen!"
+    },
+    "controls": {
+      "complete": "Erledigt",
+      "start": "Start",
+      "timer": "Timer",
+      "new": "Neu",
+      "addHabit": "Gewohnheit hinzufügen"
+    },
+    "dateFormat": {
+      "short": "{day}. {month}",
+      "long": "{weekday}, {day}. {month}"
+    },
+    "completions": "{count, plural, =1 {{date}: {count} Erledigung} other {{date}: {count} Erledigungen}}",
     "yearlyOverview": {
       "title": "Jahresübersicht",
       "thingsDone": "{count} Dinge im letzten Jahr erledigt",
@@ -302,11 +322,6 @@
         "dec": "Dez"
       },
       "tooltip": "{date}: {count} Erledigungen"
-    },
-    "controls": {
-      "complete": "Erledigt",
-      "start": "Start",
-      "timer": "Timer"
     },
     "weekDays": {
       "sun": "So",
@@ -339,6 +354,36 @@
       "october": "Oktober",
       "november": "November",
       "december": "Dezember"
+    },
+    "importExport": {
+      "button": "Import/Export",
+      "title": "Import/Export",
+      "import": {
+        "button": "Import",
+        "title": "Import",
+        "description": "Dies importiert Kalender, Gewohnheiten und den Verlauf aus der ausgewählten Datei.",
+        "cancel": "Abbrechen",
+        "continue": "Fortfahren"
+      },
+      "export": {
+        "button": "Export",
+        "title": "Export",
+        "description": "Dies exportiert alle deine Kalender, Gewohnheiten und den Verlauf.",
+        "cancel": "Abbrechen",
+        "continue": "Fortfahren"
+      }
+    },
+    "container": {
+      "emptyState": {
+        "noCalendars": "Du hast noch keine Kalender erstellt.",
+        "createOne": "Erstelle einen, um deine Gewohnheiten zu verfolgen!",
+        "createButton": "Kalender erstellen"
+      },
+      "addCalendar": "Kalender hinzufügen"
     }
+  },
+  "auth": {
+    "signInPrompt": "Bitte melden Sie sich an, um Ihre Kalender anzuzeigen",
+    "signIn": "Anmelden"
   }
 }

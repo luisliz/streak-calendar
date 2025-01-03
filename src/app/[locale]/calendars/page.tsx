@@ -8,6 +8,7 @@ import { useCalendarState } from "@/hooks/use-calendar-state";
 import { useDateRange } from "@/hooks/use-date-range";
 import { useHabitState } from "@/hooks/use-habit-state";
 import { SignInButton, SignedIn, SignedOut } from "@clerk/nextjs";
+import { useTranslations } from "next-intl";
 import { useMemo } from "react";
 
 /**
@@ -24,21 +25,24 @@ import { useMemo } from "react";
  * Authentication wrapper component that handles user authentication state
  * Shows sign-in button for unauthenticated users and renders children for authenticated users
  */
-const AuthenticationWrapper = ({ children }: { children: React.ReactNode }) => (
-  <>
-    <SignedIn>{children}</SignedIn>
-    <SignedOut>
-      <div className="flex min-h-[50vh] flex-col items-center justify-center gap-4">
-        <h2 className="text-xl font-semibold">Please sign in to view your calendars</h2>
-        <SignInButton mode="modal">
-          <button className="rounded-md bg-primary px-4 py-2 text-primary-foreground hover:bg-primary/90">
-            Sign In
-          </button>
-        </SignInButton>
-      </div>
-    </SignedOut>
-  </>
-);
+const AuthenticationWrapper = ({ children }: { children: React.ReactNode }) => {
+  const t = useTranslations("auth");
+  return (
+    <>
+      <SignedIn>{children}</SignedIn>
+      <SignedOut>
+        <div className="flex min-h-[50vh] flex-col items-center justify-center gap-4">
+          <h2 className="text-xl font-semibold">{t("signInPrompt")}</h2>
+          <SignInButton mode="modal">
+            <button className="rounded-md bg-primary px-4 py-2 text-primary-foreground hover:bg-primary/90">
+              {t("signIn")}
+            </button>
+          </SignInButton>
+        </div>
+      </SignedOut>
+    </>
+  );
+};
 
 export default function CalendarsPage() {
   // Initialize calendar view state and habit management

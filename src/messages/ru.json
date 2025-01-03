@@ -272,6 +272,11 @@
       "1hour": "1 час",
       "1_5hour": "1 час 30 минут",
       "2hour": "2 часа"
+    },
+    "timer": {
+      "title": "Таймер на {duration} минут",
+      "cancel": "Отменить таймер",
+      "confirmCancel": "Таймер все еще работает. Вы уверены, что хотите отменить?"
     }
   },
   "calendar": {
@@ -279,6 +284,21 @@
       "calendar": "Вид календаря",
       "row": "Вид строками"
     },
+    "emptyState": {
+      "noHabits": "Привычки еще не добавлены. Добавьте одну, чтобы начать отслеживание!"
+    },
+    "controls": {
+      "complete": "Выполнить",
+      "start": "Начать",
+      "timer": "Таймер",
+      "new": "Новая",
+      "addHabit": "Добавить привычку"
+    },
+    "dateFormat": {
+      "short": "{day} {month}",
+      "long": "{weekday}, {day} {month}"
+    },
+    "completions": "{count, plural, one {{date}: {count} выполнение} few {{date}: {count} выполнения} many {{date}: {count} выполнений} other {{date}: {count} выполнений}}",
     "yearlyOverview": {
       "title": "Годовой обзор",
       "thingsDone": "{count} выполнено за прошлый год",
@@ -302,11 +322,6 @@
         "dec": "Дек"
       },
       "tooltip": "{date}: {count} выполнено"
-    },
-    "controls": {
-      "complete": "Выполнить",
-      "start": "Начать",
-      "timer": "Таймер"
     },
     "weekDays": {
       "sun": "Вс",
@@ -339,6 +354,36 @@
       "october": "Октябрь",
       "november": "Ноябрь",
       "december": "Декабрь"
+    },
+    "importExport": {
+      "button": "Импорт/Экспорт",
+      "title": "Импорт/Экспорт",
+      "import": {
+        "button": "Импорт",
+        "title": "Импорт",
+        "description": "Это импортирует календари, привычки и историю выполнения из выбранного файла.",
+        "cancel": "Отмена",
+        "continue": "Продолжить"
+      },
+      "export": {
+        "button": "Экспорт",
+        "title": "Экспорт",
+        "description": "Это экспортирует все ваши календари, привычки и историю выполнения.",
+        "cancel": "Отмена",
+        "continue": "Продолжить"
+      }
+    },
+    "container": {
+      "emptyState": {
+        "noCalendars": "Вы еще не создали ни одного календаря.",
+        "createOne": "Создайте один, чтобы начать отслеживать свои привычки!",
+        "createButton": "Создать календарь"
+      },
+      "addCalendar": "Добавить календарь"
     }
+  },
+  "auth": {
+    "signInPrompt": "Пожалуйста, войдите, чтобы просмотреть ваши календари",
+    "signIn": "Войти"
   }
 }

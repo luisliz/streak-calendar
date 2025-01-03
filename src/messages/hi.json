@@ -267,6 +267,11 @@
       "1hour": "1 घंटा",
       "1_5hour": "1 घंटा 30 मिनट",
       "2hour": "2 घंटे"
+    },
+    "timer": {
+      "title": "{duration} मिनट का टाइमर",
+      "cancel": "टाइमर रद्द करें",
+      "confirmCancel": "टाइमर अभी भी चल रहा है। क्या आप वाकई रद्द करना चाहते हैं?"
     }
   },
   "calendar": {
@@ -274,35 +279,21 @@
       "calendar": "कैलेंडर दृश्य",
       "row": "पंक्ति दृश्य"
     },
-    "yearlyOverview": {
-      "title": "वार्षिक अवलोकन",
-      "thingsDone": "पिछले साल {count} काम पूरे किए",
-      "days": {
-        "mon": "सोम",
-        "wed": "बुध",
-        "fri": "शुक्र"
-      },
-      "months": {
-        "jan": "जन",
-        "feb": "फर",
-        "mar": "मार्च",
-        "apr": "अप्रै",
-        "may": "मई",
-        "jun": "जून",
-        "jul": "जुल",
-        "aug": "अग",
-        "sep": "सित",
-        "oct": "अक्टू",
-        "nov": "नव",
-        "dec": "दिस"
-      },
-      "tooltip": "{date}: {count} पूरे किए"
+    "emptyState": {
+      "noHabits": "अभी तक कोई आदत नहीं जोड़ी गई। ट्रैकिंग शुरू करने के लिए एक जोड़ें!"
     },
     "controls": {
       "complete": "पूर्ण करें",
       "start": "शुरू करें",
-      "timer": "टाइमर"
+      "timer": "टाइमर",
+      "new": "नया",
+      "addHabit": "आदत जोड़ें"
     },
+    "dateFormat": {
+      "short": "{day} {month}",
+      "long": "{weekday}, {day} {month}"
+    },
+    "completions": "{count, plural, =1 {{date}: {count} पूर्ण} other {{date}: {count} पूर्ण}}",
     "weekDays": {
       "sun": "रवि",
       "mon": "सोम",
@@ -334,6 +325,60 @@
       "october": "अक्टूबर",
       "november": "नवंबर",
       "december": "दिसंबर"
+    },
+    "importExport": {
+      "button": "आयात/निर्यात",
+      "title": "आयात/निर्यात",
+      "import": {
+        "button": "आयात",
+        "title": "आयात",
+        "description": "यह चयनित फ़ाइल से कैलेंडर, आदतें और पूर्णता इतिहास आयात करेगा।",
+        "cancel": "रद्द करें",
+        "continue": "जारी रखें"
+      },
+      "export": {
+        "button": "निर्यात",
+        "title": "निर्यात",
+        "description": "यह आपके सभी कैलेंडर, आदतें और पूर्णता इतिहास निर्यात करेगा।",
+        "cancel": "रद्द करें",
+        "continue": "जारी रखें"
+      }
+    },
+    "container": {
+      "emptyState": {
+        "noCalendars": "आपने अभी तक कोई कैलेंडर नहीं बनाया है।",
+        "createOne": "अपनी आदतों को ट्रैक करने के लिए एक बनाएं!",
+        "createButton": "कैलेंडर बनाएं"
+      },
+      "addCalendar": "कैलेंडर जोड़ें"
+    },
+    "yearlyOverview": {
+      "title": "वार्षिक अवलोकन",
+      "thingsDone": "पिछले साल {count} काम पूरे किए",
+      "days": {
+        "mon": "सोम",
+        "wed": "बुध",
+        "fri": "शुक्र"
+      },
+      "months": {
+        "jan": "जन",
+        "feb": "फर",
+        "mar": "मार्च",
+        "apr": "अप्रै",
+        "may": "मई",
+        "jun": "जून",
+        "jul": "जुल",
+        "aug": "अग",
+        "sep": "सित",
+        "oct": "अक्टू",
+        "nov": "नव",
+        "dec": "दिस"
+      },
+      "tooltip": "{date}: {count} पूर्ण"
     }
+  },
+  "auth": {
+    "signInPrompt": "अपने कैलेंडर देखने के लिए कृपया साइन इन करें",
+    "signIn": "साइन इन करें"
   }
 }

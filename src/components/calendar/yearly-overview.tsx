@@ -110,7 +110,7 @@ export const YearlyOverview = ({ completions, isLoading = false }: YearlyOvervie
   // Memoized grid cell component for better performance
   // Renders either an empty cell, a blank day, or a completion indicator
   const GridCell = memo(({ day }: { day: string | null }) => {
-    if (!day) return <div className="aspect-square w-[5px] sm:w-[9px] xl:w-4" />;
+    if (!day) return <div className="aspect-square w-[5px] sm:w-[11px] md:w-[13px] xl:w-4" />;
 
     const count = completionCounts[day] || 0;
     const colorClass = getColorClass(count);
@@ -120,7 +120,7 @@ export const YearlyOverview = ({ completions, isLoading = false }: YearlyOvervie
     if (count === 0) {
       return (
         <div
-          className={`aspect-square w-[5px] rounded-full sm:w-[9px] xl:w-4 ${colorClass}`}
+          className={`aspect-square w-[5px] rounded-full sm:w-[11px] md:w-[13px] xl:w-4 ${colorClass}`}
           title={t("tooltip", { date, count })}
         />
       );
@@ -129,7 +129,7 @@ export const YearlyOverview = ({ completions, isLoading = false }: YearlyOvervie
     // Render completion indicator for days with completions
     return (
       <div
-        className="relative aspect-square w-[5px] transition-colors hover:opacity-80 sm:w-[9px] xl:w-4"
+        className="relative aspect-square w-[5px] transition-colors hover:opacity-80 sm:w-[11px] md:w-[13px] xl:w-4"
         title={t("tooltip", { date, count })}
       >
         <svg viewBox="0 0 15 15" className={`h-full w-full ${colorClass}`}>
@@ -151,7 +151,7 @@ export const YearlyOverview = ({ completions, isLoading = false }: YearlyOvervie
 
   return (
     <div className="mt-2 flex flex-col items-center sm:mt-4">
-      <div className="w-[350px] pb-1 pl-2 text-[5px] text-muted-foreground/75 sm:w-[400px] sm:text-[7px] xl:w-[984px] xl:text-xs">
+      <div className="w-[350px] pb-1 pl-2 text-[5px] text-muted-foreground/75 sm:w-[500px] sm:text-[8px] md:w-[600px] md:text-[10px] xl:w-[984px] xl:text-xs">
         <span className="font-bold">{t("title")}</span>{" "}
         <span className="text-muted-foreground/75">{t("thingsDone", { count: totalCompletions })}</span>
       </div>
@@ -159,23 +159,23 @@ export const YearlyOverview = ({ completions, isLoading = false }: YearlyOvervie
         <div className="w-full">
           <div className="flex justify-end">
             {/* Left day labels (Mon/Wed/Fri) */}
-            <div className="mt-3 flex flex-col pr-1 text-muted-foreground/75 xl:mt-6">
-              <div className="h-[3px] xl:h-[18px]" />
-              <div className="text-right text-[5px] text-muted-foreground/75 sm:text-[7px] xl:text-xs">
+            <div className="mt-3 flex flex-col pr-1 text-muted-foreground/75 md:mt-4 xl:mt-6">
+              <div className="h-[3px] md:h-[12px] xl:h-[18px]" />
+              <div className="text-right text-[5px] text-muted-foreground/75 sm:text-[8px] md:text-[10px] xl:text-xs">
                 {t("days.mon")}
               </div>
-              <div className="h-[3px] xl:h-[18px]" />
-              <div className="text-right text-[5px] text-muted-foreground/75 sm:text-[7px] xl:text-xs">
+              <div className="h-[3px] md:h-[12px] xl:h-[18px]" />
+              <div className="text-right text-[5px] text-muted-foreground/75 sm:text-[8px] md:text-[10px] xl:text-xs">
                 {t("days.wed")}
               </div>
-              <div className="h-[3px] xl:h-[18px]" />
-              <div className="text-right text-[5px] text-muted-foreground/75 sm:text-[7px] xl:text-xs">
+              <div className="h-[3px] md:h-[12px] xl:h-[18px]" />
+              <div className="text-right text-[5px] text-muted-foreground/75 sm:text-[8px] md:text-[10px] xl:text-xs">
                 {t("days.fri")}
               </div>
             </div>
             <div className="flex-1">
               {/* Month labels row */}
-              <div className="mx-auto flex justify-center pb-[2px] text-[5px] text-muted-foreground sm:text-[7px] xl:pb-2 xl:text-xs">
+              <div className="mx-auto flex justify-center pb-[2px] text-[5px] text-muted-foreground sm:text-[8px] md:text-[10px] xl:pb-2 xl:text-xs">
                 {monthLabels.map((month, index) => (
                   <div key={month.key} className={`${index === 0 ? "mr-auto pl-1" : "flex-1 text-center"}`}>
                     {month.label}
@@ -194,17 +194,17 @@ export const YearlyOverview = ({ completions, isLoading = false }: YearlyOvervie
               </div>
             </div>
             {/* Right day labels (Mon/Wed/Fri) */}
-            <div className="mt-3 flex flex-col pl-1 text-muted-foreground/75 xl:mt-6">
-              <div className="h-[3px] xl:h-[18px]" />
-              <div className="text-left text-[5px] text-muted-foreground/75 sm:text-[7px] xl:text-xs">
+            <div className="mt-3 flex flex-col pl-1 text-muted-foreground/75 md:mt-4 xl:mt-6">
+              <div className="h-[3px] md:h-[12px] xl:h-[18px]" />
+              <div className="text-left text-[5px] text-muted-foreground/75 sm:text-[8px] md:text-[10px] xl:text-xs">
                 {t("days.mon")}
               </div>
-              <div className="h-[3px] xl:h-[18px]" />
-              <div className="text-left text-[5px] text-muted-foreground/75 sm:text-[7px] xl:text-xs">
+              <div className="h-[3px] md:h-[12px] xl:h-[18px]" />
+              <div className="text-left text-[5px] text-muted-foreground/75 sm:text-[8px] md:text-[10px] xl:text-xs">
                 {t("days.wed")}
               </div>
-              <div className="h-[3px] xl:h-[18px]" />
-              <div className="text-left text-[5px] text-muted-foreground/75 sm:text-[7px] xl:text-xs">
+              <div className="h-[3px] md:h-[12px] xl:h-[18px]" />
+              <div className="text-left text-[5px] text-muted-foreground/75 sm:text-[8px] md:text-[10px] xl:text-xs">
                 {t("days.fri")}
               </div>
             </div>
