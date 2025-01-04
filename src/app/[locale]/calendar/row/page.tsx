@@ -31,7 +31,7 @@ const AuthenticationWrapper = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-export default function CalendarPage() {
+export default function CalendarRowPage() {
   const router = useRouter();
   const params = useParams();
   const { calendarView, ...calendarState } = useCalendarState();
@@ -67,7 +67,7 @@ export default function CalendarPage() {
           />
           <CalendarContainer
             calendarState={calendarState}
-            calendarView="monthGrid"
+            calendarView="monthRow"
             calendars={calendars}
             completions={monthViewData.completions || []}
             days={days}
@@ -75,11 +75,11 @@ export default function CalendarPage() {
             habits={habits}
             monthViewData={monthViewData}
             onViewChange={(view) => {
-              if (view === "monthRow") {
-                router.push(`/${params.locale}/calendar/row`);
+              if (view === "monthGrid") {
+                router.push(`/${params.locale}/calendar`);
               }
             }}
-            view="monthGrid"
+            view="monthRow"
             isLoading={monthViewData.isLoading}
           />
           <div className="mx-4 my-8 justify-center">
