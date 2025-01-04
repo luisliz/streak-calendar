@@ -13,11 +13,15 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const languageMap = {
-  en: { name: "English", flagSrc: "/flag-us.png" },
   de: { name: "Deutsch", flagSrc: "/flag-de.png" },
+  en: { name: "English", flagSrc: "/flag-us.png" },
+  es: { name: "Español", flagSrc: "/flag-es.png" },
+  fr: { name: "Français", flagSrc: "/flag-fr.png" },
   ru: { name: "Русский", flagSrc: "/flag-ru.png" },
-  hi: { name: "हिन्दी", flagSrc: "/flag-in.png" },
   he: { name: "עברית", flagSrc: "/flag-il.png" },
+  ar: { name: "العربية", flagSrc: "/flag-sa.png" },
+  hi: { name: "हिन्दी", flagSrc: "/flag-in.png" },
+  zh: { name: "中文", flagSrc: "/flag-cn.png" },
 } as const;
 
 export function AppFooter() {

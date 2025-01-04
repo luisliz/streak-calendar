@@ -4,7 +4,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Locale, defaultLocale, locales } from "@/i18n/settings";
 import { cn } from "@/lib/utils";
 import { getMessages, unstable_setRequestLocale } from "next-intl/server";
-import { Inter, Noto_Sans, Noto_Sans_Hebrew } from "next/font/google";
+import { Inter, Noto_Sans, Noto_Sans_Arabic, Noto_Sans_Hebrew, Noto_Sans_SC } from "next/font/google";
 import { notFound } from "next/navigation";
 
 /**
@@ -30,6 +30,20 @@ const noto = Noto_Sans({
 const notoHebrew = Noto_Sans_Hebrew({
   variable: "--font-noto-hebrew",
   subsets: ["hebrew"],
+  display: "swap",
+  preload: true,
+});
+
+const notoArabic = Noto_Sans_Arabic({
+  variable: "--font-noto-arabic",
+  subsets: ["arabic"],
+  display: "swap",
+  preload: true,
+});
+
+const notoChinese = Noto_Sans_SC({
+  variable: "--font-noto-chinese",
+  subsets: ["latin"],
   display: "swap",
   preload: true,
 });
@@ -74,10 +88,12 @@ export default async function LocaleLayout({
         inter.variable,
         noto.variable,
         notoHebrew.variable,
+        notoArabic.variable,
+        notoChinese.variable,
         "min-h-screen bg-background font-sans antialiased",
         "grid-background",
-        // Enable RTL layout for Hebrew locale
-        locale === "he" && "rtl"
+        // Enable RTL layout for Hebrew and Arabic locales
+        (locale === "he" || locale === "ar") && "rtl"
       )}
     >
       {/* NoScript fallback for users with JavaScript disabled */}

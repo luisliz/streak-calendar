@@ -14,7 +14,7 @@ import NextLink from "next/link";
 export default function AboutPage() {
   const locale = useLocale();
   const t = useTranslations("about");
-  const isRTL = locale === "he";
+  const isRTL = locale === "he" || locale === "ar";
 
   return (
     // Main container with responsive width and vertical spacing
