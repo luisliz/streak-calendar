@@ -95,7 +95,7 @@ export const CalendarItem = ({
       {/* Main Calendar Content */}
       {habits.length === 0 ? (
         // Empty state when no habits exist
-        <div className="flex w-full flex-col items-center justify-center space-y-8">
+        <div className="flex w-full flex-col items-center justify-center space-y-8 pb-16">
           <p className="text-sm text-muted-foreground">{t("emptyState.noHabits")}</p>
           <Button size="sm" onClick={onAddHabit}>
             <PlusCircle className="h-4 w-4" />

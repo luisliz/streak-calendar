@@ -1,5 +1,6 @@
 import { Providers } from "@/app/providers";
 import { RootWrapper } from "@/components/root-wrapper";
+import { Toaster } from "@/components/ui/toaster";
 import { Locale, defaultLocale, locales } from "@/i18n/settings";
 import { cn } from "@/lib/utils";
 import { getMessages, unstable_setRequestLocale } from "next-intl/server";
@@ -95,6 +96,7 @@ export default async function LocaleLayout({
       <div className="relative overflow-x-hidden">
         <Providers locale={locale} messages={messages}>
           <RootWrapper>{children}</RootWrapper>
+          <Toaster />
         </Providers>
       </div>
     </body>

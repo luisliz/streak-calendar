@@ -8,6 +8,7 @@ import { CalendarItem } from "@/components/calendar/calendar-item";
 import { ViewControls } from "@/components/calendar/view-controls";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { useToastMessages } from "@/hooks/use-toast-messages";
 import { Calendar, Completion, Day, EditingCalendar, Habit, Id } from "@/types";
 import { AnimatePresence, motion } from "framer-motion";
 import { PlusCircle } from "lucide-react";
@@ -162,6 +163,7 @@ export function CalendarContainer({
   isLoading = false,
 }: CalendarContainerProps) {
   const t = useTranslations("calendar.container");
+  const toastMessages = useToastMessages();
 
   /**
    * Destructure state management props for easier access
@@ -204,11 +206,12 @@ export function CalendarContainer({
   const handleAddCalendar = useCallback(
     async (name: string, color: string) => {
       await monthViewData.handleAddCalendar(name, color);
+      toastMessages.calendar.created();
       setNewCalendarName("");
       setNewCalendarColor("bg-red-500");
       setIsNewCalendarOpen(false);
     },
-    [monthViewData, setNewCalendarName, setNewCalendarColor, setIsNewCalendarOpen]
+    [monthViewData, setNewCalendarName, setNewCalendarColor, setIsNewCalendarOpen, toastMessages]
   );
 
   /**
@@ -218,6 +221,7 @@ export function CalendarContainer({
     async (name: string, calendarId: Id<"calendars">, timerDuration?: number) => {
       try {
         await monthViewData.handleAddHabit(name, calendarId, timerDuration);
+        toastMessages.habit.created();
         setNewHabitName("");
         setNewHabitTimerDuration(undefined);
         setIsNewHabitOpen(false);
@@ -226,7 +230,7 @@ export function CalendarContainer({
         toast.error("Failed to add habit");
       }
     },
-    [monthViewData, setNewHabitName, setNewHabitTimerDuration, setIsNewHabitOpen]
+    [monthViewData, setNewHabitName, setNewHabitTimerDuration, setIsNewHabitOpen, toastMessages]
   );
 
   /**
@@ -235,9 +239,10 @@ export function CalendarContainer({
   const handleEditCalendar = useCallback(
     async (id: Id<"calendars">, name: string, color: string) => {
       await monthViewData.handleEditCalendar(id, name, color);
+      toastMessages.calendar.updated();
       setEditingCalendar(null);
     },
-    [monthViewData, setEditingCalendar]
+    [monthViewData, setEditingCalendar, toastMessages]
   );
 
   /**
@@ -247,13 +252,14 @@ export function CalendarContainer({
     async (id: Id<"habits">, name: string, timerDuration?: number) => {
       try {
         await monthViewData.handleEditHabit(id, name, timerDuration);
+        toastMessages.habit.updated();
         setEditingHabit(null);
       } catch (error) {
         console.error(error);
         toast.error("Failed to edit habit");
       }
     },
-    [monthViewData, setEditingHabit]
+    [monthViewData, setEditingHabit, toastMessages]
   );
 
   /**
@@ -262,9 +268,10 @@ export function CalendarContainer({
   const handleDeleteCalendar = useCallback(
     async (id: Id<"calendars">) => {
       await monthViewData.handleDeleteCalendar(id);
+      toastMessages.calendar.deleted();
       setEditingCalendar(null);
     },
-    [monthViewData, setEditingCalendar]
+    [monthViewData, setEditingCalendar, toastMessages]
   );
 
   /**
@@ -273,9 +280,10 @@ export function CalendarContainer({
   const handleDeleteHabit = useCallback(
     async (id: Id<"habits">) => {
       await monthViewData.handleDeleteHabit(id);
+      toastMessages.habit.deleted();
       setEditingHabit(null);
     },
-    [monthViewData, setEditingHabit]
+    [monthViewData, setEditingHabit, toastMessages]
   );
 
   /**
@@ -393,7 +401,7 @@ export function CalendarContainer({
               })}
             </div>
           </div>
-          <div className="flex justify-center pb-4">
+          <div className="flex justify-center pb-16">
             <Button variant="default" onClick={() => setIsNewCalendarOpen(true)}>
               <PlusCircle className="h-4 w-4" />
               {t("addCalendar")}

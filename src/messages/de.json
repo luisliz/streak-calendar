@@ -385,5 +385,17 @@
   "auth": {
     "signInPrompt": "Bitte melden Sie sich an, um Ihre Kalender anzuzeigen",
     "signIn": "Anmelden"
+  },
+  "toast": {
+    "calendar": {
+      "created": "Kalender erfolgreich erstellt",
+      "updated": "Kalender erfolgreich aktualisiert",
+      "deleted": "Kalender erfolgreich gelöscht"
+    },
+    "habit": {
+      "created": "Gewohnheit erfolgreich erstellt",
+      "updated": "Gewohnheit erfolgreich aktualisiert",
+      "deleted": "Gewohnheit erfolgreich gelöscht"
+    }
   }
 }

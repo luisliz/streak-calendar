@@ -380,5 +380,17 @@
   "auth": {
     "signInPrompt": "Please sign in to view your calendars",
     "signIn": "Sign In"
+  },
+  "toast": {
+    "calendar": {
+      "created": "Calendar created successfully",
+      "updated": "Calendar updated successfully",
+      "deleted": "Calendar deleted successfully"
+    },
+    "habit": {
+      "created": "Habit created successfully",
+      "updated": "Habit updated successfully",
+      "deleted": "Habit deleted successfully"
+    }
   }
 }
