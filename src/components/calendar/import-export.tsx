@@ -43,7 +43,8 @@ export function ImportExport() {
       {/* Main Dialog: Initial import/export selection screen */}
       <Dialog open={showImportExportDialog} onOpenChange={setShowImportExportDialog}>
         <DialogTrigger asChild>
-          <Button variant="outline">
+          {/* TODO: 2025-01-04 - remove md:hidden */}
+          <Button variant="outline" className="flex md:hidden">
             <ArrowUpDown className="h-4 w-4 bg-transparent" />
             {t("button")}
           </Button>

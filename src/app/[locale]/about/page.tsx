@@ -194,7 +194,7 @@ export default function AboutPage() {
               link: (chunks) => (
                 <NextLink
                   href={t("seinfeldStrategy.articleUrl")}
-                  className="font-bold hover:text-primary hover:underline"
+                  className="font-bold underline hover:text-primary"
                   target="_blank"
                   rel="noopener noreferrer"
                 >

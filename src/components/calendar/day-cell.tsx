@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { CompleteControls } from "@/components/ui/complete-controls";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { XLogo } from "@/components/ui/x-logo";
 import { getCompletionColorClass } from "@/lib/colors";
 import { format } from "date-fns";
@@ -77,63 +78,67 @@ export const DayCell = ({ date, count, onCountChange, colorClass, gridView, disa
   });
 
   return (
-    <Popover open={isOpen} onOpenChange={setIsOpen}>
-      <PopoverTrigger asChild>
-        {/* Main cell button with dynamic styling based on completion status and view mode */}
-        <Button
-          variant="ghost"
-          className={`${gridView ? "h-12 w-12" : "h-6 w-6"} rounded-full ${
-            count === 0 ? "bg-muted" : ""
-          } relative overflow-visible p-0 ${disabled ? "cursor-not-allowed opacity-50" : ""} hover:bg-transparent`}
-          title={completionText}
-          disabled={disabled}
-        >
-          {/* Render either completion indicator (X shape) or date number based on completion status */}
-          {count > 0 ? (
-            <div className="absolute">
-              {/* SVG X shape with dynamic sizing and color based on completion count */}
-              <XLogo
-                key={`${count}-${fillClass}`}
-                className={`${gridView ? "!h-[48px] !w-[48px]" : "!h-[24px] !w-[24px]"} ${fillClass} animate-completion relative`}
-              />
+    <TooltipProvider>
+      <Tooltip>
+        <Popover open={isOpen} onOpenChange={setIsOpen}>
+          <TooltipTrigger asChild>
+            <PopoverTrigger asChild>
+              <Button
+                variant="ghost"
+                className={`${gridView ? "h-12 w-12" : "h-6 w-6"} rounded-full ${
+                  count === 0 ? "bg-muted" : ""
+                } relative overflow-visible p-0 ${disabled ? "cursor-not-allowed opacity-50" : ""} hover:bg-transparent`}
+                disabled={disabled}
+              >
+                {count > 0 ? (
+                  <div className="absolute">
+                    <XLogo
+                      key={`${count}-${fillClass}`}
+                      className={`${gridView ? "!h-[48px] !w-[48px]" : "!h-[24px] !w-[24px]"} ${fillClass} animate-completion relative`}
+                    />
+                  </div>
+                ) : (
+                  <span
+                    className={`absolute inset-0 flex items-center justify-center text-xs font-medium text-zinc-900 dark:text-zinc-100 ${
+                      gridView ? "" : "scale-75"
+                    }`}
+                  >
+                    {label ?? new Date(date).getDate()}
+                  </span>
+                )}
+              </Button>
+            </PopoverTrigger>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>{completionText}</p>
+          </TooltipContent>
+          {/* Popover menu for updating completion count */}
+          <PopoverContent
+            align="center"
+            className="w-auto rounded-[15px] border bg-white/60 px-4 py-2 backdrop-blur-sm dark:bg-black/60"
+          >
+            <div className="flex flex-col items-center gap-2">
+              {/* Display full date in popover */}
+              <div className="text-xs">
+                {t("dateFormat.long", {
+                  weekday: t(`weekDays.${format(dateObj, "eee").toLowerCase()}`),
+                  month: t(`monthNames.${format(dateObj, "MMMM").toLowerCase()}`),
+                  day: dateObj.getDate(),
+                })}
+              </div>
+              {/* Completion controls for incrementing/decrementing count */}
+              <div className="flex justify-center">
+                <CompleteControls
+                  count={count}
+                  onIncrement={handleIncrement}
+                  onDecrement={handleDecrement}
+                  onComplete={() => setIsOpen(false)}
+                />
+              </div>
             </div>
-          ) : (
-            // Display date number or label when no completions
-            <span
-              className={`absolute inset-0 flex items-center justify-center text-xs font-medium text-zinc-900 dark:text-zinc-100 ${
-                gridView ? "" : "scale-75"
-              }`}
-            >
-              {label ?? new Date(date).getDate()}
-            </span>
-          )}
-        </Button>
-      </PopoverTrigger>
-      {/* Popover menu for updating completion count */}
-      <PopoverContent
-        align="center"
-        className="w-auto rounded-[15px] border bg-white/60 px-4 py-2 backdrop-blur-sm dark:bg-black/60"
-      >
-        <div className="flex flex-col items-center gap-2">
-          {/* Display full date in popover */}
-          <div className="text-xs">
-            {t("dateFormat.long", {
-              weekday: t(`weekDays.${format(dateObj, "eee").toLowerCase()}`),
-              month: t(`monthNames.${format(dateObj, "MMMM").toLowerCase()}`),
-              day: dateObj.getDate(),
-            })}
-          </div>
-          {/* Completion controls for incrementing/decrementing count */}
-          <div className="flex justify-center">
-            <CompleteControls
-              count={count}
-              onIncrement={handleIncrement}
-              onDecrement={handleDecrement}
-              onComplete={() => setIsOpen(false)}
-            />
-          </div>
-        </div>
-      </PopoverContent>
-    </Popover>
+          </PopoverContent>
+        </Popover>
+      </Tooltip>
+    </TooltipProvider>
   );
 };
