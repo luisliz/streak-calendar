@@ -7,9 +7,9 @@ import { useCalendarData } from "@/hooks/use-calendar-data";
 import { useCalendarState } from "@/hooks/use-calendar-state";
 import { useDateRange } from "@/hooks/use-date-range";
 import { useHabitState } from "@/hooks/use-habit-state";
+import { useViewState } from "@/hooks/use-view-state";
 import { SignInButton, SignedIn, SignedOut } from "@clerk/nextjs";
 import { useTranslations } from "next-intl";
-import { useParams, useRouter } from "next/navigation";
 import { useMemo } from "react";
 
 const AuthenticationWrapper = ({ children }: { children: React.ReactNode }) => {
@@ -32,10 +32,9 @@ const AuthenticationWrapper = ({ children }: { children: React.ReactNode }) => {
 };
 
 export default function CalendarRowPage() {
-  const router = useRouter();
-  const params = useParams();
   const { calendarView, ...calendarState } = useCalendarState();
   const habitState = useHabitState();
+  const { setView } = useViewState();
 
   const monthData = useDateRange(40);
   const yearData = useDateRange(365);
@@ -74,11 +73,7 @@ export default function CalendarRowPage() {
             habitState={habitState}
             habits={habits}
             monthViewData={monthViewData}
-            onViewChange={(view) => {
-              if (view === "monthGrid") {
-                router.push(`/${params.locale}/calendar`);
-              }
-            }}
+            onViewChange={setView}
             view="monthRow"
             isLoading={monthViewData.isLoading}
           />
