@@ -26,7 +26,7 @@ export function AppHeader() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
-    <header className="border-b border-border bg-background/30">
+    <header className="border-b border-border bg-background/60">
       <div className="container mx-auto px-3 md:px-4">
         <div className="relative flex h-14 items-center justify-between md:h-16">
           {/* Logo */}
