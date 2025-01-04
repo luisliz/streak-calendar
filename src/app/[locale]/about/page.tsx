@@ -210,8 +210,8 @@ export default function AboutPage() {
       <div className="flex justify-center">
         <SignedIn>
           <Button asChild size="lg">
-            <Link href="/calendars" locale={locale}>
-              {t("goToCalendars")}
+            <Link href="/calendar" locale={locale}>
+              {t("goToCalendar")}
             </Link>
           </Button>
         </SignedIn>

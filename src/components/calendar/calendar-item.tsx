@@ -74,7 +74,7 @@ export const CalendarItem = ({
 }: CalendarItemProps) => {
   const t = useTranslations("calendar");
   const locale = useLocale();
-  const isRTL = locale === "he";
+  const isRTL = ["he", "ar"].includes(locale);
   const colorTheme = calendar.colorTheme.startsWith("bg-") ? calendar.colorTheme : `bg-${calendar.colorTheme}-500`;
 
   return (

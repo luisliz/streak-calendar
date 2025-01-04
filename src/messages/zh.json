@@ -135,7 +135,7 @@
       "articleUrl": "https://jamesclear.com/stop-procrastinating-seinfeld-strategy"
     },
     "getStarted": "开始使用",
-    "goToCalendars": "前往日历"
+    "goToCalendar": "前往日历"
   },
   "pricing": {
     "title": "简单透明的定价",
@@ -161,7 +161,7 @@
       }
     },
     "comingSoon": "即将推出",
-    "goToCalendars": "前往日历"
+    "goToCalendar": "前往日历"
   },
   "dialogs": {
     "calendar": {

@@ -44,7 +44,7 @@ const AuthenticationWrapper = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-export default function CalendarsPage() {
+export default function CalendarPage() {
   // Initialize calendar view state and habit management
   const { calendarView, setCalendarView, ...calendarState } = useCalendarState();
   const habitState = useHabitState();

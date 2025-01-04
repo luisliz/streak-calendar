@@ -49,7 +49,7 @@ export default function Home() {
         <SignedIn>
           <div className="flex justify-center">
             <Button asChild size="lg">
-              <Link href="/calendars">{t("goToCalendar")}</Link>
+              <Link href="/calendar">{t("goToCalendar")}</Link>
             </Button>
           </div>
         </SignedIn>

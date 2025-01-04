@@ -134,8 +134,8 @@
       "attribution": "התוכן מעובד מתוך <link>המאמר של ג׳יימס קליר</link> על שיטת סיינפלד",
       "articleUrl": "https://jamesclear.com/stop-procrastinating-seinfeld-strategy"
     },
-    "getStarted": "התחל עכשיו",
-    "goToCalendars": "עבור ליומנים"
+    "getStarted": "התחל",
+    "goToCalendar": "עבור ליומן"
   },
   "pricing": {
     "title": "תמחור פשוט ושקוף",
@@ -161,7 +161,7 @@
       }
     },
     "comingSoon": "בקרוב",
-    "goToCalendars": "עבור ללוחות שנה"
+    "goToCalendar": "עבור ליומן"
   },
   "dialogs": {
     "calendar": {

@@ -42,7 +42,7 @@ export function AppHeader() {
             <Link href="/about" className="text-xs font-medium hover:text-muted-foreground md:text-sm">
               {t("about")}
             </Link>
-            <Link href="/calendars" className="text-xs font-medium hover:text-muted-foreground md:text-sm">
+            <Link href="/calendar" className="text-xs font-medium hover:text-muted-foreground md:text-sm">
               {t("calendar")}
             </Link>
             <Link href="/pricing" className="text-xs font-medium hover:text-muted-foreground md:text-sm">
@@ -87,7 +87,7 @@ export function AppHeader() {
                 {t("about")}
               </Link>
               <Link
-                href="/calendars"
+                href="/calendar"
                 className="font-medium hover:text-muted-foreground"
                 onClick={() => setIsMobileMenuOpen(false)}
               >

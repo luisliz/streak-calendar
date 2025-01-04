@@ -42,7 +42,7 @@ const PRICING_TIERS: PricingTier[] = [
     features: ["free.features.0", "free.features.1", "free.features.2"],
     cta: {
       text: "free.cta",
-      href: "/calendars",
+      href: "/calendar",
     },
   },
   {
@@ -187,7 +187,7 @@ export default function PricingPage() {
                     </SignedOut>
                     <SignedIn>
                       <Button size="lg" className="w-full" asChild>
-                        <Link href="/calendars">{t("goToCalendars")}</Link>
+                        <Link href="/calendar">{t("goToCalendar")}</Link>
                       </Button>
                     </SignedIn>
                   </>

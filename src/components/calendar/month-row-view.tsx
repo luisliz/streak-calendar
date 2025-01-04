@@ -22,7 +22,7 @@ interface MonthRowViewProps {
 
 export function MonthRowView({ habit, color, days, completions, onToggle }: MonthRowViewProps) {
   const locale = useLocale();
-  const isRTL = locale === "he";
+  const isRTL = ["he", "ar"].includes(locale);
 
   return (
     <div className="flex justify-end">

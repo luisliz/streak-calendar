@@ -134,8 +134,8 @@
       "attribution": "المحتوى مقتبس من <link>مقال جيمس كلير</link> عن استراتيجية ساينفيلد",
       "articleUrl": "https://jamesclear.com/stop-procrastinating-seinfeld-strategy"
     },
-    "getStarted": "ابدأ الآن",
-    "goToCalendars": "اذهب إلى التقويمات"
+    "getStarted": "ابدأ",
+    "goToCalendar": "اذهب إلى التقويم"
   },
   "pricing": {
     "title": "تسعير بسيط وشفاف",
@@ -161,7 +161,7 @@
       }
     },
     "comingSoon": "قريباً",
-    "goToCalendars": "اذهب إلى التقويمات"
+    "goToCalendar": "اذهب إلى التقويم"
   },
   "dialogs": {
     "calendar": {

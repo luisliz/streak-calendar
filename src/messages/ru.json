@@ -135,7 +135,7 @@
       "articleUrl": "https://jamesclear.com/stop-procrastinating-seinfeld-strategy"
     },
     "getStarted": "Начать",
-    "goToCalendars": "Перейти к календарям"
+    "goToCalendar": "Перейти к календарю"
   },
   "pricing": {
     "title": "Простые и прозрачные цены",
@@ -166,7 +166,7 @@
       }
     },
     "comingSoon": "Скоро",
-    "goToCalendars": "Перейти к календарям"
+    "goToCalendar": "Перейти к календарю"
   },
   "dialogs": {
     "calendar": {

@@ -135,7 +135,7 @@
       "articleUrl": "https://jamesclear.com/stop-procrastinating-seinfeld-strategy"
     },
     "getStarted": "शुरू करें",
-    "goToCalendars": "कैलेंडर पर जाएं"
+    "goToCalendar": "कैलेंडर पर जाएं"
   },
   "pricing": {
     "title": "सरल, पारदर्शी मूल्य निर्धारण",
@@ -161,7 +161,7 @@
       }
     },
     "comingSoon": "जल्द आ रहा है",
-    "goToCalendars": "कैलेंडर पर जाएं"
+    "goToCalendar": "कैलेंडर पर जाएं"
   },
   "dialogs": {
     "calendar": {
