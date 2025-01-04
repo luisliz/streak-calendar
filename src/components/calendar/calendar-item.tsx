@@ -7,7 +7,8 @@ import { useLocale } from "next-intl";
 
 import { Id } from "@server/convex/_generated/dataModel";
 
-import { CalendarView } from "./calendar-views";
+import { MonthGridView } from "./month-grid-view";
+import { MonthRowView } from "./month-row-view";
 
 /**
  * CalendarItem Component
@@ -35,6 +36,8 @@ import { CalendarView } from "./calendar-views";
  * @property onToggleHabit - Callback for toggling habit completion status
  * @property view - Display mode: "monthRow" or "monthGrid"
  */
+type CalendarViewType = "monthRow" | "monthGrid";
+
 interface CalendarItemProps {
   calendar: {
     _id: Id<"calendars">;
@@ -55,7 +58,7 @@ interface CalendarItemProps {
   onEditCalendar: () => void;
   onEditHabit: (habit: { _id: Id<"habits">; name: string; timerDuration?: number }) => void;
   onToggleHabit: (habitId: Id<"habits">, date: string, count: number) => void;
-  view: "monthRow" | "monthGrid";
+  view: CalendarViewType;
 }
 
 export const CalendarItem = ({
@@ -147,13 +150,12 @@ export const CalendarItem = ({
                 <div key={habit._id} className="relative flex justify-end">
                   {/* Calendar view grid for the habit */}
                   <div className="flex-1">
-                    <CalendarView
+                    <MonthRowView
                       habit={habit}
                       color={colorTheme}
                       days={days}
                       completions={completions}
                       onToggle={onToggleHabit}
-                      view={view}
                     />
                   </div>
                   {/* Editable habit name with hover effects - direction aware */}
@@ -250,13 +252,12 @@ export const CalendarItem = ({
                   />
                 </div>
                 {/* Calendar grid view */}
-                <CalendarView
+                <MonthGridView
                   habit={habit}
                   color={colorTheme}
                   days={days}
                   completions={completions}
                   onToggle={onToggleHabit}
-                  view={view}
                 />
               </div>
             );
