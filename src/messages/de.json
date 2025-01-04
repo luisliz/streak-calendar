@@ -47,15 +47,16 @@
     }
   },
   "footer": {
-    "about": "Über uns",
+    "about": "Über",
     "privacy": "Datenschutz",
-    "terms": "Nutzungsbedingungen",
+    "terms": "Bedingungen",
     "github": "GitHub",
-    "copyright": "Streak Calendar",
+    "copyright": "Streak Kalender",
     "madeWith": "Erstellt mit",
     "and": "und",
     "by": "von",
-    "love": "Liebe"
+    "love": "Liebe",
+    "changeLanguage": "Sprache ändern"
   },
   "about": {
     "title": "Über Streak Calendar",

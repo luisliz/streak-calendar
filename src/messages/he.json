@@ -51,11 +51,12 @@
     "privacy": "פרטיות",
     "terms": "תנאים",
     "github": "GitHub",
-    "copyright": "יומן הרצף",
-    "madeWith": "נוצר בעזרת",
-    "and": "ו-",
+    "copyright": "יומן הרצלים",
+    "madeWith": "נוצר עם",
+    "and": "ו",
     "by": "על ידי",
-    "love": "אהבה"
+    "love": "אהבה",
+    "changeLanguage": "שנה שפה"
   },
   "about": {
     "title": "אודות יומן הרצף",

@@ -51,11 +51,12 @@
     "privacy": "الخصوصية",
     "terms": "الشروط",
     "github": "GitHub",
-    "copyright": "تقويم المتابعة",
-    "madeWith": "صُنع بـ",
+    "copyright": "تقويم العادات",
+    "madeWith": "صنع بـ",
     "and": "و",
     "by": "بواسطة",
-    "love": "حب"
+    "love": "حب",
+    "changeLanguage": "تغيير اللغة"
   },
   "about": {
     "title": "حول تقويم المتابعة",
