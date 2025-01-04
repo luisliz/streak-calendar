@@ -301,7 +301,7 @@
     },
     "completions": "{count, plural, =0 {{date}: Sin completar} =1 {{date}: {count} completado} other {{date}: {count} completados}}",
     "yearlyOverview": {
-      "title": "Resumen anual",
+      "title": "Resumen anual:",
       "thingsDone": "{count} cosas completadas el año pasado",
       "days": {
         "mon": "Lun",

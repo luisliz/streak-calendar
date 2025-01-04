@@ -296,7 +296,7 @@
     },
     "completions": "{count, plural, =1 {{date}: {count} completion} other {{date}: {count} completions}}",
     "yearlyOverview": {
-      "title": "Yearly Overview",
+      "title": "Yearly Overview:",
       "thingsDone": "{count} things done last year",
       "days": {
         "mon": "Mon",

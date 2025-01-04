@@ -354,7 +354,7 @@
       "addCalendar": "कैलेंडर जोड़ें"
     },
     "yearlyOverview": {
-      "title": "वार्षिक अवलोकन",
+      "title": "वार्षिक अवलोकन:",
       "thingsDone": "पिछले साल {count} काम पूरे किए",
       "days": {
         "mon": "सोम",

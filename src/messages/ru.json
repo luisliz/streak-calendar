@@ -301,7 +301,7 @@
     },
     "completions": "{count, plural, one {{date}: {count} выполнение} few {{date}: {count} выполнения} many {{date}: {count} выполнений} other {{date}: {count} выполнений}}",
     "yearlyOverview": {
-      "title": "Годовой обзор",
+      "title": "Годовой обзор:",
       "thingsDone": "{count} выполнено за прошлый год",
       "days": {
         "mon": "Пн",

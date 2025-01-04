@@ -296,7 +296,7 @@
     },
     "completions": "{count, plural, =0 {{date}：无完成} =1 {{date}：{count}次完成} other {{date}：{count}次完成}}",
     "yearlyOverview": {
-      "title": "年度概览",
+      "title": "年度概览:",
       "thingsDone": "去年完成{count}项",
       "days": {
         "mon": "周一",
