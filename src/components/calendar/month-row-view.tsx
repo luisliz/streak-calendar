@@ -24,13 +24,10 @@ export function MonthRowView({ habit, color, days, completions, onToggle }: Mont
   const locale = useLocale();
   const isRTL = locale === "he";
 
-  // For RTL, we need to reverse the days array to maintain chronological order
-  const orderedDays = isRTL ? [...days].reverse() : days;
-
   return (
-    <div className="flex w-full justify-end overflow-hidden">
-      <div className="flex w-full justify-end gap-px">
-        {orderedDays.map((date) => (
+    <div className="flex justify-end">
+      <div className={`flex gap-px ${isRTL ? "pl-[96px]" : "pr-24"}`}>
+        {days.map((date) => (
           <DayCell
             key={date}
             habitId={habit._id}

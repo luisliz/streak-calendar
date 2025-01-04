@@ -75,9 +75,9 @@ export const CalendarItem = ({
   const colorTheme = calendar.colorTheme.startsWith("bg-") ? calendar.colorTheme : `bg-${calendar.colorTheme}-500`;
 
   return (
-    <div className="">
+    <div className="space-y-8">
       {/* Calendar Header Section */}
-      <div className="flex justify-center pb-8 pl-6 pt-8">
+      <div className="flex justify-center">
         {/* Editable calendar name with hover effect */}
         <div
           className="group flex cursor-pointer items-center justify-center gap-2 transition-colors hover:text-muted-foreground"
@@ -95,8 +95,8 @@ export const CalendarItem = ({
       {/* Main Calendar Content */}
       {habits.length === 0 ? (
         // Empty state when no habits exist
-        <div className="flex w-full flex-col items-center justify-center">
-          <p className="pb-8 text-sm text-muted-foreground">{t("emptyState.noHabits")}</p>
+        <div className="flex w-full flex-col items-center justify-center space-y-8">
+          <p className="text-sm text-muted-foreground">{t("emptyState.noHabits")}</p>
           <Button size="sm" onClick={onAddHabit}>
             <PlusCircle className="h-4 w-4" />
             {t("controls.addHabit")}
@@ -106,9 +106,9 @@ export const CalendarItem = ({
         <div className="relative">
           {/* Calendar Header with Day Labels */}
           <div className="relative flex">
-            {/* Left/Right spacing for habit names based on direction */}
-            <div className={`${isRTL ? "order-last" : "order-first"} w-16 bg-card md:w-32`} />
-            {/* Gradient fade effect for overflow - direction aware */}
+            {/* Left/Right spacing for gradient effect */}
+            <div className={`${isRTL ? "order-first" : "order-first"} w-16 bg-card md:w-32`} />
+            {/* Gradient fade effect - direction aware */}
             <div
               className={`absolute z-10 h-6 w-12 ${
                 isRTL
@@ -118,7 +118,7 @@ export const CalendarItem = ({
             />
             {/* Day name labels (Mo, Tu, We, etc.) */}
             <div className="flex flex-1 gap-px overflow-hidden">
-              <div className={`flex w-full justify-end gap-px ${isRTL ? "pl-[96px]" : "pr-24"}`}>
+              <div className={`flex w-full justify-end gap-px ${isRTL ? "pl-24" : "pr-24"}`}>
                 {days.map((day) => {
                   const dayOfWeek = format(new Date(day), "eee").toLowerCase();
                   return (
@@ -144,7 +144,7 @@ export const CalendarItem = ({
               ).length;
 
               return (
-                <div key={habit._id} className="relative flex items-start">
+                <div key={habit._id} className="relative flex justify-end">
                   {/* Calendar view grid for the habit */}
                   <div className="flex-1">
                     <CalendarView
@@ -167,7 +167,7 @@ export const CalendarItem = ({
                       <h3 className="bg-card text-base font-medium">
                         <span className="truncate">{habit.name}</span>
                         {habit.timerDuration && (
-                          <span className={`${isRTL ? "mr-1" : "ml-1"} text-sm text-muted-foreground/50`}>
+                          <span className={`${isRTL ? "mx-1" : "ml-1"} text-sm text-muted-foreground/50`}>
                             ({habit.timerDuration}m)
                           </span>
                         )}
@@ -202,7 +202,8 @@ export const CalendarItem = ({
               );
             })}
           </div>
-          <div className={`flex ${isRTL ? "justify-start" : "justify-end"}`}>
+          {/* TODO: 2025-01-03 - this is insane */}
+          <div className={`mt-px flex ${isRTL ? "justify-end" : "justify-end"}`}>
             <Button className="h-[24px] w-24 text-xs" size="sm" onClick={onAddHabit}>
               {t("controls.new")}
             </Button>
