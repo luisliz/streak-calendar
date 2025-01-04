@@ -1,4 +1,5 @@
 import { Providers } from "@/app/providers";
+import { ThirdPartyScripts } from "@/components/analytics/third-party-scripts";
 import { RootWrapper } from "@/components/root-wrapper";
 import { Toaster } from "@/components/ui/toaster";
 import { Locale, defaultLocale, locales } from "@/i18n/settings";
@@ -96,6 +97,7 @@ export default async function LocaleLayout({
         (locale === "he" || locale === "ar") && "rtl"
       )}
     >
+      <ThirdPartyScripts />
       {/* NoScript fallback for users with JavaScript disabled */}
       <noscript>
         <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-background">
