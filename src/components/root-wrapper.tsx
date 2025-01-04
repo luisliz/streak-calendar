@@ -1,6 +1,5 @@
 "use client";
 
-import { GoogleAd } from "@/components/ads/google-ad";
 import { AppFooter } from "@/components/app-footer";
 import { AppHeader } from "@/components/app-header";
 import { MotionWrapper } from "@/components/motion-wrapper";
@@ -13,7 +12,6 @@ export function RootWrapper({ children }: { children: React.ReactNode }) {
       <AnimatePresence mode="wait">
         <MotionWrapper>{children}</MotionWrapper>
       </AnimatePresence>
-      <GoogleAd />
       <AppFooter />
     </div>
   );
