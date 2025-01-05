@@ -150,7 +150,7 @@
       "free": {
         "name": "Free",
         "description": "Perfect for regular users",
-        "features": ["Up to 2 calendars", "Up to 2 habits per calendar", "90-day history"],
+        "features": ["Up to 3 calendars", "Up to 3 habits per calendar", "90-day history"],
         "cta": "Sign Up for Free"
       },
       "premium": {
