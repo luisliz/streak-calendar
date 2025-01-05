@@ -6,6 +6,7 @@ import { Link } from "@/i18n/routing";
 import { SignedIn, SignedOut } from "@clerk/nextjs";
 import { Activity, Calendar, ListTodo, Timer } from "lucide-react";
 import { useTranslations } from "next-intl";
+import Image from "next/image";
 
 export default function Home() {
   const t = useTranslations("home");
@@ -65,7 +66,39 @@ export default function Home() {
         </SignedOut>
       </div>
 
-      <div className="w-full max-w-xl pt-12">
+      <div className="grid w-full max-w-5xl gap-4 px-4 md:grid-cols-3">
+        {/* Desktop Preview */}
+        <div className="relative aspect-[16/10] overflow-hidden rounded-xl border shadow-lg md:col-span-2">
+          <Image src="/screen.png" alt="Desktop preview" fill className="object-cover dark:hidden" priority />
+          <Image
+            src="/screen-dark.png"
+            alt="Desktop preview (dark)"
+            fill
+            className="hidden object-cover dark:block"
+            priority
+          />
+        </div>
+
+        {/* Mobile Preview */}
+        <div className="relative aspect-[3/4] overflow-hidden rounded-xl border shadow-lg">
+          <Image
+            src="/screen-mobile.png"
+            alt="Mobile preview"
+            fill
+            className="object-cover object-top dark:hidden"
+            priority
+          />
+          <Image
+            src="/screen-mobile-dark.png"
+            alt="Mobile preview (dark)"
+            fill
+            className="hidden object-cover object-top dark:block"
+            priority
+          />
+        </div>
+      </div>
+
+      <div className="w-full max-w-xl">
         <div className="relative aspect-video w-full overflow-hidden rounded-[8px] shadow-lg">
           <iframe
             className="absolute left-0 top-0 h-full w-full"
