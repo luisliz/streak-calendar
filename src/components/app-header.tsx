@@ -67,6 +67,7 @@ export function AppHeader() {
                 <Link href="/pricing">{t("getStarted")}</Link>
               </Button>
             </SignedOut>
+            {/* TODO: 2025-01-05 - what is this? */}
             <div className="flex scale-100 md:mx-2 md:scale-110">
               <SignedIn>
                 <UserButton />
@@ -77,8 +78,8 @@ export function AppHeader() {
 
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
-          <div className="border-b bg-background md:hidden">
-            <div className="flex flex-col">
+          <div className="bg-background md:hidden">
+            <div className="flex flex-col space-y-4">
               <Link
                 href="/about"
                 className="font-medium hover:text-muted-foreground"
@@ -95,7 +96,7 @@ export function AppHeader() {
               </Link>
               <Link
                 href="/pricing"
-                className="font-medium hover:text-muted-foreground"
+                className="pb-4 font-medium hover:text-muted-foreground"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 {t("pricing")}
