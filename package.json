@@ -1,6 +1,6 @@
 {
   "name": "streak-calendar",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "private": false,
   "scripts": {
     "dev": "next dev",
@@ -42,7 +42,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
-    "@trivago/prettier-plugin-sort-imports": "^5.2.0",
+    "@trivago/prettier-plugin-sort-imports": "^5.2.1",
     "@types/node": "^22",
     "@types/react": "^19",
     "@types/react-dom": "^19",
