@@ -86,7 +86,9 @@ export const CalendarItem = ({
           className="group flex cursor-pointer items-center justify-center gap-2 transition-colors hover:text-muted-foreground"
           onClick={onEditCalendar}
         >
-          <h2 className={`text-4xl font-semibold underline decoration-4 ${colorTheme.replace("bg-", "decoration-")}`}>
+          <h2
+            className={`text-4xl font-semibold underline decoration-wavy decoration-4 ${colorTheme.replace("bg-", "decoration-")}`}
+          >
             {calendar.name}
           </h2>
           <span className="opacity-0 transition-opacity group-hover:opacity-100">
@@ -204,7 +206,7 @@ export const CalendarItem = ({
               );
             })}
           </div>
-          {/* TODO: 2025-01-03 - this is insane */}
+          {/* TODO: 2025-01-03 - this is insane browsers work in mysterious ways */}
           <div className={`mt-px flex ${isRTL ? "justify-end" : "justify-end"}`}>
             <Button className="h-[24px] w-24 text-xs" size="sm" onClick={onAddHabit}>
               {t("controls.new")}
