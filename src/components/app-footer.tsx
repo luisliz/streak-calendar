@@ -50,19 +50,28 @@ export function AppFooter() {
       <div className="container relative mx-auto flex min-h-[4rem] flex-col items-center gap-4 px-3 py-4 md:h-16 md:flex-row md:justify-between md:gap-0 md:px-4 md:py-0">
         <p className="text-center text-xs text-muted-foreground md:text-left md:text-sm">
           {t("madeWith")}{" "}
-          <span
-            className="mx-[2px] inline-block h-4 w-4 translate-y-[3px] rounded-[4px] bg-[url('/cursor-logo.png')] bg-contain bg-center bg-no-repeat md:h-5 md:w-5 md:translate-y-[4px] md:rounded-[6px]"
-            title="Cursor"
-            aria-label="Cursor"
-          />{" "}
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <span
+                  className="mx-[2px] inline-block h-4 w-4 translate-y-[3px] rounded-[4px] bg-[url('/cursor-logo.png')] bg-contain bg-center bg-no-repeat md:h-5 md:w-5 md:translate-y-[4px] md:rounded-[6px]"
+                  aria-label="Cursor"
+                />
+              </TooltipTrigger>
+              <TooltipContent>Cursor</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>{" "}
           {t("and")}{" "}
-          <span
-            className="text-base font-extrabold text-destructive md:text-lg"
-            title={t("love")}
-            aria-label={t("love")}
-          >
-            ♥️
-          </span>{" "}
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <span className="text-base font-extrabold text-destructive md:text-lg" aria-label={t("love")}>
+                  ♥️
+                </span>
+              </TooltipTrigger>
+              <TooltipContent>{t("love")}</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>{" "}
           {t("by")}{" "}
           <a
             href="https://github.com/ilyaizen"
