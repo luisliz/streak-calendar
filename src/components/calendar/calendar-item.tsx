@@ -174,16 +174,22 @@ export const CalendarItem = ({
                     }`}
                     onClick={() => onEditHabit(habit)}
                   >
-                    <div className="relative flex items-center truncate">
+                    {/* Container for habit name with relative positioning for edit icon */}
+                    <div className="relative flex items-center">
+                      {/* Habit name display with background matching card color */}
                       <h3 className="bg-card text-base font-medium">
+                        {/* TODO: 2025-01-05 - this is needs real implementation */}
+                        {/* Truncate long habit names to prevent overflow */}
                         <span className="truncate">{habit.name}</span>
+                        {/* Optional timer duration display */}
+                        {/* Shows duration in minutes with RTL-aware spacing */}
                         {habit.timerDuration && (
                           <span className={`${isRTL ? "mx-1" : "ml-1"} text-sm text-muted-foreground/50`}>
                             ({habit.timerDuration}m)
                           </span>
                         )}
                       </h3>
-
+                      {/* Gradient fade effect on the habit name */}
                       <div
                         className={`h-6 w-12 ${
                           isRTL ? "bg-gradient-to-l" : "bg-gradient-to-r"
