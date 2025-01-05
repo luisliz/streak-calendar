@@ -74,13 +74,13 @@ export function AppFooter() {
           </a>
         </p>
 
-        <div className="flex items-center gap-2">
-          <div className="flex items-center space-x-1 md:space-x-2">
+        <div className="flex items-center">
+          <div className="flex items-center gap-3 rtl:flex-row-reverse">
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
                   <a
-                    className="p-1 text-muted-foreground hover:text-foreground md:p-1.5"
+                    className="inline-flex p-1 text-muted-foreground hover:text-foreground md:p-1.5"
                     href="https://github.com/ilyaizen/streak-calendar"
                     aria-label="Github"
                     target="_blank"
@@ -98,11 +98,12 @@ export function AppFooter() {
                 </TooltipTrigger>
                 <TooltipContent>GitHub</TooltipContent>
               </Tooltip>
-
+            </TooltipProvider>
+            <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
                   <a
-                    className="p-1 text-muted-foreground hover:text-foreground md:p-1.5"
+                    className="inline-flex p-1 text-muted-foreground hover:text-foreground md:p-1.5"
                     href="https://x.com/streak_calendar"
                     aria-label="X (Twitter)"
                     target="_blank"
@@ -120,11 +121,12 @@ export function AppFooter() {
                 </TooltipTrigger>
                 <TooltipContent>X (Twitter)</TooltipContent>
               </Tooltip>
-
+            </TooltipProvider>
+            <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
                   <a
-                    className="p-1 text-muted-foreground hover:text-foreground md:p-1.5"
+                    className="inline-flex p-1 text-muted-foreground hover:text-foreground md:p-1.5"
                     href="https://discord.gg/streak-calendar"
                     aria-label="Discord"
                     target="_blank"
@@ -144,7 +146,7 @@ export function AppFooter() {
               </Tooltip>
             </TooltipProvider>
           </div>
-          <div className="h-4 w-px bg-border md:h-6" />
+          <div className="mx-3 h-4 w-px bg-border md:h-6" />
           {/* language switcher */}
           <TooltipProvider>
             <Tooltip>
