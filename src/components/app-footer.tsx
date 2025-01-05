@@ -74,7 +74,7 @@ export function AppFooter() {
           </TooltipProvider>{" "}
           {t("by")}{" "}
           <a
-            href="https://github.com/ilyaizen"
+            href="https://x.com/ilyaizen"
             className="font-semibold hover:text-foreground"
             target="_blank"
             rel="noopener noreferrer"
@@ -113,7 +113,7 @@ export function AppFooter() {
                 <TooltipTrigger asChild>
                   <a
                     className="inline-flex p-1 text-muted-foreground hover:text-foreground md:p-1.5"
-                    href="https://x.com/streak_calendar"
+                    href="https://x.com/StreakCalendar"
                     aria-label="X (Twitter)"
                     target="_blank"
                     rel="noopener noreferrer"
@@ -136,7 +136,7 @@ export function AppFooter() {
                 <TooltipTrigger asChild>
                   <a
                     className="inline-flex p-1 text-muted-foreground hover:text-foreground md:p-1.5"
-                    href="https://discord.gg/streak-calendar"
+                    href="https://discord.gg/RgaNV7Jc"
                     aria-label="Discord"
                     target="_blank"
                     rel="noopener noreferrer"
