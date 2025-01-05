@@ -136,7 +136,7 @@ export function AppFooter() {
                 <TooltipTrigger asChild>
                   <a
                     className="inline-flex p-1 text-muted-foreground hover:text-foreground md:p-1.5"
-                    href="https://discord.gg/RgaNV7Jc"
+                    href="https://discord.gg/H9bncs7qpk"
                     aria-label="Discord"
                     target="_blank"
                     rel="noopener noreferrer"
