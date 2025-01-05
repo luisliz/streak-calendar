@@ -63,28 +63,28 @@ export default function Home() {
             </Button>
           </div>
         </SignedOut>
+      </div>
 
-        <div className="w-full max-w-xl pt-12">
-          <div className="relative aspect-video w-full overflow-hidden rounded-[8px] shadow-lg">
-            <iframe
-              className="absolute left-0 top-0 h-full w-full"
-              src="https://www.youtube.com/embed/Xtxscxi83XA?si=Dr_71PWhbg4AdYML"
-              title="YouTube video player"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              referrerPolicy="strict-origin-when-cross-origin"
-              allowFullScreen
-            />
-          </div>
-          <div className="hidden w-full pr-2 text-right">
-            <a
-              href="https://youtu.be/0tlMHyUcTjg"
-              className="text-xs text-muted-foreground underline opacity-50 transition-opacity hover:opacity-100"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Full video
-            </a>
-          </div>
+      <div className="w-full max-w-xl pt-12">
+        <div className="relative aspect-video w-full overflow-hidden rounded-[8px] shadow-lg">
+          <iframe
+            className="absolute left-0 top-0 h-full w-full"
+            src="https://www.youtube.com/embed/Xtxscxi83XA?si=Dr_71PWhbg4AdYML"
+            title="YouTube video player"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerPolicy="strict-origin-when-cross-origin"
+            allowFullScreen
+          />
+        </div>
+        <div className="hidden w-full pr-2 text-right">
+          <a
+            href="https://youtu.be/0tlMHyUcTjg"
+            className="text-xs text-muted-foreground underline opacity-50 transition-opacity hover:opacity-100"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Full video
+          </a>
         </div>
       </div>
     </div>
