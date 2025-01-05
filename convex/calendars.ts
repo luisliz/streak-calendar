@@ -93,43 +93,63 @@ export const exportData = query({
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) throw new Error("Not authenticated");
 
-    const calendars = await ctx.db
-      .query("calendars")
-      .filter((q) => q.eq(q.field("userId"), identity.subject))
-      .collect();
-
-    const result = [];
-
-    for (const calendar of calendars) {
-      const habits = await ctx.db
-        .query("habits")
-        .filter((q) => q.eq(q.field("calendarId"), calendar._id))
+    try {
+      const calendars = await ctx.db
+        .query("calendars")
+        .filter((q) => q.eq(q.field("userId"), identity.subject))
         .collect();
 
-      const habitsWithCompletions = await Promise.all(
-        habits.map(async (habit) => {
-          const completions = await ctx.db
-            .query("completions")
-            .filter((q) => q.eq(q.field("habitId"), habit._id))
+      const result = [];
+
+      for (const calendar of calendars) {
+        try {
+          const habits = await ctx.db
+            .query("habits")
+            .filter((q) => q.eq(q.field("calendarId"), calendar._id))
             .collect();
 
-          return {
-            name: habit.name,
-            completions: completions.map((c) => ({
-              completedAt: c.completedAt,
-            })),
-          };
-        })
-      );
+          const habitsWithCompletions = await Promise.all(
+            habits.map(async (habit) => {
+              try {
+                const completions = await ctx.db
+                  .query("completions")
+                  .filter((q) => q.eq(q.field("habitId"), habit._id))
+                  .collect();
 
-      result.push({
-        name: calendar.name,
-        colorTheme: calendar.colorTheme,
-        habits: habitsWithCompletions,
-      });
+                return {
+                  name: habit.name,
+                  completions: completions.map((c) => ({
+                    completedAt: c.completedAt,
+                  })),
+                };
+              } catch (error) {
+                console.error(`Error fetching completions for habit ${habit._id}:`, error);
+                // Return the habit without completions if there's an error
+                return {
+                  name: habit.name,
+                  completions: [],
+                };
+              }
+            })
+          );
+
+          result.push({
+            name: calendar.name,
+            colorTheme: calendar.colorTheme,
+            habits: habitsWithCompletions,
+          });
+        } catch (error) {
+          console.error(`Error processing calendar ${calendar._id}:`, error);
+          // Continue with next calendar if there's an error
+          continue;
+        }
+      }
+
+      return { calendars: result };
+    } catch (error) {
+      console.error("Error in exportData:", error);
+      throw new Error("Failed to export data. Please try again.");
     }
-
-    return { calendars: result };
   },
 });
 
