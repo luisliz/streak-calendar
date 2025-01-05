@@ -1,7 +1,7 @@
 const authConfig = {
   providers: [
     {
-      domain: "https://grand-jay-22.clerk.accounts.dev",
+      domain: process.env.CLERK_DOMAIN ?? "https://clerk.streakcalendar.com",
       applicationID: "convex",
     },
   ],
