@@ -1,3 +1,4 @@
+import { endOfDay, format, startOfDay } from "date-fns";
 import { useMemo } from "react";
 
 /**
@@ -14,15 +15,14 @@ import { useMemo } from "react";
  *   - days: Array of ISO date strings between startDate and today (inclusive)
  */
 const getDatesForRange = (daysBack: number) => {
-  const today = new Date();
-  const startDate = new Date(today);
-  startDate.setDate(today.getDate() - daysBack);
+  const now = new Date();
+  const today = endOfDay(now);
+  const startDate = startOfDay(new Date(now));
+  startDate.setDate(startDate.getDate() - daysBack);
 
   const days = [];
-  // Iterate from startDate to today, creating an array of ISO date strings
   for (let d = new Date(startDate); d <= today; d.setDate(d.getDate() + 1)) {
-    // Extract just the date portion of the ISO string (YYYY-MM-DD)
-    const dateStr = d.toISOString().split("T")[0];
+    const dateStr = format(d, "yyyy-MM-dd");
     days.push(dateStr);
   }
 
