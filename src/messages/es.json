@@ -150,7 +150,7 @@
       "free": {
         "name": "Gratis",
         "description": "Para usuarios casuales",
-        "features": ["Hasta 2 calendarios", "Hasta 2 hábitos por calendario", "Historial de 90 días"],
+        "features": ["Hasta 3 calendarios", "Hasta 3 hábitos por calendario", "Historial de 90 días"],
         "cta": "Registrarse gratis"
       },
       "premium": {

@@ -150,7 +150,7 @@
       "free": {
         "name": "Kostenlos",
         "description": "Perfekt für regelmäßige Nutzer",
-        "features": ["Bis zu 2 Kalender", "Bis zu 2 Gewohnheiten pro Kalender", "90-Tage-Verlauf"],
+        "features": ["Bis zu 3 Kalender", "Bis zu 3 Gewohnheiten pro Kalender", "90-Tage-Verlauf"],
         "cta": "Kostenlos registrieren"
       },
       "premium": {

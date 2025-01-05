@@ -150,7 +150,7 @@
       "free": {
         "name": "Gratuit",
         "description": "Parfait pour les utilisateurs réguliers",
-        "features": ["Jusqu'à 2 calendriers", "Jusqu'à 2 habitudes par calendrier", "Historique de 90 jours"],
+        "features": ["Jusqu'à 3 calendriers", "Jusqu'à 3 habitudes par calendrier", "Historique de 90 jours"],
         "cta": "S'inscrire Gratuitement"
       },
       "premium": {
