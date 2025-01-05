@@ -26,7 +26,7 @@ export function MonthRowView({ habit, color, days, completions, onToggle }: Mont
 
   return (
     <div className="flex justify-end">
-      <div className={`flex gap-px ${isRTL ? "pl-[96px]" : "pr-24"}`}>
+      <div className={`flex gap-px ${isRTL ? "pl-28" : "pr-28"}`}>
         {days.map((date) => (
           <DayCell
             key={date}

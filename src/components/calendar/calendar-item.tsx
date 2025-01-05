@@ -83,7 +83,7 @@ export const CalendarItem = ({
       <div className="flex justify-center">
         {/* Editable calendar name with hover effect */}
         <div
-          className="group flex cursor-pointer items-center justify-center gap-2 transition-colors hover:text-muted-foreground"
+          className="group flex cursor-pointer items-center justify-center gap-2 pt-4 transition-colors hover:text-muted-foreground"
           onClick={onEditCalendar}
         >
           <h2
@@ -123,12 +123,19 @@ export const CalendarItem = ({
             />
             {/* Day name labels (Mo, Tu, We, etc.) */}
             <div className="flex flex-1 gap-px overflow-hidden">
-              <div className={`flex w-full justify-end gap-px ${isRTL ? "pl-24" : "pr-24"}`}>
+              <div className={`flex w-full justify-end gap-px ${isRTL ? "pl-28" : "pr-28"}`}>
                 {days.map((day) => {
-                  const dayOfWeek = format(new Date(day), "eee").toLowerCase();
+                  const date = new Date(day);
+                  const dayOfWeek = format(date, "eee").toLowerCase();
+                  const isSaturday = date.getDay() === 6;
+
                   return (
                     <div key={day} className="w-6">
-                      <div className="relative h-6 w-6">
+                      <div
+                        className={`relative h-6 w-6 ${
+                          isSaturday ? `${isRTL ? "border-l-2" : "border-r-2"} border-dotted border-primary/20` : ""
+                        }`}
+                      >
                         <span className="absolute inset-0 flex scale-75 items-center justify-center text-xs font-medium text-foreground">
                           {t(`weekDaysShort.${dayOfWeek}`)}
                         </span>
