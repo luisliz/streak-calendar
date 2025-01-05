@@ -1,9 +1,9 @@
-import { Button } from "@/components/ui/button";
 import { CompleteControls } from "@/components/ui/complete-controls";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { XLogo } from "@/components/ui/x-logo";
 import { getCompletionColorClass } from "@/lib/colors";
+import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
@@ -83,30 +83,34 @@ export const DayCell = ({ date, count, onCountChange, colorClass, gridView, disa
         <Popover open={isOpen} onOpenChange={setIsOpen}>
           <TooltipTrigger asChild>
             <PopoverTrigger asChild>
-              <Button
-                variant="ghost"
-                className={`${gridView ? "h-12 w-12" : "h-6 w-6"} rounded-full ${
-                  count === 0 ? "bg-muted" : ""
-                } relative overflow-visible p-0 ${disabled ? "cursor-not-allowed opacity-50" : ""} hover:bg-transparent`}
+              <button
+                type="button"
+                className={cn(
+                  "inline-flex items-center justify-center rounded-full",
+                  gridView ? "h-12 w-12" : "h-6 w-6",
+                  count === 0 ? "bg-muted" : "bg-transparent",
+                  disabled ? "cursor-not-allowed !bg-zinc-100 dark:!bg-zinc-800" : "",
+                  "relative p-0"
+                )}
                 disabled={disabled}
               >
                 {count > 0 ? (
                   <div className="absolute">
                     <XLogo
                       key={`${count}-${fillClass}`}
-                      className={`${gridView ? "!h-[48px] !w-[48px]" : "!h-[24px] !w-[24px]"} ${fillClass} animate-completion relative`}
+                      className={`${gridView ? "!h-[48px] !w-[48px]" : "!h-[24px] !w-[24px]"} ${fillClass}`}
                     />
                   </div>
                 ) : (
                   <span
-                    className={`absolute inset-0 flex items-center justify-center text-xs font-medium text-zinc-900 dark:text-zinc-100 ${
-                      gridView ? "" : "scale-75"
-                    }`}
+                    className={`absolute inset-0 flex items-center justify-center text-xs font-medium ${
+                      disabled ? "text-zinc-400 dark:text-zinc-600" : "text-zinc-900 dark:text-zinc-100"
+                    } ${gridView ? "" : "scale-75"}`}
                   >
                     {label ?? new Date(date).getDate()}
                   </span>
                 )}
-              </Button>
+              </button>
             </PopoverTrigger>
           </TooltipTrigger>
           <TooltipContent>
