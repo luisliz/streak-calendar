@@ -166,11 +166,11 @@ export const YearlyOverview = ({ completions, isLoading = false }: YearlyOvervie
 
   return (
     <div className="mt-2 flex flex-col items-center sm:mt-4">
-      <div className="w-[350px] pb-1 pl-2 text-[5px] text-muted-foreground/75 sm:w-[700px] sm:text-[8px] md:w-[800px] md:text-[10px] xl:w-[984px] xl:text-xs">
+      <div className="w-[350px] pb-1 pl-2 text-[5px] text-muted-foreground/75 sm:w-[700px] sm:text-[8px] md:w-[800px] md:text-[10px] xl:w-[1000px] xl:text-xs">
         <span className="font-bold">{t("title")}</span>{" "}
         <span className="text-muted-foreground/75">{t("thingsDone", { count: totalCompletions })}</span>
       </div>
-      <Card className="mx-auto mb-4 w-fit rounded-lg p-1 shadow-md xl:mb-16 xl:w-[984px] xl:rounded-2xl xl:p-2 xl:pb-4">
+      <Card className="mx-auto mb-4 w-fit rounded-lg p-1 shadow-md xl:mb-16 xl:w-[1000px] xl:rounded-2xl xl:p-2 xl:pb-4">
         <div className="w-full">
           <div className="flex justify-end">
             {/* Left day labels (Mon/Wed/Fri) */}
