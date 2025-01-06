@@ -5,11 +5,10 @@ Streak Calendar is an open source productivity tool that combines habit tracking
 This project is currently in its experimental/alpha stage and is solely developed by me. Any feedback, contributions, or support would be greatly appreciated as I continue to improve and refine it.
 
 <div align="center">
-  <img src="public/screen.png" alt="Streak Calendar Light Mode" width="800"/>
-  <img src="public/screen-dark.png" alt="Streak Calendar Dark Mode" width="800"/>
-  <br/>
-  <img src="public/screen-mobile.png" alt="Mobile Light Mode" height="400"/>
-  <img src="public/screen-mobile-dark.png" alt="Mobile Dark Mode" height="400"/>
+  <p align="center" style="display: flex; gap: 20px; justify-content: center">
+    <img src="public/screen-dark.png" alt="Streak Calendar Desktop Dark Mode" width="600"/>
+    <img src="public/screen-mobile-dark.png" alt="Streak Calendar Mobile Dark Mode" height="400"/>
+  </p>
 </div>
 
 ## Features
@@ -97,8 +96,8 @@ Streak Calendar is open source to encourage transparency and collaboration. Cont
 
 - Creator: [Ilya Aizenberg](https://github.com/ilyaizen)
 - Twitter/X: [@StreakCalendar](https://x.com/StreakCalendar)
-- Discord [discord.gg/H9bncs7qpk](https://discord.gg/H9bncs7qpk)
-- Product Hunt [producthunt.com/posts/streak-calendar](https://www.producthunt.com/posts/streak-calendar)
+- Discord: [discord.gg/H9bncs7qpk](https://discord.gg/H9bncs7qpk)
+- Product Hunt: [producthunt.com/posts/streak-calendar](https://www.producthunt.com/posts/streak-calendar)
 - Hacker News: [Show HN Post](https://news.ycombinator.com/item?id=42602387)
 - Reddit: [r/selfhosted Post](https://www.reddit.com/r/selfhosted/comments/1huabfz/i_made_yet_another_habit_tracking_app_for_my_son/)
 
