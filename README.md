@@ -56,18 +56,29 @@ Visit `http://localhost:3000` to see the app running.
 
 ```
 streak-calendar/
-├── src/
-│   ├── app/             # Next.js app router pages and layouts
-│   ├── components/      # Reusable UI components
-│   │   ├── calendar/    # Calendar-specific components
-│   │   └── ui/          # Base UI components
-│   ├── hooks/           # Custom React hooks
-│   ├── lib/             # Utility functions and shared logic
-│   └── types.ts         # TypeScript type definitions
-├── public/              # Static assets
 ├── convex/              # Convex backend functions and schema
-├── .env.local           # Environment variables
-└── package.json         # Project dependencies and scripts
+├── public/              # Static assets
+├── src/
+│   ├── app/            # Next.js app router pages and layouts
+│   ├── components/     # Reusable UI components
+│   │   ├── calendar/  # Calendar-specific components
+│   │   └── ui/       # shadcn/ui components
+│   ├── hooks/         # Custom React hooks
+│   ├── i18n/          # Internationalization configuration
+│   ├── lib/           # Utility functions and configurations
+│   ├── messages/      # Translation files
+│   ├── utils/         # Helper functions and utilities
+│   ├── middleware.ts  # Next.js middleware
+│   └── types.ts       # TypeScript type definitions
+├── .env.local         # Environment variables
+├── .env.example      # Example environment variables
+├── .eslintrc.json    # ESLint configuration
+├── .prettierrc       # Prettier configuration
+├── components.json   # shadcn/ui components configuration
+├── next.config.mjs   # Next.js configuration
+├── package.json      # Project dependencies and scripts
+├── tailwind.config.ts # Tailwind CSS configuration
+└── tsconfig.json    # TypeScript configuration
 ```
 
 ## Contributing
@@ -76,8 +87,12 @@ Streak Calendar is open source to encourage transparency and collaboration. Cont
 
 ## Links
 
-- [GitHub Repository](https://github.com/ilyaizen/streak-calendar)
 - Creator: [Ilya Aizenberg](https://github.com/ilyaizen)
+- Twitter/X: [@StreakCalendar](https://x.com/StreakCalendar)
+- [Discord](https://discord.gg/H9bncs7qpk)
+- [Product Hunt](https://www.producthunt.com/posts/streak-calendar)
+- [Hacker News Show HN Post](https://news.ycombinator.com/item?id=42602387)
+- [Reddit r/selfhosted Post](https://www.reddit.com/r/selfhosted/comments/1huabfz/i_made_yet_another_habit_tracking_app_for_my_son/)
 
 ## License
 
