@@ -4,6 +4,14 @@ Streak Calendar is an open source productivity tool that combines habit tracking
 
 This project is currently in its experimental/alpha stage and is solely developed by me. Any feedback, contributions, or support would be greatly appreciated as I continue to improve and refine it.
 
+<div align="center">
+  <img src="public/screen.png" alt="Streak Calendar Light Mode" width="800"/>
+  <img src="public/screen-dark.png" alt="Streak Calendar Dark Mode" width="800"/>
+  <br/>
+  <img src="public/screen-mobile.png" alt="Mobile Light Mode" height="400"/>
+  <img src="public/screen-mobile-dark.png" alt="Mobile Dark Mode" height="400"/>
+</div>
+
 ## Features
 
 Explore a range of features designed to help you stay motivated and organized:
