@@ -89,10 +89,10 @@ Streak Calendar is open source to encourage transparency and collaboration. Cont
 
 - Creator: [Ilya Aizenberg](https://github.com/ilyaizen)
 - Twitter/X: [@StreakCalendar](https://x.com/StreakCalendar)
-- [Discord](https://discord.gg/H9bncs7qpk)
-- [Product Hunt](https://www.producthunt.com/posts/streak-calendar)
-- [Hacker News Show HN Post](https://news.ycombinator.com/item?id=42602387)
-- [Reddit r/selfhosted Post](https://www.reddit.com/r/selfhosted/comments/1huabfz/i_made_yet_another_habit_tracking_app_for_my_son/)
+- Discord [discord.gg/H9bncs7qpk](https://discord.gg/H9bncs7qpk)
+- Product Hunt [producthunt.com/posts/streak-calendar](https://www.producthunt.com/posts/streak-calendar)
+- Hacker News: [Show HN Post](https://news.ycombinator.com/item?id=42602387)
+- Reddit: [r/selfhosted Post](https://www.reddit.com/r/selfhosted/comments/1huabfz/i_made_yet_another_habit_tracking_app_for_my_son/)
 
 ## License
 
