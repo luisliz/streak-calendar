@@ -151,7 +151,8 @@
         "name": "Gratis",
         "description": "Para usuarios casuales",
         "features": ["Hasta 3 calendarios", "Hasta 3 hábitos por calendario", "Historial de 90 días"],
-        "cta": "Registrarse gratis"
+        "cta": "Registrarse gratis",
+        "noCreditCard": "No se requiere tarjeta de crédito"
       },
       "premium": {
         "name": "Premium",
@@ -162,7 +163,8 @@
           "Historial ilimitado",
           "Soporte prioritario"
         ],
-        "cta": "Próximamente"
+        "cta": "Próximamente",
+        "comingSoonMessage": "Las funciones premium estarán disponibles pronto para ayudar a cubrir los costos de alojamiento y servicio. Siéntete libre de autoalojar para acceso ilimitado."
       }
     },
     "comingSoon": "Próximamente",

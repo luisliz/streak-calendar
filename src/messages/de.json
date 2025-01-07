@@ -151,7 +151,8 @@
         "name": "Kostenlos",
         "description": "Perfekt für regelmäßige Nutzer",
         "features": ["Bis zu 3 Kalender", "Bis zu 3 Gewohnheiten pro Kalender", "90-Tage-Verlauf"],
-        "cta": "Kostenlos registrieren"
+        "cta": "Kostenlos registrieren",
+        "noCreditCard": "Keine Kreditkarte erforderlich"
       },
       "premium": {
         "name": "Premium",
@@ -162,7 +163,8 @@
           "Unbegrenzter Verlauf",
           "Prioritäts-Support"
         ],
-        "cta": "Demnächst verfügbar"
+        "cta": "Demnächst verfügbar",
+        "comingSoonMessage": "Premium-Funktionen werden bald verfügbar sein, um die Hosting- und Servicekosten zu decken. Sie können auch selbst hosten für unbegrenzten Zugriff."
       }
     },
     "comingSoon": "Demnächst verfügbar",

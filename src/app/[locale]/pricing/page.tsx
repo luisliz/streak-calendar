@@ -170,12 +170,18 @@ export default function PricingPage() {
                   ))}
                 </ul>
               </CardContent>
-              <CardFooter>
-                {/* Conditional rendering of CTA button based on tier status and auth state */}
+              <CardFooter className="flex flex-col">
                 {tier.isComingSoon ? (
-                  <Button size="lg" className="w-full" disabled>
-                    {tTiers(`${tier.name}.cta`)}
-                  </Button>
+                  <>
+                    <Button size="lg" className="w-full" disabled>
+                      {tTiers(`${tier.name}.cta`)}
+                    </Button>
+                    {tier.name === "premium" && (
+                      <p className="pt-4 text-center text-sm text-muted-foreground">
+                        {tTiers(`${tier.name}.comingSoonMessage`)}
+                      </p>
+                    )}
+                  </>
                 ) : (
                   <>
                     <SignedOut>
@@ -184,6 +190,11 @@ export default function PricingPage() {
                           {tTiers(`${tier.name}.cta`)}
                         </Button>
                       </SignInButton>
+                      {tier.name === "free" && (
+                        <p className="mt-4 text-center text-sm text-muted-foreground">
+                          {tTiers(`${tier.name}.noCreditCard`)}
+                        </p>
+                      )}
                     </SignedOut>
                     <SignedIn>
                       <Button size="lg" className="w-full" asChild>

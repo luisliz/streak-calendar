@@ -151,7 +151,8 @@
         "name": "Gratuit",
         "description": "Parfait pour les utilisateurs réguliers",
         "features": ["Jusqu'à 3 calendriers", "Jusqu'à 3 habitudes par calendrier", "Historique de 90 jours"],
-        "cta": "S'inscrire Gratuitement"
+        "cta": "S'inscrire Gratuitement",
+        "noCreditCard": "Aucune carte de crédit requise"
       },
       "premium": {
         "name": "Premium",
@@ -162,7 +163,8 @@
           "Historique illimité",
           "Support prioritaire"
         ],
-        "cta": "Bientôt Disponible"
+        "cta": "Bientôt Disponible",
+        "comingSoonMessage": "Les fonctionnalités premium seront bientôt disponibles pour aider à couvrir les coûts d'hébergement et de service. N'hésitez pas à auto-héberger pour un accès illimité."
       }
     },
     "comingSoon": "Bientôt disponible",

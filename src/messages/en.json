@@ -151,13 +151,15 @@
         "name": "Free",
         "description": "Perfect for regular users",
         "features": ["Up to 3 calendars", "Up to 3 habits per calendar", "90-day history"],
-        "cta": "Sign Up for Free"
+        "cta": "Sign Up for Free",
+        "noCreditCard": "No credit card required"
       },
       "premium": {
         "name": "Premium",
         "description": "For power users",
         "features": ["Unlimited calendars", "Unlimited habits per calendar", "Unlimited history", "Priority support"],
-        "cta": "Coming Soon"
+        "cta": "Coming Soon",
+        "comingSoonMessage": "Premium features will be available soon to help cover hosting and service costs. Feel free to self-host for unlimited access."
       }
     },
     "comingSoon": "Coming Soon",
