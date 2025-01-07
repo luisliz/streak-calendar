@@ -13,9 +13,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useDebounce } from "@/hooks/use-debounce";
 import { useTranslations } from "next-intl";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 /**
  * This module contains dialog components for managing calendars and habits.
@@ -92,7 +91,6 @@ function useTimerDurations() {
  * @param isOpen - Dialog visibility state
  * @param name - Current value of calendar name input
  * @param onColorChange - Handler for color selection changes
- * @param onKeyDown - Keyboard event handler (e.g., for Enter key submission)
  * @param onNameChange - Handler for name input changes
  * @param onOpenChange - Handler for dialog open/close state
  * @param onSubmit - Handler for form submission
@@ -102,7 +100,6 @@ interface NewCalendarDialogProps {
   isOpen: boolean;
   name: string;
   onColorChange: (color: string) => void;
-  onKeyDown: (e: React.KeyboardEvent) => void;
   onNameChange: (name: string) => void;
   onOpenChange: (open: boolean) => void;
   onSubmit: () => void;
@@ -113,19 +110,12 @@ export const NewCalendarDialog = ({
   isOpen,
   name,
   onColorChange,
-  onKeyDown,
   onNameChange,
   onOpenChange,
   onSubmit,
 }: NewCalendarDialogProps) => {
-  const [localName, setLocalName] = useState(name);
-  const debouncedName = useDebounce(localName);
   const t = useTranslations("dialogs");
   const colors = useColors();
-
-  useEffect(() => {
-    onNameChange(debouncedName);
-  }, [debouncedName, onNameChange]);
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
@@ -138,9 +128,8 @@ export const NewCalendarDialog = ({
             <Label htmlFor="calendar-name">{t("calendar.new.name.label")}</Label>
             <Input
               id="calendar-name"
-              value={localName}
-              onChange={(e) => setLocalName(e.target.value)}
-              onKeyDown={onKeyDown}
+              value={name}
+              onChange={(e) => onNameChange(e.target.value)}
               placeholder={t("calendar.new.name.placeholder")}
             />
           </div>
@@ -194,7 +183,6 @@ export const NewCalendarDialog = ({
 interface NewHabitDialogProps {
   isOpen: boolean;
   name: string;
-  onKeyDown: (e: React.KeyboardEvent) => void;
   onNameChange: (name: string) => void;
   onOpenChange: (open: boolean) => void;
   onSubmit: () => void;
@@ -205,21 +193,14 @@ interface NewHabitDialogProps {
 export const NewHabitDialog = ({
   isOpen,
   name,
-  onKeyDown,
   onNameChange,
   onOpenChange,
   onSubmit,
   onTimerDurationChange,
   timerDuration,
 }: NewHabitDialogProps) => {
-  const [localName, setLocalName] = useState(name);
-  const debouncedName = useDebounce(localName);
   const t = useTranslations("dialogs");
   const timerDurations = useTimerDurations();
-
-  useEffect(() => {
-    onNameChange(debouncedName);
-  }, [debouncedName, onNameChange]);
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
@@ -232,9 +213,8 @@ export const NewHabitDialog = ({
             <Label htmlFor="habit-name">{t("habit.new.name.label")}</Label>
             <Input
               id="habit-name"
-              value={localName}
-              onChange={(e) => setLocalName(e.target.value)}
-              onKeyDown={onKeyDown}
+              value={name}
+              onChange={(e) => onNameChange(e.target.value)}
               placeholder={t("habit.new.name.placeholder")}
             />
           </div>
@@ -300,26 +280,9 @@ export const EditCalendarDialog = ({
   onSubmit,
   onDelete,
 }: EditCalendarDialogProps) => {
-  const [localName, setLocalName] = useState(name);
-  const debouncedName = useDebounce(localName);
   const [showDeleteAlert, setShowDeleteAlert] = useState(false);
   const t = useTranslations("dialogs");
   const colors = useColors();
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      onSubmit();
-    }
-  };
-
-  useEffect(() => {
-    setLocalName(name);
-  }, [name]);
-
-  useEffect(() => {
-    onNameChange(debouncedName);
-  }, [debouncedName, onNameChange]);
 
   return (
     <>
@@ -331,12 +294,7 @@ export const EditCalendarDialog = ({
           <div className="grid gap-4">
             <div>
               <Label htmlFor="edit-calendar-name">{t("calendar.edit.name.label")}</Label>
-              <Input
-                id="edit-calendar-name"
-                value={localName}
-                onChange={(e) => setLocalName(e.target.value)}
-                onKeyDown={handleKeyDown}
-              />
+              <Input id="edit-calendar-name" value={name} onChange={(e) => onNameChange(e.target.value)} />
             </div>
             <div>
               <Label>{t("calendar.edit.color.label")}</Label>
@@ -411,7 +369,6 @@ interface EditHabitDialogProps {
   isOpen: boolean;
   name: string;
   onDelete: () => void;
-  onKeyDown: (e: React.KeyboardEvent) => void;
   onNameChange: (name: string) => void;
   onOpenChange: (open: boolean) => void;
   onSubmit: () => void;
@@ -423,26 +380,15 @@ export const EditHabitDialog = ({
   isOpen,
   name,
   onDelete,
-  onKeyDown,
   onNameChange,
   onOpenChange,
   onSubmit,
   onTimerDurationChange,
   timerDuration,
 }: EditHabitDialogProps) => {
-  const [localName, setLocalName] = useState(name);
   const [showDeleteAlert, setShowDeleteAlert] = useState(false);
-  const debouncedName = useDebounce(localName);
   const t = useTranslations("dialogs");
   const timerDurations = useTimerDurations();
-
-  useEffect(() => {
-    setLocalName(name);
-  }, [name]);
-
-  useEffect(() => {
-    onNameChange(debouncedName);
-  }, [debouncedName, onNameChange]);
 
   return (
     <>
@@ -454,12 +400,7 @@ export const EditHabitDialog = ({
           <div className="grid gap-4">
             <div>
               <Label htmlFor="edit-habit-name">{t("habit.edit.name.label")}</Label>
-              <Input
-                id="edit-habit-name"
-                value={localName}
-                onChange={(e) => setLocalName(e.target.value)}
-                onKeyDown={onKeyDown}
-              />
+              <Input id="edit-habit-name" value={name} onChange={(e) => onNameChange(e.target.value)} />
             </div>
             <div>
               <Label>{t("habit.edit.timer.label")}</Label>

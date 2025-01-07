@@ -159,28 +159,6 @@ export function CalendarContainer({
     [monthViewData]
   );
 
-  const handleCalendarKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      if (state.calendar.editingCalendar) {
-        handleEditCalendar();
-      } else {
-        handleAddCalendar();
-      }
-    }
-  };
-
-  const handleHabitKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      if (state.habit.editingHabit) {
-        handleEditHabit();
-      } else {
-        handleAddHabit();
-      }
-    }
-  };
-
   if (isLoading) {
     return <CalendarSkeletons view={view} />;
   }
@@ -240,7 +218,6 @@ export function CalendarContainer({
         color={state.calendar.color}
         onColorChange={updateCalendarColor}
         onSubmit={handleAddCalendar}
-        onKeyDown={handleCalendarKeyDown}
       />
       <NewHabitDialog
         isOpen={state.habit.isNewOpen}
@@ -250,7 +227,6 @@ export function CalendarContainer({
         timerDuration={state.habit.timerDuration}
         onTimerDurationChange={updateHabitTimer}
         onSubmit={handleAddHabit}
-        onKeyDown={handleHabitKeyDown}
       />
       <EditCalendarDialog
         isOpen={state.calendar.isEditOpen}
@@ -271,7 +247,6 @@ export function CalendarContainer({
         onTimerDurationChange={updateHabitTimer}
         onSubmit={handleEditHabit}
         onDelete={handleDeleteHabit}
-        onKeyDown={handleHabitKeyDown}
       />
     </>
   );
