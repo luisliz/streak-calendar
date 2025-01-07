@@ -70,10 +70,11 @@ export function MonthGridView({
         ).length;
 
         return (
+          // TODO: 2025-01-07 - empty classes are unacceptable
           <div key={habit._id} className="">
             {/* Habit header with name and timer duration */}
             <div className="flex justify-center pt-8">
-              <div className="flex items-baseline">
+              <div className="flex items-baseline pb-2">
                 <div className="cursor-pointer" onClick={() => onEditHabit(habit)}>
                   <h3
                     className={`text-2xl font-medium underline decoration-wavy decoration-2 ${color.replace(
