@@ -1,4 +1,4 @@
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { useMutation, useQuery } from "convex/react";
 import { format } from "date-fns";
 import { useState } from "react";

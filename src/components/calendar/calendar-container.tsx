@@ -5,9 +5,9 @@ import {
   NewHabitDialog,
 } from "@/components/calendar/calendar-dialogs";
 import { CalendarItem } from "@/components/calendar/calendar-item";
-import { ViewControls } from "@/components/calendar/view-controls";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { ViewControls } from "@/components/ui/view-controls";
 import { useToastMessages } from "@/hooks/use-toast-messages";
 import { Calendar, Completion, Day, EditingCalendar, Habit, Id } from "@/types";
 import { AnimatePresence, motion } from "framer-motion";
