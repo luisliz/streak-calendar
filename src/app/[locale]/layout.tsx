@@ -125,11 +125,11 @@ export default async function LocaleLayout({
 
 type Props = {
   children: React.ReactNode;
-  params: { locale: keyof typeof i18nMetadata };
+  params: Promise<{ locale: keyof typeof i18nMetadata }>;
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const locale = params.locale as keyof typeof i18nMetadata;
+  const { locale } = await params;
   const meta = i18nMetadata[locale] ?? i18nMetadata.en;
 
   return {

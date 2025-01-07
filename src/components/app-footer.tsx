@@ -182,10 +182,6 @@ export function AppFooter() {
           </div>
         </div>
       </TooltipProvider>
-      {/* Preload all flag images */}
-      {locales.map((l) => (
-        <link key={l} rel="preload" as="image" href={languageMap[l].flagSrc} />
-      ))}
     </footer>
   );
 }

@@ -33,7 +33,7 @@ Built with a modern tech stack to ensure efficiency, scalability, and an engagin
 - Styling: [Tailwind CSS](https://tailwindcss.com/)
 - UI: [shadcn/ui](https://ui.shadcn.com/)
 
-Also used: [Canvas Confetti](https://www.kirilv.com/canvas-confetti/), [date-fns](https://date-fns.org/), [Framer Motion](https://www.framer.com/motion/), [Lucide React](https://lucide.dev/), [next-intl](https://next-intl-docs.vercel.app/), [next-themes](https://www.npmjs.com/package/next-themes), [NumberFlow](https://number-flow.barvian.me/), [Radix UI](https://www.radix-ui.com/), [React](https://react.dev/), [shadcn-pricing-page](https://github.com/aymanch-03/shadcn-pricing-page), [TypeScript](https://www.typescriptlang.org/)
+Also used: [Canvas Confetti](https://www.kirilv.com/canvas-confetti/), [date-fns](https://date-fns.org/), [Framer Motion](https://www.framer.com/motion/), [Lucide React](https://lucide.dev/), [next-intl](https://next-intl-docs.vercel.app/), [next-themes](https://www.npmjs.com/package/next-themes), [NumberFlow](https://number-flow.barvian.me/), [Radix UI](https://www.radix-ui.com/), [React](https://react.dev/), [shadcn-pricing-page](https://github.com/aymanch-03/shadcn-pricing-page), [TypeScript](https://www.typescriptlang.org/).
 
 ## Getting Started
 

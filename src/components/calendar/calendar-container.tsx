@@ -19,7 +19,7 @@ import { toast } from "react-hot-toast";
 
 import { CalendarSkeletons } from "./calendar-skeletons";
 
-const MotionCard = motion.create(Card);
+const MotionCard = motion(Card);
 
 type CalendarView = "monthRow" | "monthGrid";
 
@@ -194,14 +194,11 @@ export function CalendarContainer({
       <AnimatePresence mode="wait" initial={false}>
         <MotionCard
           key={calendarView}
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -10 }}
-          transition={{
-            duration: 0.2,
-            ease: "easeInOut",
-          }}
           className="space-y-8 border p-2 shadow-md"
+          initial={{ opacity: 1, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, ease: [0, 0.7, 0.1, 1] }}
         >
           <ViewControls calendarView={calendarView} onViewChange={onViewChange} />
           <div className="flex w-full flex-col gap-4 md:px-8">
@@ -225,6 +222,7 @@ export function CalendarContainer({
               })}
             </div>
           </div>
+
           <div className="flex justify-center pb-16">
             <Button variant="default" onClick={openNewCalendar}>
               <PlusCircle className="h-4 w-4" />
