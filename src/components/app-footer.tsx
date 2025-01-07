@@ -47,45 +47,43 @@ export function AppFooter() {
 
   return (
     <footer className="border-t border-border bg-background/30">
-      <div className="container relative mx-auto flex min-h-[4rem] flex-col items-center gap-4 px-3 py-4 md:h-16 md:flex-row md:justify-between md:gap-0 md:px-4 md:py-0">
-        <p className="text-center text-xs text-muted-foreground md:text-left md:text-sm">
-          {t("madeWith")}{" "}
-          <TooltipProvider>
+      <TooltipProvider delayDuration={200}>
+        <div className="container relative mx-auto flex min-h-[4rem] flex-col items-center gap-4 px-3 py-4 md:h-16 md:flex-row md:justify-between md:gap-0 md:px-4 md:py-0">
+          <div className="text-center text-xs text-muted-foreground md:text-left md:text-sm">
+            {t("madeWith")}{" "}
             <Tooltip>
               <TooltipTrigger asChild>
                 <span
                   className="mx-[2px] inline-block h-4 w-4 translate-y-[3px] rounded-[4px] bg-[url('/cursor-logo.png')] bg-contain bg-center bg-no-repeat md:h-5 md:w-5 md:translate-y-[4px] md:rounded-[6px]"
                   aria-label="Cursor"
+                  role="button"
+                  tabIndex={0}
                 />
               </TooltipTrigger>
-              <TooltipContent>Cursor</TooltipContent>
-            </Tooltip>
-          </TooltipProvider>{" "}
-          {t("and")}{" "}
-          <TooltipProvider>
+              <TooltipContent sideOffset={5}>Cursor</TooltipContent>
+            </Tooltip>{" "}
+            {t("and")}{" "}
             <Tooltip>
               <TooltipTrigger asChild>
                 <span className="text-base font-extrabold text-destructive md:text-lg" aria-label={t("love")}>
                   ♥️
                 </span>
               </TooltipTrigger>
-              <TooltipContent>{t("love")}</TooltipContent>
-            </Tooltip>
-          </TooltipProvider>{" "}
-          {t("by")}{" "}
-          <a
-            href="https://x.com/ilyaizen"
-            className="font-semibold hover:text-foreground"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            @ilyaizen
-          </a>
-        </p>
+              <TooltipContent sideOffset={5}>{t("love")}</TooltipContent>
+            </Tooltip>{" "}
+            {t("by")}{" "}
+            <a
+              href="https://x.com/ilyaizen"
+              className="font-semibold hover:text-foreground"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              @ilyaizen
+            </a>
+          </div>
 
-        <div className="flex items-center">
-          <div className="flex items-center gap-3 rtl:flex-row-reverse">
-            <TooltipProvider>
+          <div className="flex items-center">
+            <div className="flex items-center gap-3 rtl:flex-row-reverse">
               <Tooltip>
                 <TooltipTrigger asChild>
                   <a
@@ -105,10 +103,8 @@ export function AppFooter() {
                     </svg>
                   </a>
                 </TooltipTrigger>
-                <TooltipContent>GitHub</TooltipContent>
+                <TooltipContent sideOffset={5}>GitHub</TooltipContent>
               </Tooltip>
-            </TooltipProvider>
-            <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
                   <a
@@ -128,10 +124,8 @@ export function AppFooter() {
                     </svg>
                   </a>
                 </TooltipTrigger>
-                <TooltipContent>X (Twitter)</TooltipContent>
+                <TooltipContent sideOffset={5}>X (Twitter)</TooltipContent>
               </Tooltip>
-            </TooltipProvider>
-            <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
                   <a
@@ -151,13 +145,11 @@ export function AppFooter() {
                     </svg>
                   </a>
                 </TooltipTrigger>
-                <TooltipContent>Discord</TooltipContent>
+                <TooltipContent sideOffset={5}>Discord</TooltipContent>
               </Tooltip>
-            </TooltipProvider>
-          </div>
-          <div className="mx-3 h-4 w-px bg-border md:h-6" />
-          {/* language switcher */}
-          <TooltipProvider>
+            </div>
+            <div className="mx-3 h-4 w-px bg-border md:h-6" />
+            {/* language switcher */}
             <Tooltip>
               <DropdownMenu>
                 <TooltipTrigger asChild>
@@ -180,7 +172,7 @@ export function AppFooter() {
                     </svg>
                   </DropdownMenuTrigger>
                 </TooltipTrigger>
-                <DropdownMenuContent align="end">
+                <DropdownMenuContent align="end" className="min-w-[150px]">
                   {locales.map((l) => (
                     <DropdownMenuItem key={l} asChild>
                       <Link
@@ -191,9 +183,11 @@ export function AppFooter() {
                           src={languageMap[l].flagSrc}
                           alt={l.toUpperCase()}
                           className="size-4 rounded-[3px]"
-                          width={16}
-                          height={16}
-                          unoptimized
+                          width={32}
+                          height={32}
+                          priority
+                          loading="eager"
+                          sizes="16px"
                         />
                         <span>{languageMap[l].name}</span>
                       </Link>
@@ -201,11 +195,15 @@ export function AppFooter() {
                   ))}
                 </DropdownMenuContent>
               </DropdownMenu>
-              <TooltipContent>{t("changeLanguage")}</TooltipContent>
+              <TooltipContent sideOffset={5}>{t("changeLanguage")}</TooltipContent>
             </Tooltip>
-          </TooltipProvider>
+          </div>
         </div>
-      </div>
+      </TooltipProvider>
+      {/* Preload all flag images */}
+      {locales.map((l) => (
+        <link key={l} rel="preload" as="image" href={languageMap[l].flagSrc} />
+      ))}
     </footer>
   );
 }

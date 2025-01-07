@@ -1,6 +1,9 @@
+import { Button } from "@/components/ui/button";
+import { CompleteControls } from "@/components/ui/complete-controls";
 import { useMobile } from "@/hooks/use-mobile";
 import { getCompletionCount } from "@/utils/completion-utils";
 import { format } from "date-fns";
+import { Pencil, PlusCircle } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 import { Id } from "@server/convex/_generated/dataModel";
@@ -20,9 +23,96 @@ interface MonthGridViewProps {
     completedAt: number;
   }>;
   onToggle: (habitId: Id<"habits">, date: string, count: number) => void;
+  onEditHabit: (habit: { _id: Id<"habits">; name: string; timerDuration?: number }) => void;
+  habits: Array<{
+    _id: Id<"habits">;
+    name: string;
+    timerDuration?: number;
+  }>;
+  onAddHabit: () => void;
 }
 
-export function MonthGridView({ habit, color, days, completions, onToggle }: MonthGridViewProps) {
+export function MonthGridView({
+  color,
+  days,
+  completions,
+  onToggle,
+  onEditHabit,
+  habits,
+  onAddHabit,
+}: MonthGridViewProps) {
+  const t = useTranslations("calendar");
+
+  return (
+    <div className="space-y-4">
+      {habits.map((habit) => {
+        // Calculate today's completion count for the habit
+        const today = new Date().toISOString().split("T")[0];
+        const todayCount = completions.filter(
+          (c) => c.habitId === habit._id && new Date(c.completedAt).toISOString().split("T")[0] === today
+        ).length;
+
+        return (
+          <div key={habit._id} className="">
+            {/* Editable habit name */}
+            <div className="flex justify-center pt-8">
+              <div
+                className="group inline-flex cursor-pointer items-center gap-2 pl-6 transition-colors hover:text-muted-foreground"
+                onClick={() => onEditHabit(habit)}
+              >
+                <h3 className="text-2xl font-medium">
+                  {habit.name}
+                  {habit.timerDuration && (
+                    <span className="ml-1 text-sm text-muted-foreground">({habit.timerDuration}m)</span>
+                  )}
+                </h3>
+                <span className="opacity-0 transition-opacity group-hover:opacity-100">
+                  <Pencil className="h-4 w-4" />
+                </span>
+              </div>
+            </div>
+            {/* Centered completion controls */}
+            <div className="flex justify-center pb-4">
+              <CompleteControls
+                count={todayCount}
+                onIncrement={() => onToggle(habit._id, today, todayCount + 1)}
+                onDecrement={() => onToggle(habit._id, today, todayCount - 1)}
+                variant="default"
+                timerDuration={habit.timerDuration}
+                habitName={habit.name}
+              />
+            </div>
+            {/* Calendar grid view */}
+            <MonthGridCalendar habit={habit} color={color} days={days} completions={completions} onToggle={onToggle} />
+          </div>
+        );
+      })}
+      <div className="flex justify-center pb-8">
+        <Button variant="outline" size="sm" onClick={onAddHabit}>
+          <PlusCircle className="h-4 w-4" />
+          {t("controls.addHabit")}
+        </Button>
+      </div>
+    </div>
+  );
+}
+
+interface MonthGridCalendarProps {
+  habit: {
+    _id: Id<"habits">;
+    name: string;
+    timerDuration?: number;
+  };
+  color: string;
+  days: string[];
+  completions: Array<{
+    habitId: Id<"habits">;
+    completedAt: number;
+  }>;
+  onToggle: (habitId: Id<"habits">, date: string, count: number) => void;
+}
+
+function MonthGridCalendar({ habit, color, days, completions, onToggle }: MonthGridCalendarProps) {
   const isMobile = useMobile();
   const t = useTranslations("calendar");
 
