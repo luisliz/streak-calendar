@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button";
-import { Pencil } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 import { Id } from "@server/convex/_generated/dataModel";
@@ -50,22 +49,15 @@ export const CalendarItem = ({
     <div className="space-y-8">
       {/* Calendar Header Section */}
       <div className="flex justify-center">
-        {/* Editable calendar name with hover effect */}
-        <div
-          className="group flex cursor-pointer items-center justify-center gap-2 pt-4 transition-colors hover:text-muted-foreground"
-          onClick={onEditCalendar}
-        >
+        <div className="cursor-pointer pt-4" onClick={onEditCalendar}>
           <h2
             className={`text-4xl font-semibold underline decoration-wavy decoration-4 ${colorTheme.replace(
               "bg-",
               "decoration-"
-            )}`}
+            )}/30 hover:text-muted-foreground hover:no-underline`}
           >
             {calendar.name}
           </h2>
-          <span className="opacity-0 transition-opacity group-hover:opacity-100">
-            <Pencil className="h-4 w-4" />
-          </span>
         </div>
       </div>
 

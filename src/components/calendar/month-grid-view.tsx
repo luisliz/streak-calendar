@@ -3,7 +3,7 @@ import { CompleteControls } from "@/components/ui/complete-controls";
 import { useMobile } from "@/hooks/use-mobile";
 import { getCompletionCount } from "@/utils/completion-utils";
 import { format } from "date-fns";
-import { Pencil, PlusCircle } from "lucide-react";
+import { PlusCircle } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 import { Id } from "@server/convex/_generated/dataModel";
@@ -56,19 +56,20 @@ export function MonthGridView({
           <div key={habit._id} className="">
             {/* Editable habit name */}
             <div className="flex justify-center pt-8">
-              <div
-                className="group inline-flex cursor-pointer items-center gap-2 pl-6 transition-colors hover:text-muted-foreground"
-                onClick={() => onEditHabit(habit)}
-              >
-                <h3 className="text-2xl font-medium">
-                  {habit.name}
-                  {habit.timerDuration && (
-                    <span className="ml-1 text-sm text-muted-foreground">({habit.timerDuration}m)</span>
-                  )}
-                </h3>
-                <span className="opacity-0 transition-opacity group-hover:opacity-100">
-                  <Pencil className="h-4 w-4" />
-                </span>
+              <div className="flex items-baseline">
+                <div className="cursor-pointer" onClick={() => onEditHabit(habit)}>
+                  <h3
+                    className={`text-2xl font-medium underline decoration-wavy decoration-2 ${color.replace(
+                      "bg-",
+                      "decoration-"
+                    )}/30 hover:text-muted-foreground hover:no-underline`}
+                  >
+                    {habit.name}
+                  </h3>
+                </div>
+                {habit.timerDuration && (
+                  <span className="ml-1 text-sm text-muted-foreground">({habit.timerDuration}m)</span>
+                )}
               </div>
             </div>
             {/* Centered completion controls */}

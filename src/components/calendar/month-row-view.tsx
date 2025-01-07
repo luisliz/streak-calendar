@@ -2,7 +2,6 @@ import { Button } from "@/components/ui/button";
 import { CompleteControls } from "@/components/ui/complete-controls";
 import { getCompletionCount } from "@/utils/completion-utils";
 import { format } from "date-fns";
-import { Pencil } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 
 import { Id } from "@server/convex/_generated/dataModel";
@@ -114,36 +113,29 @@ export function MonthRowView({
               </div>
               {/* Editable habit name with hover effects - direction aware */}
               <div
-                className={`group absolute flex w-24 cursor-pointer items-start transition-colors hover:text-muted-foreground md:w-48 ${
-                  isRTL ? "right-0" : "left-0"
-                }`}
+                className={`absolute flex w-24 cursor-pointer items-start md:w-48 ${isRTL ? "right-0" : "left-0"}`}
                 onClick={() => onEditHabit(habit)}
               >
-                {/* Container for habit name with relative positioning for edit icon */}
                 <div className="relative flex items-center">
-                  {/* Habit name display with background matching card color */}
-                  <h3 className="bg-card text-base font-medium">
-                    {/* Truncate long habit names to prevent overflow */}
-                    <span className="truncate">{habit.name}</span>
-                    {/* Optional timer duration display */}
-                    {/* Shows duration in minutes with RTL-aware spacing */}
+                  <div className="flex items-baseline bg-card">
+                    <h3
+                      className={`text-base font-medium underline decoration-wavy decoration-2 ${color.replace(
+                        "bg-",
+                        "decoration-"
+                      )}/30 hover:text-muted-foreground hover:no-underline`}
+                      onClick={() => onEditHabit(habit)}
+                    >
+                      <span className="cursor-pointer truncate">{habit.name}</span>
+                    </h3>
                     {habit.timerDuration && (
                       <span className={`${isRTL ? "mx-1" : "ml-1"} text-sm text-muted-foreground/50`}>
                         ({habit.timerDuration}m)
                       </span>
                     )}
-                  </h3>
-                  {/* Gradient fade effect on the habit name */}
+                  </div>
                   <div
                     className={`h-6 w-12 ${isRTL ? "bg-gradient-to-l" : "bg-gradient-to-r"} from-card to-transparent`}
                   />
-                  <span
-                    className={`absolute top-1/2 -translate-y-1/2 opacity-0 transition-opacity group-hover:opacity-100 ${
-                      isRTL ? "left-6" : "right-6"
-                    }`}
-                  >
-                    <Pencil className="h-4 w-4" />
-                  </span>
                 </div>
               </div>
               {/* Habit completion controls for today */}
