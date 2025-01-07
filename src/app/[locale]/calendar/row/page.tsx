@@ -6,7 +6,6 @@ import { YearlyOverview } from "@/components/calendar/yearly-overview";
 import { useCalendarData } from "@/hooks/use-calendar-data";
 import { useCalendarState } from "@/hooks/use-calendar-state";
 import { useDateRange } from "@/hooks/use-date-range";
-import { useHabitState } from "@/hooks/use-habit-state";
 import { useViewState } from "@/hooks/use-view-state";
 import { SignInButton, SignedIn, SignedOut } from "@clerk/nextjs";
 import { useTranslations } from "next-intl";
@@ -32,8 +31,7 @@ const AuthenticationWrapper = ({ children }: { children: React.ReactNode }) => {
 };
 
 export default function CalendarRowPage() {
-  const { calendarView, ...calendarState } = useCalendarState();
-  const habitState = useHabitState();
+  const { calendarView } = useCalendarState();
   const { setView } = useViewState();
 
   const monthData = useDateRange(40);
@@ -65,12 +63,10 @@ export default function CalendarRowPage() {
             isLoading={yearViewData.isLoading}
           />
           <CalendarContainer
-            calendarState={calendarState}
             calendarView="monthRow"
             calendars={calendars}
             completions={monthViewData.completions || []}
             days={days}
-            habitState={habitState}
             habits={habits}
             monthViewData={monthViewData}
             onViewChange={setView}

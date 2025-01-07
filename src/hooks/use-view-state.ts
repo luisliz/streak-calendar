@@ -1,30 +1,17 @@
-import { useParams, useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useParams, usePathname, useRouter } from "next/navigation";
+import { useMemo } from "react";
 
 type CalendarView = "monthGrid" | "monthRow";
 
 export function useViewState() {
   const router = useRouter();
   const params = useParams();
+  const pathname = usePathname();
 
-  useEffect(() => {
-    // Check if we're on the main calendar route
-    if (window.location.pathname === `/${params.locale}/calendar`) {
-      // Get last used view from localStorage
-      const lastView = localStorage.getItem("calendarView") as CalendarView;
-
-      // If user previously used row view, redirect them there
-      if (lastView === "monthRow") {
-        router.push(`/${params.locale}/calendar/row`);
-      }
-    }
-  }, [params.locale, router]);
+  const view: CalendarView = useMemo(() => (pathname?.endsWith("/row") ? "monthRow" : "monthGrid"), [pathname]);
 
   const setView = (view: CalendarView) => {
-    // Save view preference
     localStorage.setItem("calendarView", view);
-
-    // Navigate to appropriate route
     if (view === "monthRow") {
       router.push(`/${params.locale}/calendar/row`);
     } else {
@@ -32,5 +19,5 @@ export function useViewState() {
     }
   };
 
-  return { setView };
+  return { view, setView };
 }
