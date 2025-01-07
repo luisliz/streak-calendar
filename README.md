@@ -4,6 +4,8 @@ Streak Calendar is an open source productivity tool that combines habit tracking
 
 This project is currently in its experimental/alpha stage and is solely developed by me. Any feedback, contributions, or support would be greatly appreciated as I continue to improve and refine it.
 
+It is hosted on Vercel and free at the moment to ensure accessibility and flexibility. With an MIT license, anyone can freely use and adapt it. Hosting does have costs, and I may soon need premium services from Convex and Clerk. To cover these expenses and sustain development, I plan to introduce an affordable pricing model through Stripe, keeping it significantly cheaper than alternatives. Feel free to fork the project and host it on your own to unlock all the features.
+
 |                   Desktop                    |                       Mobile                       |
 | :------------------------------------------: | :------------------------------------------------: |
 | ![Desktop Dark Mode](public/screen-dark.png) | ![Mobile Dark Mode](public/screen-mobile-dark.png) |
