@@ -1,10 +1,12 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { CustomCalendarIcon } from "@/components/ui/custom-calendar-icon";
+import { CustomTodoIcon } from "@/components/ui/custom-todo-icon";
 import { XLogo } from "@/components/ui/x-logo";
 import { Link } from "@/i18n/routing";
 import { SignedIn, SignedOut } from "@clerk/nextjs";
-import { Activity, Calendar, ListTodo, Timer } from "lucide-react";
+import { Activity, Timer } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 
@@ -20,7 +22,7 @@ export default function Home() {
 
       <div className="mx-auto grid max-w-xs grid-cols-1 gap-8 px-4 md:max-w-3xl md:grid-cols-2 lg:grid-cols-4">
         <div className="space-y-2 text-center">
-          <Calendar className="mx-auto mb-2 h-8 w-8 text-primary" />
+          <CustomCalendarIcon className="mx-auto mb-2 h-8 w-8 text-primary" />
           <h3 className="font-semibold">{t("hero.features.visualTracking.title")}</h3>
           <p className="text-sm text-muted-foreground">
             {t("hero.features.visualTracking.description.part1")} <XLogo className="inline h-4 w-4 fill-red-500" />{" "}
@@ -28,7 +30,7 @@ export default function Home() {
           </p>
         </div>
         <div className="space-y-2 text-center">
-          <ListTodo className="mx-auto mb-2 h-8 w-8 text-primary" />
+          <CustomTodoIcon className="mx-auto mb-2 h-8 w-8 text-primary" />
           <h3 className="font-semibold">{t("hero.features.multiHabit.title")}</h3>
           <p className="text-sm text-muted-foreground">{t("hero.features.multiHabit.description")}</p>
         </div>
