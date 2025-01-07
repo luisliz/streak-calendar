@@ -11,17 +11,29 @@ import { Activity, Timer } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 
+/**
+ * Home component - Landing page of the application
+ * Features:
+ * - Responsive hero section with title and subtitle
+ * - Feature grid showcasing key functionalities
+ * - Authentication-aware CTA buttons
+ * - Responsive preview images for desktop and mobile
+ */
 export default function Home() {
+  // Initialize translations for the home page namespace
   const t = useTranslations("home");
 
   return (
     <div className="flex flex-col items-center justify-center space-y-16 px-4 py-16 text-center">
+      {/* Hero Section */}
       <div className="max-w-lg">
         <h1 className="mb-4 text-2xl font-bold md:text-4xl">{t("hero.title")}</h1>
         <p className="mx-auto max-w-[600px] text-muted-foreground md:text-lg">{t("hero.subtitle")}</p>
       </div>
 
+      {/* Feature Grid - Displays 4 key features with icons and descriptions */}
       <div className="mx-auto grid max-w-xs grid-cols-1 gap-8 px-4 md:max-w-3xl md:grid-cols-2 lg:grid-cols-4">
+        {/* Visual Tracking Feature */}
         <div className="space-y-2 text-center">
           <CustomCalendarIcon className="mx-auto mb-2 h-8 w-8 text-primary" />
           <h3 className="font-semibold">{t("hero.features.visualTracking.title")}</h3>
@@ -30,16 +42,19 @@ export default function Home() {
             {t("hero.features.visualTracking.description.part2")}
           </p>
         </div>
+        {/* Multi-Habit Tracking Feature */}
         <div className="space-y-2 text-center">
           <CustomTodoIcon className="mx-auto mb-2 h-8 w-8 text-primary" />
           <h3 className="font-semibold">{t("hero.features.multiHabit.title")}</h3>
           <p className="text-sm text-muted-foreground">{t("hero.features.multiHabit.description")}</p>
         </div>
+        {/* Yearly Grid Feature */}
         <div className="space-y-2 text-center">
           <Activity className="mx-auto mb-2 h-8 w-8 text-primary" />
           <h3 className="font-semibold">{t("hero.features.yearlyGrid.title")}</h3>
           <p className="text-sm text-muted-foreground">{t("hero.features.yearlyGrid.description")}</p>
         </div>
+        {/* Timed Tasks Feature */}
         <div className="space-y-2 text-center">
           <Timer className="mx-auto mb-2 h-8 w-8 text-primary" />
           <h3 className="font-semibold">{t("hero.features.timedTasks.title")}</h3>
@@ -47,9 +62,11 @@ export default function Home() {
         </div>
       </div>
 
+      {/* CTA Section - Shows different buttons based on authentication state */}
       <div className="space-y-4">
         <p className="hidden text-xs text-muted-foreground md:block md:text-sm">{t("hero.motivation")}</p>
 
+        {/* Authenticated user view */}
         <SignedIn>
           <div className="flex justify-center">
             <Button asChild size="lg">
@@ -57,6 +74,7 @@ export default function Home() {
             </Button>
           </div>
         </SignedIn>
+        {/* Non-authenticated user view */}
         <SignedOut>
           <div className="flex justify-center gap-4">
             <Button asChild size="lg">
@@ -69,12 +87,12 @@ export default function Home() {
         </SignedOut>
       </div>
 
+      {/* Preview Section - Responsive images for desktop and mobile views */}
       <div className="grid w-full max-w-5xl grid-cols-1 gap-4 px-4 md:grid-cols-3">
-        {/* Desktop Preview */}
+        {/* Desktop Preview - Takes 2/3 of the grid on larger screens */}
         <Card className="relative md:col-span-2 md:h-[400px]">
           <div className="h-0 pb-[56.25%] md:h-full md:pb-0">
-            {" "}
-            {/* 16:9 aspect ratio on mobile */}
+            {/* Maintains 16:9 aspect ratio on mobile */}
             <Image src="/screen.png" alt="Desktop preview" fill className="object-contain dark:hidden" priority />
             <Image
               src="/screen-dark.png"
@@ -86,11 +104,10 @@ export default function Home() {
           </div>
         </Card>
 
-        {/* Mobile Preview */}
+        {/* Mobile Preview - Takes 1/3 of the grid on larger screens */}
         <Card className="relative md:h-[400px]">
           <div className="h-0 pb-[177.78%] md:h-full md:pb-0">
-            {" "}
-            {/* 9:16 aspect ratio on mobile */}
+            {/* Maintains 9:16 aspect ratio on mobile */}
             <Image src="/screen-mobile.png" alt="Mobile preview" fill className="object-contain dark:hidden" priority />
             <Image
               src="/screen-mobile-dark.png"

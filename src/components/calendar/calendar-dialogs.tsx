@@ -27,6 +27,7 @@ import { useState } from "react";
  * Each color is defined with a human-readable name and corresponding Tailwind class.
  * All colors use the 500 shade for consistency in the UI.
  */
+
 const COLOR_VALUES = [
   { key: "red", value: "bg-red-500" },
   { key: "orange", value: "bg-orange-500" },

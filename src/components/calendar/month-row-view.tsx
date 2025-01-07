@@ -8,28 +8,49 @@ import { Id } from "@server/convex/_generated/dataModel";
 
 import { DayCell } from "./day-cell";
 
+/**
+ * Row view component for displaying habits in a horizontal calendar layout.
+ * Shows days in a continuous row with habit completion tracking.
+ * Supports RTL languages and includes gradient fade effects for better UX.
+ */
+
+/**
+ * Props interface for the MonthRowView component
+ */
 interface MonthRowViewProps {
+  /** Primary habit for the calendar */
   habit: {
     _id: Id<"habits">;
     name: string;
     timerDuration?: number;
   };
+  /** Color theme for the calendar */
   color: string;
+  /** Array of dates to display */
   days: string[];
+  /** Array of habit completion records */
   completions: Array<{
     habitId: Id<"habits">;
     completedAt: number;
   }>;
+  /** Callback for toggling habit completion */
   onToggle: (habitId: Id<"habits">, date: string, count: number) => void;
+  /** Callback for editing habit properties */
   onEditHabit: (habit: { _id: Id<"habits">; name: string; timerDuration?: number }) => void;
+  /** Array of all habits in the calendar */
   habits: Array<{
     _id: Id<"habits">;
     name: string;
     timerDuration?: number;
   }>;
+  /** Callback for adding a new habit */
   onAddHabit: () => void;
 }
 
+/**
+ * Component that renders habits in a horizontal calendar layout
+ * Supports RTL languages and includes gradient fade effects
+ */
 export function MonthRowView({
   color,
   days,
@@ -41,6 +62,7 @@ export function MonthRowView({
 }: MonthRowViewProps) {
   const locale = useLocale();
   const t = useTranslations("calendar");
+  // Check if current locale is RTL (Hebrew or Arabic)
   const isRTL = ["he", "ar"].includes(locale);
 
   return (
@@ -63,6 +85,7 @@ export function MonthRowView({
             {days.map((day) => {
               const date = new Date(day);
               const dayOfWeek = format(date, "eee").toLowerCase();
+              // Add separator line for weekends
               const isSaturday = date.getDay() === 6;
 
               return (
@@ -86,6 +109,7 @@ export function MonthRowView({
       {/* Habit Rows Section */}
       <div className="relative space-y-px overflow-hidden">
         {habits.map((habit) => {
+          // Calculate today's completion count for the habit
           const today = new Date().toISOString().split("T")[0];
           const todayCount = completions.filter(
             (c) => c.habitId === habit._id && new Date(c.completedAt).toISOString().split("T")[0] === today
@@ -133,6 +157,7 @@ export function MonthRowView({
                       </span>
                     )}
                   </div>
+                  {/* Gradient fade effect for habit name */}
                   <div
                     className={`h-6 w-12 ${isRTL ? "bg-gradient-to-l" : "bg-gradient-to-r"} from-card to-transparent`}
                   />
@@ -153,7 +178,7 @@ export function MonthRowView({
           );
         })}
       </div>
-      {/* TODO: 2025-01-03 - this is insane browsers work in mysterious ways */}
+      {/* Add new habit button */}
       <div className={`mt-px flex ${isRTL ? "justify-end" : "justify-end"}`}>
         <Button className="h-[24px] w-24 text-xs" size="sm" onClick={onAddHabit}>
           {t("controls.new")}

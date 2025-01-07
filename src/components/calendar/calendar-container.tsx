@@ -19,10 +19,22 @@ import { toast } from "react-hot-toast";
 
 import { CalendarSkeletons } from "./calendar-skeletons";
 
+/**
+ * Main calendar container component that manages the display and interaction of calendars and habits.
+ * Handles calendar/habit CRUD operations and view switching between month row and grid layouts.
+ */
+
 const MotionCard = motion(Card);
 
+/**
+ * Type for calendar view modes - either month row or month grid layout
+ */
 type CalendarView = "monthRow" | "monthGrid";
 
+/**
+ * Interface defining all calendar-related data operations
+ * Includes CRUD operations for calendars and habits, plus habit completion toggling
+ */
 interface CalendarData {
   handleAddCalendar: (name: string, color: string) => Promise<void>;
   handleAddHabit: (name: string, calendarId: Id<"calendars">, timerDuration?: number) => Promise<void>;
@@ -33,6 +45,10 @@ interface CalendarData {
   handleToggleHabit: (habitId: Id<"habits">, date: string, count: number) => Promise<void>;
 }
 
+/**
+ * Props interface for the CalendarContainer component
+ * Contains all necessary data and callbacks for calendar functionality
+ */
 interface CalendarContainerProps {
   calendarView: CalendarView;
   calendars: Calendar[];
@@ -45,6 +61,10 @@ interface CalendarContainerProps {
   isLoading?: boolean;
 }
 
+/**
+ * Component displayed when no calendars exist
+ * Provides a button to create the first calendar
+ */
 const EmptyState = () => {
   const t = useTranslations("calendar.container.emptyState");
   const { openNewCalendar } = useDialogState();
@@ -61,6 +81,10 @@ const EmptyState = () => {
   );
 };
 
+/**
+ * Main calendar container component that orchestrates the display and interaction
+ * of calendars, habits, and their associated dialogs
+ */
 export function CalendarContainer({
   calendarView,
   calendars,
@@ -74,6 +98,8 @@ export function CalendarContainer({
 }: CalendarContainerProps) {
   const t = useTranslations("calendar.container");
   const toastMessages = useToastMessages();
+
+  // Dialog state management for calendar and habit operations
   const {
     state,
     openNewCalendar,
@@ -88,6 +114,10 @@ export function CalendarContainer({
     resetHabitState,
   } = useDialogState();
 
+  /**
+   * Handles creation of a new calendar
+   * Validates name and triggers toast notification on success
+   */
   const handleAddCalendar = useCallback(async () => {
     const { name, color } = state.calendar;
     if (!name.trim()) return;
@@ -97,6 +127,10 @@ export function CalendarContainer({
     resetCalendarState();
   }, [monthViewData, state.calendar, toastMessages, resetCalendarState]);
 
+  /**
+   * Handles creation of a new habit within a calendar
+   * Validates name and selected calendar, includes error handling
+   */
   const handleAddHabit = useCallback(async () => {
     const { name, timerDuration, selectedCalendar } = state.habit;
     if (!name.trim() || !selectedCalendar) return;
@@ -111,6 +145,10 @@ export function CalendarContainer({
     }
   }, [monthViewData, state.habit, toastMessages, resetHabitState]);
 
+  /**
+   * Handles updating an existing calendar's properties
+   * Validates name and triggers toast notification on success
+   */
   const handleEditCalendar = useCallback(async () => {
     const { name, color, editingCalendar } = state.calendar;
     if (!name.trim() || !editingCalendar) return;
@@ -120,6 +158,10 @@ export function CalendarContainer({
     resetCalendarState();
   }, [monthViewData, state.calendar, toastMessages, resetCalendarState]);
 
+  /**
+   * Handles updating an existing habit's properties
+   * Validates name and includes error handling
+   */
   const handleEditHabit = useCallback(async () => {
     const { name, timerDuration, editingHabit } = state.habit;
     if (!name.trim() || !editingHabit) return;
@@ -134,6 +176,10 @@ export function CalendarContainer({
     }
   }, [monthViewData, state.habit, toastMessages, resetHabitState]);
 
+  /**
+   * Handles deletion of a calendar
+   * Triggers toast notification on success
+   */
   const handleDeleteCalendar = useCallback(async () => {
     const { editingCalendar } = state.calendar;
     if (!editingCalendar) return;
@@ -143,6 +189,10 @@ export function CalendarContainer({
     resetCalendarState();
   }, [monthViewData, state.calendar, toastMessages, resetCalendarState]);
 
+  /**
+   * Handles deletion of a habit
+   * Triggers toast notification on success
+   */
   const handleDeleteHabit = useCallback(async () => {
     const { editingHabit } = state.habit;
     if (!editingHabit) return;
@@ -152,6 +202,10 @@ export function CalendarContainer({
     resetHabitState();
   }, [monthViewData, state.habit, toastMessages, resetHabitState]);
 
+  /**
+   * Handles toggling habit completion for a specific date
+   * Updates completion count in the database
+   */
   const handleToggleHabit = useCallback(
     async (habitId: Id<"habits">, date: string, count: number) => {
       await monthViewData.handleToggleHabit(habitId, date, count);
@@ -159,16 +213,19 @@ export function CalendarContainer({
     [monthViewData]
   );
 
+  // Show loading skeletons while data is being fetched
   if (isLoading) {
     return <CalendarSkeletons view={view} />;
   }
 
+  // Show empty state when no calendars exist
   if (calendars.length === 0) {
     return <EmptyState />;
   }
 
   return (
     <>
+      {/* Animated container for calendar view with smooth transitions */}
       <AnimatePresence mode="wait" initial={false}>
         <MotionCard
           key={calendarView}
@@ -178,9 +235,13 @@ export function CalendarContainer({
           exit={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, ease: [0, 0.7, 0.1, 1] }}
         >
+          {/* Controls for switching between month row and grid views */}
           <ViewControls calendarView={calendarView} onViewChange={onViewChange} />
+
+          {/* Container for all calendar items */}
           <div className="flex w-full flex-col gap-4 md:px-8">
             <div className="w-full">
+              {/* Map through calendars and render individual calendar items */}
               {calendars.map((calendar) => {
                 const calendarHabits = habits.filter((h) => h.calendarId === calendar._id);
                 return (
@@ -201,6 +262,7 @@ export function CalendarContainer({
             </div>
           </div>
 
+          {/* Button to add new calendar */}
           <div className="flex justify-center pb-16">
             <Button variant="default" onClick={openNewCalendar}>
               <PlusCircle className="h-4 w-4" />
@@ -210,6 +272,7 @@ export function CalendarContainer({
         </MotionCard>
       </AnimatePresence>
 
+      {/* Dialog components for creating/editing calendars and habits */}
       <NewCalendarDialog
         isOpen={state.calendar.isNewOpen}
         onOpenChange={() => resetCalendarState()}

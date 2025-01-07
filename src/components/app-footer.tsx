@@ -13,6 +13,16 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+/**
+ * Application footer component with language switcher, social links, and credits.
+ * Supports RTL languages and includes responsive design for mobile/desktop.
+ * Uses Shadcn UI dropdowns and tooltips for enhanced UX.
+ */
+
+/**
+ * Map of supported languages with their display names and flag images
+ * Used for language switcher dropdown menu
+ */
 const languageMap = {
   de: { name: "Deutsch", flagSrc: "/flag-de.png" },
   en: { name: "English", flagSrc: "/flag-us.png" },
@@ -30,6 +40,10 @@ export function AppFooter() {
   const pathname = usePathname();
   const locale = useLocale();
 
+  /**
+   * Generates the redirected pathname when switching languages
+   * Preserves the current route while changing the locale segment
+   */
   const redirectedPathname = (newLocale: string) => {
     if (!pathname) return `/${newLocale}`;
 
@@ -52,6 +66,7 @@ export function AppFooter() {
     <footer className="border-t border-border bg-background/30">
       <TooltipProvider delayDuration={200}>
         <div className="container relative mx-auto flex min-h-[4rem] flex-col items-center gap-4 px-3 py-4 md:h-16 md:flex-row md:justify-between md:gap-0 md:px-4 md:py-0">
+          {/* Credits section with Cursor logo and author link */}
           <div className="text-center text-xs text-muted-foreground md:text-left md:text-sm">
             {t("madeWith")}{" "}
             <Tooltip>
@@ -85,8 +100,11 @@ export function AppFooter() {
             </a>
           </div>
 
+          {/* Social links and language switcher */}
           <div className="flex items-center">
+            {/* Social media links with icons */}
             <div className="flex items-center gap-3 rtl:flex-row-reverse">
+              {/* GitHub link */}
               <Tooltip>
                 <TooltipTrigger asChild>
                   <a
@@ -108,6 +126,7 @@ export function AppFooter() {
                 </TooltipTrigger>
                 <TooltipContent sideOffset={5}>GitHub</TooltipContent>
               </Tooltip>
+              {/* X (Twitter) link */}
               <Tooltip>
                 <TooltipTrigger asChild>
                   <a
@@ -130,8 +149,9 @@ export function AppFooter() {
                 <TooltipContent sideOffset={5}>X (Twitter)</TooltipContent>
               </Tooltip>
             </div>
+            {/* Divider between social links and language switcher */}
             <div className="mx-3 h-4 w-px bg-border md:h-6" />
-            {/* language switcher */}
+            {/* Language switcher dropdown */}
             <Tooltip>
               <DropdownMenu>
                 <TooltipTrigger asChild>
@@ -154,6 +174,7 @@ export function AppFooter() {
                     </svg>
                   </DropdownMenuTrigger>
                 </TooltipTrigger>
+                {/* Language options with flags */}
                 <DropdownMenuContent align="end" className="min-w-[150px]">
                   {locales.map((l) => (
                     <DropdownMenuItem key={l} asChild>

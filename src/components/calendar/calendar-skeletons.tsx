@@ -53,7 +53,7 @@ function MonthRowSkeleton() {
   return (
     <div className="space-y-4">
       {/* Day Labels Row */}
-      {/* TODO: 2025-01-07 - this does not look right */}
+      {/* TODO: 2025-01-07 - this does not look good */}
       <div className="relative flex h-12 items-center">
         <div className="order-first w-16 bg-card md:w-32" />
         <div className="flex flex-1 gap-px overflow-hidden">
