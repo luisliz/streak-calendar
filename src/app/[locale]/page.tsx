@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { CustomCalendarIcon } from "@/components/ui/custom-calendar-icon";
 import { CustomTodoIcon } from "@/components/ui/custom-todo-icon";
 import { XLogo } from "@/components/ui/x-logo";
@@ -68,50 +69,38 @@ export default function Home() {
         </SignedOut>
       </div>
 
-      <div className="grid w-full max-w-5xl gap-4 px-4 md:grid-cols-3">
+      <div className="grid w-full max-w-5xl grid-cols-1 gap-4 px-4 md:grid-cols-3">
         {/* Desktop Preview */}
-        <div className="relative aspect-[16/10] overflow-hidden rounded-xl border shadow-lg md:col-span-2">
-          <Image src="/screen.png" alt="Desktop preview" fill className="object-cover dark:hidden" priority />
-          <Image
-            src="/screen-dark.png"
-            alt="Desktop preview (dark)"
-            fill
-            className="hidden object-cover dark:block"
-            priority
-          />
-        </div>
+        <Card className="relative md:col-span-2 md:h-[400px]">
+          <div className="h-0 pb-[56.25%] md:h-full md:pb-0">
+            {" "}
+            {/* 16:9 aspect ratio on mobile */}
+            <Image src="/screen.png" alt="Desktop preview" fill className="object-contain dark:hidden" priority />
+            <Image
+              src="/screen-dark.png"
+              alt="Desktop preview (dark)"
+              fill
+              className="hidden object-contain dark:block"
+              priority
+            />
+          </div>
+        </Card>
 
         {/* Mobile Preview */}
-        <div className="relative aspect-[3/4] overflow-hidden rounded-xl border shadow-lg">
-          <Image
-            src="/screen-mobile.png"
-            alt="Mobile preview"
-            fill
-            className="object-cover object-top dark:hidden"
-            priority
-          />
-          <Image
-            src="/screen-mobile-dark.png"
-            alt="Mobile preview (dark)"
-            fill
-            className="hidden object-cover object-top dark:block"
-            priority
-          />
-        </div>
-      </div>
-
-      <div className="w-full max-w-xl">
-        <a
-          href="https://www.producthunt.com/posts/streak-calendar?embed=true&utm_source=badge-featured&utm_medium=badge&utm_souce=badge-streak&#0045;calendar"
-          target="_blank"
-        >
-          <Image
-            src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=759383&theme=light"
-            alt="Streak&#0032;Calendar - Build&#0032;better&#0032;habits | Product Hunt"
-            width={250}
-            height={54}
-          />
-        </a>
+        <Card className="relative md:h-[400px]">
+          <div className="h-0 pb-[177.78%] md:h-full md:pb-0">
+            {" "}
+            {/* 9:16 aspect ratio on mobile */}
+            <Image src="/screen-mobile.png" alt="Mobile preview" fill className="object-contain dark:hidden" priority />
+            <Image
+              src="/screen-mobile-dark.png"
+              alt="Mobile preview (dark)"
+              fill
+              className="hidden object-contain dark:block"
+              priority
+            />
+          </div>
+        </Card>
       </div>
     </div>
   );
