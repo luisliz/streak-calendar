@@ -182,7 +182,7 @@ export function CalendarContainer({
   };
 
   if (isLoading) {
-    return <CalendarSkeletons />;
+    return <CalendarSkeletons view={view} />;
   }
 
   if (calendars.length === 0) {
