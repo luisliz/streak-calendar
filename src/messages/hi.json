@@ -1,6 +1,6 @@
 {
   "app": {
-    "name": "Streak Calendar",
+    "name": "अनुश्रृंखला कैलेंडर",
     "description": "अपनी आदतों को ट्रैक करें और अपना जीवन बेहतर बनाएं"
   },
   "nav": {
@@ -10,7 +10,7 @@
     "pricing": "कीमतें",
     "getStarted": "शुरू करें",
     "app": {
-      "name": "Streak Calendar"
+      "name": "अनुश्रृंखला कैलेंडर"
     }
   },
   "home": {

@@ -33,16 +33,19 @@ export function AppFooter() {
   const redirectedPathname = (newLocale: string) => {
     if (!pathname) return `/${newLocale}`;
 
-    // Get the current path segments and remove empty ones
+    // Get the segments and remove empty ones
     const segments = pathname.split("/").filter(Boolean);
 
-    // Get the path without any locale prefix
-    const pathWithoutLocale = segments
-      .filter((segment) => !locales.includes(segment as (typeof locales)[number]))
-      .join("/");
+    // Find the current locale index (it should be the first segment)
+    const localeIndex = segments.findIndex((segment) => locales.includes(segment as (typeof locales)[number]));
 
-    // Always include locale prefix
-    return `/${newLocale}${pathWithoutLocale ? `/${pathWithoutLocale}` : ""}`;
+    // Remove the current locale
+    if (localeIndex !== -1) {
+      segments.splice(localeIndex, 1);
+    }
+
+    // Join remaining segments and add new locale
+    return `/${newLocale}${segments.length ? `/${segments.join("/")}` : ""}`;
   };
 
   return (

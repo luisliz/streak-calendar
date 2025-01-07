@@ -1,6 +1,6 @@
 {
   "app": {
-    "name": "Streak Calendar",
+    "name": "Gewohnheits-Kalender",
     "description": "Verfolge deine Gewohnheiten und verbessere dein Leben"
   },
   "nav": {
@@ -10,7 +10,7 @@
     "pricing": "Preise",
     "getStarted": "Loslegen",
     "app": {
-      "name": "Streak Calendar"
+      "name": "Gewohnheits-Kalender"
     }
   },
   "home": {

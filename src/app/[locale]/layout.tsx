@@ -2,8 +2,10 @@ import { Providers } from "@/app/providers";
 import { ThirdPartyScripts } from "@/components/analytics/third-party-scripts";
 import { RootWrapper } from "@/components/root-wrapper";
 import { Toaster } from "@/components/ui/toaster";
+import { metadata as i18nMetadata } from "@/i18n/metadata";
 import { Locale, defaultLocale, locales } from "@/i18n/settings";
 import { cn } from "@/lib/utils";
+import type { Metadata } from "next";
 import { getMessages, unstable_setRequestLocale } from "next-intl/server";
 import { Inter, Noto_Sans, Noto_Sans_Arabic, Noto_Sans_Hebrew, Noto_Sans_SC } from "next/font/google";
 import { notFound } from "next/navigation";
@@ -119,4 +121,36 @@ export default async function LocaleLayout({
       </div>
     </body>
   );
+}
+
+type Props = {
+  children: React.ReactNode;
+  params: { locale: keyof typeof i18nMetadata };
+};
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const locale = params.locale as keyof typeof i18nMetadata;
+  const meta = i18nMetadata[locale] ?? i18nMetadata.en;
+
+  return {
+    metadataBase: new URL("https://www.streakcalendar.com"),
+    title: meta.title,
+    description: meta.description,
+    keywords: meta.keywords,
+    openGraph: {
+      title: meta.title,
+      description: meta.description,
+      images: ["/og-image.png"],
+      type: "website",
+      siteName: meta.title.split(" - ")[0],
+      url: `https://www.streakcalendar.com/${locale}`,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: meta.title,
+      description: meta.description,
+      images: ["/og-image.png"],
+    },
+    manifest: "/manifest.json",
+  };
 }
