@@ -267,8 +267,11 @@
       "5min": "5 minutes",
       "10min": "10 minutes",
       "15min": "15 minutes",
+      "20min": "20 minutes",
+      "25min": "25 minutes",
       "30min": "30 minutes",
       "45min": "45 minutes",
+      "60min": "60 minutes",
       "1hour": "1 hour",
       "1_5hour": "1 hour 30 minutes",
       "2hour": "2 hours"

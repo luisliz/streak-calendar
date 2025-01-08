@@ -267,13 +267,14 @@
       "rose": "Rose"
     },
     "timers": {
-      "1min": "1 Minute",
-      "2min": "2 Minuten",
       "5min": "5 Minuten",
       "10min": "10 Minuten",
       "15min": "15 Minuten",
+      "20min": "20 Minuten",
+      "25min": "25 Minuten",
       "30min": "30 Minuten",
       "45min": "45 Minuten",
+      "60min": "60 Minuten",
       "1hour": "1 Stunde",
       "1_5hour": "1 Stunde 30 Minuten",
       "2hour": "2 Stunden"

@@ -15,7 +15,6 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useRouter } from "@/i18n/routing";
 import { useMutation } from "convex/react";
 import { ArrowLeft } from "lucide-react";
@@ -31,6 +30,7 @@ const TIMER_VALUES = [
   { key: "5min", value: 5 },
   { key: "10min", value: 10 },
   { key: "15min", value: 15 },
+  { key: "20min", value: 20 },
   { key: "30min", value: 30 },
   { key: "45min", value: 45 },
   { key: "1hour", value: 60 },
@@ -77,49 +77,51 @@ export function HabitDetails({ habit }: HabitDetailsProps) {
 
   return (
     <>
-      <Card className="mt-8 border p-2 shadow-md">
-        <Tabs defaultValue="details" className="w-full">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="back" onClick={() => router.push("/calendar")} className="gap-2">
-              <ArrowLeft className="h-4 w-4" />
-              {t("habit.edit.actions.back")}
-            </TabsTrigger>
-            <TabsTrigger value="details">{t("habit.edit.title")}</TabsTrigger>
-          </TabsList>
-          <TabsContent value="details" className="space-y-4 p-4">
-            <div>
-              <Label htmlFor="edit-habit-name">{t("habit.edit.name.label")}</Label>
-              <Input id="edit-habit-name" value={name} onChange={(e) => setName(e.target.value)} />
+      <Card className="my-8 border shadow-md">
+        <div className="flex items-center gap-2 p-2">
+          <Button variant="ghost" onClick={() => router.push("/calendar")} className="gap-2">
+            <ArrowLeft className="h-4 w-4" />
+            {t("habit.edit.actions.back")}
+          </Button>
+        </div>
+        <Card className="mx-auto my-8 max-w-xl border p-2 shadow-md">
+          <div className="p-4">
+            <h2 className="mb-6 text-lg font-semibold">{t("habit.edit.title")}</h2>
+            <div className="space-y-4">
+              <div>
+                <Label htmlFor="edit-habit-name">{t("habit.edit.name.label")}</Label>
+                <Input id="edit-habit-name" value={name} onChange={(e) => setName(e.target.value)} />
+              </div>
+              <div>
+                <Label>{t("habit.edit.timer.label")}</Label>
+                <Select
+                  value={timerDuration?.toString() ?? "none"}
+                  onValueChange={(value) => setTimerDuration(value === "none" ? undefined : parseInt(value))}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder={t("habit.edit.timer.placeholder")} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="none">{t("habit.edit.timer.noTimer")}</SelectItem>
+                    {TIMER_VALUES.map((duration) => (
+                      <SelectItem key={duration.value} value={duration.value.toString()}>
+                        {t(`timers.${duration.key}`)}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="flex gap-2 pt-4">
+                <Button variant="destructive" onClick={() => setShowDeleteAlert(true)}>
+                  {t("habit.edit.actions.delete")}
+                </Button>
+                <Button onClick={handleSave} className="flex-1">
+                  {t("habit.edit.actions.save")}
+                </Button>
+              </div>
             </div>
-            <div>
-              <Label>{t("habit.edit.timer.label")}</Label>
-              <Select
-                value={timerDuration?.toString() ?? "none"}
-                onValueChange={(value) => setTimerDuration(value === "none" ? undefined : parseInt(value))}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder={t("habit.edit.timer.placeholder")} />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="none">{t("habit.edit.timer.noTimer")}</SelectItem>
-                  {TIMER_VALUES.map((duration) => (
-                    <SelectItem key={duration.value} value={duration.value.toString()}>
-                      {t(`timers.${duration.key}`)}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="flex gap-2 pt-4">
-              <Button variant="destructive" onClick={() => setShowDeleteAlert(true)}>
-                {t("habit.edit.actions.delete")}
-              </Button>
-              <Button onClick={handleSave} className="flex-1">
-                {t("habit.edit.actions.save")}
-              </Button>
-            </div>
-          </TabsContent>
-        </Tabs>
+          </div>
+        </Card>
       </Card>
 
       <AlertDialog open={showDeleteAlert} onOpenChange={setShowDeleteAlert}>

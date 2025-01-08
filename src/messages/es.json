@@ -266,13 +266,14 @@
       "rose": "Rosa fuerte"
     },
     "timers": {
-      "1min": "1 minuto",
-      "2min": "2 minutos",
       "5min": "5 minutos",
       "10min": "10 minutos",
       "15min": "15 minutos",
+      "20min": "20 minutos",
+      "25min": "25 minutos",
       "30min": "30 minutos",
       "45min": "45 minutos",
+      "60min": "60 minutos",
       "1hour": "1 hora",
       "1_5hour": "1 hora 30 minutos",
       "2hour": "2 horas"

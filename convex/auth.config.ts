@@ -1,10 +1,10 @@
-const authConfig = {
+const config = {
   providers: [
     {
-      domain: process.env.CLERK_DOMAIN ?? "https://clerk.streakcalendar.com",
+      domain: process.env.NODE_ENV === "production" ? "clerk.streakcalendar.com" : "grand-jay-22.clerk.accounts.dev",
       applicationID: "convex",
     },
   ],
 };
 
-export default authConfig;
+export default config;
