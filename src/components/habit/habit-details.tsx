@@ -181,8 +181,13 @@ export function HabitDetails({ habit }: HabitDetailsProps) {
   }, [completions, habit._id, dateRange]);
 
   useEffect(() => {
-    if (containerRef.current) {
-      containerRef.current.scrollLeft = containerRef.current.scrollWidth;
+    if (containerRef.current && calendarData.length > 0) {
+      setTimeout(() => {
+        containerRef.current?.scrollTo({
+          left: containerRef.current.scrollWidth,
+          behavior: "smooth",
+        });
+      }, 150);
     }
   }, [calendarData]);
 
@@ -258,9 +263,10 @@ export function HabitDetails({ habit }: HabitDetailsProps) {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 1, ease: [0, 0.7, 0.1, 1] }}
                 className="overflow-x-auto pb-4"
+                ref={containerRef}
               >
                 {/* Activity calendar component with responsive sizing and theme */}
-                <div className="flex justify-center">
+                <div className="flex min-w-fit justify-center">
                   <ActivityCalendar
                     data={calendarData}
                     labels={{
