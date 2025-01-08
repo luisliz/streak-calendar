@@ -21,7 +21,7 @@ import { useMutation, useQuery } from "convex/react";
 import { motion } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import ActivityCalendar from "react-activity-calendar";
 
 import { api } from "@server/convex/_generated/api";
@@ -55,6 +55,17 @@ interface HabitDetailsProps {
   onDelete: () => void;
 }
 
+function getCalendarSize() {
+  if (typeof window === "undefined") return { blockSize: 8, blockMargin: 2 };
+
+  const isLg = window.matchMedia("(min-width: 1024px)").matches;
+  const isMd = window.matchMedia("(min-width: 768px)").matches;
+
+  if (isLg) return { blockSize: 12, blockMargin: 4 };
+  if (isMd) return { blockSize: 10, blockMargin: 3 };
+  return { blockSize: 8, blockMargin: 2 };
+}
+
 export function HabitDetails({ habit }: HabitDetailsProps) {
   const t = useTranslations("dialogs");
   const tToast = useTranslations("toast");
@@ -63,9 +74,19 @@ export function HabitDetails({ habit }: HabitDetailsProps) {
   const [showDeleteAlert, setShowDeleteAlert] = useState(false);
   const [name, setName] = useState(habit.name);
   const [timerDuration, setTimerDuration] = useState<number | undefined>(habit.timerDuration);
+  const [calendarSize, setCalendarSize] = useState(getCalendarSize());
 
   const updateHabit = useMutation(api.habits.update);
   const deleteHabit = useMutation(api.habits.remove);
+
+  useEffect(() => {
+    function handleResize() {
+      setCalendarSize(getCalendarSize());
+    }
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   // Memoize date range
   const dateRange = useMemo(() => {
@@ -167,6 +188,7 @@ export function HabitDetails({ habit }: HabitDetailsProps) {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 1, ease: [0, 0.7, 0.1, 1] }}
+                className="overflow-x-auto pb-4"
               >
                 <ActivityCalendar
                   data={calendarData}
@@ -175,6 +197,10 @@ export function HabitDetails({ habit }: HabitDetailsProps) {
                   }}
                   showWeekdayLabels
                   weekStart={1}
+                  blockSize={calendarSize.blockSize}
+                  blockMargin={calendarSize.blockMargin}
+                  fontSize={10}
+                  hideColorLegend
                   theme={{
                     light: [
                       "var(--activity-level-0)",

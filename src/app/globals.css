@@ -24,6 +24,7 @@
     --input: 240 5.9% 90%;
     --ring: 240 5.9% 10%;
     --radius: 0.75rem;
+
     /* Activity Calendar Theme */
     --activity-level-0: hsl(var(--muted));
     --activity-level-1: rgb(239 68 68 / 0.4); /* red-500/40 */
