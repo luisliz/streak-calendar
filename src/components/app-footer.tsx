@@ -181,6 +181,7 @@ export function AppFooter() {
                       <Link
                         href={redirectedPathname(l)}
                         className={`flex w-full items-center gap-2 ${l === locale ? "font-medium" : ""}`}
+                        aria-label={`${t("changeLanguage")}: ${languageMap[l].name}`}
                       >
                         <Image
                           src={languageMap[l].flagSrc}
