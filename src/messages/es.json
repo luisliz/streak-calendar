@@ -231,7 +231,8 @@
         },
         "timer": {
           "label": "Duración del Temporizador",
-          "placeholder": "Seleccionar duración (opcional)"
+          "placeholder": "Seleccionar duración (opcional)",
+          "noTimer": "Sin temporizador"
         },
         "actions": {
           "back": "Volver",
