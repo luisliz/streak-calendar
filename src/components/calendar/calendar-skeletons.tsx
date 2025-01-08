@@ -53,37 +53,42 @@ function MonthRowSkeleton() {
   return (
     <div className="space-y-4">
       {/* Day Labels Row */}
-      {/* TODO: 2025-01-07 - this does not look good */}
       <div className="relative flex h-12 items-center">
         <div className="order-first w-16 bg-card md:w-32" />
         <div className="flex flex-1 gap-px overflow-hidden">
-          <div className="flex w-full justify-end gap-px pr-28">
+          <div className="flex w-full justify-end gap-px">
             <Skeleton className="h-6 w-full" />
           </div>
+          <div className="w-28" /> {/* Spacer for right controls */}
         </div>
       </div>
 
-      {/* Habit Rows */}
-      {[1, 2, 3].map((i) => (
-        <div key={i} className="relative flex justify-end">
-          {/* Habit Name */}
-          <div className="absolute left-0 flex w-24 items-start md:w-48">
-            <Skeleton className="h-6 w-32" />
-          </div>
-          {/* Days Row */}
-          <div className="flex-1">
-            <div className="flex justify-end">
-              <div className="flex gap-px pr-28">
+      {/* Three identical rows */}
+      <div className="relative space-y-px overflow-hidden">
+        {[1, 2, 3].map((i) => (
+          <div key={i} className="relative flex">
+            {/* Habit Name */}
+            <div className="absolute left-0 flex w-24 items-start md:w-48">
+              <div className="relative flex items-center">
+                <Skeleton className="h-6 w-32" />
+                <div className="h-6 w-12 bg-gradient-to-r from-card to-transparent" />
+              </div>
+            </div>
+
+            {/* Days - single continuous skeleton */}
+            <div className="flex flex-1 pl-32 md:pl-48">
+              <div className="flex w-full pr-24 md:pr-28">
                 <Skeleton className="h-6 w-full" />
               </div>
             </div>
+
+            {/* Complete Controls */}
+            <div className="absolute right-0">
+              <Skeleton className="h-6 w-24" />
+            </div>
           </div>
-          {/* Complete Controls */}
-          <div className="absolute right-0">
-            <Skeleton className="h-6 w-24" />
-          </div>
-        </div>
-      ))}
+        ))}
+      </div>
 
       {/* Add Habit Button */}
       <div className="flex justify-end">
