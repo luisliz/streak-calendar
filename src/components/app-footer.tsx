@@ -155,7 +155,10 @@ export function AppFooter() {
             <Tooltip>
               <DropdownMenu>
                 <TooltipTrigger asChild>
-                  <DropdownMenuTrigger className="p-1 text-muted-foreground hover:text-foreground md:p-1.5">
+                  <DropdownMenuTrigger
+                    className="p-1 text-muted-foreground hover:text-foreground md:p-1.5"
+                    aria-label={t("changeLanguage")}
+                  >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 24 24"
