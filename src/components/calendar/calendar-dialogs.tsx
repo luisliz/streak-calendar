@@ -146,7 +146,7 @@ export const NewCalendarDialog = ({
                   </div>
                 </SelectValue>
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="max-h-40">
                 {colors.map((c) => (
                   <SelectItem key={c.value} value={c.value}>
                     <div className="flex items-center gap-2">
@@ -229,7 +229,7 @@ export const NewHabitDialog = ({
               <SelectTrigger>
                 <SelectValue placeholder={t("habit.new.timer.placeholder")} />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="max-h-40">
                 <SelectItem value="none">{t("habit.new.timer.noTimer")}</SelectItem>
                 {timerDurations.map((duration) => (
                   <SelectItem key={duration.value} value={duration.value.toString()}>
@@ -305,7 +305,7 @@ export const EditCalendarDialog = ({
                     </div>
                   </SelectValue>
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="max-h-40">
                   {colors.map((c) => (
                     <SelectItem key={c.value} value={c.value}>
                       <div className="flex items-center gap-2">
