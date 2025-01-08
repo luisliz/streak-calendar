@@ -89,7 +89,7 @@ export function HabitDetails({ habit }: HabitDetailsProps) {
       router.replace("/calendar");
       await new Promise((resolve) => setTimeout(resolve, 0));
       await deleteHabit({ id: habit._id });
-      toast({ description: tToast("habit.deleted") });
+      toast({ description: tToast("habit.deleted"), variant: "destructive" });
     } catch (error) {
       toast({
         description: `Failed to delete habit: ${error instanceof Error ? error.message : "Unknown error"}`,
@@ -124,7 +124,7 @@ export function HabitDetails({ habit }: HabitDetailsProps) {
                   <SelectTrigger>
                     <SelectValue placeholder={t("habit.edit.timer.placeholder")} />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="max-h-40">
                     <SelectItem value="none">{t("habit.edit.timer.noTimer")}</SelectItem>
                     {TIMER_VALUES.map((duration) => (
                       <SelectItem key={duration.value} value={duration.value.toString()}>
