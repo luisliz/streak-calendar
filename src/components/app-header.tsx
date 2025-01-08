@@ -8,7 +8,7 @@ import { useState } from "react";
 
 import { ThemeToggle } from "./theme-toggle";
 import { Button } from "./ui/button";
-import { XLogo } from "./ui/x-logo";
+import { XIcon } from "./ui/x-icon";
 
 /**
  * AppHeader Component
@@ -32,7 +32,7 @@ export function AppHeader() {
           {/* Logo */}
           <div className="flex shrink-0 items-center">
             <Link href="/" className="flex items-center gap-1.5 text-lg font-bold md:gap-2 md:text-xl">
-              <XLogo className="h-5 w-5 flex-shrink-0 fill-red-500 drop-shadow-lg md:h-6 md:w-6" />
+              <XIcon className="h-5 w-5 flex-shrink-0 fill-red-500 drop-shadow-lg md:h-6 md:w-6" />
               <span className="whitespace-nowrap text-primary drop-shadow-lg">{t("app.name")}</span>
             </Link>
           </div>

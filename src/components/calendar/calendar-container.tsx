@@ -230,9 +230,9 @@ export function CalendarContainer({
         <MotionCard
           key={calendarView}
           className="space-y-8 border p-2 shadow-md"
-          initial={{ opacity: 1, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 1, y: 0 }}
+          initial={{ y: 20 }}
+          animate={{ y: 0 }}
+          exit={{ y: 0 }}
           transition={{ duration: 1, ease: [0, 0.7, 0.1, 1] }}
         >
           {/* Controls for switching between month row and grid views */}

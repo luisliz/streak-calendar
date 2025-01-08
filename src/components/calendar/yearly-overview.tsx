@@ -1,12 +1,12 @@
 import { Card } from "@/components/ui/card";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { XLogo } from "@/components/ui/x-logo";
 import { eachDayOfInterval, format, getDay, subYears } from "date-fns";
 import { useTranslations } from "next-intl";
 import { memo, useCallback, useMemo } from "react";
 
 import { Id } from "@server/convex/_generated/dataModel";
 
+import { XIcon } from "../ui/x-icon";
 import { YearlyOverviewSkeleton } from "./calendar-skeletons";
 
 /**
@@ -142,7 +142,7 @@ export const YearlyOverview = ({ completions, isLoading = false }: YearlyOvervie
           <TooltipTrigger asChild>
             <div className="relative aspect-square w-[5px] transition-colors hover:opacity-80 sm:w-[11px] md:w-[13px] xl:w-4">
               <svg viewBox="0 0 15 15" className={`h-full w-full ${colorClass}`}>
-                <XLogo />
+                <XIcon />
               </svg>
             </div>
           </TooltipTrigger>

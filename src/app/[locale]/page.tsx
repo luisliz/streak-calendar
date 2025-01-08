@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { CustomCalendarIcon } from "@/components/ui/custom-calendar-icon";
 import { CustomTodoIcon } from "@/components/ui/custom-todo-icon";
-import { XLogo } from "@/components/ui/x-logo";
+import { XIcon } from "@/components/ui/x-icon";
 import { Link } from "@/i18n/routing";
 import { SignedIn, SignedOut } from "@clerk/nextjs";
 import { Activity, Timer } from "lucide-react";
@@ -37,7 +37,7 @@ export default function Home() {
           <CustomCalendarIcon className="mx-auto mb-2 h-8 w-8 text-primary" />
           <h3 className="font-semibold">{t("hero.features.visualTracking.title")}</h3>
           <p className="text-sm text-muted-foreground">
-            {t("hero.features.visualTracking.description.part1")} <XLogo className="inline h-4 w-4 fill-red-500" />{" "}
+            {t("hero.features.visualTracking.description.part1")} <XIcon className="inline h-4 w-4 fill-red-500" />{" "}
             {t("hero.features.visualTracking.description.part2")}
           </p>
         </div>

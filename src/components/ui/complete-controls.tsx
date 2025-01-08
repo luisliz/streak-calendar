@@ -3,7 +3,7 @@
 import TimerModal from "@/components/timer-modal";
 import { Button } from "@/components/ui/button";
 import { ConfettiButton } from "@/components/ui/confetti";
-import { xLogoPath } from "@/components/ui/x-logo";
+import { xIconPath } from "@/components/ui/x-icon";
 import NumberFlow from "@number-flow/react";
 import confettiLib from "canvas-confetti";
 import { Minus, Plus, Timer } from "lucide-react";
@@ -57,7 +57,7 @@ export function CompleteControls({
   }, [onDecrement, onComplete]);
 
   // Create custom X-shaped confetti particle
-  const confettiShape = useMemo(() => confettiLib.shapeFromPath(xLogoPath), []);
+  const confettiShape = useMemo(() => confettiLib.shapeFromPath(xIconPath), []);
 
   /**
    * Configures confetti animation options

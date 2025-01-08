@@ -1,7 +1,6 @@
 import { CompleteControls } from "@/components/ui/complete-controls";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { XLogo } from "@/components/ui/x-logo";
 import { getCompletionColorClass } from "@/lib/colors";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
@@ -9,6 +8,7 @@ import { useTranslations } from "next-intl";
 import { memo, useState } from "react";
 
 import { Id } from "@server/convex/_generated/dataModel";
+import { XIcon } from "../ui/x-icon";
 
 /**
  * DayCell Component
@@ -97,7 +97,7 @@ export const DayCell = memo(
                 >
                   {count > 0 ? (
                     <div className="absolute">
-                      <XLogo
+                      <XIcon
                         key={`${count}-${fillClass}`}
                         className={`${gridView ? "!h-[48px] !w-[48px]" : "!h-[24px] !w-[24px]"} ${fillClass}`}
                       />
