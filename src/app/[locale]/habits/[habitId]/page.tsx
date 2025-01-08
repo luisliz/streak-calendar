@@ -1,6 +1,8 @@
 "use client";
 
 import { HabitDetails } from "@/components/habit/habit-details";
+import { Card } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useQuery } from "convex/react";
 import { useParams } from "next/navigation";
 
@@ -19,13 +21,36 @@ export default function HabitPage() {
   const habit = useQuery(api.habits.get, { id: habitId });
   const calendar = useQuery(api.calendars.get, habit ? { id: habit.calendarId } : "skip");
 
-  if (!habit || !calendar) {
-    return null; // TODO: Add loading state
-  }
-
   return (
     <div className="container mx-auto max-w-7xl">
-      <HabitDetails habit={habit} calendar={calendar} />
+      {habit && calendar ? (
+        <HabitDetails habit={habit} calendar={calendar} />
+      ) : (
+        <Card className="my-8 border shadow-md">
+          <div className="flex items-center gap-2 p-2">
+            <Skeleton className="h-10 w-24" />
+          </div>
+          <Card className="mx-auto my-8 max-w-xl border p-2 shadow-md">
+            <div className="space-y-4 p-4">
+              <Skeleton className="h-7 w-32" />
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Skeleton className="h-5 w-24" />
+                  <Skeleton className="h-10 w-full" />
+                </div>
+                <div className="space-y-2">
+                  <Skeleton className="h-5 w-24" />
+                  <Skeleton className="h-10 w-full" />
+                </div>
+                <div className="flex gap-2 pt-4">
+                  <Skeleton className="h-10 w-24" />
+                  <Skeleton className="h-10 flex-1" />
+                </div>
+              </div>
+            </div>
+          </Card>
+        </Card>
+      )}
     </div>
   );
 }
