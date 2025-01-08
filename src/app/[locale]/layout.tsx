@@ -86,42 +86,40 @@ export default async function LocaleLayout({
   const messages = await getMessages({ locale });
 
   return (
-    <html lang={locale}>
-      <body
-        className={cn(
-          inter.variable,
-          noto.variable,
-          notoHebrew.variable,
-          notoArabic.variable,
-          notoChinese.variable,
-          "min-h-screen bg-background font-sans antialiased",
-          "grid-background",
-          // Enable RTL layout for Hebrew and Arabic locales
-          (locale === "he" || locale === "ar") && "rtl"
-        )}
-      >
-        <ThirdPartyScripts />
-        {/* NoScript fallback for users with JavaScript disabled */}
-        <noscript>
-          <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-background">
-            <p className="rounded border bg-card px-6 py-4 text-center shadow-lg">
-              Please enable JavaScript to use this app.
-            </p>
-          </div>
-        </noscript>
-
-        {/* Background gradient overlay */}
-        <div className="fixed inset-0 bg-gradient-to-t from-muted/60 to-transparent" />
-
-        {/* Main content wrapper with providers and root layout */}
-        <div className="relative overflow-x-hidden">
-          <Providers locale={locale} messages={messages}>
-            <RootWrapper>{children}</RootWrapper>
-            <Toaster />
-          </Providers>
+    <body
+      className={cn(
+        inter.variable,
+        noto.variable,
+        notoHebrew.variable,
+        notoArabic.variable,
+        notoChinese.variable,
+        "min-h-screen bg-background font-sans antialiased",
+        "grid-background",
+        // Enable RTL layout for Hebrew and Arabic locales
+        (locale === "he" || locale === "ar") && "rtl"
+      )}
+    >
+      <ThirdPartyScripts />
+      {/* NoScript fallback for users with JavaScript disabled */}
+      <noscript>
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-background">
+          <p className="rounded border bg-card px-6 py-4 text-center shadow-lg">
+            Please enable JavaScript to use this app.
+          </p>
         </div>
-      </body>
-    </html>
+      </noscript>
+
+      {/* Background gradient overlay */}
+      <div className="fixed inset-0 bg-gradient-to-t from-muted/60 to-transparent" />
+
+      {/* Main content wrapper with providers and root layout */}
+      <div className="relative overflow-x-hidden">
+        <Providers locale={locale} messages={messages}>
+          <RootWrapper>{children}</RootWrapper>
+          <Toaster />
+        </Providers>
+      </div>
+    </body>
   );
 }
 
