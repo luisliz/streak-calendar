@@ -15,6 +15,7 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "@/i18n/routing";
 import { useMutation } from "convex/react";
 import { ArrowLeft } from "lucide-react";
@@ -49,11 +50,14 @@ interface HabitDetailsProps {
     name: string;
     colorTheme: string;
   };
+  onDelete: () => void;
 }
 
-export function HabitDetails({ habit }: HabitDetailsProps) {
+export function HabitDetails({ habit, calendar, onDelete }: HabitDetailsProps) {
   const t = useTranslations("dialogs");
+  const tToast = useTranslations("toast");
   const router = useRouter();
+  const { toast } = useToast();
   const [showDeleteAlert, setShowDeleteAlert] = useState(false);
   const [name, setName] = useState(habit.name);
   const [timerDuration, setTimerDuration] = useState<number | undefined>(habit.timerDuration);
@@ -63,16 +67,33 @@ export function HabitDetails({ habit }: HabitDetailsProps) {
 
   const handleSave = async () => {
     if (!name.trim()) return;
-    await updateHabit({
-      id: habit._id,
-      name,
-      timerDuration,
-    });
+    try {
+      await updateHabit({
+        id: habit._id,
+        name,
+        timerDuration,
+      });
+      toast({ description: tToast("habit.updated") });
+      router.push("/calendar");
+    } catch (error) {
+      toast({
+        description: `Failed to update habit: ${error instanceof Error ? error.message : "Unknown error"}`,
+        variant: "destructive",
+      });
+    }
   };
 
   const handleDelete = async () => {
-    await deleteHabit({ id: habit._id });
-    router.push("/calendar");
+    try {
+      onDelete();
+      await deleteHabit({ id: habit._id });
+      toast({ description: tToast("habit.deleted") });
+    } catch (error) {
+      toast({
+        description: `Failed to delete habit: ${error instanceof Error ? error.message : "Unknown error"}`,
+        variant: "destructive",
+      });
+    }
   };
 
   return (
