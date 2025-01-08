@@ -77,7 +77,7 @@ export function MonthGridView({
               <div className="flex items-baseline pb-2">
                 <div className="cursor-pointer" onClick={() => onEditHabit(habit)}>
                   <h3
-                    className={`text-2xl font-medium underline decoration-wavy decoration-2 ${color.replace(
+                    className={`select-none text-2xl font-medium underline decoration-wavy decoration-2 ${color.replace(
                       "bg-",
                       "decoration-"
                     )}/30 hover:text-muted-foreground hover:no-underline`}
