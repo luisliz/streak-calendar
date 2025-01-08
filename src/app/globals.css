@@ -25,11 +25,11 @@
     --ring: 240 5.9% 10%;
     --radius: 0.75rem;
     /* Activity Calendar Theme */
-    --activity-level-0: #ebedf0;
-    --activity-level-1: #ffcdd2;
-    --activity-level-2: #ef9a9a;
-    --activity-level-3: #e57373;
-    --activity-level-4: #ef5350;
+    --activity-level-0: hsl(var(--muted));
+    --activity-level-1: rgb(239 68 68 / 0.4); /* red-500/40 */
+    --activity-level-2: rgb(239 68 68 / 0.7); /* red-500/70 */
+    --activity-level-3: rgb(239 68 68 / 0.8); /* red-500/80 */
+    --activity-level-4: rgb(239 68 68); /* red-500 */
   }
 
   .dark {
@@ -54,11 +54,11 @@
     --ring: 240 4.9% 83.9%;
 
     /* Activity Calendar Theme - Dark Mode */
-    --activity-level-0: #161b22;
-    --activity-level-1: #ff5252;
-    --activity-level-2: #ff1744;
-    --activity-level-3: #d50000;
-    --activity-level-4: #b71c1c;
+    --activity-level-0: hsl(var(--muted));
+    --activity-level-1: rgb(239 68 68 / 0.4); /* red-500/40 */
+    --activity-level-2: rgb(239 68 68 / 0.7); /* red-500/70 */
+    --activity-level-3: rgb(239 68 68 / 0.8); /* red-500/80 */
+    --activity-level-4: rgb(239 68 68); /* red-500 */
   }
 }
 
