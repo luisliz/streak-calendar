@@ -1,3 +1,5 @@
+import { Locale, defaultLocale } from "@/i18n/settings";
+
 import "./globals.css";
 
 /**
@@ -7,11 +9,14 @@ import "./globals.css";
 
 type Props = {
   children: React.ReactNode;
+  params?: { locale?: string };
 };
 
-export default function RootLayout({ children }: Props) {
+export default function RootLayout({ children, params }: Props) {
+  const locale = (params?.locale || defaultLocale) as Locale;
+
   return (
-    <html lang="x-default" suppressHydrationWarning>
+    <html lang={locale} suppressHydrationWarning>
       {children}
     </html>
   );
