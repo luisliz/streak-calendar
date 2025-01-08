@@ -1,7 +1,11 @@
 const config = {
   providers: [
     {
-      domain: process.env.NODE_ENV === "production" ? "clerk.streakcalendar.com" : "grand-jay-22.clerk.accounts.dev",
+      domain: "clerk.streakcalendar.com",
+      applicationID: "convex",
+    },
+    {
+      domain: "grand-jay-22.clerk.accounts.dev",
       applicationID: "convex",
     },
   ],
