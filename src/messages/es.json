@@ -225,7 +225,7 @@
         }
       },
       "edit": {
-        "title": "Detalles del Hábito",
+        "title": "Editar Hábito",
         "name": {
           "label": "Nombre"
         },
