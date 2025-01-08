@@ -58,6 +58,7 @@ const TIMER_VALUES = [
   { key: "5min", value: 5 },
   { key: "10min", value: 10 },
   { key: "15min", value: 15 },
+  { key: "20min", value: 20 },
   { key: "30min", value: 30 },
   { key: "45min", value: 45 },
   { key: "1hour", value: 60 },
@@ -222,14 +223,14 @@ export const NewHabitDialog = ({
           <div>
             <Label>{t("habit.new.timer.label")}</Label>
             <Select
-              value={timerDuration?.toString()}
-              onValueChange={(value) => onTimerDurationChange(value ? parseInt(value) : undefined)}
+              value={timerDuration?.toString() ?? "none"}
+              onValueChange={(value) => onTimerDurationChange(value === "none" ? undefined : parseInt(value))}
             >
               <SelectTrigger>
                 <SelectValue placeholder={t("habit.new.timer.placeholder")} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">No Timer</SelectItem>
+                <SelectItem value="none">{t("habit.new.timer.noTimer")}</SelectItem>
                 {timerDurations.map((duration) => (
                   <SelectItem key={duration.value} value={duration.value.toString()}>
                     {duration.name}
