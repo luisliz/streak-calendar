@@ -112,15 +112,12 @@ export default async function LocaleLayout({
       {/* Background gradient overlay */}
       <div className="fixed inset-0 bg-gradient-to-t from-muted/60 to-transparent" />
 
-      {/* Main content wrapper with providers and root layout */}
-      <div className="relative overflow-x-hidden">
-        <Providers locale={locale} messages={messages}>
-          <main>
-            <RootWrapper>{children}</RootWrapper>
-          </main>
-          <Toaster />
-        </Providers>
-      </div>
+      <Providers locale={locale} messages={messages}>
+        <main className="relative overflow-x-hidden">
+          <RootWrapper>{children}</RootWrapper>
+        </main>
+        <Toaster />
+      </Providers>
     </body>
   );
 }
