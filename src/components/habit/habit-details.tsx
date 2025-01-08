@@ -17,10 +17,12 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "@/i18n/routing";
-import { useMutation } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
+import { motion } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import ActivityCalendar from "react-activity-calendar";
 
 import { api } from "@server/convex/_generated/api";
 import { Id } from "@server/convex/_generated/dataModel";
@@ -65,6 +67,53 @@ export function HabitDetails({ habit }: HabitDetailsProps) {
   const updateHabit = useMutation(api.habits.update);
   const deleteHabit = useMutation(api.habits.remove);
 
+  // Memoize date range
+  const dateRange = useMemo(() => {
+    const now = new Date();
+    const end = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const start = new Date(end);
+    start.setFullYear(start.getFullYear() - 1);
+
+    return {
+      startDate: start.getTime(),
+      endDate: end.getTime(),
+    };
+  }, []);
+
+  // Fetch completions for the activity calendar
+  const completions = useQuery(api.habits.getCompletions, dateRange);
+
+  // Transform completions into activity calendar data
+  const calendarData = useMemo(() => {
+    if (!completions) return [];
+
+    // Create a map of all dates in the range
+    const dates = new Map();
+    const start = new Date(dateRange.startDate);
+    const end = new Date(dateRange.endDate);
+
+    for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+      dates.set(d.toISOString().split("T")[0], 0);
+    }
+
+    // Fill in completion counts
+    completions
+      .filter((completion) => completion.habitId === habit._id)
+      .forEach((completion) => {
+        const date = new Date(completion.completedAt).toISOString().split("T")[0];
+        if (dates.has(date)) {
+          dates.set(date, (dates.get(date) || 0) + 1);
+        }
+      });
+
+    // Convert to required format
+    return Array.from(dates).map(([date, count]) => ({
+      date,
+      count,
+      level: count > 0 ? Math.min(Math.ceil(count / 2), 4) : 0,
+    }));
+  }, [completions, habit._id, dateRange]);
+
   const handleSave = async () => {
     if (!name.trim()) return;
     try {
@@ -107,6 +156,47 @@ export function HabitDetails({ habit }: HabitDetailsProps) {
             {t("habit.edit.actions.back")}
           </Button>
         </div>
+
+        <div className="mx-auto max-w-5xl p-6">
+          <h1 className="mb-8 text-2xl font-bold">{name}</h1>
+          <div className="mb-8">
+            {!completions ? (
+              <div className="h-[200px] w-full animate-pulse rounded-lg bg-muted" />
+            ) : calendarData.length > 0 ? (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 1, ease: [0, 0.7, 0.1, 1] }}
+              >
+                <ActivityCalendar
+                  data={calendarData}
+                  labels={{
+                    totalCount: "{{count}} completions in the last year",
+                  }}
+                  showWeekdayLabels
+                  weekStart={1}
+                  theme={{
+                    light: [
+                      "var(--activity-level-0)",
+                      "var(--activity-level-1)",
+                      "var(--activity-level-2)",
+                      "var(--activity-level-3)",
+                      "var(--activity-level-4)",
+                    ],
+                    dark: [
+                      "var(--activity-level-0)",
+                      "var(--activity-level-1)",
+                      "var(--activity-level-2)",
+                      "var(--activity-level-3)",
+                      "var(--activity-level-4)",
+                    ],
+                  }}
+                />
+              </motion.div>
+            ) : null}
+          </div>
+        </div>
+
         <Card className="mx-auto my-8 max-w-xl border p-2 shadow-md">
           <div className="p-4">
             <h2 className="mb-6 text-lg font-semibold">{t("habit.edit.title")}</h2>
