@@ -80,14 +80,19 @@ interface HabitDetailsProps {
  * - Mobile: 8px blocks, 2px margin
  */
 function getCalendarSize() {
-  if (typeof window === "undefined") return { blockSize: 6, blockMargin: 2 };
+  if (typeof window === "undefined")
+    return {
+      blockSize: 5,
+      blockMargin: 2,
+      showLabels: false,
+    };
 
   const isLg = window.matchMedia("(min-width: 1024px)").matches;
   const isMd = window.matchMedia("(min-width: 768px)").matches;
 
-  if (isLg) return { blockSize: 12, blockMargin: 4 };
-  if (isMd) return { blockSize: 8, blockMargin: 3 };
-  return { blockSize: 6, blockMargin: 2 };
+  if (isLg) return { blockSize: 12, blockMargin: 2, showLabels: true };
+  if (isMd) return { blockSize: 8, blockMargin: 1, showLabels: true };
+  return { blockSize: 6, blockMargin: 1, showLabels: false };
 }
 
 /**
@@ -272,7 +277,7 @@ export function HabitDetails({ habit }: HabitDetailsProps) {
                     labels={{
                       totalCount: "{{count}} completions in the last year",
                     }}
-                    showWeekdayLabels
+                    showWeekdayLabels={calendarSize.showLabels}
                     weekStart={1}
                     blockSize={calendarSize.blockSize}
                     blockMargin={calendarSize.blockMargin}
