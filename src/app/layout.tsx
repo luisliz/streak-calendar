@@ -9,11 +9,12 @@ import "./globals.css";
 
 type Props = {
   children: React.ReactNode;
-  params?: { locale?: string };
+  params: Promise<{ locale?: string }>;
 };
 
-export default function RootLayout({ children, params }: Props) {
-  const locale = (params?.locale || defaultLocale) as Locale;
+export default async function RootLayout({ children, params }: Props) {
+  const { locale: paramLocale } = await params;
+  const locale = (paramLocale || defaultLocale) as Locale;
 
   return (
     <html lang={locale} suppressHydrationWarning>
