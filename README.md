@@ -1,10 +1,10 @@
 # Streak Calendar
 
-Streak Calendar is an open source productivity tool that combines habit tracking, task timing, and progress visualization. It supports multiple calendars and habits, allowing you to customize your approach to personal growth. Featuring an activity grid similar to GitHub's contribution tracker, it offers a clear view of your achievements over time.
+Streak Calendar is an open source productivity tool for habit tracking, task timing, and progress visualization. Supporting multiple calendars and habits, it offers a customizable approach to personal growth, with a GitHub-style activity grid to track achievements over time.
 
-This project is currently in its experimental/alpha stage and is solely developed by me. Any feedback, contributions, or support would be greatly appreciated as I continue to improve and refine it.
+Currently in its experimental/alpha stage, this project is solely developed by me. Feedback, contributions, and support are welcome to help improve and refine it.
 
-It is hosted on Vercel and free at the moment to ensure accessibility and flexibility. With an MIT license, anyone can freely use and adapt it. Hosting does have costs, and I may soon need premium services from Convex and Clerk. To cover these expenses and sustain development, I plan to introduce an affordable pricing model through Stripe, keeping it significantly cheaper than alternatives. Feel free to fork the project and host it on your own to unlock all the features.
+With an MIT license, Streak Calendar is free to use and adapt. Hosting and premium services from Convex and Clerk may introduce costs, so I plan to add an affordable pricing model via Stripe. Users can also fork and self-host the project for full access to all features.
 
 |                   Desktop                    |                       Mobile                       |
 | :------------------------------------------: | :------------------------------------------------: |
