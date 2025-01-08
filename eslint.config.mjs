@@ -9,6 +9,36 @@ const compat = new FlatCompat({
   baseDirectory: __dirname,
 });
 
-const eslintConfig = [...compat.extends("next/core-web-vitals", "next/typescript")];
+const createConfig = async () => [
+  ...compat.extends("next/core-web-vitals"),
+  ...compat.extends("next/typescript"),
+  ...compat.extends("prettier"),
+  {
+    plugins: {
+      "check-file": await import("eslint-plugin-check-file"),
+    },
+    rules: {
+      "prefer-arrow-callback": ["error"],
+      "prefer-template": ["error"],
+      semi: ["error"],
+      quotes: ["error", "double"],
+      "check-file/filename-naming-convention": [
+        "error",
+        {
+          "**/*.{ts,tsx}": "KEBAB_CASE",
+        },
+        {
+          ignoreMiddleExtensions: true,
+        },
+      ],
+      "check-file/folder-naming-convention": [
+        "error",
+        {
+          "src/**/!^[.*": "KEBAB_CASE",
+        },
+      ],
+    },
+  },
+];
 
-export default eslintConfig;
+export default createConfig();

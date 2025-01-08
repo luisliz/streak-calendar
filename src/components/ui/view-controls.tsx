@@ -31,7 +31,7 @@ interface ViewControlsProps {
  * Uses tabs for intuitive switching between grid and row layouts.
  * Includes icons for better visual representation of each view.
  */
-export const ViewControls = memo(function ViewControls({ calendarView, onViewChange }: ViewControlsProps) {
+export const ViewControls = memo(({ calendarView, onViewChange }: ViewControlsProps) => {
   const t = useTranslations("calendar.views");
 
   /**
@@ -67,3 +67,5 @@ export const ViewControls = memo(function ViewControls({ calendarView, onViewCha
     </div>
   );
 });
+
+ViewControls.displayName = "ViewControls";

@@ -183,7 +183,7 @@ function MonthGridCalendar({ habit, color, days, completions, onToggle }: MonthG
         const emptyEndDays = Array(endPadding).fill(null);
 
         // Get localized day and month names
-        const dayLabels = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"].map((d) => t("weekDays." + d));
+        const dayLabels = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"].map((d) => t(`weekDays.${d}`));
         const monthName = t(`monthNames.${format(firstDay, "MMMM").toLowerCase()}`);
         const year = format(firstDay, "yyyy");
 
