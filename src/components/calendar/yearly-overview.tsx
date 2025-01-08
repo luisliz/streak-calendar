@@ -102,10 +102,10 @@ export const YearlyOverview = ({ completions, isLoading = false }: YearlyOvervie
   // Determine the color intensity based on the number of completions
   const getColorClass = useCallback((count: number) => {
     if (count === 0) return "bg-muted";
-    if (count === 1) return "fill-red-500/40 dark:fill-red-500/40";
-    if (count <= 3) return "fill-red-500/70 dark:fill-red-500/70";
-    if (count <= 5) return "fill-red-500/80 dark:fill-red-500/80";
-    if (count <= 8) return "fill-red-500/90 dark:fill-red-500/90";
+    if (count === 1) return "fill-red-500/30 dark:fill-red-500/30";
+    if (count === 2) return "fill-red-500/50 dark:fill-red-500/50";
+    if (count === 3) return "fill-red-500/70 dark:fill-red-500/70";
+    if (count === 4) return "fill-red-500/85 dark:fill-red-500/85";
     return "fill-red-500 dark:fill-red-500";
   }, []);
 
