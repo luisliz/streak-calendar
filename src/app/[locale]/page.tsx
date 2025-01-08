@@ -89,35 +89,8 @@ export default function Home() {
 
       {/* Preview Section - Responsive images for desktop and mobile views */}
       <div className="grid w-full max-w-5xl grid-cols-1 gap-4 px-4 md:grid-cols-3">
-        {/* Desktop Preview - Takes 2/3 of the grid on larger screens */}
-        <Card className="relative md:col-span-2 md:h-[400px]">
-          <div className="h-0 pb-[56.25%] md:h-full md:pb-0">
-            {/* Maintains 16:9 aspect ratio on mobile */}
-            <Image src="/screen.png" alt="Desktop preview" fill className="object-contain dark:hidden" priority />
-            <Image
-              src="/screen-dark.png"
-              alt="Desktop preview (dark)"
-              fill
-              className="hidden object-contain dark:block"
-              priority
-            />
-          </div>
-        </Card>
-
-        {/* Mobile Preview - Takes 1/3 of the grid on larger screens */}
-        <Card className="relative md:h-[400px]">
-          <div className="h-0 pb-[177.78%] md:h-full md:pb-0">
-            {/* Maintains 9:16 aspect ratio on mobile */}
-            <Image src="/screen-mobile.png" alt="Mobile preview" fill className="object-contain dark:hidden" priority />
-            <Image
-              src="/screen-mobile-dark.png"
-              alt="Mobile preview (dark)"
-              fill
-              className="hidden object-contain dark:block"
-              priority
-            />
-          </div>
-        </Card>
+        <Card className="relative h-[225px] bg-[url('/screen.png')] bg-cover bg-top dark:bg-[url('/screen-dark.png')] md:col-span-2 md:h-[400px]" />
+        <Card className="relative h-[400px] bg-[url('/screen-mobile.png')] bg-cover bg-top dark:bg-[url('/screen-mobile-dark.png')]" />
       </div>
     </div>
   );
