@@ -19,5 +19,7 @@ export default defineSchema({
     habitId: v.id("habits"),
     userId: v.string(),
     completedAt: v.number(),
-  }).index("by_habit", ["habitId"]),
+  })
+    .index("by_habit", ["habitId"])
+    .index("by_user_and_date", ["userId", "completedAt"]),
 });

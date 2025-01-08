@@ -106,10 +106,12 @@ export const getCompletions = query({
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) throw new Error("Not authenticated");
 
+    // Use the compound index for more efficient querying
     return await ctx.db
       .query("completions")
-      .filter((q) => q.eq(q.field("userId"), identity.subject))
-      .filter((q) => q.and(q.gte(q.field("completedAt"), args.startDate), q.lte(q.field("completedAt"), args.endDate)))
+      .withIndex("by_user_and_date", (q) =>
+        q.eq("userId", identity.subject).gte("completedAt", args.startDate).lte("completedAt", args.endDate)
+      )
       .collect();
   },
 });
