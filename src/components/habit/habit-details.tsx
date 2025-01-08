@@ -53,7 +53,7 @@ interface HabitDetailsProps {
   onDelete: () => void;
 }
 
-export function HabitDetails({ habit, onDelete }: HabitDetailsProps) {
+export function HabitDetails({ habit }: HabitDetailsProps) {
   const t = useTranslations("dialogs");
   const tToast = useTranslations("toast");
   const router = useRouter();
@@ -85,7 +85,9 @@ export function HabitDetails({ habit, onDelete }: HabitDetailsProps) {
 
   const handleDelete = async () => {
     try {
-      onDelete();
+      setShowDeleteAlert(false);
+      router.replace("/calendar");
+      await new Promise((resolve) => setTimeout(resolve, 0));
       await deleteHabit({ id: habit._id });
       toast({ description: tToast("habit.deleted") });
     } catch (error) {
