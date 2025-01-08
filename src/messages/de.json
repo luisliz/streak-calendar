@@ -216,7 +216,8 @@
         },
         "timer": {
           "label": "Timer-Dauer",
-          "placeholder": "Dauer auswählen (optional)"
+          "placeholder": "Dauer auswählen (optional)",
+          "noTimer": "Kein Timer"
         },
         "actions": {
           "cancel": "Abbrechen",
@@ -230,7 +231,8 @@
         },
         "timer": {
           "label": "Timer-Dauer",
-          "placeholder": "Dauer auswählen (optional)"
+          "placeholder": "Dauer auswählen (optional)",
+          "noTimer": "Kein Timer"
         },
         "actions": {
           "cancel": "Abbrechen",

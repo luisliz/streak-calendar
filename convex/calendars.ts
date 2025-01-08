@@ -91,7 +91,7 @@ export const update = mutation({
 export const exportData = query({
   handler: async (ctx) => {
     const identity = await ctx.auth.getUserIdentity();
-    if (!identity) throw new Error("Not authenticated");
+    if (!identity) return null;
 
     try {
       const calendars = await ctx.db
@@ -124,7 +124,6 @@ export const exportData = query({
                 };
               } catch (error) {
                 console.error(`Error fetching completions for habit ${habit._id}:`, error);
-                // Return the habit without completions if there's an error
                 return {
                   name: habit.name,
                   completions: [],
@@ -140,7 +139,6 @@ export const exportData = query({
           });
         } catch (error) {
           console.error(`Error processing calendar ${calendar._id}:`, error);
-          // Continue with next calendar if there's an error
           continue;
         }
       }
@@ -148,7 +146,7 @@ export const exportData = query({
       return { calendars: result };
     } catch (error) {
       console.error("Error in exportData:", error);
-      throw new Error("Failed to export data. Please try again.");
+      return { calendars: [] };
     }
   },
 });
@@ -262,5 +260,14 @@ export const importData = mutation({
         }
       }
     }
+  },
+});
+
+export const get = query({
+  args: { id: v.id("calendars") },
+  handler: async (ctx, args) => {
+    const calendar = await ctx.db.get(args.id);
+    if (!calendar) throw new Error("Calendar not found");
+    return calendar;
   },
 });

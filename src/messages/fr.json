@@ -215,8 +215,9 @@
           "placeholder": "ex: Exercice, Méditation, Écriture..."
         },
         "timer": {
-          "label": "Durée du Minuteur",
-          "placeholder": "Sélectionner la durée (optionnel)"
+          "label": "Durée du minuteur",
+          "placeholder": "Sélectionner la durée",
+          "noTimer": "Pas de minuteur"
         },
         "actions": {
           "cancel": "Annuler",
@@ -229,8 +230,9 @@
           "label": "Nom de l'Habitude"
         },
         "timer": {
-          "label": "Durée du Minuteur",
-          "placeholder": "Sélectionner la durée (optionnel)"
+          "label": "Durée du minuteur",
+          "placeholder": "Sélectionner la durée",
+          "noTimer": "Pas de minuteur"
         },
         "actions": {
           "cancel": "Annuler",

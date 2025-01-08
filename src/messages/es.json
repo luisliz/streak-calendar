@@ -216,7 +216,8 @@
         },
         "timer": {
           "label": "Duración del temporizador",
-          "placeholder": "Seleccionar duración (opcional)"
+          "placeholder": "Seleccionar duración",
+          "noTimer": "Sin temporizador"
         },
         "actions": {
           "cancel": "Cancelar",
@@ -224,24 +225,24 @@
         }
       },
       "edit": {
-        "title": "Editar hábito",
+        "title": "Detalles del Hábito",
         "name": {
-          "label": "Nombre del hábito"
+          "label": "Nombre"
         },
         "timer": {
-          "label": "Duración del temporizador",
+          "label": "Duración del Temporizador",
           "placeholder": "Seleccionar duración (opcional)"
         },
         "actions": {
-          "cancel": "Cancelar",
-          "delete": "Eliminar",
-          "save": "Guardar cambios"
+          "back": "Volver",
+          "save": "Guardar Cambios",
+          "delete": "Eliminar"
         },
         "deleteConfirm": {
-          "title": "¿Estás seguro?",
-          "description": "Esto eliminará permanentemente el hábito \"{name}\". Esta acción no se puede deshacer.",
+          "title": "Eliminar Hábito",
+          "description": "¿Estás seguro de que quieres eliminar \"{name}\"? Esta acción no se puede deshacer.",
           "cancel": "Cancelar",
-          "confirm": "Eliminar hábito"
+          "confirm": "Eliminar"
         }
       }
     },

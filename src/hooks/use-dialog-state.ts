@@ -5,7 +5,7 @@
  * - Form data (name, color, duration)
  * - Selected/Editing items
  */
-import { Calendar, EditingCalendar, Id } from "@/types";
+import { Calendar, EditingCalendar } from "@/types";
 import { useCallback, useState } from "react";
 
 /**
@@ -28,10 +28,6 @@ interface DialogState {
   habit: {
     /** Whether new habit dialog is open */
     isNewOpen: boolean;
-    /** Whether edit habit dialog is open */
-    isEditOpen: boolean;
-    /** Currently editing habit data */
-    editingHabit: { _id: Id<"habits">; name: string; timerDuration?: number } | null;
     /** Habit name input value */
     name: string;
     /** Optional timer duration in minutes */
@@ -57,8 +53,6 @@ export function useDialogState() {
     },
     habit: {
       isNewOpen: false,
-      isEditOpen: false,
-      editingHabit: null,
       name: "",
       timerDuration: undefined,
       selectedCalendar: null,
@@ -93,8 +87,6 @@ export function useDialogState() {
       habit: {
         ...prev.habit,
         isNewOpen: false,
-        isEditOpen: false,
-        editingHabit: null,
         name: "",
         timerDuration: undefined,
       },
@@ -137,22 +129,6 @@ export function useDialogState() {
         ...prev.habit,
         isNewOpen: true,
         selectedCalendar: calendar,
-      },
-    }));
-  }, []);
-
-  /**
-   * Opens the edit habit dialog with existing habit data
-   */
-  const openEditHabit = useCallback((habit: { _id: Id<"habits">; name: string; timerDuration?: number }) => {
-    setState((prev) => ({
-      ...prev,
-      habit: {
-        ...prev.habit,
-        isEditOpen: true,
-        editingHabit: habit,
-        name: habit.name,
-        timerDuration: habit.timerDuration,
       },
     }));
   }, []);
@@ -202,7 +178,6 @@ export function useDialogState() {
     openNewCalendar,
     openEditCalendar,
     openNewHabit,
-    openEditHabit,
     updateCalendarName,
     updateCalendarColor,
     updateHabitName,

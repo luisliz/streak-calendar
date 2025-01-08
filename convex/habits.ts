@@ -159,3 +159,12 @@ export const remove = mutation({
     await ctx.db.delete(args.id);
   },
 });
+
+export const get = query({
+  args: { id: v.id("habits") },
+  handler: async (ctx, args) => {
+    const habit = await ctx.db.get(args.id);
+    if (!habit) throw new Error("Habit not found");
+    return habit;
+  },
+});

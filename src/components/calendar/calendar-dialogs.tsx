@@ -229,6 +229,7 @@ export const NewHabitDialog = ({
                 <SelectValue placeholder={t("habit.new.timer.placeholder")} />
               </SelectTrigger>
               <SelectContent>
+                <SelectItem value="">No Timer</SelectItem>
                 {timerDurations.map((duration) => (
                   <SelectItem key={duration.value} value={duration.value.toString()}>
                     {duration.name}
@@ -253,12 +254,7 @@ export const NewHabitDialog = ({
 
 /**
  * Dialog component for editing an existing calendar.
- * Similar to NewCalendarDialog but includes:
- * - Pre-filled values for name and color
- * - Additional delete option for removing the calendar
- * - Modified button layout with destructive delete action
- *
- * Changes are only applied when explicitly saved.
+ * Similar to NewCalendarDialog but includes delete option.
  */
 interface EditCalendarDialogProps {
   color: string;
@@ -348,107 +344,6 @@ export const EditCalendarDialog = ({
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
               {t("calendar.edit.deleteConfirm.confirm")}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-    </>
-  );
-};
-
-/**
- * Dialog component for editing an existing habit.
- * Similar to NewHabitDialog but includes:
- * - Pre-filled values for name and timer duration
- * - Additional delete option for removing the habit
- * - Modified button layout with destructive delete action
- *
- * Timer duration remains optional and validates range (1-120 minutes).
- * Changes are only applied when explicitly saved.
- */
-interface EditHabitDialogProps {
-  isOpen: boolean;
-  name: string;
-  onDelete: () => void;
-  onNameChange: (name: string) => void;
-  onOpenChange: (open: boolean) => void;
-  onSubmit: () => void;
-  onTimerDurationChange: (duration: number | undefined) => void;
-  timerDuration: number | undefined;
-}
-
-export const EditHabitDialog = ({
-  isOpen,
-  name,
-  onDelete,
-  onNameChange,
-  onOpenChange,
-  onSubmit,
-  onTimerDurationChange,
-  timerDuration,
-}: EditHabitDialogProps) => {
-  const [showDeleteAlert, setShowDeleteAlert] = useState(false);
-  const t = useTranslations("dialogs");
-  const timerDurations = useTimerDurations();
-
-  return (
-    <>
-      <Dialog open={isOpen} onOpenChange={onOpenChange}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>{t("habit.edit.title")}</DialogTitle>
-          </DialogHeader>
-          <div className="grid gap-4">
-            <div>
-              <Label htmlFor="edit-habit-name">{t("habit.edit.name.label")}</Label>
-              <Input id="edit-habit-name" value={name} onChange={(e) => onNameChange(e.target.value)} />
-            </div>
-            <div>
-              <Label>{t("habit.edit.timer.label")}</Label>
-              <Select
-                value={timerDuration?.toString()}
-                onValueChange={(value) => onTimerDurationChange(value ? parseInt(value) : undefined)}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder={t("habit.edit.timer.placeholder")} />
-                </SelectTrigger>
-                <SelectContent>
-                  {timerDurations.map((duration) => (
-                    <SelectItem key={duration.value} value={duration.value.toString()}>
-                      {duration.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="flex gap-2">
-              <Button variant="outline" onClick={() => onOpenChange(false)} className="flex-1">
-                {t("habit.edit.actions.cancel")}
-              </Button>
-              <Button variant="destructive" onClick={() => setShowDeleteAlert(true)}>
-                {t("habit.edit.actions.delete")}
-              </Button>
-              <Button onClick={onSubmit} className="flex-1">
-                {t("habit.edit.actions.save")}
-              </Button>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
-
-      <AlertDialog open={showDeleteAlert} onOpenChange={setShowDeleteAlert}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>{t("habit.edit.deleteConfirm.title")}</AlertDialogTitle>
-            <AlertDialogDescription>{t("habit.edit.deleteConfirm.description", { name })}</AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>{t("habit.edit.deleteConfirm.cancel")}</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={onDelete}
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-            >
-              {t("habit.edit.deleteConfirm.confirm")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

@@ -211,7 +211,8 @@
         },
         "timer": {
           "label": "Timer Duration",
-          "placeholder": "Select duration (optional)"
+          "placeholder": "Select duration (optional)",
+          "noTimer": "No Timer"
         },
         "actions": {
           "cancel": "Cancel",
@@ -219,24 +220,25 @@
         }
       },
       "edit": {
-        "title": "Edit Habit",
+        "title": "Habit Details",
         "name": {
-          "label": "Habit Name"
+          "label": "Name"
         },
         "timer": {
           "label": "Timer Duration",
-          "placeholder": "Select duration (optional)"
+          "placeholder": "Select duration",
+          "noTimer": "No Timer"
         },
         "actions": {
-          "cancel": "Cancel",
-          "delete": "Delete",
-          "save": "Save Changes"
+          "back": "Go Back",
+          "save": "Save Changes",
+          "delete": "Delete"
         },
         "deleteConfirm": {
-          "title": "Are you sure?",
-          "description": "This will permanently delete the habit \"{name}\". This action cannot be undone.",
+          "title": "Delete Habit",
+          "description": "Are you sure you want to delete \"{name}\"? This action cannot be undone.",
           "cancel": "Cancel",
-          "confirm": "Delete Habit"
+          "confirm": "Delete"
         }
       }
     },

@@ -1,15 +1,11 @@
-import {
-  EditCalendarDialog,
-  EditHabitDialog,
-  NewCalendarDialog,
-  NewHabitDialog,
-} from "@/components/calendar/calendar-dialogs";
+import { EditCalendarDialog, NewCalendarDialog, NewHabitDialog } from "@/components/calendar/calendar-dialogs";
 import { CalendarItem } from "@/components/calendar/calendar-item";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ViewControls } from "@/components/ui/view-controls";
 import { useDialogState } from "@/hooks/use-dialog-state";
 import { useToastMessages } from "@/hooks/use-toast-messages";
+import { useRouter } from "@/i18n/routing";
 import { Calendar, Completion, Day, Habit, Id } from "@/types";
 import { AnimatePresence, motion } from "framer-motion";
 import { PlusCircle } from "lucide-react";
@@ -98,6 +94,7 @@ export function CalendarContainer({
 }: CalendarContainerProps) {
   const t = useTranslations("calendar.container");
   const toastMessages = useToastMessages();
+  const router = useRouter();
 
   // Dialog state management for calendar and habit operations
   const {
@@ -105,7 +102,6 @@ export function CalendarContainer({
     openNewCalendar,
     openEditCalendar,
     openNewHabit,
-    openEditHabit,
     updateCalendarName,
     updateCalendarColor,
     updateHabitName,
@@ -158,28 +154,6 @@ export function CalendarContainer({
     resetCalendarState();
   }, [monthViewData, state.calendar, toastMessages, resetCalendarState]);
 
-  /**
-   * Handles updating an existing habit's properties
-   * Validates name and includes error handling
-   */
-  const handleEditHabit = useCallback(async () => {
-    const { name, timerDuration, editingHabit } = state.habit;
-    if (!name.trim() || !editingHabit) return;
-
-    try {
-      await monthViewData.handleEditHabit(editingHabit._id, name, timerDuration);
-      toastMessages.habit.updated();
-      resetHabitState();
-    } catch (error) {
-      console.error(error);
-      toast.error("Failed to edit habit");
-    }
-  }, [monthViewData, state.habit, toastMessages, resetHabitState]);
-
-  /**
-   * Handles deletion of a calendar
-   * Triggers toast notification on success
-   */
   const handleDeleteCalendar = useCallback(async () => {
     const { editingCalendar } = state.calendar;
     if (!editingCalendar) return;
@@ -188,19 +162,6 @@ export function CalendarContainer({
     toastMessages.calendar.deleted();
     resetCalendarState();
   }, [monthViewData, state.calendar, toastMessages, resetCalendarState]);
-
-  /**
-   * Handles deletion of a habit
-   * Triggers toast notification on success
-   */
-  const handleDeleteHabit = useCallback(async () => {
-    const { editingHabit } = state.habit;
-    if (!editingHabit) return;
-
-    await monthViewData.handleDeleteHabit(editingHabit._id);
-    toastMessages.habit.deleted();
-    resetHabitState();
-  }, [monthViewData, state.habit, toastMessages, resetHabitState]);
 
   /**
    * Handles toggling habit completion for a specific date
@@ -253,7 +214,7 @@ export function CalendarContainer({
                     key={calendar._id}
                     onAddHabit={() => openNewHabit(calendar)}
                     onEditCalendar={() => openEditCalendar(calendar)}
-                    onEditHabit={openEditHabit}
+                    onEditHabit={(habit) => router.push(`/habits/${habit._id}`)}
                     onToggleHabit={handleToggleHabit}
                     view={view}
                   />
@@ -300,16 +261,6 @@ export function CalendarContainer({
         onColorChange={updateCalendarColor}
         onSubmit={handleEditCalendar}
         onDelete={handleDeleteCalendar}
-      />
-      <EditHabitDialog
-        isOpen={state.habit.isEditOpen}
-        onOpenChange={() => resetHabitState()}
-        name={state.habit.name}
-        onNameChange={updateHabitName}
-        timerDuration={state.habit.timerDuration}
-        onTimerDurationChange={updateHabitTimer}
-        onSubmit={handleEditHabit}
-        onDelete={handleDeleteHabit}
       />
     </>
   );

@@ -211,7 +211,8 @@
         },
         "timer": {
           "label": "计时器时长",
-          "placeholder": "选择时长（可选）"
+          "placeholder": "选择时长（可选）",
+          "noTimer": "无计时器"
         },
         "actions": {
           "cancel": "取消",
@@ -219,24 +220,25 @@
         }
       },
       "edit": {
-        "title": "编辑习惯",
+        "title": "习惯详情",
         "name": {
-          "label": "习惯名称"
+          "label": "名称"
         },
         "timer": {
           "label": "计时器时长",
-          "placeholder": "选择时长（可选）"
+          "placeholder": "选择时长",
+          "noTimer": "无计时器"
         },
         "actions": {
-          "cancel": "取消",
-          "delete": "删除",
-          "save": "保存更改"
+          "back": "返回",
+          "save": "保存更改",
+          "delete": "删除"
         },
         "deleteConfirm": {
-          "title": "确定吗？",
-          "description": "这将永久删除习惯\"{name}\"。此操作无法撤消。",
+          "title": "删除习惯",
+          "description": "确定要删除\"{name}\"吗？此操作无法撤消。",
           "cancel": "取消",
-          "confirm": "删除习惯"
+          "confirm": "删除"
         }
       }
     },
