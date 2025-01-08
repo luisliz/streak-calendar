@@ -115,7 +115,9 @@ export default async function LocaleLayout({
       {/* Main content wrapper with providers and root layout */}
       <div className="relative overflow-x-hidden">
         <Providers locale={locale} messages={messages}>
-          <RootWrapper>{children}</RootWrapper>
+          <main>
+            <RootWrapper>{children}</RootWrapper>
+          </main>
           <Toaster />
         </Providers>
       </div>
