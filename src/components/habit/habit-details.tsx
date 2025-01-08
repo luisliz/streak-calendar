@@ -21,7 +21,7 @@ import { useMutation, useQuery } from "convex/react";
 import { motion } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import ActivityCalendar from "react-activity-calendar";
 
 import { api } from "@server/convex/_generated/api";
@@ -80,14 +80,14 @@ interface HabitDetailsProps {
  * - Mobile: 8px blocks, 2px margin
  */
 function getCalendarSize() {
-  if (typeof window === "undefined") return { blockSize: 8, blockMargin: 2 };
+  if (typeof window === "undefined") return { blockSize: 6, blockMargin: 2 };
 
   const isLg = window.matchMedia("(min-width: 1024px)").matches;
   const isMd = window.matchMedia("(min-width: 768px)").matches;
 
   if (isLg) return { blockSize: 12, blockMargin: 4 };
-  if (isMd) return { blockSize: 10, blockMargin: 3 };
-  return { blockSize: 8, blockMargin: 2 };
+  if (isMd) return { blockSize: 8, blockMargin: 3 };
+  return { blockSize: 6, blockMargin: 2 };
 }
 
 /**
@@ -107,6 +107,7 @@ export function HabitDetails({ habit }: HabitDetailsProps) {
   const [name, setName] = useState(habit.name);
   const [timerDuration, setTimerDuration] = useState<number | undefined>(habit.timerDuration);
   const [calendarSize, setCalendarSize] = useState(getCalendarSize());
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const updateHabit = useMutation(api.habits.update);
   const deleteHabit = useMutation(api.habits.remove);
@@ -178,6 +179,12 @@ export function HabitDetails({ habit }: HabitDetailsProps) {
       level: count > 0 ? Math.min(Math.ceil(count / 2), 4) : 0,
     }));
   }, [completions, habit._id, dateRange]);
+
+  useEffect(() => {
+    if (containerRef.current) {
+      containerRef.current.scrollLeft = containerRef.current.scrollWidth;
+    }
+  }, [calendarData]);
 
   /**
    * Handles habit updates with optimistic navigation.
@@ -253,34 +260,36 @@ export function HabitDetails({ habit }: HabitDetailsProps) {
                 className="overflow-x-auto pb-4"
               >
                 {/* Activity calendar component with responsive sizing and theme */}
-                <ActivityCalendar
-                  data={calendarData}
-                  labels={{
-                    totalCount: "{{count}} completions in the last year",
-                  }}
-                  showWeekdayLabels
-                  weekStart={1}
-                  blockSize={calendarSize.blockSize}
-                  blockMargin={calendarSize.blockMargin}
-                  fontSize={10}
-                  hideColorLegend
-                  theme={{
-                    light: [
-                      "var(--activity-level-0)",
-                      "var(--activity-level-1)",
-                      "var(--activity-level-2)",
-                      "var(--activity-level-3)",
-                      "var(--activity-level-4)",
-                    ],
-                    dark: [
-                      "var(--activity-level-0)",
-                      "var(--activity-level-1)",
-                      "var(--activity-level-2)",
-                      "var(--activity-level-3)",
-                      "var(--activity-level-4)",
-                    ],
-                  }}
-                />
+                <div className="flex justify-center">
+                  <ActivityCalendar
+                    data={calendarData}
+                    labels={{
+                      totalCount: "{{count}} completions in the last year",
+                    }}
+                    showWeekdayLabels
+                    weekStart={1}
+                    blockSize={calendarSize.blockSize}
+                    blockMargin={calendarSize.blockMargin}
+                    fontSize={10}
+                    hideColorLegend
+                    theme={{
+                      light: [
+                        "var(--activity-level-0)",
+                        "var(--activity-level-1)",
+                        "var(--activity-level-2)",
+                        "var(--activity-level-3)",
+                        "var(--activity-level-4)",
+                      ],
+                      dark: [
+                        "var(--activity-level-0)",
+                        "var(--activity-level-1)",
+                        "var(--activity-level-2)",
+                        "var(--activity-level-3)",
+                        "var(--activity-level-4)",
+                      ],
+                    }}
+                  />
+                </div>
               </motion.div>
             ) : null}
           </div>
