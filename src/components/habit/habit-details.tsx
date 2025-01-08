@@ -27,6 +27,20 @@ import ActivityCalendar from "react-activity-calendar";
 import { api } from "@server/convex/_generated/api";
 import { Id } from "@server/convex/_generated/dataModel";
 
+/**
+ * Client-side component for displaying and managing habit details.
+ * Features include:
+ * - Habit name and timer duration editing
+ * - Activity visualization using a calendar heatmap
+ * - Habit deletion with confirmation
+ * - Responsive design for different screen sizes
+ */
+
+/**
+ * Timer duration options in minutes.
+ * Provides a range from 1 minute to 2 hours for habit timer settings.
+ * Used in the timer duration dropdown selection.
+ */
 const TIMER_VALUES = [
   { key: "1min", value: 1 },
   { key: "2min", value: 2 },
@@ -41,6 +55,9 @@ const TIMER_VALUES = [
   { key: "2hour", value: 120 },
 ];
 
+/**
+ * Props interface for the HabitDetails component
+ */
 interface HabitDetailsProps {
   habit: {
     _id: Id<"habits">;
@@ -55,6 +72,13 @@ interface HabitDetailsProps {
   onDelete: () => void;
 }
 
+/**
+ * Determines calendar block size and margin based on viewport width.
+ * Uses media queries to provide responsive sizing:
+ * - Desktop (lg): 12px blocks, 4px margin
+ * - Tablet (md): 10px blocks, 3px margin
+ * - Mobile: 8px blocks, 2px margin
+ */
 function getCalendarSize() {
   if (typeof window === "undefined") return { blockSize: 8, blockMargin: 2 };
 
@@ -66,6 +90,14 @@ function getCalendarSize() {
   return { blockSize: 8, blockMargin: 2 };
 }
 
+/**
+ * Main component for displaying and editing habit details.
+ * Manages state for:
+ * - Habit name and timer duration
+ * - Delete confirmation dialog
+ * - Activity calendar visualization
+ * - Responsive calendar sizing
+ */
 export function HabitDetails({ habit }: HabitDetailsProps) {
   const t = useTranslations("dialogs");
   const tToast = useTranslations("toast");
@@ -88,7 +120,11 @@ export function HabitDetails({ habit }: HabitDetailsProps) {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Memoize date range
+  /**
+   * Memoized date range calculation for the activity calendar.
+   * Calculates start and end dates for the past year's activity display.
+   * Updates only when component mounts to prevent unnecessary recalculations.
+   */
   const dateRange = useMemo(() => {
     const now = new Date();
     const end = new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -104,11 +140,18 @@ export function HabitDetails({ habit }: HabitDetailsProps) {
   // Fetch completions for the activity calendar
   const completions = useQuery(api.habits.getCompletions, dateRange);
 
-  // Transform completions into activity calendar data
+  /**
+   * Transforms habit completion data into activity calendar format.
+   * Process:
+   * 1. Creates a map with zero counts for all dates in range
+   * 2. Counts completions per day for the specific habit
+   * 3. Converts to activity calendar format with level calculations
+   * Level is calculated as ceil(count/2), capped at 4
+   */
   const calendarData = useMemo(() => {
     if (!completions) return [];
 
-    // Create a map of all dates in the range
+    // Initialize map with zero counts for all dates in range
     const dates = new Map();
     const start = new Date(dateRange.startDate);
     const end = new Date(dateRange.endDate);
@@ -117,7 +160,7 @@ export function HabitDetails({ habit }: HabitDetailsProps) {
       dates.set(d.toISOString().split("T")[0], 0);
     }
 
-    // Fill in completion counts
+    // Count completions per day
     completions
       .filter((completion) => completion.habitId === habit._id)
       .forEach((completion) => {
@@ -127,7 +170,8 @@ export function HabitDetails({ habit }: HabitDetailsProps) {
         }
       });
 
-    // Convert to required format
+    // Convert to activity calendar format
+    // Level is calculated as ceil(count/2), capped at 4
     return Array.from(dates).map(([date, count]) => ({
       date,
       count,
@@ -135,6 +179,11 @@ export function HabitDetails({ habit }: HabitDetailsProps) {
     }));
   }, [completions, habit._id, dateRange]);
 
+  /**
+   * Handles habit updates with optimistic navigation.
+   * Validates input, updates the habit, shows success/error toast,
+   * and navigates back to calendar view.
+   */
   const handleSave = async () => {
     if (!name.trim()) return;
     try {
@@ -153,6 +202,14 @@ export function HabitDetails({ habit }: HabitDetailsProps) {
     }
   };
 
+  /**
+   * Handles habit deletion with optimistic UI update.
+   * Flow:
+   * 1. Closes delete confirmation dialog
+   * 2. Navigates away immediately for better UX
+   * 3. Performs actual deletion
+   * 4. Shows success/error toast
+   */
   const handleDelete = async () => {
     try {
       setShowDeleteAlert(false);
@@ -170,7 +227,9 @@ export function HabitDetails({ habit }: HabitDetailsProps) {
 
   return (
     <>
+      {/* Main card container with navigation and content */}
       <Card className="my-8 border shadow-md">
+        {/* Back navigation button */}
         <div className="flex items-center gap-2 p-2">
           <Button variant="ghost" onClick={() => router.push("/calendar")} className="gap-2">
             <ArrowLeft className="h-4 w-4" />
@@ -180,16 +239,20 @@ export function HabitDetails({ habit }: HabitDetailsProps) {
 
         <div className="mx-auto max-w-5xl p-6">
           <h1 className="mb-8 text-2xl font-bold">{name}</h1>
+          {/* Activity calendar visualization with loading state */}
           <div className="mb-8">
             {!completions ? (
+              // Loading skeleton
               <div className="h-[200px] w-full animate-pulse rounded-lg bg-muted" />
             ) : calendarData.length > 0 ? (
+              // Animated calendar container with horizontal scroll
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 1, ease: [0, 0.7, 0.1, 1] }}
                 className="overflow-x-auto pb-4"
               >
+                {/* Activity calendar component with responsive sizing and theme */}
                 <ActivityCalendar
                   data={calendarData}
                   labels={{
@@ -223,14 +286,17 @@ export function HabitDetails({ habit }: HabitDetailsProps) {
           </div>
         </div>
 
+        {/* Habit edit form card */}
         <Card className="mx-auto my-8 max-w-xl border p-2 shadow-md">
           <div className="p-4">
             <h2 className="mb-6 text-lg font-semibold">{t("habit.edit.title")}</h2>
             <div className="space-y-4">
+              {/* Habit name input field */}
               <div>
                 <Label htmlFor="edit-habit-name">{t("habit.edit.name.label")}</Label>
                 <Input id="edit-habit-name" value={name} onChange={(e) => setName(e.target.value)} />
               </div>
+              {/* Timer duration selection dropdown */}
               <div>
                 <Label>{t("habit.edit.timer.label")}</Label>
                 <Select
@@ -250,6 +316,7 @@ export function HabitDetails({ habit }: HabitDetailsProps) {
                   </SelectContent>
                 </Select>
               </div>
+              {/* Action buttons container */}
               <div className="flex gap-2 pt-4">
                 <Button variant="destructive" onClick={() => setShowDeleteAlert(true)}>
                   {t("habit.edit.actions.delete")}
@@ -263,6 +330,7 @@ export function HabitDetails({ habit }: HabitDetailsProps) {
         </Card>
       </Card>
 
+      {/* Delete confirmation dialog */}
       <AlertDialog open={showDeleteAlert} onOpenChange={setShowDeleteAlert}>
         <AlertDialogContent>
           <AlertDialogHeader>
