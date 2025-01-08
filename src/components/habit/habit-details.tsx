@@ -53,7 +53,7 @@ interface HabitDetailsProps {
   onDelete: () => void;
 }
 
-export function HabitDetails({ habit, calendar, onDelete }: HabitDetailsProps) {
+export function HabitDetails({ habit, onDelete }: HabitDetailsProps) {
   const t = useTranslations("dialogs");
   const tToast = useTranslations("toast");
   const router = useRouter();
