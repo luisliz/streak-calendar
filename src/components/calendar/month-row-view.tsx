@@ -137,7 +137,7 @@ export function MonthRowView({
               </div>
               {/* Editable habit name with hover effects - direction aware */}
               <div
-                className={`absolute flex w-24 cursor-pointer items-start md:w-48 ${isRTL ? "right-0" : "left-0"}`}
+                className={`absolute flex w-24 cursor-pointer select-none items-start md:w-48 ${isRTL ? "right-0" : "left-0"}`}
                 onClick={() => onEditHabit(habit)}
               >
                 <div className="relative flex items-center">
