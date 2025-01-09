@@ -79,15 +79,15 @@ interface HabitDetailsProps {
 
 /**
  * Determines calendar block size and margin based on viewport width.
- * Uses media queries to provide responsive sizing:
- * - Desktop (lg): 12px blocks, 4px margin
- * - Tablet (md): 10px blocks, 3px margin
- * - Mobile: 8px blocks, 2px margin
+ * Optimized for readability across all device sizes:
+ * - Desktop (lg): 12px blocks with 2px margin
+ * - Tablet (md): 10px blocks with 2px margin
+ * - Mobile: 8px blocks with 1px margin
  */
 function getCalendarSize() {
   if (typeof window === "undefined")
     return {
-      blockSize: 5,
+      blockSize: 8,
       blockMargin: 2,
       showLabels: false,
     };
@@ -96,8 +96,8 @@ function getCalendarSize() {
   const isMd = window.matchMedia("(min-width: 768px)").matches;
 
   if (isLg) return { blockSize: 12, blockMargin: 2, showLabels: true };
-  if (isMd) return { blockSize: 8, blockMargin: 1, showLabels: true };
-  return { blockSize: 6, blockMargin: 1, showLabels: false };
+  if (isMd) return { blockSize: 10, blockMargin: 2, showLabels: true };
+  return { blockSize: 8, blockMargin: 1, showLabels: false };
 }
 
 const habitTheme: ThemeInput = {
@@ -174,7 +174,7 @@ function SingleMonthCalendar({ habit, color, completions, onToggle }: SingleMont
   const year = format(firstDay, "yyyy");
 
   return (
-    <Card className="mx-auto my-8 max-w-[400px] border p-2 shadow-md">
+    <Card className="max-w-[400px] border p-2 shadow-md">
       <div className="p-4">
         <h3 className="mb-4 text-center text-lg font-semibold">{`${monthName} ${year}`}</h3>
         <div className="mx-auto w-fit space-y-4">
@@ -403,69 +403,181 @@ export function HabitDetails({ habit }: HabitDetailsProps) {
         </Button>
       </div>
 
-      {/* Habit details container */}
-      {/* TODO: 2025-01-09 - PLEASE WORK ON THIS */}
-      <div className="mx-auto max-w-5xl p-6">
-        <div className="flex flex-col items-center">
-          <h1 className="mb-8 text-2xl font-bold">{name}</h1>
-          {/* Activity calendar visualization with loading state */}
-          <div className="mb-8">
-            {!completions ? (
-              // Loading skeleton
-              <Skeleton className="h-[150px] w-[600px]" />
-            ) : calendarData.length > 0 ? (
-              // Animated calendar container with horizontal scroll
-              <Card className="max-w-[800px] border p-2 shadow-md">
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 1, ease: [0, 0.7, 0.1, 1] }}
-                  className="overflow-x-auto"
-                  ref={containerRef}
-                >
-                  {/* Activity calendar component with responsive sizing and theme */}
-                  <div className="flex min-w-fit justify-center p-4">
-                    <ActivityCalendar
-                      data={calendarData}
-                      labels={{
-                        totalCount: "{{count}} completions in the last year",
-                      }}
-                      showWeekdayLabels={false}
-                      blockRadius={20}
-                      hideColorLegend={true}
-                      hideTotalCount={true}
-                      weekStart={0}
-                      blockSize={calendarSize.blockSize}
-                      blockMargin={calendarSize.blockMargin}
-                      fontSize={10}
-                      maxLevel={4}
-                      theme={habitTheme}
-                    />
-                  </div>
-                </motion.div>
-              </Card>
-            ) : null}
-          </div>
-        </div>
+      {/* Habit title */}
+      <div className="text-center">
+        <h1 className="mb-8 text-2xl font-bold">{name}</h1>
       </div>
 
-      {/* Single month calendar */}
-      <SingleMonthCalendar
-        habit={habit}
-        color="bg-red-500"
-        completions={completions ?? []}
-        onToggle={async (habitId, date, count) => {
-          try {
-            const completedAt = new Date(date).getTime();
-            await markComplete({ habitId, completedAt, count });
-          } catch (error) {
-            toast({
-              description: `Failed to update completion: ${error instanceof Error ? error.message : "Unknown error"}`,
-              variant: "destructive",
-            });
-          }
-        }}
-      />
+      {/* Calendar and Statistics Section
+       * This section contains three main components:
+       * 1. Monthly Calendar - Shows current month with interactive day cells
+       * 2. Activity Calendar - Shows year-long activity heatmap
+       * 3. Statistics Card - Shows key metrics
+       *
+       * Layout behavior:
+       * - Desktop (lg): Side-by-side layout with monthly calendar (400px) and activity section (800px)
+       * - Tablet (md): Stacked layout with preserved cell sizes
+       * - Mobile: Full-width stacked layout with adjusted cell sizes
+       */}
+      <div className="mx-auto max-w-7xl space-y-8 p-6 md:space-y-6 lg:flex lg:items-start lg:justify-center lg:space-x-6 lg:space-y-0">
+        {/* Monthly Calendar Container
+         * - Fixed width on desktop to prevent squishing
+         * - Min-width on mobile/tablet to maintain cell size integrity
+         * - Responsive padding and margins for different screen sizes
+         */}
+        <div className="w-full min-w-[320px] lg:w-[400px]">
+          <SingleMonthCalendar
+            habit={habit}
+            color="bg-red-500"
+            completions={completions ?? []}
+            onToggle={async (habitId, date, count) => {
+              try {
+                const completedAt = new Date(date).getTime();
+                await markComplete({ habitId, completedAt, count });
+              } catch (error) {
+                toast({
+                  description: `Failed to update completion: ${error instanceof Error ? error.message : "Unknown error"}`,
+                  variant: "destructive",
+                });
+              }
+            }}
+          />
+        </div>
+
+        {/* Activity Calendar and Statistics Container
+         * - Full width on mobile/tablet for better readability
+         * - Fixed width on desktop to maintain layout
+         * - Vertical spacing between components
+         */}
+        <div className="w-full min-w-[320px] space-y-4 md:min-w-[720px] lg:w-[800px]">
+          {/* Activity Calendar Card
+           * - Scrollable container for year view
+           * - Maintains block size integrity across screen sizes
+           * - Animated entrance for better UX
+           */}
+          {!completions ? (
+            <Skeleton className="h-[150px] w-full" />
+          ) : calendarData.length > 0 ? (
+            <Card className="border p-2 shadow-md">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 1, ease: [0, 0.7, 0.1, 1] }}
+                className="overflow-x-auto"
+                ref={containerRef}
+              >
+                <div className="flex min-w-[720px] justify-center p-4 md:min-w-[720px] lg:min-w-[800px]">
+                  <ActivityCalendar
+                    data={calendarData}
+                    labels={{
+                      totalCount: "{{count}} completions in the last year",
+                    }}
+                    showWeekdayLabels={false}
+                    blockRadius={20}
+                    hideColorLegend={true}
+                    hideTotalCount={true}
+                    weekStart={0}
+                    blockSize={calendarSize.blockSize}
+                    blockMargin={calendarSize.blockMargin}
+                    fontSize={10}
+                    maxLevel={4}
+                    theme={habitTheme}
+                  />
+                </div>
+              </motion.div>
+            </Card>
+          ) : null}
+
+          {/* Statistics Card
+           * - Grid layout adapts to screen size
+           * - Maintains readable text size across devices
+           * - Consistent spacing and alignment
+           */}
+          <Card className="border p-2 shadow-md">
+            <div className="p-4">
+              <h2 className="mb-4 text-lg font-semibold">Statistics</h2>
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                {/* Total Completions Counter */}
+                <div className="space-y-1">
+                  <p className="text-sm text-muted-foreground">Total Completions</p>
+                  <p className="text-2xl font-bold">
+                    {completions?.filter((c) => c.habitId === habit._id).length ?? 0}
+                  </p>
+                </div>
+                {/* Current Month Stats */}
+                <div className="space-y-1">
+                  <p className="text-sm text-muted-foreground">This Month</p>
+                  <p className="text-2xl font-bold">
+                    {completions?.filter((c) => {
+                      const date = new Date(c.completedAt);
+                      const now = new Date();
+                      return (
+                        c.habitId === habit._id &&
+                        date.getMonth() === now.getMonth() &&
+                        date.getFullYear() === now.getFullYear()
+                      );
+                    }).length ?? 0}
+                  </p>
+                </div>
+                {/* Current Streak Calculator
+                 * Calculates consecutive days of habit completion
+                 * Resets if today and yesterday are both missed
+                 */}
+                <div className="space-y-1">
+                  <p className="text-sm text-muted-foreground">Current Streak</p>
+                  <p className="text-2xl font-bold">
+                    {(() => {
+                      if (!completions) return 0;
+                      const dates = completions
+                        .filter((c) => c.habitId === habit._id)
+                        .map((c) => new Date(c.completedAt).toISOString().split("T")[0])
+                        .sort();
+                      if (dates.length === 0) return 0;
+
+                      let streak = 0;
+                      const today = new Date().toISOString().split("T")[0];
+                      const yesterday = new Date(Date.now() - 86400000).toISOString().split("T")[0];
+
+                      if (!dates.includes(today) && !dates.includes(yesterday)) return 0;
+
+                      for (let i = dates.length - 1; i >= 0; i--) {
+                        const current = new Date(dates[i]);
+                        const prev = new Date(dates[i - 1] || dates[i]);
+                        prev.setDate(prev.getDate() + 1);
+
+                        if (i === dates.length - 1 || current.getTime() === prev.getTime()) {
+                          streak++;
+                        } else break;
+                      }
+                      return streak;
+                    })()}
+                  </p>
+                </div>
+                {/* Average Completions Calculator
+                 * Shows average completions per active day
+                 * Excludes days with no completions
+                 */}
+                <div className="space-y-1">
+                  <p className="text-sm text-muted-foreground">Avg. Per Active Day</p>
+                  <p className="text-2xl font-bold">
+                    {(() => {
+                      if (!completions) return "0.0";
+                      const habitCompletions = completions.filter((c) => c.habitId === habit._id);
+                      if (habitCompletions.length === 0) return "0.0";
+
+                      const uniqueDays = new Set(
+                        habitCompletions.map((c) => new Date(c.completedAt).toISOString().split("T")[0])
+                      );
+
+                      return (habitCompletions.length / uniqueDays.size).toFixed(1);
+                    })()}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </Card>
+        </div>
+      </div>
 
       {/* Habit edit form card */}
       <Card className="mx-auto my-8 max-w-xl border p-2 shadow-md">
