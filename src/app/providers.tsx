@@ -34,7 +34,12 @@ interface ProvidersProps extends PropsWithChildren {
 export function Providers({ children, locale, messages }: ProvidersProps) {
   return (
     <IntlProvider locale={locale} messages={messages}>
-      <ClerkProvider publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY as string}>
+      <ClerkProvider
+        publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY as string}
+        afterSignUpUrl="/calendar"
+        afterSignInUrl="/calendar"
+        afterSignOutUrl="/"
+      >
         <ConvexProviderWithClerk client={convex} useAuth={useAuth}>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
             {children}

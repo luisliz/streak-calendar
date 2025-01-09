@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { SignInButton, SignedIn, SignedOut } from "@clerk/nextjs";
+import { SignUpButton, SignedIn, SignedOut } from "@clerk/nextjs";
 import NumberFlow from "@number-flow/react";
 import { motion } from "framer-motion";
 import { Check } from "lucide-react";
@@ -240,11 +240,11 @@ export default function PricingPage() {
                   // Active tier CTA with authentication state handling
                   <>
                     <SignedOut>
-                      <SignInButton mode="redirect">
+                      <SignUpButton mode="modal">
                         <Button size="lg" className="w-full" type="button">
                           {tTiers(`${tier.name}.cta`)}
                         </Button>
-                      </SignInButton>
+                      </SignUpButton>
                       {tier.name === "free" && (
                         <p className="mt-4 text-center text-sm text-muted-foreground">
                           {tTiers(`${tier.name}.noCreditCard`)}
