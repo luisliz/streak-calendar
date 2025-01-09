@@ -283,97 +283,101 @@ export function HabitDetails({ habit }: HabitDetailsProps) {
   return (
     <>
       {/* Main card container with navigation and content */}
-      <Card className="my-8 border shadow-md">
-        {/* Back navigation button */}
-        <div className="flex items-center gap-2 p-2">
-          <Button variant="ghost" onClick={() => router.push("/calendar")} className="gap-2">
-            <ArrowLeft className="h-4 w-4" />
-            {t("habit.edit.actions.back")}
-          </Button>
-        </div>
+      {/* Back navigation button */}
+      <div className="flex items-center gap-2 p-2">
+        <Button variant="ghost" onClick={() => router.push("/calendar")} className="gap-2">
+          <ArrowLeft className="h-4 w-4" />
+          {t("habit.edit.actions.back")}
+        </Button>
+      </div>
 
-        <div className="mx-auto max-w-5xl p-6">
+      {/* Habit details container */}
+      {/* TODO: 2025-01-09 - PLEASE WORK ON THIS */}
+      <div className="mx-auto max-w-5xl p-6">
+        <div className="flex flex-col items-center">
           <h1 className="mb-8 text-2xl font-bold">{name}</h1>
           {/* Activity calendar visualization with loading state */}
           <div className="mb-8">
             {!completions ? (
               // Loading skeleton
-              <div className="h-[200px] w-full animate-pulse rounded-lg bg-muted" />
+              <div className="h-[150px] w-full animate-pulse rounded-lg bg-muted" />
             ) : calendarData.length > 0 ? (
               // Animated calendar container with horizontal scroll
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 1, ease: [0, 0.7, 0.1, 1] }}
-                className="overflow-x-auto pb-4"
-                ref={containerRef}
-              >
-                {/* Activity calendar component with responsive sizing and theme */}
-                <div className="flex min-w-fit justify-center">
-                  <ActivityCalendar
-                    data={calendarData}
-                    labels={{
-                      totalCount: "{{count}} completions in the last year",
-                    }}
-                    showWeekdayLabels={false}
-                    blockRadius={20}
-                    hideColorLegend={true}
-                    hideTotalCount={true}
-                    weekStart={0}
-                    blockSize={calendarSize.blockSize}
-                    blockMargin={calendarSize.blockMargin}
-                    fontSize={10}
-                    maxLevel={4}
-                    theme={habitTheme}
-                  />
-                </div>
-              </motion.div>
+              <Card className="max-w-[800px] border p-2 shadow-md">
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 1, ease: [0, 0.7, 0.1, 1] }}
+                  className="overflow-x-auto"
+                  ref={containerRef}
+                >
+                  {/* Activity calendar component with responsive sizing and theme */}
+                  <div className="flex min-w-fit justify-center p-4">
+                    <ActivityCalendar
+                      data={calendarData}
+                      labels={{
+                        totalCount: "{{count}} completions in the last year",
+                      }}
+                      showWeekdayLabels={false}
+                      blockRadius={20}
+                      hideColorLegend={true}
+                      hideTotalCount={true}
+                      weekStart={0}
+                      blockSize={calendarSize.blockSize}
+                      blockMargin={calendarSize.blockMargin}
+                      fontSize={10}
+                      maxLevel={4}
+                      theme={habitTheme}
+                    />
+                  </div>
+                </motion.div>
+              </Card>
             ) : null}
           </div>
         </div>
+      </div>
 
-        {/* Habit edit form card */}
-        <Card className="mx-auto my-8 max-w-xl border p-2 shadow-md">
-          <div className="p-4">
-            <h2 className="mb-6 text-lg font-semibold">{t("habit.edit.title")}</h2>
-            <div className="space-y-4">
-              {/* Habit name input field */}
-              <div>
-                <Label htmlFor="edit-habit-name">{t("habit.edit.name.label")}</Label>
-                <Input id="edit-habit-name" value={name} onChange={(e) => setName(e.target.value)} />
-              </div>
-              {/* Timer duration selection dropdown */}
-              <div>
-                <Label>{t("habit.edit.timer.label")}</Label>
-                <Select
-                  value={timerDuration?.toString() ?? "none"}
-                  onValueChange={(value) => setTimerDuration(value === "none" ? undefined : parseInt(value))}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder={t("habit.edit.timer.placeholder")} />
-                  </SelectTrigger>
-                  <SelectContent className="max-h-40">
-                    <SelectItem value="none">{t("habit.edit.timer.noTimer")}</SelectItem>
-                    {TIMER_VALUES.map((duration) => (
-                      <SelectItem key={duration.value} value={duration.value.toString()}>
-                        {t(`timers.${duration.key}`)}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              {/* Action buttons container */}
-              <div className="flex gap-2 pt-4">
-                <Button variant="destructive" onClick={() => setShowDeleteAlert(true)}>
-                  {t("habit.edit.actions.delete")}
-                </Button>
-                <Button onClick={handleSave} className="flex-1">
-                  {t("habit.edit.actions.save")}
-                </Button>
-              </div>
+      {/* Habit edit form card */}
+      <Card className="mx-auto my-8 max-w-xl border p-2 shadow-md">
+        <div className="p-4">
+          <h2 className="mb-6 text-lg font-semibold">{t("habit.edit.title")}</h2>
+          <div className="space-y-4">
+            {/* Habit name input field */}
+            <div>
+              <Label htmlFor="edit-habit-name">{t("habit.edit.name.label")}</Label>
+              <Input id="edit-habit-name" value={name} onChange={(e) => setName(e.target.value)} />
+            </div>
+            {/* Timer duration selection dropdown */}
+            <div>
+              <Label>{t("habit.edit.timer.label")}</Label>
+              <Select
+                value={timerDuration?.toString() ?? "none"}
+                onValueChange={(value) => setTimerDuration(value === "none" ? undefined : parseInt(value))}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder={t("habit.edit.timer.placeholder")} />
+                </SelectTrigger>
+                <SelectContent className="max-h-40">
+                  <SelectItem value="none">{t("habit.edit.timer.noTimer")}</SelectItem>
+                  {TIMER_VALUES.map((duration) => (
+                    <SelectItem key={duration.value} value={duration.value.toString()}>
+                      {t(`timers.${duration.key}`)}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            {/* Action buttons container */}
+            <div className="flex gap-2 pt-4">
+              <Button variant="destructive" onClick={() => setShowDeleteAlert(true)}>
+                {t("habit.edit.actions.delete")}
+              </Button>
+              <Button onClick={handleSave} className="flex-1">
+                {t("habit.edit.actions.save")}
+              </Button>
             </div>
           </div>
-        </Card>
+        </div>
       </Card>
 
       {/* Delete confirmation dialog */}
