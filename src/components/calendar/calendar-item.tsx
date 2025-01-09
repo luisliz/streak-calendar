@@ -77,7 +77,7 @@ export const CalendarItem = ({
       <div className="flex justify-center">
         <div className="cursor-pointer pt-4" onClick={onEditCalendar}>
           <h2
-            className={`select-none text-4xl font-semibold underline decoration-wavy decoration-4 ${colorTheme.replace(
+            className={`select-none text-4xl font-semibold underline decoration-wavy decoration-2 ${colorTheme.replace(
               "bg-",
               "decoration-"
             )}/30 hover:text-muted-foreground hover:no-underline`}
