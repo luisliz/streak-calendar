@@ -150,6 +150,16 @@ function SingleMonthCalendar({ habit, color, completions, onToggle }: SingleMont
     return format(day, "yyyy-MM-dd");
   });
 
+  // Get the date range for completions
+  const now = new Date();
+  const end = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999); // Set to end of today
+  const start = new Date(end);
+  start.setFullYear(start.getFullYear() - 1);
+  const days = monthDays.filter((d) => {
+    const date = new Date(d);
+    return date >= start && date <= end;
+  });
+
   // Calculate padding days
   const firstDay = new Date(monthDays[0]);
   const lastDay = new Date(monthDays[monthDays.length - 1]);
@@ -183,7 +193,7 @@ function SingleMonthCalendar({ habit, color, completions, onToggle }: SingleMont
             ))}
             {/* Day cells with completion tracking */}
             {monthDays.map((dateStr) => {
-              const isInRange = dateStr <= new Date().toISOString().split("T")[0];
+              const isInRange = days.includes(dateStr);
               const count = getCompletionCount(dateStr, habit._id, completions);
               return (
                 <div key={dateStr} className="h-[48px] w-[48px] p-0">
@@ -253,7 +263,7 @@ export function HabitDetails({ habit }: HabitDetailsProps) {
    */
   const dateRange = useMemo(() => {
     const now = new Date();
-    const end = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const end = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
     const start = new Date(end);
     start.setFullYear(start.getFullYear() - 1);
 
