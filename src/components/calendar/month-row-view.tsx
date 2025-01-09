@@ -129,7 +129,7 @@ export function MonthRowView({
                         count={getCompletionCount(date, habit._id, completions)}
                         onCountChange={(newCount) => onToggle(habit._id, date, newCount)}
                         colorClass={color}
-                        gridView={false}
+                        size="small"
                       />
                     ))}
                   </div>

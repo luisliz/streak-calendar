@@ -8,6 +8,7 @@ import { useTranslations } from "next-intl";
 import { memo, useState } from "react";
 
 import { Id } from "@server/convex/_generated/dataModel";
+
 import { XIcon } from "../ui/x-icon";
 
 /**
@@ -27,6 +28,7 @@ import { XIcon } from "../ui/x-icon";
  * @property {boolean} [gridView] - Optional flag for grid view display mode
  * @property {boolean} [disabled] - Optional flag to disable interactions (e.g., for dates outside query range)
  * @property {string} [label] - Optional label to display instead of date number
+ * @property {"small" | "medium" | "large"} [size] - Optional size of the cell
  */
 interface DayCellProps {
   habitId: Id<"habits">;
@@ -37,6 +39,7 @@ interface DayCellProps {
   gridView?: boolean; // Whether to display in grid view (affects sizing)
   disabled?: boolean; // Whether the completion menu is disabled (outside query range)
   label?: string; // Optional label to display instead of date number
+  size?: "small" | "medium" | "large"; // Optional size of the cell
 }
 
 /**
@@ -44,7 +47,7 @@ interface DayCellProps {
  * Includes a clickable button that shows completion status and a popover menu for updating counts
  */
 export const DayCell = memo(
-  ({ date, count, onCountChange, colorClass, gridView, disabled, label }: DayCellProps) => {
+  ({ date, count, onCountChange, colorClass, disabled, label, size = "medium" }: DayCellProps) => {
     const [isOpen, setIsOpen] = useState(false);
     const t = useTranslations("calendar");
 
@@ -77,6 +80,18 @@ export const DayCell = memo(
       date: formattedDate,
     });
 
+    const sizeClasses = {
+      small: "h-6 w-6",
+      medium: "h-9 w-9",
+      large: "h-12 w-12",
+    };
+
+    const iconSizeClasses = {
+      small: "!h-[24px] !w-[24px]",
+      medium: "!h-[36px] !w-[36px]",
+      large: "!h-[48px] !w-[48px]",
+    };
+
     return (
       <TooltipProvider>
         <Tooltip>
@@ -88,7 +103,7 @@ export const DayCell = memo(
                   onClick={() => !disabled && setIsOpen(true)}
                   className={cn(
                     "inline-flex items-center justify-center rounded-full",
-                    gridView ? "h-12 w-12" : "h-6 w-6",
+                    sizeClasses[size],
                     count === 0 ? "bg-muted" : "bg-transparent",
                     disabled ? "cursor-not-allowed !bg-zinc-100 dark:!bg-zinc-800" : "",
                     "relative p-0"
@@ -97,16 +112,13 @@ export const DayCell = memo(
                 >
                   {count > 0 ? (
                     <div className="absolute">
-                      <XIcon
-                        key={`${count}-${fillClass}`}
-                        className={`${gridView ? "!h-[48px] !w-[48px]" : "!h-[24px] !w-[24px]"} ${fillClass}`}
-                      />
+                      <XIcon key={`${count}-${fillClass}`} className={`${iconSizeClasses[size]} ${fillClass}`} />
                     </div>
                   ) : (
                     <span
                       className={`absolute inset-0 flex items-center justify-center text-xs font-medium ${
                         disabled ? "text-zinc-400 dark:text-zinc-600" : "text-zinc-900 dark:text-zinc-100"
-                      } ${gridView ? "" : "scale-75"}`}
+                      } ${size === "small" ? "scale-75" : ""}`}
                     >
                       {label ?? new Date(date).getDate()}
                     </span>
@@ -154,7 +166,8 @@ export const DayCell = memo(
       prevProps.colorClass === nextProps.colorClass &&
       prevProps.gridView === nextProps.gridView &&
       prevProps.disabled === nextProps.disabled &&
-      prevProps.label === nextProps.label
+      prevProps.label === nextProps.label &&
+      prevProps.size === nextProps.size
     );
   }
 );

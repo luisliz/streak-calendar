@@ -174,20 +174,20 @@ function SingleMonthCalendar({ habit, color, completions, onToggle }: SingleMont
   const year = format(firstDay, "yyyy");
 
   return (
-    <Card className="max-w-[400px] border p-2 shadow-md">
+    <Card className="max-w-[350px] border p-2 shadow-md">
       <div className="p-4">
         <h3 className="mb-4 text-center text-lg font-semibold">{`${monthName} ${year}`}</h3>
-        <div className="mx-auto w-fit space-y-4">
-          <div className="grid grid-cols-7 gap-[1px]">
+        <div className="mx-auto w-fit">
+          <div className="grid grid-cols-7 gap-1">
             {/* Day name labels */}
             {dayLabels.map((label) => (
-              <div key={label} className="text-center text-sm text-muted-foreground">
+              <div key={label} className="text-center text-xs text-muted-foreground">
                 {label}
               </div>
             ))}
             {/* Empty cells for start padding */}
             {emptyStartDays.map((_, index) => (
-              <div key={`empty-start-${index}`} className="h-[48px] w-[48px] p-0">
+              <div key={`empty-start-${index}`} className="h-9 w-9">
                 <div className="h-full w-full" />
               </div>
             ))}
@@ -196,24 +196,22 @@ function SingleMonthCalendar({ habit, color, completions, onToggle }: SingleMont
               const isInRange = days.includes(dateStr);
               const count = getCompletionCount(dateStr, habit._id, completions);
               return (
-                <div key={dateStr} className="h-[48px] w-[48px] p-0">
-                  <div className="h-full w-full">
-                    <DayCell
-                      habitId={habit._id}
-                      date={dateStr}
-                      count={count}
-                      onCountChange={(newCount) => onToggle(habit._id, dateStr, newCount)}
-                      colorClass={color}
-                      gridView={true}
-                      disabled={!isInRange}
-                    />
-                  </div>
+                <div key={dateStr} className="h-9 w-9">
+                  <DayCell
+                    habitId={habit._id}
+                    date={dateStr}
+                    count={count}
+                    onCountChange={(newCount) => onToggle(habit._id, dateStr, newCount)}
+                    colorClass={color}
+                    size="medium"
+                    disabled={!isInRange}
+                  />
                 </div>
               );
             })}
             {/* Empty cells for end padding */}
             {emptyEndDays.map((_, index) => (
-              <div key={`empty-end-${index}`} className="h-[48px] w-[48px] p-0">
+              <div key={`empty-end-${index}`} className="h-9 w-9">
                 <div className="h-full w-full" />
               </div>
             ))}
@@ -335,17 +333,6 @@ export function HabitDetails({ habit }: HabitDetailsProps) {
     return calendarDataResult;
   }, [completions, habit._id, dateRange]);
 
-  useEffect(() => {
-    if (containerRef.current && calendarData.length > 0) {
-      setTimeout(() => {
-        containerRef.current?.scrollTo({
-          left: containerRef.current.scrollWidth,
-          behavior: "smooth",
-        });
-      }, 150);
-    }
-  }, [calendarData]);
-
   /**
    * Handles habit updates with optimistic navigation.
    * Validates input, updates the habit, shows success/error toast,
@@ -408,24 +395,10 @@ export function HabitDetails({ habit }: HabitDetailsProps) {
         <h1 className="mb-8 text-2xl font-bold">{name}</h1>
       </div>
 
-      {/* Calendar and Statistics Section
-       * This section contains three main components:
-       * 1. Monthly Calendar - Shows current month with interactive day cells
-       * 2. Activity Calendar - Shows year-long activity heatmap
-       * 3. Statistics Card - Shows key metrics
-       *
-       * Layout behavior:
-       * - Desktop (lg): Side-by-side layout with monthly calendar (400px) and activity section (800px)
-       * - Tablet (md): Stacked layout with preserved cell sizes
-       * - Mobile: Full-width stacked layout with adjusted cell sizes
-       */}
-      <div className="mx-auto max-w-7xl space-y-8 p-6 md:space-y-6 lg:flex lg:items-start lg:justify-center lg:space-x-6 lg:space-y-0">
-        {/* Monthly Calendar Container
-         * - Fixed width on desktop to prevent squishing
-         * - Min-width on mobile/tablet to maintain cell size integrity
-         * - Responsive padding and margins for different screen sizes
-         */}
-        <div className="w-full min-w-[320px] lg:w-[400px]">
+      {/* Calendar and Statistics Section */}
+      <div className="mx-auto max-w-[7xl] space-y-8 md:space-y-6 lg:flex lg:items-start lg:justify-center lg:space-x-6 lg:space-y-0">
+        {/* Monthly Calendar Container */}
+        <div className="mx-auto w-full max-w-[300px] lg:mx-0 lg:w-[300px]">
           <SingleMonthCalendar
             habit={habit}
             color="bg-red-500"
@@ -444,17 +417,9 @@ export function HabitDetails({ habit }: HabitDetailsProps) {
           />
         </div>
 
-        {/* Activity Calendar and Statistics Container
-         * - Full width on mobile/tablet for better readability
-         * - Fixed width on desktop to maintain layout
-         * - Vertical spacing between components
-         */}
-        <div className="w-full min-w-[320px] space-y-4 md:min-w-[720px] lg:w-[800px]">
-          {/* Activity Calendar Card
-           * - Scrollable container for year view
-           * - Maintains block size integrity across screen sizes
-           * - Animated entrance for better UX
-           */}
+        {/* Activity Calendar and Statistics Container */}
+        <div className="mx-auto w-[800px] space-y-4">
+          {/* Activity Calendar Card */}
           {!completions ? (
             <Skeleton className="h-[150px] w-full" />
           ) : calendarData.length > 0 ? (
@@ -463,37 +428,41 @@ export function HabitDetails({ habit }: HabitDetailsProps) {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 1, ease: [0, 0.7, 0.1, 1] }}
-                className="overflow-x-auto"
-                ref={containerRef}
+                onAnimationComplete={() => {
+                  if (containerRef.current) {
+                    containerRef.current.scrollTo({
+                      left: containerRef.current.scrollWidth,
+                      behavior: "smooth",
+                    });
+                  }
+                }}
               >
-                <div className="flex min-w-[720px] justify-center p-4 md:min-w-[720px] lg:min-w-[800px]">
-                  <ActivityCalendar
-                    data={calendarData}
-                    labels={{
-                      totalCount: "{{count}} completions in the last year",
-                    }}
-                    showWeekdayLabels={false}
-                    blockRadius={20}
-                    hideColorLegend={true}
-                    hideTotalCount={true}
-                    weekStart={0}
-                    blockSize={calendarSize.blockSize}
-                    blockMargin={calendarSize.blockMargin}
-                    fontSize={10}
-                    maxLevel={4}
-                    theme={habitTheme}
-                  />
+                <div className="overflow-x-auto" ref={containerRef}>
+                  <div className="inline-block">
+                    <ActivityCalendar
+                      data={calendarData}
+                      labels={{
+                        totalCount: "{{count}} completions in the last year",
+                      }}
+                      showWeekdayLabels={true}
+                      blockRadius={20}
+                      hideColorLegend={true}
+                      hideTotalCount={true}
+                      weekStart={0}
+                      blockSize={calendarSize.blockSize}
+                      blockMargin={calendarSize.blockMargin}
+                      fontSize={10}
+                      maxLevel={4}
+                      theme={habitTheme}
+                    />
+                  </div>
                 </div>
               </motion.div>
             </Card>
           ) : null}
 
-          {/* Statistics Card
-           * - Grid layout adapts to screen size
-           * - Maintains readable text size across devices
-           * - Consistent spacing and alignment
-           */}
-          <Card className="border p-2 shadow-md">
+          {/* Statistics Card */}
+          <Card className="w-[800px] border p-2 shadow-md">
             <div className="p-4">
               <h2 className="mb-4 text-lg font-semibold">Statistics</h2>
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -519,36 +488,51 @@ export function HabitDetails({ habit }: HabitDetailsProps) {
                     }).length ?? 0}
                   </p>
                 </div>
-                {/* Current Streak Calculator
-                 * Calculates consecutive days of habit completion
-                 * Resets if today and yesterday are both missed
-                 */}
+                {/* Current Streak Calculator */}
                 <div className="space-y-1">
                   <p className="text-sm text-muted-foreground">Current Streak</p>
                   <p className="text-2xl font-bold">
                     {(() => {
                       if (!completions) return 0;
+
+                      // Get all completion dates for this habit
                       const dates = completions
                         .filter((c) => c.habitId === habit._id)
                         .map((c) => new Date(c.completedAt).toISOString().split("T")[0])
                         .sort();
+
                       if (dates.length === 0) return 0;
 
-                      let streak = 0;
                       const today = new Date().toISOString().split("T")[0];
                       const yesterday = new Date(Date.now() - 86400000).toISOString().split("T")[0];
 
-                      if (!dates.includes(today) && !dates.includes(yesterday)) return 0;
+                      // Get unique dates (in case of multiple completions per day)
+                      const uniqueDates = [...new Set(dates)];
 
-                      for (let i = dates.length - 1; i >= 0; i--) {
-                        const current = new Date(dates[i]);
-                        const prev = new Date(dates[i - 1] || dates[i]);
-                        prev.setDate(prev.getDate() + 1);
+                      // Start from the most recent date
+                      let streak = 0;
 
-                        if (i === dates.length - 1 || current.getTime() === prev.getTime()) {
-                          streak++;
-                        } else break;
+                      // If neither today nor yesterday has completion, streak is 0
+                      if (!uniqueDates.includes(today) && !uniqueDates.includes(yesterday)) {
+                        return 0;
                       }
+
+                      // Count backwards until we find a gap
+                      for (let i = uniqueDates.length - 1; i >= 0; i--) {
+                        const date = new Date(uniqueDates[i]);
+
+                        // If this is not the first date we're checking
+                        if (i < uniqueDates.length - 1) {
+                          const prevDate = new Date(uniqueDates[i + 1]);
+                          const dayDiff = Math.floor((prevDate.getTime() - date.getTime()) / (1000 * 60 * 60 * 24));
+
+                          // If gap is more than 1 day, break the streak
+                          if (dayDiff > 1) break;
+                        }
+
+                        streak++;
+                      }
+
                       return streak;
                     })()}
                   </p>

@@ -219,7 +219,7 @@ function MonthGridCalendar({ habit, color, days, completions, onToggle }: MonthG
                         count={count}
                         onCountChange={(newCount) => onToggle(habit._id, dateStr, newCount)}
                         colorClass={color}
-                        gridView={true}
+                        size="large"
                         disabled={!isInRange}
                       />
                     </div>
