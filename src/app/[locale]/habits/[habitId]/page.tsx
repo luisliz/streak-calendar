@@ -1,7 +1,6 @@
 "use client";
 
 import { HabitDetails } from "@/components/habit/habit-details";
-import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useQuery } from "convex/react";
 import { useParams, useRouter } from "next/navigation";
@@ -45,35 +44,32 @@ export default function HabitPage() {
         <HabitDetails habit={habit} calendar={calendar} onDelete={() => router.replace("/calendar")} />
       ) : (
         // Show skeleton loading state while data is being fetched
-        // Mimics the structure of the HabitDetails component for smooth transition
-        <Card className="my-8 border shadow-md">
-          {/* Skeleton header section */}
+        <>
+          {/* Back button skeleton */}
           <div className="flex items-center gap-2 p-2">
             <Skeleton className="h-10 w-24" />
           </div>
-          {/* Skeleton form section */}
-          <Card className="mx-auto my-8 max-w-xl border p-2 shadow-md">
-            <div className="space-y-4 p-4">
-              <Skeleton className="h-7 w-32" />
-              <div className="space-y-4">
-                {/* Input field skeletons */}
-                <div className="space-y-2">
-                  <Skeleton className="h-5 w-24" />
-                  <Skeleton className="h-10 w-full" />
-                </div>
-                <div className="space-y-2">
-                  <Skeleton className="h-5 w-24" />
-                  <Skeleton className="h-10 w-full" />
-                </div>
-                {/* Action button skeletons */}
-                <div className="flex gap-2 pt-4">
-                  <Skeleton className="h-10 w-24" />
-                  <Skeleton className="h-10 flex-1" />
-                </div>
+
+          {/* Main content skeleton */}
+          <div className="mx-auto max-w-5xl p-6">
+            <div className="flex flex-col items-center">
+              <Skeleton className="mb-8 h-8 w-48" />
+              <Skeleton className="mb-8 h-[150px] w-[600px]" />
+            </div>
+          </div>
+
+          {/* Form skeleton */}
+          <div className="mx-auto max-w-xl p-4">
+            <div className="space-y-4">
+              <Skeleton className="h-10 w-full" />
+              <Skeleton className="h-10 w-full" />
+              <div className="flex gap-2">
+                <Skeleton className="h-10 w-24" />
+                <Skeleton className="h-10 flex-1" />
               </div>
             </div>
-          </Card>
-        </Card>
+          </div>
+        </>
       )}
     </div>
   );
