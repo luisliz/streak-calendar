@@ -1,5 +1,6 @@
 "use client";
 
+import { DayCell } from "@/components/calendar/day-cell";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -18,7 +19,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "@/i18n/routing";
+import { getCompletionCount } from "@/utils/completion-utils";
 import { useMutation, useQuery } from "convex/react";
+import { format } from "date-fns";
 import { motion } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -115,6 +118,103 @@ const habitTheme: ThemeInput = {
 };
 
 /**
+ * Props interface for the SingleMonthCalendar component
+ */
+interface SingleMonthCalendarProps {
+  habit: {
+    _id: Id<"habits">;
+    name: string;
+    timerDuration?: number;
+  };
+  color: string;
+  completions: Array<{
+    habitId: Id<"habits">;
+    completedAt: number;
+  }>;
+  onToggle: (habitId: Id<"habits">, date: string, count: number) => void;
+}
+
+/**
+ * Single month calendar component for habit details view
+ */
+function SingleMonthCalendar({ habit, color, completions, onToggle }: SingleMonthCalendarProps) {
+  const t = useTranslations("calendar");
+
+  // Get current month's days
+  const today = new Date();
+  const currentMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+  const daysInMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
+
+  const monthDays = Array.from({ length: daysInMonth }, (_, i) => {
+    const day = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), i + 1);
+    return format(day, "yyyy-MM-dd");
+  });
+
+  // Calculate padding days
+  const firstDay = new Date(monthDays[0]);
+  const lastDay = new Date(monthDays[monthDays.length - 1]);
+  const startPadding = firstDay.getDay();
+  const endPadding = 6 - lastDay.getDay();
+  const emptyStartDays = Array(startPadding).fill(null);
+  const emptyEndDays = Array(endPadding).fill(null);
+
+  // Get localized day and month names
+  const dayLabels = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"].map((d) => t(`weekDays.${d}`));
+  const monthName = t(`monthNames.${format(firstDay, "MMMM").toLowerCase()}`);
+  const year = format(firstDay, "yyyy");
+
+  return (
+    <Card className="mx-auto my-8 max-w-[400px] border p-2 shadow-md">
+      <div className="p-4">
+        <h3 className="mb-4 text-center text-lg font-semibold">{`${monthName} ${year}`}</h3>
+        <div className="mx-auto w-fit space-y-4">
+          <div className="grid grid-cols-7 gap-[1px]">
+            {/* Day name labels */}
+            {dayLabels.map((label) => (
+              <div key={label} className="text-center text-sm text-muted-foreground">
+                {label}
+              </div>
+            ))}
+            {/* Empty cells for start padding */}
+            {emptyStartDays.map((_, index) => (
+              <div key={`empty-start-${index}`} className="h-[48px] w-[48px] p-0">
+                <div className="h-full w-full" />
+              </div>
+            ))}
+            {/* Day cells with completion tracking */}
+            {monthDays.map((dateStr) => {
+              const isInRange = dateStr <= new Date().toISOString().split("T")[0];
+              const count = getCompletionCount(dateStr, habit._id, completions);
+              return (
+                <div key={dateStr} className="h-[48px] w-[48px] p-0">
+                  <div className="h-full w-full">
+                    <DayCell
+                      habitId={habit._id}
+                      date={dateStr}
+                      count={count}
+                      onCountChange={(newCount) => onToggle(habit._id, dateStr, newCount)}
+                      colorClass={color}
+                      gridView={true}
+                      disabled={!isInRange}
+                    />
+                  </div>
+                </div>
+              );
+            })}
+            {/* Empty cells for end padding */}
+            {emptyEndDays.map((_, index) => (
+              <div key={`empty-end-${index}`} className="h-[48px] w-[48px] p-0">
+                <div className="h-full w-full" />
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </Card>
+  );
+}
+
+/**
  * Main component for displaying and editing habit details.
  * Manages state for:
  * - Habit name and timer duration
@@ -135,6 +235,7 @@ export function HabitDetails({ habit }: HabitDetailsProps) {
 
   const updateHabit = useMutation(api.habits.update);
   const deleteHabit = useMutation(api.habits.remove);
+  const markComplete = useMutation(api.habits.markComplete);
 
   useEffect(() => {
     function handleResize() {
@@ -337,6 +438,24 @@ export function HabitDetails({ habit }: HabitDetailsProps) {
           </div>
         </div>
       </div>
+
+      {/* Single month calendar */}
+      <SingleMonthCalendar
+        habit={habit}
+        color="bg-red-500"
+        completions={completions ?? []}
+        onToggle={async (habitId, date, count) => {
+          try {
+            const completedAt = new Date(date).getTime();
+            await markComplete({ habitId, completedAt, count });
+          } catch (error) {
+            toast({
+              description: `Failed to update completion: ${error instanceof Error ? error.message : "Unknown error"}`,
+              variant: "destructive",
+            });
+          }
+        }}
+      />
 
       {/* Habit edit form card */}
       <Card className="mx-auto my-8 max-w-xl border p-2 shadow-md">
