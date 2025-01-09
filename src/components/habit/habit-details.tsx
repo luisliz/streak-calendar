@@ -15,6 +15,7 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "@/i18n/routing";
 import { useMutation, useQuery } from "convex/react";
@@ -300,7 +301,7 @@ export function HabitDetails({ habit }: HabitDetailsProps) {
           <div className="mb-8">
             {!completions ? (
               // Loading skeleton
-              <div className="h-[150px] w-full animate-pulse rounded-lg bg-muted" />
+              <Skeleton className="h-[150px] w-[600px]" />
             ) : calendarData.length > 0 ? (
               // Animated calendar container with horizontal scroll
               <Card className="max-w-[800px] border p-2 shadow-md">
