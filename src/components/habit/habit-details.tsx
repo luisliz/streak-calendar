@@ -15,19 +15,17 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "@/i18n/routing";
 import { useMutation, useQuery } from "convex/react";
-import { motion } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useEffect, useMemo, useRef, useState } from "react";
-import type { ThemeInput } from "react-activity-calendar";
-import ActivityCalendar from "react-activity-calendar";
+import { useState } from "react";
 
 import { api } from "@server/convex/_generated/api";
 import { Id } from "@server/convex/_generated/dataModel";
+
+import { ActivityCalendar } from "./activity-calendar";
 
 /**
  * Client-side component for displaying and managing habit details.
@@ -75,46 +73,6 @@ interface HabitDetailsProps {
 }
 
 /**
- * Determines calendar block size and margin based on viewport width.
- * Uses media queries to provide responsive sizing:
- * - Desktop (lg): 12px blocks, 4px margin
- * - Tablet (md): 10px blocks, 3px margin
- * - Mobile: 8px blocks, 2px margin
- */
-function getCalendarSize() {
-  if (typeof window === "undefined")
-    return {
-      blockSize: 5,
-      blockMargin: 2,
-      showLabels: false,
-    };
-
-  const isLg = window.matchMedia("(min-width: 1024px)").matches;
-  const isMd = window.matchMedia("(min-width: 768px)").matches;
-
-  if (isLg) return { blockSize: 12, blockMargin: 2, showLabels: true };
-  if (isMd) return { blockSize: 8, blockMargin: 1, showLabels: true };
-  return { blockSize: 6, blockMargin: 1, showLabels: false };
-}
-
-const habitTheme: ThemeInput = {
-  light: [
-    "rgb(124 124 124 / 0.1)",
-    "rgb(239 68 68 / 0.3)",
-    "rgb(239 68 68 / 0.5)",
-    "rgb(239 68 68 / 0.7)",
-    "rgb(239 68 68 / 0.85)",
-  ],
-  dark: [
-    "rgb(124 124 124 / 0.1)",
-    "rgb(239 68 68 / 0.3)",
-    "rgb(239 68 68 / 0.5)",
-    "rgb(239 68 68 / 0.7)",
-    "rgb(239 68 68 / 0.85)",
-  ],
-};
-
-/**
  * Main component for displaying and editing habit details.
  * Manages state for:
  * - Habit name and timer duration
@@ -130,116 +88,14 @@ export function HabitDetails({ habit }: HabitDetailsProps) {
   const [showDeleteAlert, setShowDeleteAlert] = useState(false);
   const [name, setName] = useState(habit.name);
   const [timerDuration, setTimerDuration] = useState<number | undefined>(habit.timerDuration);
-  const [calendarSize, setCalendarSize] = useState(getCalendarSize());
-  const containerRef = useRef<HTMLDivElement>(null);
 
   const updateHabit = useMutation(api.habits.update);
   const deleteHabit = useMutation(api.habits.remove);
+  const completions = useQuery(api.habits.getCompletions, {
+    startDate: new Date(new Date().setFullYear(new Date().getFullYear() - 1)).getTime(),
+    endDate: new Date().getTime(),
+  });
 
-  useEffect(() => {
-    function handleResize() {
-      setCalendarSize(getCalendarSize());
-    }
-
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  /**
-   * Memoized date range calculation for the activity calendar.
-   * Calculates start and end dates for the past year's activity display.
-   * Updates only when component mounts to prevent unnecessary recalculations.
-   */
-  const dateRange = useMemo(() => {
-    const now = new Date();
-    const end = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    const start = new Date(end);
-    start.setFullYear(start.getFullYear() - 1);
-
-    return {
-      startDate: start.getTime(),
-      endDate: end.getTime(),
-    };
-  }, []);
-
-  // Fetch completions for the activity calendar
-  const completions = useQuery(api.habits.getCompletions, dateRange);
-
-  /**
-   * Transforms habit completion data into activity calendar format.
-   * Process:
-   * 1. Creates a map with zero counts for all dates in range
-   * 2. Counts completions per day for the specific habit
-   * 3. Converts to activity calendar format with level calculations
-   * Level is calculated as ceil(count/2), capped at 4
-   */
-  const calendarData = useMemo(() => {
-    if (!completions) return [];
-
-    // Initialize map with zero counts for all dates in range
-    const dates = new Map();
-    const start = new Date(dateRange.startDate);
-    const end = new Date(dateRange.endDate);
-
-    for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
-      dates.set(d.toISOString().split("T")[0], 0);
-    }
-
-    // Count completions per day
-    completions
-      .filter((completion) => completion.habitId === habit._id)
-      .forEach((completion) => {
-        const date = new Date(completion.completedAt).toISOString().split("T")[0];
-        if (dates.has(date)) {
-          dates.set(date, (dates.get(date) || 0) + 1);
-        }
-      });
-
-    // Convert to activity calendar format
-    const calendarDataResult = Array.from(dates).map(([date, count]) => {
-      // Force distinct levels based on count
-      let level;
-      if (count === 0) level = 0;
-      else if (count === 1) level = 1;
-      else if (count === 2) level = 2;
-      else if (count === 3) level = 3;
-      else level = 4;
-
-      if (count > 0) {
-        console.log(`Date: ${date}, Count: ${count}, Level: ${level}`);
-      }
-      return {
-        date,
-        count,
-        level,
-      };
-    });
-
-    // Debug log a sample of high-count days
-    const highCountDays = calendarDataResult.filter((d) => d.count > 1);
-    if (highCountDays.length > 0) {
-      console.log("High count days:", highCountDays);
-    }
-
-    return calendarDataResult;
-  }, [completions, habit._id, dateRange]);
-
-  useEffect(() => {
-    if (containerRef.current && calendarData.length > 0) {
-      setTimeout(() => {
-        containerRef.current?.scrollTo({
-          left: containerRef.current.scrollWidth,
-          behavior: "smooth",
-        });
-      }, 150);
-    }
-  }, [calendarData]);
-
-  /**
-   * Handles habit updates with optimistic navigation.
-   * Validates input, updates the habit, shows success/error toast,
-   * and navigates back to calendar view.
-   */
   const handleSave = async () => {
     if (!name.trim()) return;
     try {
@@ -293,47 +149,12 @@ export function HabitDetails({ habit }: HabitDetailsProps) {
       </div>
 
       {/* Habit details container */}
-      {/* TODO: 2025-01-09 - PLEASE WORK ON THIS */}
       <div className="mx-auto max-w-5xl p-6">
         <div className="flex flex-col items-center">
           <h1 className="mb-8 text-2xl font-bold">{name}</h1>
-          {/* Activity calendar visualization with loading state */}
+          {/* Activity calendar visualization */}
           <div className="mb-8">
-            {!completions ? (
-              // Loading skeleton
-              <Skeleton className="h-[150px] w-[600px]" />
-            ) : calendarData.length > 0 ? (
-              // Animated calendar container with horizontal scroll
-              <Card className="max-w-[800px] border p-2 shadow-md">
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 1, ease: [0, 0.7, 0.1, 1] }}
-                  className="overflow-x-auto"
-                  ref={containerRef}
-                >
-                  {/* Activity calendar component with responsive sizing and theme */}
-                  <div className="flex min-w-fit justify-center p-4">
-                    <ActivityCalendar
-                      data={calendarData}
-                      labels={{
-                        totalCount: "{{count}} completions in the last year",
-                      }}
-                      showWeekdayLabels={false}
-                      blockRadius={20}
-                      hideColorLegend={true}
-                      hideTotalCount={true}
-                      weekStart={0}
-                      blockSize={calendarSize.blockSize}
-                      blockMargin={calendarSize.blockMargin}
-                      fontSize={10}
-                      maxLevel={4}
-                      theme={habitTheme}
-                    />
-                  </div>
-                </motion.div>
-              </Card>
-            ) : null}
+            <ActivityCalendar habitId={habit._id} completions={completions} />
           </div>
         </div>
       </div>
