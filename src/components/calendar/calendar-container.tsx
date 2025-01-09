@@ -61,19 +61,41 @@ interface CalendarContainerProps {
  * Component displayed when no calendars exist
  * Provides a button to create the first calendar
  */
-const EmptyState = () => {
+const EmptyState = ({ monthViewData }: { monthViewData: CalendarData }) => {
   const t = useTranslations("calendar.container.emptyState");
-  const { openNewCalendar } = useDialogState();
+  const toastMessages = useToastMessages();
+  const { state, openNewCalendar, updateCalendarName, updateCalendarColor, resetCalendarState } = useDialogState();
+
+  const handleAddCalendar = useCallback(async () => {
+    const { name, color } = state.calendar;
+    if (!name.trim()) return;
+
+    await monthViewData.handleAddCalendar(name, color);
+    toastMessages.calendar.created();
+    resetCalendarState();
+  }, [monthViewData, state.calendar, toastMessages, resetCalendarState]);
 
   return (
-    <div className="py-12 text-center text-muted-foreground">
-      <p>{t("noCalendars")}</p>
-      <p className="mt-2">{t("createOne")}</p>
-      <Button variant="default" onClick={openNewCalendar} className="mt-4">
-        <PlusCircle className="mr-2 h-4 w-4" />
-        {t("createButton")}
-      </Button>
-    </div>
+    <>
+      <div className="py-12 text-center text-muted-foreground">
+        <p>{t("noCalendars")}</p>
+        <p className="mt-2">{t("createOne")}</p>
+        <Button variant="default" onClick={openNewCalendar} className="mt-4">
+          <PlusCircle className="mr-2 h-4 w-4" />
+          {t("createButton")}
+        </Button>
+      </div>
+
+      <NewCalendarDialog
+        isOpen={state.calendar.isNewOpen}
+        onOpenChange={() => resetCalendarState()}
+        name={state.calendar.name}
+        onNameChange={updateCalendarName}
+        color={state.calendar.color}
+        onColorChange={updateCalendarColor}
+        onSubmit={handleAddCalendar}
+      />
+    </>
   );
 };
 
@@ -181,7 +203,7 @@ export function CalendarContainer({
 
   // Show empty state when no calendars exist
   if (calendars.length === 0) {
-    return <EmptyState />;
+    return <EmptyState monthViewData={monthViewData} />;
   }
 
   return (

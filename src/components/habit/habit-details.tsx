@@ -22,6 +22,7 @@ import { motion } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useEffect, useMemo, useRef, useState } from "react";
+import type { ThemeInput } from "react-activity-calendar";
 import ActivityCalendar from "react-activity-calendar";
 
 import { api } from "@server/convex/_generated/api";
@@ -94,6 +95,23 @@ function getCalendarSize() {
   if (isMd) return { blockSize: 8, blockMargin: 1, showLabels: true };
   return { blockSize: 6, blockMargin: 1, showLabels: false };
 }
+
+const habitTheme: ThemeInput = {
+  light: [
+    "rgb(124 124 124 / 0.1)",
+    "rgb(239 68 68 / 0.3)",
+    "rgb(239 68 68 / 0.5)",
+    "rgb(239 68 68 / 0.7)",
+    "rgb(239 68 68 / 0.85)",
+  ],
+  dark: [
+    "rgb(124 124 124 / 0.1)",
+    "rgb(239 68 68 / 0.3)",
+    "rgb(239 68 68 / 0.5)",
+    "rgb(239 68 68 / 0.7)",
+    "rgb(239 68 68 / 0.85)",
+  ],
+};
 
 /**
  * Main component for displaying and editing habit details.
@@ -177,12 +195,32 @@ export function HabitDetails({ habit }: HabitDetailsProps) {
       });
 
     // Convert to activity calendar format
-    // Level is calculated as ceil(count/2), capped at 4
-    return Array.from(dates).map(([date, count]) => ({
-      date,
-      count,
-      level: count > 0 ? Math.min(Math.ceil(count / 2), 4) : 0,
-    }));
+    const calendarDataResult = Array.from(dates).map(([date, count]) => {
+      // Force distinct levels based on count
+      let level;
+      if (count === 0) level = 0;
+      else if (count === 1) level = 1;
+      else if (count === 2) level = 2;
+      else if (count === 3) level = 3;
+      else level = 4;
+
+      if (count > 0) {
+        console.log(`Date: ${date}, Count: ${count}, Level: ${level}`);
+      }
+      return {
+        date,
+        count,
+        level,
+      };
+    });
+
+    // Debug log a sample of high-count days
+    const highCountDays = calendarDataResult.filter((d) => d.count > 1);
+    if (highCountDays.length > 0) {
+      console.log("High count days:", highCountDays);
+    }
+
+    return calendarDataResult;
   }, [completions, habit._id, dateRange]);
 
   useEffect(() => {
@@ -277,28 +315,16 @@ export function HabitDetails({ habit }: HabitDetailsProps) {
                     labels={{
                       totalCount: "{{count}} completions in the last year",
                     }}
-                    showWeekdayLabels={calendarSize.showLabels}
-                    weekStart={1}
+                    showWeekdayLabels={false}
+                    blockRadius={20}
+                    hideColorLegend={true}
+                    hideTotalCount={true}
+                    weekStart={0}
                     blockSize={calendarSize.blockSize}
                     blockMargin={calendarSize.blockMargin}
                     fontSize={10}
-                    hideColorLegend
-                    theme={{
-                      light: [
-                        "var(--activity-level-0)",
-                        "var(--activity-level-1)",
-                        "var(--activity-level-2)",
-                        "var(--activity-level-3)",
-                        "var(--activity-level-4)",
-                      ],
-                      dark: [
-                        "var(--activity-level-0)",
-                        "var(--activity-level-1)",
-                        "var(--activity-level-2)",
-                        "var(--activity-level-3)",
-                        "var(--activity-level-4)",
-                      ],
-                    }}
+                    maxLevel={4}
+                    theme={habitTheme}
                   />
                 </div>
               </motion.div>
