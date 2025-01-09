@@ -9,11 +9,25 @@ import ActivityCalendarBase from "react-activity-calendar";
 
 import { Id } from "@server/convex/_generated/dataModel";
 
+/**
+ * Client-side component for displaying habit completion activity in a calendar heatmap.
+ * Features include:
+ * - Responsive sizing based on viewport
+ * - Loading states with skeleton UI
+ * - Smooth animations and transitions
+ * - Auto-scrolling to most recent activity
+ */
+
 interface ActivityCalendarProps {
   habitId: Id<"habits">;
   completions: Array<{ completedAt: number; habitId: Id<"habits"> }> | undefined;
 }
 
+/**
+ * Theme configuration for the activity calendar.
+ * Uses a red color scheme with increasing opacity for higher activity levels.
+ * Maintains consistent colors between light and dark modes.
+ */
 const habitTheme: ThemeInput = {
   light: [
     "rgb(124 124 124 / 0.1)",
@@ -34,9 +48,9 @@ const habitTheme: ThemeInput = {
 /**
  * Determines calendar block size and margin based on viewport width.
  * Uses media queries to provide responsive sizing:
- * - Desktop (lg): 12px blocks, 4px margin
- * - Tablet (md): 10px blocks, 3px margin
- * - Mobile: 8px blocks, 2px margin
+ * - Desktop (lg): 12px blocks, 2px margin, with labels
+ * - Tablet (md): 8px blocks, 1px margin, with labels
+ * - Mobile: 6px blocks, 1px margin, no labels
  */
 function getCalendarSize() {
   if (typeof window === "undefined")
@@ -58,6 +72,7 @@ export function ActivityCalendar({ habitId, completions }: ActivityCalendarProps
   const containerRef = useRef<HTMLDivElement>(null);
   const [calendarSize, setCalendarSize] = useState(getCalendarSize());
 
+  // Handle responsive sizing on window resize
   useEffect(() => {
     function handleResize() {
       setCalendarSize(getCalendarSize());
@@ -67,6 +82,11 @@ export function ActivityCalendar({ habitId, completions }: ActivityCalendarProps
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  /**
+   * Memoized date range calculation for the activity calendar.
+   * Calculates start and end dates for the past year's activity display.
+   * Updates only when component mounts to prevent unnecessary recalculations.
+   */
   const dateRange = useMemo(() => {
     const now = new Date();
     const end = new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -79,6 +99,19 @@ export function ActivityCalendar({ habitId, completions }: ActivityCalendarProps
     };
   }, []);
 
+  /**
+   * Transforms habit completion data into activity calendar format.
+   * Process:
+   * 1. Creates a map with zero counts for all dates in range
+   * 2. Counts completions per day for the specific habit
+   * 3. Converts to activity calendar format with level calculations
+   * Level is determined by completion count:
+   * - 0 completions = level 0
+   * - 1 completion = level 1
+   * - 2 completions = level 2
+   * - 3 completions = level 3
+   * - 4+ completions = level 4
+   */
   const calendarData = useMemo(() => {
     if (!completions) return [];
 
@@ -101,7 +134,7 @@ export function ActivityCalendar({ habitId, completions }: ActivityCalendarProps
         }
       });
 
-    // Convert to activity calendar format
+    // Convert to activity calendar format with level calculations
     const calendarDataResult = Array.from(dates).map(([date, count]) => {
       let level;
       if (count === 0) level = 0;
@@ -120,6 +153,7 @@ export function ActivityCalendar({ habitId, completions }: ActivityCalendarProps
     return calendarDataResult;
   }, [completions, habitId, dateRange]);
 
+  // Auto-scroll to most recent activity when data loads
   useEffect(() => {
     if (containerRef.current && calendarData.length > 0) {
       setTimeout(() => {
@@ -131,10 +165,12 @@ export function ActivityCalendar({ habitId, completions }: ActivityCalendarProps
     }
   }, [calendarData]);
 
+  // Show loading skeleton while data is being fetched
   if (!completions) {
     return <Skeleton className="h-[150px] w-[600px]" />;
   }
 
+  // Hide calendar if no data is available
   if (calendarData.length === 0) {
     return null;
   }
