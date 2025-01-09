@@ -2,8 +2,9 @@
 
 import { HabitDetails } from "@/components/habit/habit-details";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useQuery } from "convex/react";
+import { useConvexAuth, useQuery } from "convex/react";
 import { useParams, useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 import { api } from "@server/convex/_generated/api";
 import { Id } from "@server/convex/_generated/dataModel";
@@ -21,19 +22,26 @@ import { Id } from "@server/convex/_generated/dataModel";
  * - Renders HabitDetails component with edit/delete capabilities
  */
 export default function HabitPage() {
-  // Extract habitId from route parameters and set up navigation
+  const { isAuthenticated, isLoading } = useConvexAuth();
   const params = useParams();
   const router = useRouter();
   const habitId = params.habitId as Id<"habits">;
 
-  // Fetch habit and associated calendar data using Convex queries
-  // Calendar query is skipped if habit data isn't available yet
+  // Always call hooks unconditionally
   const habit = useQuery(api.habits.get, { id: habitId });
   const calendar = useQuery(api.calendars.get, habit ? { id: habit.calendarId } : "skip");
 
-  // Redirect to calendar page if habit doesn't exist
-  if (habit === null) {
-    router.replace("/calendar");
+  // Handle redirects in useEffect
+  useEffect(() => {
+    if (!isLoading && !isAuthenticated) {
+      router.replace("/");
+    } else if (habit === null) {
+      router.replace("/calendar");
+    }
+  }, [isLoading, isAuthenticated, habit, router]);
+
+  // Show loading state while checking auth
+  if (isLoading || (!isLoading && !isAuthenticated)) {
     return null;
   }
 
