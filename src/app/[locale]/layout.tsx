@@ -5,7 +5,6 @@ import { Toaster } from "@/components/ui/toaster";
 import { metadata as i18nMetadata } from "@/i18n/metadata";
 import { Locale, defaultLocale, locales } from "@/i18n/settings";
 import { cn } from "@/lib/utils";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata } from "next";
 import { getMessages, unstable_setRequestLocale } from "next-intl/server";
 import { Inter, Noto_Sans, Noto_Sans_Arabic, Noto_Sans_Hebrew, Noto_Sans_SC } from "next/font/google";
@@ -118,7 +117,6 @@ export default async function LocaleLayout({
           <RootWrapper>{children}</RootWrapper>
         </main>
         <Toaster />
-        <SpeedInsights />
       </Providers>
     </body>
   );
