@@ -20,6 +20,9 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "@/i18n/routing";
 import { getCompletionCount } from "@/utils/completion-utils";
+import { Group } from "@visx/group";
+import { scaleBand, scaleLinear } from "@visx/scale";
+import { Bar } from "@visx/shape";
 import { useMutation, useQuery } from "convex/react";
 import { format } from "date-fns";
 import { motion } from "framer-motion";
@@ -99,23 +102,6 @@ function getCalendarSize() {
   if (isMd) return { blockSize: 10, blockMargin: 2, showLabels: true };
   return { blockSize: 8, blockMargin: 1, showLabels: false };
 }
-
-const habitTheme: ThemeInput = {
-  light: [
-    "rgb(124 124 124 / 0.1)",
-    "rgb(239 68 68 / 0.3)",
-    "rgb(239 68 68 / 0.5)",
-    "rgb(239 68 68 / 0.7)",
-    "rgb(239 68 68 / 0.85)",
-  ],
-  dark: [
-    "rgb(124 124 124 / 0.1)",
-    "rgb(239 68 68 / 0.3)",
-    "rgb(239 68 68 / 0.5)",
-    "rgb(239 68 68 / 0.7)",
-    "rgb(239 68 68 / 0.85)",
-  ],
-};
 
 /**
  * Props interface for the SingleMonthCalendar component
@@ -230,7 +216,7 @@ function SingleMonthCalendar({ habit, color, completions, onToggle }: SingleMont
  * - Activity calendar visualization
  * - Responsive calendar sizing
  */
-export function HabitDetails({ habit }: HabitDetailsProps) {
+export function HabitDetails({ habit, calendar }: HabitDetailsProps) {
   const t = useTranslations("dialogs");
   const tToast = useTranslations("toast");
   const router = useRouter();
@@ -240,6 +226,23 @@ export function HabitDetails({ habit }: HabitDetailsProps) {
   const [timerDuration, setTimerDuration] = useState<number | undefined>(habit.timerDuration);
   const [calendarSize, setCalendarSize] = useState(getCalendarSize());
   const containerRef = useRef<HTMLDivElement>(null);
+
+  const habitTheme: ThemeInput = {
+    light: [
+      "rgb(124 124 124 / 0.1)",
+      "rgb(239 68 68 / 0.3)",
+      "rgb(239 68 68 / 0.5)",
+      "rgb(239 68 68 / 0.7)",
+      "rgb(239 68 68 / 0.85)",
+    ],
+    dark: [
+      "rgb(124 124 124 / 0.1)",
+      "rgb(239 68 68 / 0.3)",
+      "rgb(239 68 68 / 0.5)",
+      "rgb(239 68 68 / 0.7)",
+      "rgb(239 68 68 / 0.85)",
+    ],
+  };
 
   const updateHabit = useMutation(api.habits.update);
   const deleteHabit = useMutation(api.habits.remove);
@@ -401,7 +404,7 @@ export function HabitDetails({ habit }: HabitDetailsProps) {
         <div className="mx-auto w-full max-w-[300px] lg:mx-0 lg:w-[300px]">
           <SingleMonthCalendar
             habit={habit}
-            color="bg-red-500"
+            color={`bg-${calendar.colorTheme}-500`}
             completions={completions ?? []}
             onToggle={async (habitId, date, count) => {
               try {
@@ -423,20 +426,20 @@ export function HabitDetails({ habit }: HabitDetailsProps) {
           {!completions ? (
             <Skeleton className="h-[150px] w-full" />
           ) : calendarData.length > 0 ? (
-            <Card className="border p-2 shadow-md">
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 1, ease: [0, 0.7, 0.1, 1] }}
-                onAnimationComplete={() => {
-                  if (containerRef.current) {
-                    containerRef.current.scrollTo({
-                      left: containerRef.current.scrollWidth,
-                      behavior: "smooth",
-                    });
-                  }
-                }}
-              >
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, ease: [0, 0.7, 0.1, 1] }}
+              onAnimationComplete={() => {
+                if (containerRef.current) {
+                  containerRef.current.scrollTo({
+                    left: containerRef.current.scrollWidth,
+                    behavior: "smooth",
+                  });
+                }
+              }}
+            >
+              <Card className="border p-2 shadow-md">
                 <div className="overflow-x-auto" ref={containerRef}>
                   <div className="inline-block">
                     <ActivityCalendar
@@ -457,109 +460,424 @@ export function HabitDetails({ habit }: HabitDetailsProps) {
                     />
                   </div>
                 </div>
-              </motion.div>
-            </Card>
+              </Card>
+            </motion.div>
           ) : null}
 
           {/* Statistics Card */}
-          <Card className="w-[800px] border p-2 shadow-md">
-            <div className="p-4">
-              <h2 className="mb-4 text-lg font-semibold">Statistics</h2>
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                {/* Total Completions Counter */}
-                <div className="space-y-1">
-                  <p className="text-sm text-muted-foreground">Total Completions</p>
-                  <p className="text-2xl font-bold">
-                    {completions?.filter((c) => c.habitId === habit._id).length ?? 0}
-                  </p>
+          {!completions ? (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, ease: [0, 0.7, 0.1, 1], delay: 0.3 }}
+            >
+              <Card className="w-[800px] border p-2 shadow-md">
+                <div className="p-4">
+                  <h2 className="mb-4 text-lg font-semibold">Statistics</h2>
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                    {Array.from({ length: 4 }).map((_, i) => (
+                      <div key={i} className="space-y-3">
+                        <Skeleton className="h-4 w-24" />
+                        <Skeleton className="h-8 w-16" />
+                      </div>
+                    ))}
+                  </div>
+                  <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                    {Array.from({ length: 4 }).map((_, i) => (
+                      <div key={i} className="h-[120px]">
+                        <Skeleton className="mb-2 h-4 w-24" />
+                        <Skeleton className="h-[90px] w-[150px]" />
+                      </div>
+                    ))}
+                  </div>
                 </div>
-                {/* Current Month Stats */}
-                <div className="space-y-1">
-                  <p className="text-sm text-muted-foreground">This Month</p>
-                  <p className="text-2xl font-bold">
-                    {completions?.filter((c) => {
-                      const date = new Date(c.completedAt);
-                      const now = new Date();
-                      return (
-                        c.habitId === habit._id &&
-                        date.getMonth() === now.getMonth() &&
-                        date.getFullYear() === now.getFullYear()
-                      );
-                    }).length ?? 0}
-                  </p>
-                </div>
-                {/* Current Streak Calculator */}
-                <div className="space-y-1">
-                  <p className="text-sm text-muted-foreground">Current Streak</p>
-                  <p className="text-2xl font-bold">
-                    {(() => {
-                      if (!completions) return 0;
+              </Card>
+            </motion.div>
+          ) : (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, ease: [0, 0.7, 0.1, 1], delay: 0.3 }}
+            >
+              <Card className="w-[800px] border p-2 shadow-md">
+                <div className="p-4">
+                  <h2 className="mb-4 text-lg font-semibold">Statistics</h2>
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                    {/* Total Completions Counter */}
+                    <div className="space-y-1">
+                      <p className="text-sm text-muted-foreground">Total Completions</p>
+                      <p className="text-2xl font-bold">
+                        {completions?.filter((c) => c.habitId === habit._id).length ?? 0}
+                      </p>
+                    </div>
+                    {/* Current Month Stats */}
+                    <div className="space-y-1">
+                      <p className="text-sm text-muted-foreground">This Month</p>
+                      <p className="text-2xl font-bold">
+                        {completions?.filter((c) => {
+                          const date = new Date(c.completedAt);
+                          const now = new Date();
+                          return (
+                            c.habitId === habit._id &&
+                            date.getMonth() === now.getMonth() &&
+                            date.getFullYear() === now.getFullYear()
+                          );
+                        }).length ?? 0}
+                      </p>
+                    </div>
+                    {/* Current Streak Calculator */}
+                    <div className="space-y-1">
+                      <p className="text-sm text-muted-foreground">Current Streak</p>
+                      <p className="text-2xl font-bold">
+                        {(() => {
+                          if (!completions) return 0;
 
-                      // Get all completion dates for this habit
-                      const dates = completions
-                        .filter((c) => c.habitId === habit._id)
-                        .map((c) => new Date(c.completedAt).toISOString().split("T")[0])
-                        .sort();
+                          // Get all completion dates for this habit
+                          const dates = completions
+                            .filter((c) => c.habitId === habit._id)
+                            .map((c) => new Date(c.completedAt).toISOString().split("T")[0])
+                            .sort();
 
-                      if (dates.length === 0) return 0;
+                          if (dates.length === 0) return 0;
 
-                      const today = new Date().toISOString().split("T")[0];
-                      const yesterday = new Date(Date.now() - 86400000).toISOString().split("T")[0];
+                          const today = new Date().toISOString().split("T")[0];
+                          const yesterday = new Date(Date.now() - 86400000).toISOString().split("T")[0];
 
-                      // Get unique dates (in case of multiple completions per day)
-                      const uniqueDates = [...new Set(dates)];
+                          // Get unique dates (in case of multiple completions per day)
+                          const uniqueDates = [...new Set(dates)];
 
-                      // Start from the most recent date
-                      let streak = 0;
+                          // Start from the most recent date
+                          let streak = 0;
 
-                      // If neither today nor yesterday has completion, streak is 0
-                      if (!uniqueDates.includes(today) && !uniqueDates.includes(yesterday)) {
-                        return 0;
-                      }
+                          // If neither today nor yesterday has completion, streak is 0
+                          if (!uniqueDates.includes(today) && !uniqueDates.includes(yesterday)) {
+                            return 0;
+                          }
 
-                      // Count backwards until we find a gap
-                      for (let i = uniqueDates.length - 1; i >= 0; i--) {
-                        const date = new Date(uniqueDates[i]);
+                          // Count backwards until we find a gap
+                          for (let i = uniqueDates.length - 1; i >= 0; i--) {
+                            const date = new Date(uniqueDates[i]);
 
-                        // If this is not the first date we're checking
-                        if (i < uniqueDates.length - 1) {
-                          const prevDate = new Date(uniqueDates[i + 1]);
-                          const dayDiff = Math.floor((prevDate.getTime() - date.getTime()) / (1000 * 60 * 60 * 24));
+                            // If this is not the first date we're checking
+                            if (i < uniqueDates.length - 1) {
+                              const prevDate = new Date(uniqueDates[i + 1]);
+                              const dayDiff = Math.floor((prevDate.getTime() - date.getTime()) / (1000 * 60 * 60 * 24));
 
-                          // If gap is more than 1 day, break the streak
-                          if (dayDiff > 1) break;
+                              // If gap is more than 1 day, break the streak
+                              if (dayDiff > 1) break;
+                            }
+
+                            streak++;
+                          }
+
+                          return streak;
+                        })()}
+                      </p>
+                    </div>
+                    {/* Average Completions Calculator
+                     * Shows average completions per active day
+                     * Excludes days with no completions
+                     */}
+                    <div className="space-y-1">
+                      <p className="text-sm text-muted-foreground">Avg. Per Active Day</p>
+                      <p className="text-2xl font-bold">
+                        {(() => {
+                          if (!completions) return "0.0";
+                          const habitCompletions = completions.filter((c) => c.habitId === habit._id);
+                          if (habitCompletions.length === 0) return "0.0";
+
+                          const uniqueDays = new Set(
+                            habitCompletions.map((c) => new Date(c.completedAt).toISOString().split("T")[0])
+                          );
+
+                          return (habitCompletions.length / uniqueDays.size).toFixed(1);
+                        })()}
+                      </p>
+                    </div>
+                  </div>
+                  {/* Analytics Graphs */}
+                  <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                    {/* Weekly Distribution */}
+                    <div className="h-[120px]">
+                      <p className="mb-2 text-sm text-muted-foreground">Weekly Pattern</p>
+                      {(() => {
+                        if (!completions) return null;
+                        const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+                        const dayStats = days.map((day) => ({
+                          day,
+                          count: completions.filter((c) => {
+                            const date = new Date(c.completedAt);
+                            return c.habitId === habit._id && date.getDay() === days.indexOf(day);
+                          }).length,
+                        }));
+
+                        const width = 150;
+                        const height = 90;
+
+                        const xScale = scaleBand({
+                          range: [0, width],
+                          domain: days,
+                          padding: 0.2,
+                        });
+
+                        const yScale = scaleLinear({
+                          range: [height, 0],
+                          domain: [0, Math.max(...dayStats.map((d) => d.count))],
+                        });
+
+                        return (
+                          <svg width={width} height={height}>
+                            <Group>
+                              {dayStats.map((d) => (
+                                <Bar
+                                  key={d.day}
+                                  x={xScale(d.day)}
+                                  y={yScale(d.count)}
+                                  height={height - yScale(d.count)}
+                                  width={xScale.bandwidth()}
+                                  fill={`rgb(239 68 68 / ${0.3 + (d.count / Math.max(...dayStats.map((d) => d.count))) * 0.7})`}
+                                />
+                              ))}
+                            </Group>
+                            <Group>
+                              {days.map((day) => (
+                                <text
+                                  key={day}
+                                  x={xScale(day)! + xScale.bandwidth() / 2}
+                                  y={height}
+                                  dy="1em"
+                                  fontSize={10}
+                                  textAnchor="middle"
+                                  fill="currentColor"
+                                >
+                                  {day}
+                                </text>
+                              ))}
+                            </Group>
+                          </svg>
+                        );
+                      })()}
+                    </div>
+
+                    {/* Time of Day Pattern */}
+                    <div className="h-[120px]">
+                      <p className="mb-2 text-sm text-muted-foreground">Daily Rhythm</p>
+                      {(() => {
+                        if (!completions) return null;
+                        const timeSlots = ["Morning", "Afternoon", "Evening", "Night"];
+                        const timeStats = timeSlots.map((slot) => ({
+                          slot,
+                          count: completions.filter((c) => {
+                            const hour = new Date(c.completedAt).getHours();
+                            if (slot === "Morning") return hour >= 5 && hour < 12;
+                            if (slot === "Afternoon") return hour >= 12 && hour < 17;
+                            if (slot === "Evening") return hour >= 17 && hour < 22;
+                            return hour >= 22 || hour < 5;
+                          }).length,
+                        }));
+
+                        const width = 150;
+                        const height = 90;
+
+                        const xScale = scaleBand({
+                          range: [0, width],
+                          domain: timeSlots,
+                          padding: 0.2,
+                        });
+
+                        const yScale = scaleLinear({
+                          range: [height, 0],
+                          domain: [0, Math.max(...timeStats.map((d) => d.count))],
+                        });
+
+                        return (
+                          <svg width={width} height={height}>
+                            <Group>
+                              {timeStats.map((d) => (
+                                <Bar
+                                  key={d.slot}
+                                  x={xScale(d.slot)}
+                                  y={yScale(d.count)}
+                                  height={height - yScale(d.count)}
+                                  width={xScale.bandwidth()}
+                                  fill={`rgb(239 68 68 / ${0.3 + (d.count / Math.max(...timeStats.map((d) => d.count))) * 0.7})`}
+                                />
+                              ))}
+                            </Group>
+                            <Group>
+                              {timeSlots.map((slot) => (
+                                <text
+                                  key={slot}
+                                  x={xScale(slot)! + xScale.bandwidth() / 2}
+                                  y={height}
+                                  dy="1em"
+                                  fontSize={10}
+                                  textAnchor="middle"
+                                  fill="currentColor"
+                                >
+                                  {slot.slice(0, 3)}
+                                </text>
+                              ))}
+                            </Group>
+                          </svg>
+                        );
+                      })()}
+                    </div>
+
+                    {/* Streak History */}
+                    <div className="h-[120px]">
+                      <p className="mb-2 text-sm text-muted-foreground">Recent Streaks</p>
+                      {(() => {
+                        if (!completions) return null;
+
+                        // Get all streaks
+                        const dates = completions
+                          .filter((c) => c.habitId === habit._id)
+                          .map((c) => new Date(c.completedAt).toISOString().split("T")[0])
+                          .sort();
+
+                        const streaks: number[] = [];
+                        let currentStreak = 1;
+
+                        for (let i = 1; i < dates.length; i++) {
+                          const curr = new Date(dates[i]);
+                          const prev = new Date(dates[i - 1]);
+                          const dayDiff = Math.floor((curr.getTime() - prev.getTime()) / (1000 * 60 * 60 * 24));
+
+                          if (dayDiff === 1) {
+                            currentStreak++;
+                          } else {
+                            streaks.push(currentStreak);
+                            currentStreak = 1;
+                          }
                         }
+                        if (currentStreak > 1) streaks.push(currentStreak);
 
-                        streak++;
-                      }
+                        const lastStreaks = streaks.slice(-8);
+                        const width = 150;
+                        const height = 90;
 
-                      return streak;
-                    })()}
-                  </p>
+                        const xScale = scaleBand({
+                          range: [0, width],
+                          domain: lastStreaks.map((_, i) => i.toString()),
+                          padding: 0.2,
+                        });
+
+                        const yScale = scaleLinear({
+                          range: [height, 0],
+                          domain: [0, Math.max(...lastStreaks)],
+                        });
+
+                        return (
+                          <svg width={width} height={height}>
+                            <Group>
+                              {lastStreaks.map((streak, i) => (
+                                <Bar
+                                  key={i}
+                                  x={xScale(i.toString())}
+                                  y={yScale(streak)}
+                                  height={height - yScale(streak)}
+                                  width={xScale.bandwidth()}
+                                  fill={`rgb(239 68 68 / ${0.3 + (streak / Math.max(...lastStreaks)) * 0.7})`}
+                                />
+                              ))}
+                            </Group>
+                            <Group>
+                              {lastStreaks.map((_, i) => (
+                                <text
+                                  key={i}
+                                  x={xScale(i.toString())! + xScale.bandwidth() / 2}
+                                  y={height}
+                                  dy="1em"
+                                  fontSize={10}
+                                  textAnchor="middle"
+                                  fill="currentColor"
+                                >
+                                  {i + 1}
+                                </text>
+                              ))}
+                            </Group>
+                          </svg>
+                        );
+                      })()}
+                    </div>
+
+                    {/* Monthly Trend */}
+                    <div className="h-[120px]">
+                      <p className="mb-2 text-sm text-muted-foreground">6-Month Trend</p>
+                      {(() => {
+                        if (!completions) return null;
+
+                        const months = Array.from({ length: 6 }, (_, i) => {
+                          const d = new Date();
+                          d.setMonth(d.getMonth() - i);
+                          return d;
+                        }).reverse();
+
+                        const monthStats = months.map((month) => ({
+                          month: month.toLocaleString("default", { month: "short" }),
+                          count: completions.filter((c) => {
+                            const date = new Date(c.completedAt);
+                            return (
+                              c.habitId === habit._id &&
+                              date.getMonth() === month.getMonth() &&
+                              date.getFullYear() === month.getFullYear()
+                            );
+                          }).length,
+                        }));
+
+                        const width = 150;
+                        const height = 90;
+
+                        const xScale = scaleBand({
+                          range: [0, width],
+                          domain: monthStats.map((d) => d.month),
+                          padding: 0.2,
+                        });
+
+                        const yScale = scaleLinear({
+                          range: [height, 0],
+                          domain: [0, Math.max(...monthStats.map((d) => d.count))],
+                        });
+
+                        return (
+                          <svg width={width} height={height}>
+                            <Group>
+                              {monthStats.map((d) => (
+                                <Bar
+                                  key={d.month}
+                                  x={xScale(d.month)}
+                                  y={yScale(d.count)}
+                                  height={height - yScale(d.count)}
+                                  width={xScale.bandwidth()}
+                                  fill={`rgb(239 68 68 / ${0.3 + (d.count / Math.max(...monthStats.map((d) => d.count))) * 0.7})`}
+                                />
+                              ))}
+                            </Group>
+                            <Group>
+                              {monthStats.map((d) => (
+                                <text
+                                  key={d.month}
+                                  x={xScale(d.month)! + xScale.bandwidth() / 2}
+                                  y={height}
+                                  dy="1em"
+                                  fontSize={10}
+                                  textAnchor="middle"
+                                  fill="currentColor"
+                                >
+                                  {d.month}
+                                </text>
+                              ))}
+                            </Group>
+                          </svg>
+                        );
+                      })()}
+                    </div>
+                  </div>
                 </div>
-                {/* Average Completions Calculator
-                 * Shows average completions per active day
-                 * Excludes days with no completions
-                 */}
-                <div className="space-y-1">
-                  <p className="text-sm text-muted-foreground">Avg. Per Active Day</p>
-                  <p className="text-2xl font-bold">
-                    {(() => {
-                      if (!completions) return "0.0";
-                      const habitCompletions = completions.filter((c) => c.habitId === habit._id);
-                      if (habitCompletions.length === 0) return "0.0";
-
-                      const uniqueDays = new Set(
-                        habitCompletions.map((c) => new Date(c.completedAt).toISOString().split("T")[0])
-                      );
-
-                      return (habitCompletions.length / uniqueDays.size).toFixed(1);
-                    })()}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </Card>
+              </Card>
+            </motion.div>
+          )}
         </div>
       </div>
 
