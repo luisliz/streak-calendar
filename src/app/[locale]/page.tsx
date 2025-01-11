@@ -87,8 +87,7 @@ export default function Home() {
       </div>
 
       {/* Preview Section - Responsive images for desktop and mobile views */}
-      {/* TODO: 2025-01-11 - update & unhide this after finishing the calendar */}
-      <div className="hidden w-full max-w-5xl grid-cols-1 gap-4 px-4 md:grid-cols-3">
+      <div className="grid w-full max-w-5xl grid-cols-1 gap-4 px-4 md:grid-cols-3">
         <Card className="relative h-[225px] bg-[url('/screen.png')] bg-cover bg-top dark:bg-[url('/screen-dark.png')] md:col-span-2 md:h-[400px]" />
         <Card className="relative h-[400px] bg-[url('/screen-mobile.png')] bg-cover bg-top dark:bg-[url('/screen-mobile-dark.png')]" />
       </div>

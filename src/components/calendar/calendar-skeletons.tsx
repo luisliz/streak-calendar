@@ -8,12 +8,14 @@ interface CalendarSkeletonsProps {
 export function YearlyOverviewSkeleton() {
   return (
     <div className="mt-2 flex flex-col items-center sm:mt-4">
-      <div className="w-[350px] pb-1 sm:w-[400px] xl:w-[984px]">
+      <div className="w-[350px] pb-1 pl-2 sm:w-[400px] xl:w-[984px]">
         <Skeleton className="h-4 w-48" />
       </div>
-      <div className="mb-8 flex h-full w-full items-center justify-center">
-        <Skeleton className="h-[40px] w-[350px] sm:h-[70px] sm:w-[400px] xl:h-[140px] xl:w-[950px]" />
-      </div>
+      <Card className="mx-auto mb-4 w-fit rounded-xl p-1 shadow-md xl:mb-16 xl:w-[984px] xl:rounded-3xl xl:p-2">
+        <div className="flex h-full w-full items-center justify-center">
+          <Skeleton className="h-[40px] w-[350px] sm:h-[70px] sm:w-[400px] xl:h-[140px] xl:w-[950px]" />
+        </div>
+      </Card>
     </div>
   );
 }

@@ -49,8 +49,6 @@ interface CalendarItemProps {
   onToggleHabit: (habitId: Id<"habits">, date: string, count: number) => void;
   /** Current view mode of the calendar */
   view: CalendarViewType;
-  /** Loading state for individual cells */
-  loadingCells: Record<string, boolean>;
 }
 
 /**
@@ -67,7 +65,6 @@ export const CalendarItem = ({
   onEditHabit,
   onToggleHabit,
   view,
-  loadingCells,
 }: CalendarItemProps) => {
   const t = useTranslations("calendar");
 
@@ -110,7 +107,6 @@ export const CalendarItem = ({
           onToggle={onToggleHabit}
           onEditHabit={onEditHabit}
           onAddHabit={onAddHabit}
-          loadingCells={loadingCells}
         />
       ) : (
         // Month Grid View - Displays habits in a grid layout
@@ -123,7 +119,6 @@ export const CalendarItem = ({
           onToggle={onToggleHabit}
           onEditHabit={onEditHabit}
           onAddHabit={onAddHabit}
-          loadingCells={loadingCells}
         />
       )}
     </div>

@@ -80,8 +80,8 @@ interface HabitDetailsProps {
 /**
  * Determines calendar block size and margin based on viewport width.
  * Optimized for readability across all device sizes:
- * - Desktop (lg): 12px blocks with 1px margin
- * - Tablet (md): 10px blocks with 1px margin
+ * - Desktop (lg): 12px blocks with 2px margin
+ * - Tablet (md): 10px blocks with 2px margin
  * - Mobile: 8px blocks with 1px margin
  */
 function getCalendarSize() {
@@ -95,8 +95,8 @@ function getCalendarSize() {
   const isLg = window.matchMedia("(min-width: 1024px)").matches;
   const isMd = window.matchMedia("(min-width: 768px)").matches;
 
-  if (isLg) return { blockSize: 12, blockMargin: 1, showLabels: true };
-  if (isMd) return { blockSize: 10, blockMargin: 1, showLabels: true };
+  if (isLg) return { blockSize: 12, blockMargin: 2, showLabels: true };
+  if (isMd) return { blockSize: 10, blockMargin: 2, showLabels: true };
   return { blockSize: 8, blockMargin: 1, showLabels: false };
 }
 
