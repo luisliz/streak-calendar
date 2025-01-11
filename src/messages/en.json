@@ -189,6 +189,10 @@
         "color": {
           "label": "Color Theme"
         },
+        "position": {
+          "label": "Display Order",
+          "placeholder": "Select position"
+        },
         "actions": {
           "cancel": "Cancel",
           "delete": "Delete",

@@ -189,6 +189,10 @@
         "color": {
           "label": "颜色主题"
         },
+        "position": {
+          "label": "显示顺序",
+          "placeholder": "选择位置"
+        },
         "actions": {
           "cancel": "取消",
           "delete": "删除",

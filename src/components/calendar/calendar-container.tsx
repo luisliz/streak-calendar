@@ -34,7 +34,7 @@ type CalendarView = "monthRow" | "monthGrid";
 interface CalendarData {
   handleAddCalendar: (name: string, color: string) => Promise<void>;
   handleAddHabit: (name: string, calendarId: Id<"calendars">, timerDuration?: number) => Promise<void>;
-  handleEditCalendar: (id: Id<"calendars">, name: string, color: string) => Promise<void>;
+  handleEditCalendar: (id: Id<"calendars">, name: string, color: string, position: number) => Promise<void>;
   handleEditHabit: (id: Id<"habits">, name: string, timerDuration?: number) => Promise<void>;
   handleDeleteCalendar: (id: Id<"calendars">) => Promise<void>;
   handleDeleteHabit: (id: Id<"habits">) => Promise<void>;
@@ -126,6 +126,7 @@ export function CalendarContainer({
     openNewHabit,
     updateCalendarName,
     updateCalendarColor,
+    updateCalendarPosition,
     updateHabitName,
     updateHabitTimer,
     resetCalendarState,
@@ -168,10 +169,10 @@ export function CalendarContainer({
    * Validates name and triggers toast notification on success
    */
   const handleEditCalendar = useCallback(async () => {
-    const { name, color, editingCalendar } = state.calendar;
+    const { name, color, editingCalendar, position } = state.calendar;
     if (!name.trim() || !editingCalendar) return;
 
-    await monthViewData.handleEditCalendar(editingCalendar._id, name, color);
+    await monthViewData.handleEditCalendar(editingCalendar._id, name, color, position);
     toastMessages.calendar.updated();
     resetCalendarState();
   }, [monthViewData, state.calendar, toastMessages, resetCalendarState]);
@@ -225,23 +226,25 @@ export function CalendarContainer({
           <div className="flex w-full flex-col gap-4 md:px-8">
             <div className="w-full">
               {/* Map through calendars and render individual calendar items */}
-              {calendars.map((calendar) => {
-                const calendarHabits = habits.filter((h) => h.calendarId === calendar._id);
-                return (
-                  <CalendarItem
-                    calendar={calendar}
-                    completions={completions}
-                    days={days}
-                    habits={calendarHabits}
-                    key={calendar._id}
-                    onAddHabit={() => openNewHabit(calendar)}
-                    onEditCalendar={() => openEditCalendar(calendar)}
-                    onEditHabit={(habit) => router.push(`/habits/${habit._id}`)}
-                    onToggleHabit={handleToggleHabit}
-                    view={view}
-                  />
-                );
-              })}
+              {[...calendars]
+                .sort((a, b) => (a.position ?? Infinity) - (b.position ?? Infinity))
+                .map((calendar) => {
+                  const calendarHabits = habits.filter((h) => h.calendarId === calendar._id);
+                  return (
+                    <CalendarItem
+                      calendar={calendar}
+                      completions={completions}
+                      days={days}
+                      habits={calendarHabits}
+                      key={calendar._id}
+                      onAddHabit={() => openNewHabit(calendar)}
+                      onEditCalendar={() => openEditCalendar(calendar)}
+                      onEditHabit={(habit) => router.push(`/habits/${habit._id}`)}
+                      onToggleHabit={handleToggleHabit}
+                      view={view}
+                    />
+                  );
+                })}
             </div>
           </div>
 
@@ -281,6 +284,9 @@ export function CalendarContainer({
         onNameChange={updateCalendarName}
         color={state.calendar.color}
         onColorChange={updateCalendarColor}
+        position={state.calendar.position}
+        onPositionChange={updateCalendarPosition}
+        totalCalendars={calendars?.length ?? 0}
         onSubmit={handleEditCalendar}
         onDelete={handleDeleteCalendar}
       />

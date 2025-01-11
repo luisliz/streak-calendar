@@ -189,6 +189,10 @@
         "color": {
           "label": "रंग थीम"
         },
+        "position": {
+          "label": "प्रदर्शन क्रम",
+          "placeholder": "स्थिति चुनें"
+        },
         "actions": {
           "cancel": "रद्द करें",
           "delete": "हटाएं",

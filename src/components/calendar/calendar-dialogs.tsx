@@ -261,11 +261,14 @@ interface EditCalendarDialogProps {
   color: string;
   isOpen: boolean;
   name: string;
+  position: number;
   onColorChange: (color: string) => void;
   onDelete: () => void;
   onNameChange: (name: string) => void;
   onOpenChange: (open: boolean) => void;
+  onPositionChange: (position: number) => void;
   onSubmit: () => void;
+  totalCalendars: number;
 }
 
 export const EditCalendarDialog = ({
@@ -275,6 +278,9 @@ export const EditCalendarDialog = ({
   onNameChange,
   color,
   onColorChange,
+  position,
+  onPositionChange,
+  totalCalendars,
   onSubmit,
   onDelete,
 }: EditCalendarDialogProps) => {
@@ -312,6 +318,21 @@ export const EditCalendarDialog = ({
                         <div className={`h-4 w-4 rounded-full ${c.value}`} />
                         {c.name}
                       </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label>{t("calendar.edit.position.label")}</Label>
+              <Select value={position.toString()} onValueChange={(value) => onPositionChange(parseInt(value))}>
+                <SelectTrigger>
+                  <SelectValue placeholder={t("calendar.edit.position.placeholder")} />
+                </SelectTrigger>
+                <SelectContent>
+                  {Array.from({ length: totalCalendars }, (_, i) => (
+                    <SelectItem key={i + 1} value={(i + 1).toString()}>
+                      {i + 1}
                     </SelectItem>
                   ))}
                 </SelectContent>

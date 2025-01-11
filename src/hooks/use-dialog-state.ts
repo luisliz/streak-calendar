@@ -12,83 +12,71 @@ import { useCallback, useState } from "react";
  * Interface defining the structure of dialog states
  * Includes separate states for calendar and habit dialogs
  */
-interface DialogState {
-  calendar: {
-    /** Whether new calendar dialog is open */
-    isNewOpen: boolean;
-    /** Whether edit calendar dialog is open */
-    isEditOpen: boolean;
-    /** Currently editing calendar data */
-    editingCalendar: EditingCalendar | null;
-    /** Calendar name input value */
-    name: string;
-    /** Calendar color theme value */
-    color: string;
-  };
-  habit: {
-    /** Whether new habit dialog is open */
-    isNewOpen: boolean;
-    /** Habit name input value */
-    name: string;
-    /** Optional timer duration in minutes */
-    timerDuration?: number;
-    /** Calendar selected for new habit */
-    selectedCalendar: Calendar | null;
-  };
+interface CalendarState {
+  isNewOpen: boolean;
+  isEditOpen: boolean;
+  name: string;
+  color: string;
+  editingCalendar: EditingCalendar | null;
+  position: number;
 }
+
+interface HabitState {
+  isNewOpen: boolean;
+  name: string;
+  timerDuration?: number;
+  selectedCalendar: Calendar | null;
+}
+
+interface DialogState {
+  calendar: CalendarState;
+  habit: HabitState;
+}
+
+const initialState: DialogState = {
+  calendar: {
+    isNewOpen: false,
+    isEditOpen: false,
+    name: "",
+    color: "bg-red-500",
+    editingCalendar: null,
+    position: 1,
+  },
+  habit: {
+    isNewOpen: false,
+    name: "",
+    timerDuration: undefined,
+    selectedCalendar: null,
+  },
+};
 
 /**
  * Hook for managing dialog states and actions
  * Provides functions for opening dialogs and updating form values
  */
 export function useDialogState() {
-  // Initialize dialog state with default values
-  const [state, setState] = useState<DialogState>({
-    calendar: {
-      isNewOpen: false,
-      isEditOpen: false,
-      editingCalendar: null,
-      name: "",
-      color: "bg-red-500",
-    },
-    habit: {
-      isNewOpen: false,
-      name: "",
-      timerDuration: undefined,
-      selectedCalendar: null,
-    },
-  });
+  const [state, setState] = useState<DialogState>(initialState);
 
   /**
    * Resets calendar dialog state to initial values
-   * Used when closing calendar dialogs
    */
   const resetCalendarState = useCallback(() => {
     setState((prev) => ({
       ...prev,
       calendar: {
-        ...prev.calendar,
-        isNewOpen: false,
-        isEditOpen: false,
-        editingCalendar: null,
-        name: "",
-        color: "bg-red-500",
+        ...initialState.calendar,
       },
     }));
   }, []);
 
   /**
    * Resets habit dialog state to initial values
-   * Used when closing habit dialogs
    */
   const resetHabitState = useCallback(() => {
     setState((prev) => ({
       ...prev,
       habit: {
-        ...prev.habit,
-        isNewOpen: false,
-        name: "",
-        timerDuration: undefined,
+        ...initialState.habit,
       },
     }));
   }, []);
@@ -115,6 +103,7 @@ export function useDialogState() {
         editingCalendar: calendar,
         name: calendar.name,
         color: calendar.colorTheme,
+        position: calendar.position ?? 1,
       },
     }));
   }, []);
@@ -154,6 +143,16 @@ export function useDialogState() {
   }, []);
 
   /**
+   * Updates calendar position in state
+   */
+  const updateCalendarPosition = useCallback((position: number) => {
+    setState((prev) => ({
+      ...prev,
+      calendar: { ...prev.calendar, position },
+    }));
+  }, []);
+
+  /**
    * Updates habit name in state
    */
   const updateHabitName = useCallback((name: string) => {
@@ -166,7 +165,7 @@ export function useDialogState() {
   /**
    * Updates habit timer duration in state
    */
-  const updateHabitTimer = useCallback((timerDuration?: number) => {
+  const updateHabitTimer = useCallback((timerDuration: number | undefined) => {
     setState((prev) => ({
       ...prev,
       habit: { ...prev.habit, timerDuration },
@@ -180,6 +179,7 @@ export function useDialogState() {
     openNewHabit,
     updateCalendarName,
     updateCalendarColor,
+    updateCalendarPosition,
     updateHabitName,
     updateHabitTimer,
     resetCalendarState,

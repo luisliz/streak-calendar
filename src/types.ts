@@ -6,6 +6,7 @@ export interface Calendar {
   name: string;
   colorTheme: string;
   userId: string;
+  position?: number;
 }
 
 export interface Habit {
@@ -26,5 +27,5 @@ export interface Completion {
 
 export type Day = string;
 
-export type EditingCalendar = Pick<Calendar, "_id" | "name" | "colorTheme">;
+export type EditingCalendar = Pick<Calendar, "_id" | "name" | "colorTheme" | "position">;
 export type EditingHabit = Pick<Habit, "_id" | "name">;

@@ -14,6 +14,7 @@ export default defineSchema({
     name: v.string(), // Display name of the calendar
     userId: v.string(), // Owner of the calendar
     colorTheme: v.string(), // Theme identifier for calendar styling
+    position: v.optional(v.number()), // Optional display order in the UI
   }).index("by_user", ["userId"]), // Index to quickly fetch user's calendars
 
   // Stores habit definitions that users want to track

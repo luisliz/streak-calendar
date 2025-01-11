@@ -82,12 +82,13 @@ export function useCalendarData(startDate: Date, endDate: Date) {
    * @param name - New calendar name
    * @param colorTheme - New color theme
    */
-  const handleEditCalendar = async (id: Id<"calendars">, name: string, colorTheme: string) => {
+  const handleEditCalendar = async (id: Id<"calendars">, name: string, colorTheme: string, position: number) => {
     if (!name.trim()) return;
     await updateCalendar({
       id,
       name,
       colorTheme,
+      position,
     });
   };
 
