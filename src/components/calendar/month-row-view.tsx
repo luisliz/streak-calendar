@@ -95,7 +95,7 @@ export function MonthRowView({
                       isSaturday ? `${isRTL ? "border-l-2" : "border-r-2"} border-dotted border-primary/20` : ""
                     }`}
                   >
-                    <span className="absolute inset-0 flex scale-75 items-center justify-center text-xs font-medium text-foreground">
+                    <span className="absolute inset-0 flex scale-90 items-center justify-center text-xs font-medium text-foreground">
                       {t(`weekDaysShort.${dayOfWeek}`)}
                     </span>
                   </div>
