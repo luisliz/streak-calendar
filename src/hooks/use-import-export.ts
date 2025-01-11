@@ -1,5 +1,5 @@
 import { useToast } from "@/hooks/use-toast";
-import { useMutation, useQuery } from "convex/react";
+import { useConvexAuth, useMutation, useQuery } from "convex/react";
 import { format } from "date-fns";
 import { useState } from "react";
 
@@ -11,6 +11,7 @@ import { api } from "@server/convex/_generated/api";
  */
 
 export function useImportExport() {
+  const { isAuthenticated } = useConvexAuth();
   const { toast } = useToast();
   // Dialog visibility states
   const [showImportExportDialog, setShowImportExportDialog] = useState(false);
@@ -20,7 +21,7 @@ export function useImportExport() {
   const [importFile, setImportFile] = useState<File | null>(null);
 
   // Fetch user's calendar data for export
-  const exportData = useQuery(api.calendars.exportData);
+  const exportData = useQuery(api.calendars.exportData, isAuthenticated ? undefined : "skip");
   // Mutation for importing calendar data
   const importData = useMutation(api.calendars.importData);
 
@@ -31,17 +32,33 @@ export function useImportExport() {
    */
   const handleExportConfirm = () => {
     setShowExportDialog(false);
-    if (!exportData) return;
+    if (!exportData) {
+      toast({
+        title: "Export failed",
+        description: "No data to export",
+        variant: "destructive",
+      });
+      return;
+    }
 
-    const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `streak-calendar-export-${format(new Date(), "yyyy-MM-dd")}.json`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    try {
+      const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `streak-calendar-export-${format(new Date(), "yyyy-MM-dd")}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("[handleExportConfirm] Error:", error);
+      toast({
+        title: "Export failed",
+        description: "Failed to create export file",
+        variant: "destructive",
+      });
+    }
   };
 
   /**

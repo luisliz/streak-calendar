@@ -1,5 +1,4 @@
-import { useMutation, useQuery } from "convex/react";
-import { useConvexAuth } from "convex/react";
+import { useConvexAuth, useMutation, useQuery } from "convex/react";
 
 import { api } from "@server/convex/_generated/api";
 import { Id } from "@server/convex/_generated/dataModel";
@@ -100,10 +99,14 @@ export function useCalendarData(startDate: Date, endDate: Date) {
    */
   const handleEditHabit = async (id: Id<"habits">, name: string, timerDuration?: number) => {
     if (!name.trim()) return;
+    const habit = habitsQuery?.find((h) => h._id === id);
+    if (!habit) return;
+
     await updateHabit({
       id,
       name,
       timerDuration,
+      calendarId: habit.calendarId,
     });
   };
 

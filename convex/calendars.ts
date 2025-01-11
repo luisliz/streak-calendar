@@ -90,63 +90,82 @@ export const update = mutation({
 
 export const exportData = query({
   handler: async (ctx) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) return null;
-
     try {
+      const identity = await ctx.auth.getUserIdentity();
+      if (!identity) return null;
+
       const calendars = await ctx.db
         .query("calendars")
         .filter((q) => q.eq(q.field("userId"), identity.subject))
         .collect();
 
-      const result = [];
+      const result = await Promise.all(
+        calendars.map(async (calendar) => {
+          try {
+            const habits = await ctx.db
+              .query("habits")
+              .filter((q) => q.eq(q.field("calendarId"), calendar._id))
+              .collect();
 
-      for (const calendar of calendars) {
-        try {
-          const habits = await ctx.db
-            .query("habits")
-            .filter((q) => q.eq(q.field("calendarId"), calendar._id))
-            .collect();
+            const habitsWithCompletions = await Promise.all(
+              habits.map(async (habit) => {
+                try {
+                  // Get all completions without limit
+                  const completions = await ctx.db
+                    .query("completions")
+                    .withIndex("by_habit", (q) => q.eq("habitId", habit._id))
+                    .collect();
 
-          const habitsWithCompletions = await Promise.all(
-            habits.map(async (habit) => {
-              try {
-                const completions = await ctx.db
-                  .query("completions")
-                  .filter((q) => q.eq(q.field("habitId"), habit._id))
-                  .collect();
+                  const habitData: {
+                    name: string;
+                    completions: { completedAt: number }[];
+                    timerDuration?: number;
+                    position?: number;
+                  } = {
+                    name: habit.name,
+                    completions: completions.map((c) => ({
+                      completedAt: c.completedAt,
+                    })),
+                  };
 
-                return {
-                  name: habit.name,
-                  completions: completions.map((c) => ({
-                    completedAt: c.completedAt,
-                  })),
-                };
-              } catch (error) {
-                console.error(`Error fetching completions for habit ${habit._id}:`, error);
-                return {
-                  name: habit.name,
-                  completions: [],
-                };
-              }
-            })
-          );
+                  if (habit.timerDuration !== undefined) {
+                    habitData.timerDuration = habit.timerDuration;
+                  }
+                  if (habit.position !== undefined) {
+                    habitData.position = habit.position;
+                  }
 
-          result.push({
-            name: calendar.name,
-            colorTheme: calendar.colorTheme,
-            habits: habitsWithCompletions,
-          });
-        } catch (error) {
-          console.error(`Error processing calendar ${calendar._id}:`, error);
-          continue;
-        }
-      }
+                  return habitData;
+                } catch (error) {
+                  console.error(`Error processing habit ${habit._id}:`, error);
+                  return {
+                    name: habit.name,
+                    completions: [],
+                  };
+                }
+              })
+            );
+
+            return {
+              name: calendar.name,
+              colorTheme: calendar.colorTheme,
+              habits: habitsWithCompletions,
+            };
+          } catch (error) {
+            console.error(`Error processing calendar ${calendar._id}:`, error);
+            return {
+              name: calendar.name,
+              colorTheme: calendar.colorTheme,
+              habits: [],
+            };
+          }
+        })
+      );
 
       return { calendars: result };
     } catch (error) {
       console.error("Error in exportData:", error);
-      return { calendars: [] };
+      throw error;
     }
   },
 });
@@ -161,7 +180,8 @@ export const importData = mutation({
           habits: v.array(
             v.object({
               name: v.string(),
-              targetFrequency: v.optional(v.number()),
+              timerDuration: v.optional(v.number()),
+              position: v.optional(v.number()),
               completions: v.array(
                 v.object({
                   completedAt: v.number(),
@@ -200,8 +220,7 @@ export const importData = mutation({
 
         // Import habits
         for (const habitData of calendarData.habits) {
-          // Get only the needed fields
-          const { name, completions } = habitData;
+          const { name, completions, timerDuration, position } = habitData;
 
           // Find or create habit
           const existingHabit = existingHabits.find((h) => h.name === name);
@@ -211,6 +230,8 @@ export const importData = mutation({
               name,
               userId: identity.subject,
               calendarId,
+              ...(timerDuration !== undefined && { timerDuration }),
+              ...(position !== undefined && { position }),
             }));
 
           // Get existing completions to avoid duplicates
@@ -242,12 +263,14 @@ export const importData = mutation({
 
         // Create all habits and completions for new calendar
         for (const habitData of calendarData.habits) {
-          const { name, completions } = habitData;
+          const { name, completions, timerDuration, position } = habitData;
 
           const habitId = await ctx.db.insert("habits", {
             name,
             userId: identity.subject,
             calendarId: newCalendarId,
+            ...(timerDuration !== undefined && { timerDuration }),
+            ...(position !== undefined && { position }),
           });
 
           for (const completion of completions) {
