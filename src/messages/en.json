@@ -224,6 +224,10 @@
         "name": {
           "label": "Name"
         },
+        "calendar": {
+          "label": "Calendar",
+          "placeholder": "Select calendar"
+        },
         "timer": {
           "label": "Timer Duration",
           "placeholder": "Select duration",

@@ -68,6 +68,7 @@ interface HabitDetailsProps {
     _id: Id<"habits">;
     name: string;
     timerDuration?: number;
+    calendarId: Id<"calendars">;
   };
   calendar: {
     _id: Id<"calendars">;
@@ -238,12 +239,14 @@ export function HabitDetails({ habit }: HabitDetailsProps) {
   const [showDeleteAlert, setShowDeleteAlert] = useState(false);
   const [name, setName] = useState(habit.name);
   const [timerDuration, setTimerDuration] = useState<number | undefined>(habit.timerDuration);
+  const [selectedCalendarId, setSelectedCalendarId] = useState<Id<"calendars">>(habit.calendarId);
   const [calendarSize, setCalendarSize] = useState(getCalendarSize());
   const containerRef = useRef<HTMLDivElement>(null);
 
   const updateHabit = useMutation(api.habits.update);
   const deleteHabit = useMutation(api.habits.remove);
   const markComplete = useMutation(api.habits.markComplete);
+  const calendars = useQuery(api.calendars.list);
 
   useEffect(() => {
     function handleResize() {
@@ -345,6 +348,7 @@ export function HabitDetails({ habit }: HabitDetailsProps) {
         id: habit._id,
         name,
         timerDuration,
+        calendarId: selectedCalendarId,
       });
       toast({ description: tToast("habit.updated") });
       router.push("/calendar");
@@ -572,6 +576,25 @@ export function HabitDetails({ habit }: HabitDetailsProps) {
             <div>
               <Label htmlFor="edit-habit-name">{t("habit.edit.name.label")}</Label>
               <Input id="edit-habit-name" value={name} onChange={(e) => setName(e.target.value)} />
+            </div>
+            {/* Calendar selection dropdown */}
+            <div>
+              <Label>{t("habit.edit.calendar.label")}</Label>
+              <Select
+                value={selectedCalendarId}
+                onValueChange={(value) => setSelectedCalendarId(value as Id<"calendars">)}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder={t("habit.edit.calendar.placeholder")} />
+                </SelectTrigger>
+                <SelectContent>
+                  {calendars?.map((cal) => (
+                    <SelectItem key={cal._id} value={cal._id}>
+                      {cal.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
             {/* Timer duration selection dropdown */}
             <div>

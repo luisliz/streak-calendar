@@ -121,6 +121,7 @@ export const update = mutation({
     id: v.id("habits"),
     name: v.string(),
     timerDuration: v.optional(v.number()),
+    calendarId: v.id("calendars"),
   },
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
@@ -131,9 +132,16 @@ export const update = mutation({
       throw new Error("Not authorized");
     }
 
+    // Verify calendar belongs to user
+    const calendar = await ctx.db.get(args.calendarId);
+    if (!calendar || calendar.userId !== identity.subject) {
+      throw new Error("Calendar not found");
+    }
+
     await ctx.db.patch(args.id, {
       name: args.name,
       timerDuration: args.timerDuration,
+      calendarId: args.calendarId,
     });
   },
 });
