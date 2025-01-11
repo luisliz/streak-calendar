@@ -4,6 +4,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { getCompletionColorClass } from "@/lib/colors";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
+import { Loader2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { memo, useState } from "react";
 
@@ -29,6 +30,7 @@ import { XIcon } from "../ui/x-icon";
  * @property {boolean} [disabled] - Optional flag to disable interactions (e.g., for dates outside query range)
  * @property {string} [label] - Optional label to display instead of date number
  * @property {"small" | "medium" | "large"} [size] - Optional size of the cell
+ * @property {boolean} [isLoading] - Optional flag to indicate loading state
  */
 interface DayCellProps {
   habitId: Id<"habits">;
@@ -40,6 +42,7 @@ interface DayCellProps {
   disabled?: boolean; // Whether the completion menu is disabled (outside query range)
   label?: string; // Optional label to display instead of date number
   size?: "small" | "medium" | "large"; // Optional size of the cell
+  isLoading?: boolean;
 }
 
 /**
@@ -47,7 +50,7 @@ interface DayCellProps {
  * Includes a clickable button that shows completion status and a popover menu for updating counts
  */
 export const DayCell = memo(
-  ({ date, count, onCountChange, colorClass, disabled, label, size = "medium" }: DayCellProps) => {
+  ({ date, count, onCountChange, colorClass, disabled, label, size = "medium", isLoading }: DayCellProps) => {
     const [isOpen, setIsOpen] = useState(false);
     const t = useTranslations("calendar");
 
@@ -92,6 +95,12 @@ export const DayCell = memo(
       large: "!h-[48px] !w-[48px]",
     };
 
+    const spinnerSizeClasses = {
+      small: "h-3 w-3",
+      medium: "h-4 w-4",
+      large: "h-5 w-5",
+    };
+
     return (
       <TooltipProvider>
         <Tooltip>
@@ -100,25 +109,28 @@ export const DayCell = memo(
               <PopoverTrigger asChild>
                 <button
                   type="button"
-                  onClick={() => !disabled && setIsOpen(true)}
+                  onClick={() => !disabled && !isLoading && setIsOpen(true)}
                   className={cn(
                     "inline-flex items-center justify-center rounded-full",
                     sizeClasses[size],
                     count === 0 ? "bg-muted" : "bg-transparent",
                     disabled ? "cursor-not-allowed !bg-zinc-100 dark:!bg-zinc-800" : "",
+                    isLoading ? "cursor-wait" : "",
                     "relative p-0"
                   )}
-                  disabled={disabled}
+                  disabled={disabled || isLoading}
                 >
-                  {count > 0 ? (
+                  {isLoading ? (
+                    <Loader2 className={cn("animate-spin text-muted-foreground", spinnerSizeClasses[size])} />
+                  ) : count > 0 ? (
                     <div className="absolute">
                       <XIcon key={`${count}-${fillClass}`} className={`${iconSizeClasses[size]} ${fillClass}`} />
                     </div>
                   ) : (
                     <span
                       className={`absolute inset-0 flex items-center justify-center text-xs font-medium ${
-                        disabled ? "text-zinc-400 dark:text-zinc-600" : "text-zinc-900 dark:text-zinc-100"
-                      } ${size === "small" ? "scale-75" : ""}`}
+                        disabled ? "text-zinc-500" : "text-zinc-700 dark:text-zinc-300"
+                      } ${size === "small" ? "scale-90" : ""}`}
                     >
                       {label ?? new Date(date).getDate()}
                     </span>
@@ -167,7 +179,8 @@ export const DayCell = memo(
       prevProps.gridView === nextProps.gridView &&
       prevProps.disabled === nextProps.disabled &&
       prevProps.label === nextProps.label &&
-      prevProps.size === nextProps.size
+      prevProps.size === nextProps.size &&
+      prevProps.isLoading === nextProps.isLoading
     );
   }
 );

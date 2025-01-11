@@ -10,8 +10,7 @@ import { Calendar, Completion, Day, Habit, Id } from "@/types";
 import { AnimatePresence, motion } from "framer-motion";
 import { PlusCircle } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useCallback } from "react";
-import { toast } from "react-hot-toast";
+import { useCallback, useState } from "react";
 
 import { CalendarSkeletons } from "./calendar-skeletons";
 
@@ -28,41 +27,48 @@ const MotionCard = motion(Card);
 type CalendarView = "monthRow" | "monthGrid";
 
 /**
- * Interface defining all calendar-related data operations
- * Includes CRUD operations for calendars and habits, plus habit completion toggling
- */
-interface CalendarData {
-  handleAddCalendar: (name: string, color: string) => Promise<void>;
-  handleAddHabit: (name: string, calendarId: Id<"calendars">, timerDuration?: number) => Promise<void>;
-  handleEditCalendar: (id: Id<"calendars">, name: string, color: string) => Promise<void>;
-  handleEditHabit: (id: Id<"habits">, name: string, timerDuration?: number) => Promise<void>;
-  handleDeleteCalendar: (id: Id<"calendars">) => Promise<void>;
-  handleDeleteHabit: (id: Id<"habits">) => Promise<void>;
-  handleToggleHabit: (habitId: Id<"habits">, date: string, count: number) => Promise<void>;
-}
-
-/**
  * Props interface for the CalendarContainer component
- * Contains all necessary data and callbacks for calendar functionality
  */
 interface CalendarContainerProps {
+  /** Current calendar view mode */
   calendarView: CalendarView;
-  calendars: Calendar[];
-  completions: Completion[];
-  days: Day[];
-  habits: Habit[];
-  monthViewData: CalendarData;
+  /** Array of user's calendars */
+  calendars: Array<Calendar>;
+  /** Array of habit completion records */
+  completions: Array<Completion>;
+  /** Array of dates to display */
+  days: Array<Day>;
+  /** Array of habits across all calendars */
+  habits: Array<Habit>;
+  /** Data and handlers for month view operations */
+  monthViewData: {
+    handleAddCalendar: (name: string, color: string) => Promise<void>;
+    handleAddHabit: (name: string, calendarId: Id<"calendars">, timerDuration?: number) => Promise<void>;
+    handleEditCalendar: (id: Id<"calendars">, name: string, color: string) => Promise<void>;
+    handleEditHabit: (id: Id<"habits">, name: string, timerDuration?: number) => Promise<void>;
+    handleDeleteCalendar: (id: Id<"calendars">) => Promise<void>;
+    handleDeleteHabit: (id: Id<"habits">) => Promise<void>;
+    handleToggleHabit: (habitId: Id<"habits">, date: string, count: number) => Promise<void>;
+  };
+  /** Current view mode */
   view: CalendarView;
+  /** Callback for changing view mode */
   onViewChange: (view: CalendarView) => void;
+  /** Loading state flag */
   isLoading?: boolean;
 }
 
 /**
- * Component displayed when no calendars exist
- * Provides a button to create the first calendar
+ * Empty state component shown when no calendars exist
  */
-const EmptyState = ({ monthViewData }: { monthViewData: CalendarData }) => {
-  const t = useTranslations("calendar.container.emptyState");
+function EmptyState({
+  monthViewData,
+}: {
+  monthViewData: {
+    handleAddCalendar: (name: string, color: string) => Promise<void>;
+  };
+}) {
+  const t = useTranslations("calendar.container");
   const toastMessages = useToastMessages();
   const { state, openNewCalendar, updateCalendarName, updateCalendarColor, resetCalendarState } = useDialogState();
 
@@ -76,28 +82,24 @@ const EmptyState = ({ monthViewData }: { monthViewData: CalendarData }) => {
   }, [monthViewData, state.calendar, toastMessages, resetCalendarState]);
 
   return (
-    <>
-      <div className="py-12 text-center text-muted-foreground">
-        <p>{t("noCalendars")}</p>
-        <p className="mt-2">{t("createOne")}</p>
-        <Button variant="default" onClick={openNewCalendar} className="mt-4">
-          <PlusCircle className="mr-2 h-4 w-4" />
-          {t("createButton")}
-        </Button>
-      </div>
-
+    <div className="flex flex-col items-center justify-center space-y-4 py-16">
+      <p className="text-sm text-muted-foreground">{t("emptyState.noCalendars")}</p>
+      <Button onClick={openNewCalendar} size="sm">
+        <PlusCircle className="mr-2 h-4 w-4" />
+        {t("controls.addCalendar")}
+      </Button>
       <NewCalendarDialog
         isOpen={state.calendar.isNewOpen}
-        onOpenChange={() => resetCalendarState()}
         name={state.calendar.name}
-        onNameChange={updateCalendarName}
         color={state.calendar.color}
+        onOpenChange={resetCalendarState}
+        onNameChange={updateCalendarName}
         onColorChange={updateCalendarColor}
         onSubmit={handleAddCalendar}
       />
-    </>
+    </div>
   );
-};
+}
 
 /**
  * Main calendar container component that orchestrates the display and interaction
@@ -114,14 +116,13 @@ export function CalendarContainer({
   onViewChange,
   isLoading = false,
 }: CalendarContainerProps) {
-  const t = useTranslations("calendar.container");
   const toastMessages = useToastMessages();
   const router = useRouter();
+  const [loadingCells, setLoadingCells] = useState<Record<string, boolean>>({});
 
   // Dialog state management for calendar and habit operations
   const {
     state,
-    openNewCalendar,
     openEditCalendar,
     openNewHabit,
     updateCalendarName,
@@ -146,25 +147,20 @@ export function CalendarContainer({
   }, [monthViewData, state.calendar, toastMessages, resetCalendarState]);
 
   /**
-   * Handles creation of a new habit within a calendar
-   * Validates name and selected calendar, includes error handling
+   * Handles creation of a new habit
+   * Validates name and triggers toast notification on success
    */
   const handleAddHabit = useCallback(async () => {
     const { name, timerDuration, selectedCalendar } = state.habit;
     if (!name.trim() || !selectedCalendar) return;
 
-    try {
-      await monthViewData.handleAddHabit(name, selectedCalendar._id, timerDuration);
-      toastMessages.habit.created();
-      resetHabitState();
-    } catch (error) {
-      console.error(error);
-      toast.error("Failed to add habit");
-    }
+    await monthViewData.handleAddHabit(name, selectedCalendar._id, timerDuration);
+    toastMessages.habit.created();
+    resetHabitState();
   }, [monthViewData, state.habit, toastMessages, resetHabitState]);
 
   /**
-   * Handles updating an existing calendar's properties
+   * Handles editing an existing calendar
    * Validates name and triggers toast notification on success
    */
   const handleEditCalendar = useCallback(async () => {
@@ -176,6 +172,9 @@ export function CalendarContainer({
     resetCalendarState();
   }, [monthViewData, state.calendar, toastMessages, resetCalendarState]);
 
+  /**
+   * Handles deleting a calendar
+   */
   const handleDeleteCalendar = useCallback(async () => {
     const { editingCalendar } = state.calendar;
     if (!editingCalendar) return;
@@ -191,7 +190,13 @@ export function CalendarContainer({
    */
   const handleToggleHabit = useCallback(
     async (habitId: Id<"habits">, date: string, count: number) => {
-      await monthViewData.handleToggleHabit(habitId, date, count);
+      const cellKey = `${habitId}-${date}`;
+      setLoadingCells((prev) => ({ ...prev, [cellKey]: true }));
+      try {
+        await monthViewData.handleToggleHabit(habitId, date, count);
+      } finally {
+        setLoadingCells((prev) => ({ ...prev, [cellKey]: false }));
+      }
     },
     [monthViewData]
   );
@@ -239,50 +244,43 @@ export function CalendarContainer({
                     onEditHabit={(habit) => router.push(`/habits/${habit._id}`)}
                     onToggleHabit={handleToggleHabit}
                     view={view}
+                    loadingCells={loadingCells}
                   />
                 );
               })}
             </div>
           </div>
-
-          {/* Button to add new calendar */}
-          <div className="flex justify-center pb-16">
-            <Button variant="default" onClick={openNewCalendar}>
-              <PlusCircle className="h-4 w-4" />
-              {t("addCalendar")}
-            </Button>
-          </div>
         </MotionCard>
       </AnimatePresence>
 
-      {/* Dialog components for creating/editing calendars and habits */}
+      {/* Dialogs for calendar and habit operations */}
       <NewCalendarDialog
         isOpen={state.calendar.isNewOpen}
-        onOpenChange={() => resetCalendarState()}
         name={state.calendar.name}
-        onNameChange={updateCalendarName}
         color={state.calendar.color}
+        onOpenChange={resetCalendarState}
+        onNameChange={updateCalendarName}
         onColorChange={updateCalendarColor}
         onSubmit={handleAddCalendar}
       />
-      <NewHabitDialog
-        isOpen={state.habit.isNewOpen}
-        onOpenChange={() => resetHabitState()}
-        name={state.habit.name}
-        onNameChange={updateHabitName}
-        timerDuration={state.habit.timerDuration}
-        onTimerDurationChange={updateHabitTimer}
-        onSubmit={handleAddHabit}
-      />
       <EditCalendarDialog
         isOpen={state.calendar.isEditOpen}
-        onOpenChange={() => resetCalendarState()}
         name={state.calendar.name}
-        onNameChange={updateCalendarName}
         color={state.calendar.color}
+        onOpenChange={resetCalendarState}
+        onNameChange={updateCalendarName}
         onColorChange={updateCalendarColor}
         onSubmit={handleEditCalendar}
         onDelete={handleDeleteCalendar}
+      />
+      <NewHabitDialog
+        isOpen={state.habit.isNewOpen}
+        name={state.habit.name}
+        timerDuration={state.habit.timerDuration}
+        onOpenChange={resetHabitState}
+        onNameChange={updateHabitName}
+        onTimerDurationChange={updateHabitTimer}
+        onSubmit={handleAddHabit}
       />
     </>
   );

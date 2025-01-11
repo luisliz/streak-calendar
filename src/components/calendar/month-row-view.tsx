@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { CompleteControls } from "@/components/ui/complete-controls";
 import { getCompletionCount } from "@/utils/completion-utils";
-import { format } from "date-fns";
 import { useLocale, useTranslations } from "next-intl";
 
 import { Id } from "@server/convex/_generated/dataModel";
@@ -45,6 +44,7 @@ interface MonthRowViewProps {
   }>;
   /** Callback for adding a new habit */
   onAddHabit: () => void;
+  loadingCells: Record<string, boolean>;
 }
 
 /**
@@ -59,53 +59,13 @@ export function MonthRowView({
   onEditHabit,
   habits,
   onAddHabit,
+  loadingCells,
 }: MonthRowViewProps) {
-  const locale = useLocale();
   const t = useTranslations("calendar");
-  // Check if current locale is RTL (Hebrew or Arabic)
-  const isRTL = ["he", "ar"].includes(locale);
+  const isRTL = useLocale() === "ar";
 
   return (
     <div className="relative">
-      {/* Calendar Header with Day Labels */}
-      <div className="relative flex">
-        {/* Left/Right spacing for gradient effect */}
-        <div className={`${isRTL ? "order-first" : "order-first"} w-16 bg-card md:w-32`} />
-        {/* Gradient fade effect - direction aware */}
-        <div
-          className={`absolute z-10 h-6 w-12 ${
-            isRTL
-              ? "right-16 bg-gradient-to-l from-card to-transparent md:right-32"
-              : "left-16 bg-gradient-to-r from-card to-transparent md:left-32"
-          }`}
-        />
-        {/* Day name labels (Mo, Tu, We, etc.) */}
-        <div className="flex flex-1 gap-px overflow-hidden">
-          <div className={`flex w-full justify-end gap-px ${isRTL ? "pl-24 md:pl-28" : "pr-24 md:pr-28"}`}>
-            {days.map((day) => {
-              const date = new Date(day);
-              const dayOfWeek = format(date, "eee").toLowerCase();
-              // Add separator line for weekends
-              const isSaturday = date.getDay() === 6;
-
-              return (
-                <div key={day} className="w-6">
-                  <div
-                    className={`relative h-6 w-6 ${
-                      isSaturday ? `${isRTL ? "border-l-2" : "border-r-2"} border-dotted border-primary/20` : ""
-                    }`}
-                  >
-                    <span className="absolute inset-0 flex scale-75 items-center justify-center text-xs font-medium text-foreground">
-                      {t(`weekDaysShort.${dayOfWeek}`)}
-                    </span>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </div>
-
       {/* Habit Rows Section */}
       <div className="relative space-y-px overflow-hidden">
         {habits.map((habit) => {
@@ -116,51 +76,41 @@ export function MonthRowView({
           ).length;
 
           return (
-            <div key={habit._id} className="relative flex justify-end">
+            <div key={habit._id} className="relative flex h-6 items-center justify-end">
               {/* Calendar view grid for the habit */}
               <div className="flex-1">
                 <div className="flex justify-end">
                   <div className={`flex gap-px ${isRTL ? "pl-24 md:pl-28" : "pr-24 md:pr-28"}`}>
-                    {days.map((date) => (
-                      <DayCell
-                        key={date}
-                        habitId={habit._id}
-                        date={date}
-                        count={getCompletionCount(date, habit._id, completions)}
-                        onCountChange={(newCount) => onToggle(habit._id, date, newCount)}
-                        colorClass={color}
-                        size="small"
-                      />
-                    ))}
+                    {days.map((date) => {
+                      const cellKey = `${habit._id}-${date}`;
+                      return (
+                        <DayCell
+                          key={date}
+                          habitId={habit._id}
+                          date={date}
+                          count={getCompletionCount(date, habit._id, completions)}
+                          onCountChange={(newCount) => onToggle(habit._id, date, newCount)}
+                          colorClass={color}
+                          size="small"
+                          isLoading={loadingCells[cellKey]}
+                        />
+                      );
+                    })}
                   </div>
                 </div>
               </div>
               {/* Editable habit name with hover effects - direction aware */}
               <div
-                className={`absolute flex w-24 cursor-pointer select-none items-start md:w-48 ${isRTL ? "right-0" : "left-0"}`}
+                className={`absolute top-0 flex h-full items-center ${
+                  isRTL ? "right-0" : "left-0"
+                } w-24 cursor-pointer select-none md:w-48`}
                 onClick={() => onEditHabit(habit)}
               >
-                <div className="relative flex items-center">
-                  <div className="flex items-baseline bg-card">
-                    <h3
-                      className={`text-base font-medium underline decoration-wavy decoration-2 ${color.replace(
-                        "bg-",
-                        "decoration-"
-                      )}/30 hover:text-muted-foreground hover:no-underline`}
-                      onClick={() => onEditHabit(habit)}
-                    >
-                      <span className="cursor-pointer truncate">{habit.name}</span>
-                    </h3>
-                    {habit.timerDuration && (
-                      <span className={`${isRTL ? "mx-1" : "ml-1"} text-sm text-muted-foreground/50`}>
-                        ({habit.timerDuration}m)
-                      </span>
-                    )}
-                  </div>
-                  {/* Gradient fade effect for habit name */}
-                  <div
-                    className={`h-6 w-12 ${isRTL ? "bg-gradient-to-l" : "bg-gradient-to-r"} from-card to-transparent`}
-                  />
+                <div className="flex items-baseline bg-card">
+                  <h3 className="text-sm font-medium hover:text-muted-foreground">{habit.name}</h3>
+                  {habit.timerDuration && (
+                    <span className="ml-1 text-xs text-muted-foreground">({habit.timerDuration}m)</span>
+                  )}
                 </div>
               </div>
               {/* Habit completion controls for today */}
@@ -178,10 +128,10 @@ export function MonthRowView({
           );
         })}
       </div>
-      {/* Add new habit button */}
-      <div className={`mt-px flex ${isRTL ? "justify-end" : "justify-end"}`}>
-        <Button className="h-[24px] w-24 text-xs" size="sm" onClick={onAddHabit}>
-          {t("controls.new")}
+      {/* Add habit button */}
+      <div className="mt-px flex justify-end">
+        <Button variant="ghost" size="sm" onClick={onAddHabit}>
+          {t("controls.addHabit")}
         </Button>
       </div>
     </div>

@@ -47,6 +47,7 @@ interface MonthGridViewProps {
   }>;
   /** Callback for adding a new habit */
   onAddHabit: () => void;
+  loadingCells: Record<string, boolean>;
 }
 
 export function MonthGridView({
@@ -57,11 +58,12 @@ export function MonthGridView({
   onEditHabit,
   habits,
   onAddHabit,
+  loadingCells,
 }: MonthGridViewProps) {
   const t = useTranslations("calendar");
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-8">
       {habits.map((habit) => {
         // Calculate today's completion count for the habit
         const today = new Date().toISOString().split("T")[0];
@@ -102,7 +104,14 @@ export function MonthGridView({
               />
             </div>
             {/* Monthly calendar grid */}
-            <MonthGridCalendar habit={habit} color={color} days={days} completions={completions} onToggle={onToggle} />
+            <MonthGridCalendar
+              habit={habit}
+              color={color}
+              days={days}
+              completions={completions}
+              onToggle={onToggle}
+              loadingCells={loadingCells}
+            />
           </div>
         );
       })}
@@ -138,13 +147,14 @@ interface MonthGridCalendarProps {
   }>;
   /** Callback for toggling habit completion */
   onToggle: (habitId: Id<"habits">, date: string, count: number) => void;
+  loadingCells: Record<string, boolean>;
 }
 
 /**
  * Subcomponent that renders the actual calendar grid for a habit
  * Handles month calculation, day padding, and responsive layout
  */
-function MonthGridCalendar({ habit, color, days, completions, onToggle }: MonthGridCalendarProps) {
+function MonthGridCalendar({ habit, color, days, completions, onToggle, loadingCells }: MonthGridCalendarProps) {
   const isMobile = useMobile();
   const t = useTranslations("calendar");
 
@@ -166,13 +176,11 @@ function MonthGridCalendar({ habit, color, days, completions, onToggle }: MonthG
     });
   }
 
-  const sortedMonths = Object.entries(months).sort(([a], [b]) => a.localeCompare(b));
+  // Sort months in reverse chronological order
+  const sortedMonths = Object.entries(months).sort((a, b) => b[0].localeCompare(a[0]));
 
   return (
-    <div
-      data-habit-id={habit._id}
-      className="w-full space-y-8 md:grid md:grid-cols-2 md:gap-8 md:space-y-0 lg:grid-cols-3"
-    >
+    <div className="flex flex-col items-center gap-8">
       {sortedMonths.map(([monthKey, monthDays]) => {
         // Calculate padding days for proper grid alignment
         const firstDay = new Date(monthDays[0]);
@@ -209,6 +217,7 @@ function MonthGridCalendar({ habit, color, days, completions, onToggle }: MonthG
               {monthDays.map((dateStr) => {
                 const isInRange = days.includes(dateStr);
                 const count = isInRange ? getCompletionCount(dateStr, habit._id, completions) : 0;
+                const cellKey = `${habit._id}-${dateStr}`;
 
                 return (
                   <div key={dateStr} className="h-[48px] w-[48px] p-0">
@@ -221,6 +230,7 @@ function MonthGridCalendar({ habit, color, days, completions, onToggle }: MonthG
                         colorClass={color}
                         size="large"
                         disabled={!isInRange}
+                        isLoading={loadingCells[cellKey]}
                       />
                     </div>
                   </div>
