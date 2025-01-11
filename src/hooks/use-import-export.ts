@@ -21,9 +21,9 @@ export function useImportExport() {
   const [importFile, setImportFile] = useState<File | null>(null);
 
   // Fetch user's calendar data for export
-  const exportData = useQuery(api.calendars.exportData, isAuthenticated ? undefined : "skip");
+  const exportData = useQuery(api.calendar_sync.exportData, isAuthenticated ? undefined : "skip");
   // Mutation for importing calendar data
-  const importData = useMutation(api.calendars.importData);
+  const importData = useMutation(api.calendar_sync.importData);
 
   /**
    * Handles the export confirmation action.
