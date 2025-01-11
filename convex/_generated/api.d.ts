@@ -15,6 +15,7 @@ import type {
 } from "convex/server";
 import type * as calendars from "../calendars.js";
 import type * as habits from "../habits.js";
+import type * as migrations from "../migrations.js";
 
 /**
  * A utility for referencing Convex functions in your app's API.
@@ -27,6 +28,7 @@ import type * as habits from "../habits.js";
 declare const fullApi: ApiFromModules<{
   calendars: typeof calendars;
   habits: typeof habits;
+  migrations: typeof migrations;
 }>;
 export declare const api: FilterApi<
   typeof fullApi,

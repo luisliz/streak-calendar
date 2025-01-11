@@ -69,6 +69,7 @@ interface HabitDetailsProps {
     name: string;
     timerDuration?: number;
     calendarId: Id<"calendars">;
+    position?: number;
   };
   calendar: {
     _id: Id<"calendars">;
@@ -240,6 +241,7 @@ export function HabitDetails({ habit }: HabitDetailsProps) {
   const [name, setName] = useState(habit.name);
   const [timerDuration, setTimerDuration] = useState<number | undefined>(habit.timerDuration);
   const [selectedCalendarId, setSelectedCalendarId] = useState<Id<"calendars">>(habit.calendarId);
+  const [position, setPosition] = useState<number>(habit.position ?? 1);
   const [calendarSize, setCalendarSize] = useState(getCalendarSize());
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -247,6 +249,7 @@ export function HabitDetails({ habit }: HabitDetailsProps) {
   const deleteHabit = useMutation(api.habits.remove);
   const markComplete = useMutation(api.habits.markComplete);
   const calendars = useQuery(api.calendars.list);
+  const habits = useQuery(api.habits.list, { calendarId: selectedCalendarId });
 
   useEffect(() => {
     function handleResize() {
@@ -317,21 +320,12 @@ export function HabitDetails({ habit }: HabitDetailsProps) {
       else if (count === 3) level = 3;
       else level = 4;
 
-      if (count > 0) {
-        console.log(`Date: ${date}, Count: ${count}, Level: ${level}`);
-      }
       return {
         date,
         count,
         level,
       };
     });
-
-    // Debug log a sample of high-count days
-    const highCountDays = calendarDataResult.filter((d) => d.count > 1);
-    if (highCountDays.length > 0) {
-      console.log("High count days:", highCountDays);
-    }
 
     return calendarDataResult;
   }, [completions, habit._id, dateRange]);
@@ -349,6 +343,7 @@ export function HabitDetails({ habit }: HabitDetailsProps) {
         name,
         timerDuration,
         calendarId: selectedCalendarId,
+        position,
       });
       toast({ description: tToast("habit.updated") });
       router.push("/calendar");
@@ -582,7 +577,12 @@ export function HabitDetails({ habit }: HabitDetailsProps) {
               <Label>{t("habit.edit.calendar.label")}</Label>
               <Select
                 value={selectedCalendarId}
-                onValueChange={(value) => setSelectedCalendarId(value as Id<"calendars">)}
+                onValueChange={(value) => {
+                  setSelectedCalendarId(value as Id<"calendars">);
+                  // Reset position to end of new calendar
+                  const calendarHabits = habits?.length ?? 0;
+                  setPosition(calendarHabits + 1);
+                }}
               >
                 <SelectTrigger>
                   <SelectValue placeholder={t("habit.edit.calendar.placeholder")} />
@@ -593,6 +593,25 @@ export function HabitDetails({ habit }: HabitDetailsProps) {
                       {cal.name}
                     </SelectItem>
                   ))}
+                </SelectContent>
+              </Select>
+            </div>
+            {/* Position selection dropdown */}
+            <div>
+              <Label>{t("habit.edit.position.label")}</Label>
+              <Select value={(position ?? 1).toString()} onValueChange={(value) => setPosition(parseInt(value))}>
+                <SelectTrigger>
+                  <SelectValue placeholder={t("habit.edit.position.placeholder")} />
+                </SelectTrigger>
+                <SelectContent>
+                  {Array.from(
+                    { length: (habits?.length ?? 0) + (selectedCalendarId !== habit.calendarId ? 1 : 0) },
+                    (_, i) => (
+                      <SelectItem key={i + 1} value={(i + 1).toString()}>
+                        {i + 1}
+                      </SelectItem>
+                    )
+                  )}
                 </SelectContent>
               </Select>
             </div>

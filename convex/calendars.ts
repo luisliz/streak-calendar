@@ -1,5 +1,6 @@
 import { v } from "convex/values";
 
+import { Id } from "./_generated/dataModel";
 import { mutation, query } from "./_generated/server";
 
 export const list = query({
@@ -110,34 +111,19 @@ export const exportData = query({
             const habitsWithCompletions = await Promise.all(
               habits.map(async (habit) => {
                 try {
-                  // Get all completions without limit
                   const completions = await ctx.db
                     .query("completions")
-                    .withIndex("by_habit", (q) => q.eq("habitId", habit._id))
+                    .filter((q) => q.eq(q.field("habitId"), habit._id))
                     .collect();
 
-                  const habitData: {
-                    name: string;
-                    completions: { completedAt: number }[];
-                    timerDuration?: number;
-                    position?: number;
-                  } = {
+                  return {
                     name: habit.name,
                     completions: completions.map((c) => ({
                       completedAt: c.completedAt,
                     })),
                   };
-
-                  if (habit.timerDuration !== undefined) {
-                    habitData.timerDuration = habit.timerDuration;
-                  }
-                  if (habit.position !== undefined) {
-                    habitData.position = habit.position;
-                  }
-
-                  return habitData;
                 } catch (error) {
-                  console.error(`Error processing habit ${habit._id}:`, error);
+                  console.error(`Error fetching completions for habit ${habit._id}:`, error);
                   return {
                     name: habit.name,
                     completions: [],
@@ -220,19 +206,28 @@ export const importData = mutation({
 
         // Import habits
         for (const habitData of calendarData.habits) {
-          const { name, completions, timerDuration, position } = habitData;
+          const { name, completions, timerDuration } = habitData;
 
           // Find or create habit
           const existingHabit = existingHabits.find((h) => h.name === name);
-          const habitId =
-            existingHabit?._id ||
-            (await ctx.db.insert("habits", {
+          let habitId: Id<"habits">;
+
+          if (existingHabit) {
+            habitId = existingHabit._id;
+            // Update existing habit
+            await ctx.db.patch(habitId, {
+              position: existingHabits.indexOf(existingHabit) + 1,
+            });
+          } else {
+            // Create new habit
+            habitId = await ctx.db.insert("habits", {
               name,
               userId: identity.subject,
               calendarId,
-              ...(timerDuration !== undefined && { timerDuration }),
-              ...(position !== undefined && { position }),
-            }));
+              timerDuration,
+              position: existingHabits.length + 1,
+            });
+          }
 
           // Get existing completions to avoid duplicates
           const existingCompletions = await ctx.db
@@ -263,14 +258,12 @@ export const importData = mutation({
 
         // Create all habits and completions for new calendar
         for (const habitData of calendarData.habits) {
-          const { name, completions, timerDuration, position } = habitData;
+          const { name, completions } = habitData;
 
           const habitId = await ctx.db.insert("habits", {
             name,
             userId: identity.subject,
             calendarId: newCalendarId,
-            ...(timerDuration !== undefined && { timerDuration }),
-            ...(position !== undefined && { position }),
           });
 
           for (const completion of completions) {

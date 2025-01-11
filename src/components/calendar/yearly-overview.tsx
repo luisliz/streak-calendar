@@ -166,7 +166,7 @@ export const YearlyOverview = ({ completions, isLoading = false }: YearlyOvervie
 
   return (
     <div className="mt-2 flex flex-col items-center sm:mt-4">
-      <div className="w-[350px] pb-1 text-[5px] text-muted-foreground/75 sm:w-[600px] sm:text-[8px] md:w-[800px] md:text-[10px] xl:w-[1000px] xl:text-xs">
+      <div className="w-[350px] pb-1 text-[5px] text-muted-foreground sm:w-[600px] sm:text-[8px] md:w-[800px] md:text-[10px] xl:w-[1000px] xl:text-xs">
         <span className="font-bold">{t("title")}</span>{" "}
         <span className="text-muted-foreground/75">{t("thingsDone", { count: totalCompletions })}</span>
       </div>

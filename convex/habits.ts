@@ -16,7 +16,8 @@ export const list = query({
       q = q.filter((q) => q.eq(q.field("calendarId"), args.calendarId));
     }
 
-    return await q.collect();
+    const habits = await q.collect();
+    return habits.sort((a, b) => (a.position ?? Infinity) - (b.position ?? Infinity));
   },
 });
 
@@ -36,11 +37,20 @@ export const create = mutation({
       throw new Error("Calendar not found");
     }
 
+    // Get max position for this calendar
+    const habits = await ctx.db
+      .query("habits")
+      .filter((q) => q.eq(q.field("calendarId"), args.calendarId))
+      .collect();
+
+    const maxPosition = habits.reduce((max, habit) => Math.max(max, habit.position || 0), 0);
+
     return await ctx.db.insert("habits", {
       name: args.name,
       userId: identity.subject,
       calendarId: args.calendarId,
       timerDuration: args.timerDuration,
+      position: maxPosition + 1,
     });
   },
 });
@@ -122,6 +132,7 @@ export const update = mutation({
     name: v.string(),
     timerDuration: v.optional(v.number()),
     calendarId: v.id("calendars"),
+    position: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
@@ -138,10 +149,70 @@ export const update = mutation({
       throw new Error("Calendar not found");
     }
 
+    // Handle position update if provided or if calendar changed
+    if (args.position !== undefined || args.calendarId !== habit.calendarId) {
+      const habits = await ctx.db
+        .query("habits")
+        .filter((q) => q.eq(q.field("calendarId"), args.calendarId))
+        .collect();
+
+      // Calculate new position
+      let newPosition: number;
+      if (args.calendarId !== habit.calendarId) {
+        // Moving to different calendar - put at end
+        newPosition = habits.length + 1;
+      } else if (args.position !== undefined) {
+        // Staying in same calendar with specified position
+        newPosition = args.position;
+      } else {
+        // Staying in same calendar without position - keep current
+        newPosition = habit.position ?? habits.length + 1;
+      }
+
+      // Validate position
+      if (newPosition < 1 || newPosition > habits.length + 1) {
+        throw new Error("Invalid position");
+      }
+
+      // Update positions of other habits
+      const oldPosition = habit.position ?? 0;
+
+      if (args.calendarId === habit.calendarId && oldPosition !== newPosition) {
+        if (oldPosition < newPosition) {
+          // Moving down: decrease positions of habits in between
+          for (const h of habits) {
+            const hPos = h.position ?? 0;
+            if (hPos > oldPosition && hPos <= newPosition) {
+              await ctx.db.patch(h._id, { position: hPos - 1 });
+            }
+          }
+        } else {
+          // Moving up: increase positions of habits in between
+          for (const h of habits) {
+            const hPos = h.position ?? 0;
+            if (hPos >= newPosition && hPos < oldPosition) {
+              await ctx.db.patch(h._id, { position: hPos + 1 });
+            }
+          }
+        }
+      }
+
+      // Update the habit with new position
+      await ctx.db.patch(args.id, {
+        name: args.name,
+        timerDuration: args.timerDuration,
+        calendarId: args.calendarId,
+        position: newPosition,
+      });
+      return;
+    }
+
+    // Update the habit
     await ctx.db.patch(args.id, {
       name: args.name,
       timerDuration: args.timerDuration,
       calendarId: args.calendarId,
+      ...(args.position !== undefined && { position: args.position }),
     });
   },
 });

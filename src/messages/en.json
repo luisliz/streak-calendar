@@ -228,6 +228,10 @@
           "label": "Calendar",
           "placeholder": "Select calendar"
         },
+        "position": {
+          "label": "Position",
+          "placeholder": "Select position"
+        },
         "timer": {
           "label": "Timer Duration",
           "placeholder": "Select duration",

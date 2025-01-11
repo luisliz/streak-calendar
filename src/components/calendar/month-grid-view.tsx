@@ -25,6 +25,7 @@ interface MonthGridViewProps {
     _id: Id<"habits">;
     name: string;
     timerDuration?: number;
+    position?: number;
   };
   /** Color theme for the calendar */
   color: string;
@@ -44,6 +45,7 @@ interface MonthGridViewProps {
     _id: Id<"habits">;
     name: string;
     timerDuration?: number;
+    position?: number;
   }>;
   /** Callback for adding a new habit */
   onAddHabit: () => void;
@@ -62,50 +64,58 @@ export function MonthGridView({
 
   return (
     <div className="space-y-4">
-      {habits.map((habit) => {
-        // Calculate today's completion count for the habit
-        const today = new Date().toISOString().split("T")[0];
-        const todayCount = completions.filter(
-          (c) => c.habitId === habit._id && new Date(c.completedAt).toISOString().split("T")[0] === today
-        ).length;
+      {[...habits]
+        .sort((a, b) => (a.position ?? 0) - (b.position ?? 0))
+        .map((habit) => {
+          // Calculate today's completion count for the habit
+          const today = new Date().toISOString().split("T")[0];
+          const todayCount = completions.filter(
+            (c) => c.habitId === habit._id && new Date(c.completedAt).toISOString().split("T")[0] === today
+          ).length;
 
-        return (
-          // TODO: 2025-01-07 - empty classes are unacceptable
-          <div key={habit._id} className="">
-            {/* Habit header with name and timer duration */}
-            <div className="flex justify-center pt-8">
-              <div className="flex items-baseline pb-2">
-                <div className="cursor-pointer" onClick={() => onEditHabit(habit)}>
-                  <h3
-                    className={`select-none text-2xl font-medium underline decoration-wavy decoration-2 ${color.replace(
-                      "bg-",
-                      "decoration-"
-                    )}/30 hover:text-muted-foreground hover:no-underline`}
-                  >
-                    {habit.name}
-                  </h3>
+          return (
+            // TODO: 2025-01-07 - empty classes are unacceptable
+            <div key={habit._id} className="">
+              {/* Habit header with name and timer duration */}
+              <div className="flex justify-center pt-8">
+                <div className="flex items-baseline pb-2">
+                  <div className="cursor-pointer" onClick={() => onEditHabit(habit)}>
+                    <h3
+                      className={`select-none text-2xl font-medium underline decoration-wavy decoration-2 ${color.replace(
+                        "bg-",
+                        "decoration-"
+                      )}/30 hover:text-muted-foreground hover:no-underline`}
+                    >
+                      {habit.name}
+                    </h3>
+                  </div>
+                  {habit.timerDuration && (
+                    <span className="ml-1 text-sm text-muted-foreground">({habit.timerDuration}m)</span>
+                  )}
                 </div>
-                {habit.timerDuration && (
-                  <span className="ml-1 text-sm text-muted-foreground">({habit.timerDuration}m)</span>
-                )}
               </div>
-            </div>
-            {/* Today's completion controls */}
-            <div className="flex justify-center pb-4">
-              <CompleteControls
-                count={todayCount}
-                onIncrement={() => onToggle(habit._id, today, todayCount + 1)}
-                onDecrement={() => onToggle(habit._id, today, todayCount - 1)}
-                variant="default"
-                timerDuration={habit.timerDuration}
-                habitName={habit.name}
+              {/* Today's completion controls */}
+              <div className="flex justify-center pb-4">
+                <CompleteControls
+                  count={todayCount}
+                  onIncrement={() => onToggle(habit._id, today, todayCount + 1)}
+                  onDecrement={() => onToggle(habit._id, today, todayCount - 1)}
+                  variant="default"
+                  timerDuration={habit.timerDuration}
+                  habitName={habit.name}
+                />
+              </div>
+              {/* Monthly calendar grid */}
+              <MonthGridCalendar
+                habit={habit}
+                color={color}
+                days={days}
+                completions={completions}
+                onToggle={onToggle}
               />
             </div>
-            {/* Monthly calendar grid */}
-            <MonthGridCalendar habit={habit} color={color} days={days} completions={completions} onToggle={onToggle} />
-          </div>
-        );
-      })}
+          );
+        })}
       {/* Add habit button */}
       <div className="flex justify-center pb-8">
         <Button variant="outline" size="sm" onClick={onAddHabit}>

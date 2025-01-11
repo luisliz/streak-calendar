@@ -117,7 +117,7 @@ export const DayCell = memo(
                   ) : (
                     <span
                       className={`absolute inset-0 flex items-center justify-center text-xs font-medium ${
-                        disabled ? "text-zinc-500" : "text-zinc-700 dark:text-zinc-300"
+                        disabled ? "text-zinc-500/50" : "text-zinc-600 dark:text-zinc-400"
                       } ${size === "small" ? "scale-90" : ""}`}
                     >
                       {label ?? new Date(date).getDate()}

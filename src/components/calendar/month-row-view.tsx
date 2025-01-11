@@ -23,6 +23,7 @@ interface MonthRowViewProps {
     _id: Id<"habits">;
     name: string;
     timerDuration?: number;
+    position?: number;
   };
   /** Color theme for the calendar */
   color: string;
@@ -42,6 +43,7 @@ interface MonthRowViewProps {
     _id: Id<"habits">;
     name: string;
     timerDuration?: number;
+    position?: number;
   }>;
   /** Callback for adding a new habit */
   onAddHabit: () => void;
@@ -95,7 +97,7 @@ export function MonthRowView({
                       isSaturday ? `${isRTL ? "border-l-2" : "border-r-2"} border-dotted border-primary/20` : ""
                     }`}
                   >
-                    <span className="absolute inset-0 flex scale-90 items-center justify-center text-xs font-medium text-foreground">
+                    <span className="absolute inset-0 flex scale-90 items-center justify-center text-xs font-medium text-foreground text-zinc-600 dark:text-zinc-400">
                       {t(`weekDaysShort.${dayOfWeek}`)}
                     </span>
                   </div>
@@ -108,75 +110,77 @@ export function MonthRowView({
 
       {/* Habit Rows Section */}
       <div className="relative space-y-px overflow-hidden">
-        {habits.map((habit) => {
-          // Calculate today's completion count for the habit
-          const today = new Date().toISOString().split("T")[0];
-          const todayCount = completions.filter(
-            (c) => c.habitId === habit._id && new Date(c.completedAt).toISOString().split("T")[0] === today
-          ).length;
+        {[...habits]
+          .sort((a, b) => (a.position ?? 0) - (b.position ?? 0))
+          .map((habit) => {
+            // Calculate today's completion count for the habit
+            const today = new Date().toISOString().split("T")[0];
+            const todayCount = completions.filter(
+              (c) => c.habitId === habit._id && new Date(c.completedAt).toISOString().split("T")[0] === today
+            ).length;
 
-          return (
-            <div key={habit._id} className="relative flex justify-end">
-              {/* Calendar view grid for the habit */}
-              <div className="flex-1">
-                <div className="flex justify-end">
-                  <div className={`flex gap-px ${isRTL ? "pl-24 md:pl-28" : "pr-24 md:pr-28"}`}>
-                    {days.map((date) => (
-                      <DayCell
-                        key={date}
-                        habitId={habit._id}
-                        date={date}
-                        count={getCompletionCount(date, habit._id, completions)}
-                        onCountChange={(newCount) => onToggle(habit._id, date, newCount)}
-                        colorClass={color}
-                        size="small"
-                      />
-                    ))}
+            return (
+              <div key={habit._id} className="relative flex justify-end">
+                {/* Calendar view grid for the habit */}
+                <div className="flex-1">
+                  <div className="flex justify-end">
+                    <div className={`flex gap-px ${isRTL ? "pl-24 md:pl-28" : "pr-24 md:pr-28"}`}>
+                      {days.map((date) => (
+                        <DayCell
+                          key={date}
+                          habitId={habit._id}
+                          date={date}
+                          count={getCompletionCount(date, habit._id, completions)}
+                          onCountChange={(newCount) => onToggle(habit._id, date, newCount)}
+                          colorClass={color}
+                          size="small"
+                        />
+                      ))}
+                    </div>
                   </div>
                 </div>
-              </div>
-              {/* Editable habit name with hover effects - direction aware */}
-              <div
-                className={`absolute flex w-24 cursor-pointer select-none items-start md:w-48 ${isRTL ? "right-0" : "left-0"}`}
-                onClick={() => onEditHabit(habit)}
-              >
-                <div className="relative flex items-center">
-                  <div className="flex items-baseline bg-card">
-                    <h3
-                      className={`text-base font-medium underline decoration-wavy decoration-2 ${color.replace(
-                        "bg-",
-                        "decoration-"
-                      )}/30 hover:text-muted-foreground hover:no-underline`}
-                      onClick={() => onEditHabit(habit)}
-                    >
-                      <span className="cursor-pointer truncate">{habit.name}</span>
-                    </h3>
-                    {habit.timerDuration && (
-                      <span className={`${isRTL ? "mx-1" : "ml-1"} text-sm text-muted-foreground/50`}>
-                        ({habit.timerDuration}m)
-                      </span>
-                    )}
+                {/* Editable habit name with hover effects - direction aware */}
+                <div
+                  className={`absolute flex w-24 cursor-pointer select-none items-start md:w-48 ${isRTL ? "right-0" : "left-0"}`}
+                  onClick={() => onEditHabit(habit)}
+                >
+                  <div className="relative flex items-center">
+                    <div className="flex items-baseline bg-card">
+                      <h3
+                        className={`text-base font-medium underline decoration-wavy decoration-2 ${color.replace(
+                          "bg-",
+                          "decoration-"
+                        )}/30 hover:text-muted-foreground hover:no-underline`}
+                        onClick={() => onEditHabit(habit)}
+                      >
+                        <span className="cursor-pointer truncate">{habit.name}</span>
+                      </h3>
+                      {habit.timerDuration && (
+                        <span className={`${isRTL ? "mx-1" : "ml-1"} text-sm text-muted-foreground/50`}>
+                          ({habit.timerDuration}m)
+                        </span>
+                      )}
+                    </div>
+                    {/* Gradient fade effect for habit name */}
+                    <div
+                      className={`h-6 w-12 ${isRTL ? "bg-gradient-to-l" : "bg-gradient-to-r"} from-card to-transparent`}
+                    />
                   </div>
-                  {/* Gradient fade effect for habit name */}
-                  <div
-                    className={`h-6 w-12 ${isRTL ? "bg-gradient-to-l" : "bg-gradient-to-r"} from-card to-transparent`}
+                </div>
+                {/* Habit completion controls for today */}
+                <div className={`absolute ${isRTL ? "left-0" : "right-0"}`}>
+                  <CompleteControls
+                    count={todayCount}
+                    onIncrement={() => onToggle(habit._id, today, todayCount + 1)}
+                    onDecrement={() => onToggle(habit._id, today, todayCount - 1)}
+                    variant="default"
+                    timerDuration={habit.timerDuration}
+                    habitName={habit.name}
                   />
                 </div>
               </div>
-              {/* Habit completion controls for today */}
-              <div className={`absolute ${isRTL ? "left-0" : "right-0"}`}>
-                <CompleteControls
-                  count={todayCount}
-                  onIncrement={() => onToggle(habit._id, today, todayCount + 1)}
-                  onDecrement={() => onToggle(habit._id, today, todayCount - 1)}
-                  variant="default"
-                  timerDuration={habit.timerDuration}
-                  habitName={habit.name}
-                />
-              </div>
-            </div>
-          );
-        })}
+            );
+          })}
       </div>
       {/* Add new habit button */}
       <div className={`mt-px flex ${isRTL ? "justify-end" : "justify-end"}`}>
