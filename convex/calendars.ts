@@ -1,8 +1,15 @@
+/**
+ * Calendar operations for managing user calendars and their associated habits/completions.
+ * Provides CRUD operations and data import/export functionality.
+ */
 import { v } from "convex/values";
 
 import { Id } from "./_generated/dataModel";
 import { mutation, query } from "./_generated/server";
 
+/**
+ * Retrieves all calendars for the authenticated user, ordered by most recent first.
+ */
 export const list = query({
   handler: async (ctx) => {
     const identity = await ctx.auth.getUserIdentity();
@@ -16,6 +23,9 @@ export const list = query({
   },
 });
 
+/**
+ * Creates a new calendar with specified name and color theme.
+ */
 export const create = mutation({
   args: {
     name: v.string(),
@@ -33,6 +43,13 @@ export const create = mutation({
   },
 });
 
+/**
+ * Removes a calendar and cascades deletion to all associated habits and completions.
+ * Follows this order:
+ * 1. Delete all completions for each habit
+ * 2. Delete all habits in the calendar
+ * 3. Delete the calendar itself
+ */
 export const remove = mutation({
   args: {
     id: v.id("calendars"),
@@ -71,6 +88,9 @@ export const remove = mutation({
   },
 });
 
+/**
+ * Updates a calendar's name and color theme after verifying ownership.
+ */
 export const update = mutation({
   args: { id: v.id("calendars"), name: v.string(), colorTheme: v.string() },
   handler: async (ctx, args) => {
@@ -89,6 +109,20 @@ export const update = mutation({
   },
 });
 
+/**
+ * Exports all user's calendars with their habits and completions.
+ * Structure:
+ * {
+ *   calendars: [{
+ *     name: string,
+ *     colorTheme: string,
+ *     habits: [{
+ *       name: string,
+ *       completions: [{ completedAt: number }]
+ *     }]
+ *   }]
+ * }
+ */
 export const exportData = query({
   handler: async (ctx) => {
     try {
@@ -156,6 +190,16 @@ export const exportData = query({
   },
 });
 
+/**
+ * Imports calendar data with habits and completions.
+ * For existing calendars (matched by name):
+ * - Updates the calendar's color theme
+ * - Adds new habits or updates existing ones
+ * - Adds only new completions (avoids duplicates)
+ *
+ * For new calendars:
+ * - Creates the calendar with all habits and completions
+ */
 export const importData = mutation({
   args: {
     data: v.object({
@@ -183,6 +227,7 @@ export const importData = mutation({
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) throw new Error("Not authenticated");
 
+    // Get existing calendars for matching
     const existingCalendars = await ctx.db
       .query("calendars")
       .filter((q) => q.eq(q.field("userId"), identity.subject))
@@ -214,12 +259,12 @@ export const importData = mutation({
 
           if (existingHabit) {
             habitId = existingHabit._id;
-            // Update existing habit
+            // Update existing habit position
             await ctx.db.patch(habitId, {
               position: existingHabits.indexOf(existingHabit) + 1,
             });
           } else {
-            // Create new habit
+            // Create new habit with position at end of list
             habitId = await ctx.db.insert("habits", {
               name,
               userId: identity.subject,
@@ -249,14 +294,13 @@ export const importData = mutation({
           }
         }
       } else {
-        // Create new calendar if it doesn't exist
+        // Create new calendar with all its habits and completions
         const newCalendarId = await ctx.db.insert("calendars", {
           name: calendarData.name,
           userId: identity.subject,
           colorTheme: calendarData.colorTheme,
         });
 
-        // Create all habits and completions for new calendar
         for (const habitData of calendarData.habits) {
           const { name, completions } = habitData;
 
@@ -279,6 +323,9 @@ export const importData = mutation({
   },
 });
 
+/**
+ * Retrieves a single calendar by ID after verifying it exists.
+ */
 export const get = query({
   args: { id: v.id("calendars") },
   handler: async (ctx, args) => {
