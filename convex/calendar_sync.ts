@@ -54,7 +54,6 @@ export const exportData = query({
                     } = await ctx.db
                       .query("completions")
                       .filter((q) => q.eq(q.field("habitId"), habit._id))
-                      .order("desc")
                       .paginate({ numItems: CHUNK_SIZE, cursor });
 
                     allCompletions.push(...page);
