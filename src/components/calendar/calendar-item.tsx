@@ -45,7 +45,7 @@ interface CalendarItemProps {
   /** Callback to edit a specific habit's properties */
   onEditHabit: (habit: { _id: Id<"habits">; name: string; timerDuration?: number }) => void;
   /** Callback to toggle habit completion for a specific date */
-  onToggleHabit: (habitId: Id<"habits">, date: string, count: number) => void;
+  onToggleHabit: (habitId: Id<"habits">, date: string, count: number) => Promise<void>;
   /** Current view mode of the calendar */
   view: CalendarViewType;
 }

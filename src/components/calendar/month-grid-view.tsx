@@ -5,6 +5,7 @@ import { getCompletionCount } from "@/utils/completion-utils";
 import { format } from "date-fns";
 import { PlusCircle } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { useState } from "react";
 
 import { Id } from "@server/convex/_generated/dataModel";
 
@@ -37,7 +38,7 @@ interface MonthGridViewProps {
     completedAt: number;
   }>;
   /** Callback for toggling habit completion */
-  onToggle: (habitId: Id<"habits">, date: string, count: number) => void;
+  onToggle: (habitId: Id<"habits">, date: string, count: number) => Promise<void>;
   /** Callback for editing habit properties */
   onEditHabit: (habit: { _id: Id<"habits">; name: string; timerDuration?: number }) => void;
   /** Array of all habits in the calendar */
@@ -61,6 +62,16 @@ export function MonthGridView({
   onAddHabit,
 }: MonthGridViewProps) {
   const t = useTranslations("calendar");
+  const [loadingState, setLoadingState] = useState<{ habitId: Id<"habits">; date: string } | null>(null);
+
+  const handleToggle = async (habitId: Id<"habits">, date: string, count: number) => {
+    setLoadingState({ habitId, date });
+    try {
+      await onToggle(habitId, date, count);
+    } finally {
+      setLoadingState(null);
+    }
+  };
 
   return (
     <div className="space-y-4">
@@ -98,11 +109,12 @@ export function MonthGridView({
               <div className="flex justify-center pb-4">
                 <CompleteControls
                   count={todayCount}
-                  onIncrement={() => onToggle(habit._id, today, todayCount + 1)}
-                  onDecrement={() => onToggle(habit._id, today, todayCount - 1)}
+                  onIncrement={() => handleToggle(habit._id, today, todayCount + 1)}
+                  onDecrement={() => handleToggle(habit._id, today, todayCount - 1)}
                   variant="default"
                   timerDuration={habit.timerDuration}
                   habitName={habit.name}
+                  disabled={loadingState?.habitId === habit._id}
                 />
               </div>
               {/* Monthly calendar grid */}
@@ -111,7 +123,8 @@ export function MonthGridView({
                 color={color}
                 days={days}
                 completions={completions}
-                onToggle={onToggle}
+                onToggle={handleToggle}
+                loadingState={loadingState}
               />
             </div>
           );
@@ -147,14 +160,15 @@ interface MonthGridCalendarProps {
     completedAt: number;
   }>;
   /** Callback for toggling habit completion */
-  onToggle: (habitId: Id<"habits">, date: string, count: number) => void;
+  onToggle: (habitId: Id<"habits">, date: string, count: number) => Promise<void>;
+  loadingState: { habitId: Id<"habits">; date: string } | null;
 }
 
 /**
  * Subcomponent that renders the actual calendar grid for a habit
  * Handles month calculation, day padding, and responsive layout
  */
-function MonthGridCalendar({ habit, color, days, completions, onToggle }: MonthGridCalendarProps) {
+function MonthGridCalendar({ habit, color, days, completions, onToggle, loadingState }: MonthGridCalendarProps) {
   const isMobile = useMobile();
   const t = useTranslations("calendar");
 
@@ -231,6 +245,7 @@ function MonthGridCalendar({ habit, color, days, completions, onToggle }: MonthG
                         colorClass={color}
                         size="large"
                         disabled={!isInRange}
+                        isUpdating={loadingState?.habitId === habit._id && loadingState?.date === dateStr}
                       />
                     </div>
                   </div>

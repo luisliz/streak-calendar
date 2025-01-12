@@ -19,9 +19,9 @@ interface CompleteControlsProps {
   /** Current count value */
   count: number;
   /** Callback to increment the count */
-  onIncrement: () => void;
+  onIncrement: () => Promise<void>;
   /** Callback to decrement the count */
-  onDecrement: () => void;
+  onDecrement: () => Promise<void>;
   /** Visual style variant for the buttons */
   variant?: "default" | "ghost";
   /** Timer duration in minutes (optional) */
@@ -30,6 +30,8 @@ interface CompleteControlsProps {
   onComplete?: () => void;
   /** Name of the habit */
   habitName?: string;
+  /** Whether the controls are disabled */
+  disabled?: boolean;
 }
 
 export function CompleteControls({
@@ -40,19 +42,20 @@ export function CompleteControls({
   timerDuration,
   onComplete,
   habitName = "Timer",
+  disabled = false,
 }: CompleteControlsProps) {
   const [isTimerModalOpen, setIsTimerModalOpen] = useState(false);
   const timerButtonRef = useRef<HTMLButtonElement>(null);
   const t = useTranslations("calendar.controls");
 
   // Handlers for increment/decrement with completion callback
-  const handleIncrement = useCallback(() => {
-    onIncrement();
+  const handleIncrement = useCallback(async () => {
+    await onIncrement();
     onComplete?.();
   }, [onIncrement, onComplete]);
 
-  const handleDecrement = useCallback(() => {
-    onDecrement();
+  const handleDecrement = useCallback(async () => {
+    await onDecrement();
     onComplete?.();
   }, [onDecrement, onComplete]);
 
@@ -81,7 +84,7 @@ export function CompleteControls({
     [confettiShape]
   );
 
-  const handleTimerComplete = useCallback(() => {
+  const handleTimerComplete = useCallback(async () => {
     // Trigger confetti at the timer button's position
     if (timerButtonRef.current) {
       const rect = timerButtonRef.current.getBoundingClientRect();
@@ -89,7 +92,7 @@ export function CompleteControls({
       const y = rect.top / window.innerHeight;
       confettiLib(getConfettiOptions({ x, y }));
     }
-    handleIncrement();
+    await handleIncrement();
   }, [getConfettiOptions, handleIncrement]);
 
   // Timer mode with count = 0: Show start button
@@ -103,6 +106,7 @@ export function CompleteControls({
             size="sm"
             className="flex h-6 w-[96px] items-center justify-center text-xs"
             onClick={() => setIsTimerModalOpen(true)}
+            disabled={disabled}
           >
             {t("start")}
           </Button>
@@ -126,6 +130,7 @@ export function CompleteControls({
             size="icon"
             className="aspect-square h-6 w-6 rounded-full p-0"
             onClick={handleDecrement}
+            disabled={disabled}
           >
             <Minus className="h-4 w-4" />
           </Button>
@@ -138,6 +143,7 @@ export function CompleteControls({
             size="icon"
             className="aspect-square h-6 w-6 rounded-full p-0"
             onClick={() => setIsTimerModalOpen(true)}
+            disabled={disabled}
           >
             <Timer className="h-4 w-4" />
           </Button>
@@ -163,6 +169,7 @@ export function CompleteControls({
           className="h-6 w-[96px] text-xs"
           onClick={handleIncrement}
           options={getConfettiOptions()}
+          disabled={disabled}
         >
           {t("complete")}
         </ConfettiButton>
@@ -179,6 +186,7 @@ export function CompleteControls({
           size="icon"
           className="aspect-square h-6 w-6 rounded-full p-0"
           onClick={handleDecrement}
+          disabled={disabled}
         >
           <Minus className="h-4 w-4" />
         </Button>
@@ -191,6 +199,7 @@ export function CompleteControls({
           className="aspect-square h-6 w-6 rounded-full p-0"
           onClick={handleIncrement}
           options={getConfettiOptions()}
+          disabled={disabled}
         >
           <Plus className="h-4 w-4" />
         </ConfettiButton>

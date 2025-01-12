@@ -3,6 +3,7 @@ import { CompleteControls } from "@/components/ui/complete-controls";
 import { getCompletionCount } from "@/utils/completion-utils";
 import { format } from "date-fns";
 import { useLocale, useTranslations } from "next-intl";
+import { useState } from "react";
 
 import { Id } from "@server/convex/_generated/dataModel";
 
@@ -35,7 +36,7 @@ interface MonthRowViewProps {
     completedAt: number;
   }>;
   /** Callback for toggling habit completion */
-  onToggle: (habitId: Id<"habits">, date: string, count: number) => void;
+  onToggle: (habitId: Id<"habits">, date: string, count: number) => Promise<void>;
   /** Callback for editing habit properties */
   onEditHabit: (habit: { _id: Id<"habits">; name: string; timerDuration?: number }) => void;
   /** Array of all habits in the calendar */
@@ -64,8 +65,18 @@ export function MonthRowView({
 }: MonthRowViewProps) {
   const locale = useLocale();
   const t = useTranslations("calendar");
+  const [loadingState, setLoadingState] = useState<{ habitId: Id<"habits">; date: string } | null>(null);
   // Check if current locale is RTL (Hebrew or Arabic)
   const isRTL = ["he", "ar"].includes(locale);
+
+  const handleToggle = async (habitId: Id<"habits">, date: string, count: number) => {
+    setLoadingState({ habitId, date });
+    try {
+      await onToggle(habitId, date, count);
+    } finally {
+      setLoadingState(null);
+    }
+  };
 
   return (
     <div className="relative">
@@ -131,9 +142,10 @@ export function MonthRowView({
                           habitId={habit._id}
                           date={date}
                           count={getCompletionCount(date, habit._id, completions)}
-                          onCountChange={(newCount) => onToggle(habit._id, date, newCount)}
+                          onCountChange={(newCount) => handleToggle(habit._id, date, newCount)}
                           colorClass={color}
                           size="small"
+                          isUpdating={loadingState?.habitId === habit._id && loadingState?.date === date}
                         />
                       ))}
                     </div>
@@ -171,11 +183,12 @@ export function MonthRowView({
                 <div className={`absolute ${isRTL ? "left-0" : "right-0"}`}>
                   <CompleteControls
                     count={todayCount}
-                    onIncrement={() => onToggle(habit._id, today, todayCount + 1)}
-                    onDecrement={() => onToggle(habit._id, today, todayCount - 1)}
+                    onIncrement={() => handleToggle(habit._id, today, todayCount + 1)}
+                    onDecrement={() => handleToggle(habit._id, today, todayCount - 1)}
                     variant="default"
                     timerDuration={habit.timerDuration}
                     habitName={habit.name}
+                    disabled={loadingState?.habitId === habit._id}
                   />
                 </div>
               </div>

@@ -4,6 +4,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { getCompletionColorClass } from "@/lib/colors";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
+import { Loader2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { memo, useState } from "react";
 
@@ -23,23 +24,25 @@ import { XIcon } from "../ui/x-icon";
  * @property {Id<"habits">} habitId - Unique identifier for the habit
  * @property {string} date - ISO date string representing the cell's date
  * @property {number} count - Number of completions for this date
- * @property {(count: number) => void} onCountChange - Callback for updating completion count
+ * @property {(count: number) => Promise<void>} onCountChange - Callback for updating completion count
  * @property {string} colorClass - Base color theme for visual feedback (e.g., "bg-red-500")
  * @property {boolean} [gridView] - Optional flag for grid view display mode
  * @property {boolean} [disabled] - Optional flag to disable interactions (e.g., for dates outside query range)
  * @property {string} [label] - Optional label to display instead of date number
  * @property {"small" | "medium" | "large"} [size] - Optional size of the cell
+ * @property {boolean} [isUpdating] - Whether this cell is currently being updated
  */
 interface DayCellProps {
   habitId: Id<"habits">;
   date: string; // ISO date string for the day this completion represents
   count: number; // Current number of completions for this date
-  onCountChange: (count: number) => void; // Callback when completion count changes
+  onCountChange: (count: number) => Promise<void>; // Callback when completion count changes
   colorClass: string; // Base color theme (e.g., "bg-red-500") for visual feedback
   gridView?: boolean; // Whether to display in grid view (affects sizing)
   disabled?: boolean; // Whether the completion menu is disabled (outside query range)
   label?: string; // Optional label to display instead of date number
   size?: "small" | "medium" | "large"; // Optional size of the cell
+  isUpdating?: boolean; // Whether this cell is currently being updated
 }
 
 /**
@@ -47,23 +50,9 @@ interface DayCellProps {
  * Includes a clickable button that shows completion status and a popover menu for updating counts
  */
 export const DayCell = memo(
-  ({ date, count, onCountChange, colorClass, disabled, label, size = "medium" }: DayCellProps) => {
+  ({ date, count, onCountChange, colorClass, disabled, label, size = "medium", isUpdating = false }: DayCellProps) => {
     const [isOpen, setIsOpen] = useState(false);
     const t = useTranslations("calendar");
-
-    const handleIncrement = () => {
-      if (disabled) return;
-      onCountChange(count + 1);
-      setIsOpen(false);
-    };
-
-    const handleDecrement = () => {
-      if (disabled) return;
-      if (count > 0) {
-        onCountChange(count - 1);
-        setIsOpen(false);
-      }
-    };
 
     // Extract color name from class and determine fill color based on completion count
     const colorMatch = colorClass.match(/bg-(\w+)-500/);
@@ -92,6 +81,12 @@ export const DayCell = memo(
       large: "!h-[48px] !w-[48px]",
     };
 
+    const loaderSizeClasses = {
+      small: "h-3 w-3",
+      medium: "h-5 w-5",
+      large: "h-6 w-6",
+    };
+
     return (
       <TooltipProvider>
         <Tooltip>
@@ -110,7 +105,9 @@ export const DayCell = memo(
                   )}
                   disabled={disabled}
                 >
-                  {count > 0 ? (
+                  {isUpdating ? (
+                    <Loader2 className={cn("animate-spin text-muted-foreground", loaderSizeClasses[size])} />
+                  ) : count > 0 ? (
                     <div className="absolute">
                       <XIcon key={`${count}-${fillClass}`} className={`${iconSizeClasses[size]} ${fillClass}`} />
                     </div>
@@ -147,9 +144,10 @@ export const DayCell = memo(
                 <div className="flex justify-center">
                   <CompleteControls
                     count={count}
-                    onIncrement={handleIncrement}
-                    onDecrement={handleDecrement}
-                    onComplete={() => setIsOpen(false)}
+                    onIncrement={() => onCountChange(count + 1)}
+                    onDecrement={() => onCountChange(count - 1)}
+                    variant="default"
+                    disabled={isUpdating}
                   />
                 </div>
               </div>
@@ -167,7 +165,8 @@ export const DayCell = memo(
       prevProps.gridView === nextProps.gridView &&
       prevProps.disabled === nextProps.disabled &&
       prevProps.label === nextProps.label &&
-      prevProps.size === nextProps.size
+      prevProps.size === nextProps.size &&
+      prevProps.isUpdating === nextProps.isUpdating
     );
   }
 );
