@@ -181,3 +181,68 @@ export function getBackgroundColorClass(colorTheme: string, count: number): stri
   if (count === 2) return `${baseClass}/75`;
   return `${baseClass}/50`;
 }
+
+/**
+ * RGB values for each color in our theme
+ */
+const RGB_VALUES = {
+  red: "239 68 68",
+  orange: "249 115 22",
+  amber: "245 158 11",
+  yellow: "234 179 8",
+  lime: "132 204 22",
+  green: "34 197 94",
+  emerald: "16 185 129",
+  teal: "20 184 166",
+  cyan: "6 182 212",
+  sky: "14 165 233",
+  blue: "59 130 246",
+  indigo: "99 102 241",
+  violet: "139 92 246",
+  purple: "168 85 247",
+  fuchsia: "217 70 239",
+  pink: "236 72 153",
+  rose: "244 63 94",
+} as const;
+
+/**
+ * Generates RGB color values with opacity levels for activity calendar
+ */
+export function getActivityCalendarTheme(colorTheme: string): { light: string[]; dark: string[] } {
+  const colorMatch = colorTheme.match(/bg-(\w+)-\d+/);
+  if (!colorMatch) {
+    console.warn("Invalid color theme format:", colorTheme);
+    return {
+      light: [
+        "rgb(124 124 124 / 0.1)",
+        "rgb(239 68 68 / 0.3)",
+        "rgb(239 68 68 / 0.5)",
+        "rgb(239 68 68 / 0.7)",
+        "rgb(239 68 68 / 0.85)",
+      ],
+      dark: [
+        "rgb(124 124 124 / 0.1)",
+        "rgb(239 68 68 / 0.3)",
+        "rgb(239 68 68 / 0.5)",
+        "rgb(239 68 68 / 0.7)",
+        "rgb(239 68 68 / 0.85)",
+      ],
+    };
+  }
+
+  const colorName = colorMatch[1] as keyof typeof RGB_VALUES;
+  const rgb = RGB_VALUES[colorName];
+
+  const theme = [
+    "rgb(124 124 124 / 0.1)", // Empty state stays gray
+    `rgb(${rgb} / 0.3)`,
+    `rgb(${rgb} / 0.5)`,
+    `rgb(${rgb} / 0.7)`,
+    `rgb(${rgb} / 0.85)`,
+  ];
+
+  return {
+    light: theme,
+    dark: theme,
+  };
+}

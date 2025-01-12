@@ -2,9 +2,9 @@
 
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { getActivityCalendarTheme } from "@/lib/colors";
 import { motion } from "framer-motion";
 import { useRef } from "react";
-import type { ThemeInput } from "react-activity-calendar";
 import ActivityCalendar from "react-activity-calendar";
 
 import { Id } from "@server/convex/_generated/dataModel";
@@ -26,27 +26,17 @@ interface HabitActivityCalendarProps {
     blockMargin: number;
     showLabels: boolean;
   };
+  colorTheme: string;
 }
 
-const habitTheme: ThemeInput = {
-  light: [
-    "rgb(124 124 124 / 0.1)",
-    "rgb(239 68 68 / 0.3)",
-    "rgb(239 68 68 / 0.5)",
-    "rgb(239 68 68 / 0.7)",
-    "rgb(239 68 68 / 0.85)",
-  ],
-  dark: [
-    "rgb(124 124 124 / 0.1)",
-    "rgb(239 68 68 / 0.3)",
-    "rgb(239 68 68 / 0.5)",
-    "rgb(239 68 68 / 0.7)",
-    "rgb(239 68 68 / 0.85)",
-  ],
-};
-
-export function HabitActivityCalendar({ calendarData, completions, calendarSize }: HabitActivityCalendarProps) {
+export function HabitActivityCalendar({
+  calendarData,
+  completions,
+  calendarSize,
+  colorTheme,
+}: HabitActivityCalendarProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const theme = getActivityCalendarTheme(colorTheme);
 
   if (!completions) {
     return <Skeleton className="h-[150px] w-full" />;
@@ -84,7 +74,7 @@ export function HabitActivityCalendar({ calendarData, completions, calendarSize 
               blockMargin={calendarSize.blockMargin}
               fontSize={10}
               maxLevel={4}
-              theme={habitTheme}
+              theme={theme}
             />
           </div>
         </div>

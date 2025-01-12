@@ -185,7 +185,12 @@ export function HabitDetails({ habit, calendar }: HabitDetailsProps) {
         </div>
 
         <div className="space-y-4">
-          <HabitActivityCalendar calendarData={calendarData} completions={completions} calendarSize={calendarSize} />
+          <HabitActivityCalendar
+            calendarData={calendarData}
+            completions={completions}
+            calendarSize={calendarSize}
+            colorTheme={calendar.colorTheme}
+          />
 
           <HabitStatistics habitId={habit._id} completions={completions} />
         </div>
