@@ -203,7 +203,7 @@ function SingleMonthCalendar({ habit, color, completions, onToggle }: SingleMont
                     habitId={habit._id}
                     date={dateStr}
                     count={count}
-                    onCountChange={(newCount) => onToggle(habit._id, dateStr, newCount)}
+                    onCountChange={async (newCount) => onToggle(habit._id, dateStr, newCount)}
                     colorClass={color}
                     size="medium"
                     disabled={!isInRange}
