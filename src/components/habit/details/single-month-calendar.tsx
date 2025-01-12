@@ -1,9 +1,12 @@
 "use client";
 
 import { DayCell } from "@/components/calendar/day-cell";
+import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { format } from "date-fns";
+import { addMonths, format, subMonths } from "date-fns";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { useState } from "react";
 
 import { Id } from "@server/convex/_generated/dataModel";
 
@@ -19,15 +22,39 @@ interface SingleMonthCalendarProps {
     completedAt: number;
   }>;
   onToggle: (habitId: Id<"habits">, date: string, count: number) => void;
+  initialDate?: Date;
 }
 
-export function SingleMonthCalendar({ habit, color, completions, onToggle }: SingleMonthCalendarProps) {
+export function SingleMonthCalendar({
+  habit,
+  color,
+  completions,
+  onToggle,
+  initialDate = new Date(),
+}: SingleMonthCalendarProps) {
   const t = useTranslations("calendar");
+  const [currentDate, setCurrentDate] = useState(initialDate);
+  const [updatingDates, setUpdatingDates] = useState<Set<string>>(new Set());
+
+  const goToPreviousMonth = () => setCurrentDate((prev) => subMonths(prev, 1));
+  const goToNextMonth = () => setCurrentDate((prev) => addMonths(prev, 1));
+
+  const handleToggle = async (habitId: Id<"habits">, date: string, count: number) => {
+    setUpdatingDates((prev) => new Set(prev).add(date));
+    try {
+      await onToggle(habitId, date, count);
+    } finally {
+      setUpdatingDates((prev) => {
+        const next = new Set(prev);
+        next.delete(date);
+        return next;
+      });
+    }
+  };
 
   // Get current month's days
-  const today = new Date();
-  const currentMonth = new Date(today.getFullYear(), today.getMonth(), 1);
-  const daysInMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
+  const currentMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+  const daysInMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
 
   const monthDays = Array.from({ length: daysInMonth }, (_, i) => {
     const day = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), i + 1);
@@ -60,7 +87,15 @@ export function SingleMonthCalendar({ habit, color, completions, onToggle }: Sin
   return (
     <Card className="max-w-[350px] border p-2 shadow-md">
       <div className="p-4">
-        <h3 className="mb-4 text-center text-lg font-semibold">{`${monthName} ${year}`}</h3>
+        <div className="mb-4 flex items-center justify-between">
+          <Button variant="ghost" size="icon" onClick={goToPreviousMonth} className="h-8 w-8">
+            <ChevronLeft className="h-4 w-4" />
+          </Button>
+          <h3 className="text-lg font-semibold">{`${monthName} ${year}`}</h3>
+          <Button variant="ghost" size="icon" onClick={goToNextMonth} className="h-8 w-8">
+            <ChevronRight className="h-4 w-4" />
+          </Button>
+        </div>
         <div className="mx-auto w-fit">
           <div className="grid grid-cols-7 gap-1">
             {/* Day name labels */}
@@ -85,10 +120,11 @@ export function SingleMonthCalendar({ habit, color, completions, onToggle }: Sin
                     habitId={habit._id}
                     date={dateStr}
                     count={count}
-                    onCountChange={async (newCount) => onToggle(habit._id, dateStr, newCount)}
+                    onCountChange={async (newCount) => handleToggle(habit._id, dateStr, newCount)}
                     colorClass={color}
                     size="medium"
                     disabled={!isInRange}
+                    isUpdating={updatingDates.has(dateStr)}
                   />
                 </div>
               );
