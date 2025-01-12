@@ -160,3 +160,24 @@ export function getCompletionColorClass(colorTheme: string, count: number): stri
 
   return COLOR_LEVELS[colorName as keyof typeof COLOR_LEVELS][level];
 }
+
+/**
+ * Gets the background color class for calendar cells based on completion count.
+ * Similar to getCompletionColorClass but for background colors instead of SVG fills.
+ */
+export function getBackgroundColorClass(colorTheme: string, count: number): string {
+  if (count === 0) return "";
+
+  const colorMatch = colorTheme.match(/bg-(\w+)-\d+/);
+  if (!colorMatch) {
+    console.warn("Invalid color theme format:", colorTheme);
+    return "";
+  }
+
+  const colorName = colorMatch[1];
+  const baseClass = `bg-${colorName}-500`;
+
+  if (count >= 3) return baseClass;
+  if (count === 2) return `${baseClass}/75`;
+  return `${baseClass}/50`;
+}

@@ -46,7 +46,7 @@ function getCalendarSize() {
   return { blockSize: 8, blockMargin: 1, showLabels: false };
 }
 
-export function HabitDetails({ habit }: HabitDetailsProps) {
+export function HabitDetails({ habit, calendar }: HabitDetailsProps) {
   const router = useRouter();
   const { toast } = useToast();
   const [showDeleteAlert, setShowDeleteAlert] = useState(false);
@@ -168,7 +168,7 @@ export function HabitDetails({ habit }: HabitDetailsProps) {
         <div className="mx-auto w-full max-w-[300px] lg:mx-0 lg:w-[300px]">
           <SingleMonthCalendar
             habit={habit}
-            color="bg-red-500"
+            colorTheme={calendar.colorTheme}
             completions={completions ?? []}
             onToggle={async (habitId, date, count) => {
               try {

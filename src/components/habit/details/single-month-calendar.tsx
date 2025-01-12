@@ -3,6 +3,7 @@
 import { DayCell } from "@/components/calendar/day-cell";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { getBackgroundColorClass } from "@/lib/colors";
 import { addMonths, format, subMonths } from "date-fns";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -16,7 +17,7 @@ interface SingleMonthCalendarProps {
     name: string;
     timerDuration?: number;
   };
-  color: string;
+  colorTheme: string;
   completions: Array<{
     habitId: Id<"habits">;
     completedAt: number;
@@ -27,7 +28,7 @@ interface SingleMonthCalendarProps {
 
 export function SingleMonthCalendar({
   habit,
-  color,
+  colorTheme,
   completions,
   onToggle,
   initialDate = new Date(),
@@ -121,7 +122,7 @@ export function SingleMonthCalendar({
                   date={dateStr}
                   count={count}
                   onCountChange={async (newCount) => handleToggle(habit._id, dateStr, newCount)}
-                  colorClass={color}
+                  colorClass={getBackgroundColorClass(colorTheme, count)}
                   size="medium"
                   disabled={!isInRange}
                   isUpdating={updatingDates.has(dateStr)}
