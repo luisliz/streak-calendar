@@ -94,7 +94,7 @@ export function MonthRowView({
         />
         {/* Day name labels (Mo, Tu, We, etc.) */}
         <div className="flex flex-1 gap-px overflow-hidden">
-          <div className={`flex w-full justify-end gap-px ${isRTL ? "pl-24 md:pl-28" : "pr-24 md:pr-28"}`}>
+          <div className={`flex w-full justify-end gap-px ${isRTL ? "pl-[104px] md:pl-28" : "pr-[104px] md:pr-28"}`}>
             {days.map((day) => {
               const date = new Date(day);
               const dayOfWeek = format(date, "eee").toLowerCase();
@@ -135,7 +135,7 @@ export function MonthRowView({
                 {/* Calendar view grid for the habit */}
                 <div className="flex-1">
                   <div className="flex justify-end">
-                    <div className={`flex gap-px ${isRTL ? "pl-24 md:pl-28" : "pr-24 md:pr-28"}`}>
+                    <div className={`flex gap-px ${isRTL ? "pl-[104px] md:pl-28" : "pr-[104px] md:pr-28"}`}>
                       {days.map((date) => (
                         <DayCell
                           key={date}
