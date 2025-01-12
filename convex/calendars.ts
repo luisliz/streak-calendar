@@ -18,7 +18,7 @@ export const list = query({
     return await ctx.db
       .query("calendars")
       .filter((q) => q.eq(q.field("userId"), identity.subject))
-      .order("desc")
+      .order("asc")
       .collect();
   },
 });
@@ -148,12 +148,16 @@ export const update = mutation({
         if (otherCalendar._id === args.id) continue;
 
         const currentPosition = otherCalendar.position ?? allCalendars.length;
-        if (currentPosition >= newPosition && currentPosition < oldPosition) {
-          // Moving up: increment positions of calendars in between
-          await ctx.db.patch(otherCalendar._id, { position: currentPosition + 1 });
-        } else if (currentPosition <= newPosition && currentPosition > oldPosition) {
+        if (oldPosition < newPosition) {
           // Moving down: decrement positions of calendars in between
-          await ctx.db.patch(otherCalendar._id, { position: currentPosition - 1 });
+          if (currentPosition > oldPosition && currentPosition <= newPosition) {
+            await ctx.db.patch(otherCalendar._id, { position: currentPosition - 1 });
+          }
+        } else {
+          // Moving up: increment positions of calendars in between
+          if (currentPosition >= newPosition && currentPosition < oldPosition) {
+            await ctx.db.patch(otherCalendar._id, { position: currentPosition + 1 });
+          }
         }
       }
     }

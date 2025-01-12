@@ -194,7 +194,7 @@
           "placeholder": "Select position"
         },
         "actions": {
-          "back": "Back",
+          "back": "Go Back",
           "cancel": "Cancel",
           "delete": "Delete",
           "save": "Save Changes"
@@ -234,7 +234,7 @@
           "placeholder": "Select calendar"
         },
         "position": {
-          "label": "Position",
+          "label": "Display Order",
           "placeholder": "Select position"
         },
         "timer": {

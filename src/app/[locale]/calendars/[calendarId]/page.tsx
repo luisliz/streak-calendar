@@ -9,8 +9,8 @@ interface PageProps {
   };
 }
 
-export default function CalendarPage({ params }: PageProps) {
-  return <CalendarDetails calendarId={params.calendarId} />;
+export default async function CalendarPage({ params }: PageProps) {
+  return <CalendarDetails calendarId={await params.calendarId} />;
 }
 
 // Opt out of static rendering

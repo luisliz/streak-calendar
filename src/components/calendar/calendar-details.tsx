@@ -20,7 +20,7 @@ import { useRouter } from "@/i18n/routing";
 import { useMutation, useQuery } from "convex/react";
 import { ArrowLeft } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { api } from "@server/convex/_generated/api";
 import { Id } from "@server/convex/_generated/dataModel";
@@ -66,6 +66,18 @@ export function CalendarDetails({ calendarId }: CalendarDetailsProps) {
   const [name, setName] = useState(calendar?.name ?? "");
   const [colorTheme, setColorTheme] = useState(calendar?.colorTheme ?? "bg-red-500");
   const [position, setPosition] = useState<number>(calendar?.position ?? 1);
+
+  // Update form fields when calendar data changes
+  useEffect(() => {
+    if (calendar) {
+      setName(calendar.name);
+      setColorTheme(calendar.colorTheme);
+      setPosition(calendar.position ?? 1);
+    }
+  }, [calendar]);
+
+  // Sort calendars by position to ensure correct order
+  const sortedCalendars = calendars?.slice().sort((a, b) => (a.position ?? 0) - (b.position ?? 0)) ?? [];
 
   // Mutations
   const updateCalendar = useMutation(api.calendars.update);
@@ -113,7 +125,7 @@ export function CalendarDetails({ calendarId }: CalendarDetailsProps) {
   };
 
   return (
-    <>
+    <div className="mx-auto max-w-7xl">
       {/* Back navigation button */}
       <div className="flex items-center gap-2 p-2">
         <Button variant="ghost" onClick={() => router.push("/calendar")} className="gap-2">
@@ -126,6 +138,26 @@ export function CalendarDetails({ calendarId }: CalendarDetailsProps) {
       <div className="text-center">
         <h1 className="mb-8 text-2xl font-bold">{name}</h1>
       </div>
+
+      {/* Associated habits list card */}
+      <Card className="mx-auto my-8 max-w-xl border p-2 shadow-md">
+        <div className="p-4">
+          <h2 className="mb-6 text-lg font-semibold">Associated Habits</h2>
+          <div className="space-y-2">
+            {habits?.map((habit) => (
+              <div key={habit._id} className="flex items-center justify-between rounded-lg border p-3">
+                <span>{habit.name}</span>
+                <Button variant="ghost" size="sm" onClick={() => router.push(`/habits/${habit._id}`)}>
+                  View Details
+                </Button>
+              </div>
+            ))}
+            {habits?.length === 0 && (
+              <p className="text-center text-sm text-muted-foreground">No habits in this calendar yet.</p>
+            )}
+          </div>
+        </div>
+      </Card>
 
       {/* Calendar edit form card */}
       <Card className="mx-auto my-8 max-w-xl border p-2 shadow-md">
@@ -169,9 +201,9 @@ export function CalendarDetails({ calendarId }: CalendarDetailsProps) {
                   <SelectValue placeholder={t("calendar.edit.position.placeholder")} />
                 </SelectTrigger>
                 <SelectContent>
-                  {Array.from({ length: calendars?.length ?? 0 }, (_, i) => (
-                    <SelectItem key={i + 1} value={(i + 1).toString()}>
-                      {i + 1}
+                  {sortedCalendars.map((_, index) => (
+                    <SelectItem key={index + 1} value={(index + 1).toString()}>
+                      {index + 1}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -186,26 +218,6 @@ export function CalendarDetails({ calendarId }: CalendarDetailsProps) {
                 {t("calendar.edit.actions.save")}
               </Button>
             </div>
-          </div>
-        </div>
-      </Card>
-
-      {/* Associated habits list card */}
-      <Card className="mx-auto my-8 max-w-xl border p-2 shadow-md">
-        <div className="p-4">
-          <h2 className="mb-6 text-lg font-semibold">Associated Habits</h2>
-          <div className="space-y-2">
-            {habits?.map((habit) => (
-              <div key={habit._id} className="flex items-center justify-between rounded-lg border p-3">
-                <span>{habit.name}</span>
-                <Button variant="ghost" size="sm" onClick={() => router.push(`/habits/${habit._id}`)}>
-                  View Details
-                </Button>
-              </div>
-            ))}
-            {habits?.length === 0 && (
-              <p className="text-center text-sm text-muted-foreground">No habits in this calendar yet.</p>
-            )}
           </div>
         </div>
       </Card>
@@ -228,6 +240,6 @@ export function CalendarDetails({ calendarId }: CalendarDetailsProps) {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </>
+    </div>
   );
 }

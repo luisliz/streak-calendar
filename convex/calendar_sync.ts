@@ -40,16 +40,33 @@ export const exportData = query({
             const habitsWithCompletions = await Promise.all(
               habits.map(async (habit) => {
                 try {
-                  const completions = await ctx.db
-                    .query("completions")
-                    .filter((q) => q.eq(q.field("habitId"), habit._id))
-                    .collect();
+                  // Paginate completions with a reasonable chunk size
+                  const CHUNK_SIZE = 1000;
+                  const allCompletions = [];
+                  let cursor = null;
+                  let isDone = false;
+
+                  while (!isDone) {
+                    const {
+                      page,
+                      continueCursor,
+                      isDone: done,
+                    } = await ctx.db
+                      .query("completions")
+                      .filter((q) => q.eq(q.field("habitId"), habit._id))
+                      .order("desc")
+                      .paginate({ numItems: CHUNK_SIZE, cursor });
+
+                    allCompletions.push(...page);
+                    cursor = continueCursor;
+                    isDone = done;
+                  }
 
                   return {
                     name: habit.name,
                     position: habit.position,
                     timerDuration: habit.timerDuration,
-                    completions: completions.map((c) => ({
+                    completions: allCompletions.map((c) => ({
                       completedAt: c.completedAt,
                     })),
                   };
