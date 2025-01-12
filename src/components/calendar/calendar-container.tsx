@@ -72,7 +72,7 @@ function EmptyState({ monthViewData }: { monthViewData: CalendarData }) {
 
   return (
     <div className="flex flex-col items-center justify-center space-y-4 py-16">
-      <p className="text-sm text-muted-foreground">{t("emptyState")}</p>
+      <p className="text-sm text-muted-foreground">{t("emptyState.noCalendars")}</p>
       <Button variant="default" onClick={openNewCalendar}>
         <PlusCircle className="h-4 w-4" />
         {t("addCalendar")}

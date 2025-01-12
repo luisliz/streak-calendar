@@ -3,7 +3,7 @@
 import { AuthenticationWrapper } from "@/components/authentication-wrapper";
 import { CalendarContainer } from "@/components/calendar/calendar-container";
 import { ImportExport } from "@/components/calendar/import-export";
-import { YearlyOverview } from "@/components/calendar/yearly-overview";
+// import { YearlyOverview } from "@/components/calendar/yearly-overview";
 import { useCalendarData } from "@/hooks/use-calendar-data";
 import { useDateRange } from "@/hooks/use-date-range";
 import { useViewState } from "@/hooks/use-view-state";
@@ -17,7 +17,7 @@ import { memo, useMemo } from "react";
 
 // Memoize components to prevent unnecessary re-renders
 const MemoizedCalendarContainer = memo(CalendarContainer);
-const MemoizedYearlyOverview = memo(YearlyOverview);
+// const MemoizedYearlyOverview = memo(YearlyOverview);
 
 export default function CalendarPage() {
   // Manage view state (monthRow/year) using custom hook
@@ -31,7 +31,7 @@ export default function CalendarPage() {
 
   // Fetch calendar data (habits, completions) for both views
   const monthViewData = useCalendarData(monthData.startDate, monthData.today);
-  const yearViewData = useCalendarData(yearData.startDate, yearData.today);
+  // const yearViewData = useCalendarData(yearData.startDate, yearData.today);
 
   // Select appropriate days range based on current view
   const days = isMonthView ? monthData.days : yearData.days;
@@ -50,16 +50,16 @@ export default function CalendarPage() {
   const isLoading = !monthViewData.calendars || !monthViewData.habits || !monthViewData.completions;
 
   return (
-    <div className="container mx-auto max-w-7xl">
+    <div className="container mx-auto max-w-7xl pt-16">
       <AuthenticationWrapper>
         <>
           {/* Yearly overview component showing habit completion heatmap */}
-          <MemoizedYearlyOverview
+          {/* <MemoizedYearlyOverview
             completions={yearViewData.completions || []}
             habits={memoizedData.habits}
             calendars={memoizedData.calendars}
             isLoading={isLoading}
-          />
+          /> */}
           {/* Main calendar container with month/year view toggle */}
           <MemoizedCalendarContainer
             calendarView={view}
