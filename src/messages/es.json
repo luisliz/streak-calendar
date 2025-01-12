@@ -197,13 +197,18 @@
         "actions": {
           "cancel": "Cancelar",
           "delete": "Eliminar",
-          "save": "Guardar cambios"
+          "save": "Guardar cambios",
+          "back": "Volver"
         },
         "deleteConfirm": {
           "title": "¿Estás seguro?",
           "description": "Esto eliminará permanentemente el calendario \"{name}\" y todos sus hábitos. Esta acción no se puede deshacer.",
           "cancel": "Cancelar",
           "confirm": "Eliminar calendario"
+        },
+        "position": {
+          "label": "Orden de visualización",
+          "placeholder": "Seleccionar posición"
         }
       }
     },
@@ -244,6 +249,14 @@
           "description": "¿Estás seguro de que quieres eliminar \"{name}\"? Esta acción no se puede deshacer.",
           "cancel": "Cancelar",
           "confirm": "Eliminar"
+        },
+        "calendar": {
+          "label": "Calendario",
+          "placeholder": "Seleccionar calendario"
+        },
+        "position": {
+          "label": "Orden de visualización",
+          "placeholder": "Seleccionar posición"
         }
       }
     },

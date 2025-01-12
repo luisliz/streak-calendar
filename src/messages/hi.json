@@ -196,7 +196,8 @@
         "actions": {
           "cancel": "रद्द करें",
           "delete": "हटाएं",
-          "save": "परिवर्तन सहेजें"
+          "save": "परिवर्तन सहेजें",
+          "back": "वापस जाएं"
         },
         "deleteConfirm": {
           "title": "क्या आप सुनिश्चित हैं?",
@@ -244,6 +245,14 @@
           "cancel": "रद्द करें",
           "confirm": "हटाएं"
         }
+      },
+      "calendar": {
+        "label": "कैलेंडर",
+        "placeholder": "कैलेंडर चुनें"
+      },
+      "position": {
+        "label": "प्रदर्शन क्रम",
+        "placeholder": "स्थिति चुनें"
       }
     },
     "colors": {

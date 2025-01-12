@@ -197,13 +197,18 @@
         "actions": {
           "cancel": "Abbrechen",
           "delete": "Löschen",
-          "save": "Änderungen speichern"
+          "save": "Änderungen speichern",
+          "back": "Zurück"
         },
         "deleteConfirm": {
           "title": "Bist du sicher?",
           "description": "Dies wird den Kalender \"{name}\" und alle seine Gewohnheiten dauerhaft löschen. Diese Aktion kann nicht rückgängig gemacht werden.",
           "cancel": "Abbrechen",
           "confirm": "Kalender löschen"
+        },
+        "position": {
+          "label": "Anzeigereihenfolge",
+          "placeholder": "Position auswählen"
         }
       }
     },
@@ -237,13 +242,22 @@
         "actions": {
           "cancel": "Abbrechen",
           "delete": "Löschen",
-          "save": "Änderungen speichern"
+          "save": "Änderungen speichern",
+          "back": "Zurück"
         },
         "deleteConfirm": {
           "title": "Bist du sicher?",
           "description": "Dies wird die Gewohnheit \"{name}\" dauerhaft löschen. Diese Aktion kann nicht rückgängig gemacht werden.",
           "cancel": "Abbrechen",
           "confirm": "Gewohnheit löschen"
+        },
+        "calendar": {
+          "label": "Kalender",
+          "placeholder": "Kalender auswählen"
+        },
+        "position": {
+          "label": "Anzeigereihenfolge",
+          "placeholder": "Position auswählen"
         }
       }
     },

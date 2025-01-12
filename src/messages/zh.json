@@ -196,7 +196,8 @@
         "actions": {
           "cancel": "取消",
           "delete": "删除",
-          "save": "保存更改"
+          "save": "保存更改",
+          "back": "返回"
         },
         "deleteConfirm": {
           "title": "确定吗？",
@@ -243,6 +244,14 @@
           "description": "确定要删除\"{name}\"吗？此操作无法撤消。",
           "cancel": "取消",
           "confirm": "删除"
+        },
+        "calendar": {
+          "label": "日历",
+          "placeholder": "选择日历"
+        },
+        "position": {
+          "label": "显示顺序",
+          "placeholder": "选择位置"
         }
       }
     },

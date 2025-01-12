@@ -197,13 +197,18 @@
         "actions": {
           "cancel": "Annuler",
           "delete": "Supprimer",
-          "save": "Enregistrer les Modifications"
+          "save": "Enregistrer les Modifications",
+          "back": "Retour"
         },
         "deleteConfirm": {
           "title": "Êtes-vous sûr ?",
           "description": "Cela supprimera définitivement le calendrier \"{name}\" et toutes ses habitudes. Cette action ne peut pas être annulée.",
           "cancel": "Annuler",
           "confirm": "Supprimer le Calendrier"
+        },
+        "position": {
+          "label": "Ordre d'affichage",
+          "placeholder": "Sélectionner la position"
         }
       }
     },
@@ -237,13 +242,22 @@
         "actions": {
           "cancel": "Annuler",
           "delete": "Supprimer",
-          "save": "Enregistrer les Modifications"
+          "save": "Enregistrer les Modifications",
+          "back": "Retour"
         },
         "deleteConfirm": {
           "title": "Êtes-vous sûr ?",
           "description": "Cela supprimera définitivement l'habitude \"{name}\". Cette action ne peut pas être annulée.",
           "cancel": "Annuler",
           "confirm": "Supprimer l'Habitude"
+        },
+        "calendar": {
+          "label": "Calendrier",
+          "placeholder": "Sélectionner le calendrier"
+        },
+        "position": {
+          "label": "Ordre d'affichage",
+          "placeholder": "Sélectionner la position"
         }
       }
     },
