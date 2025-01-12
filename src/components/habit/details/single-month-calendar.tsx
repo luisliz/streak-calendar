@@ -85,6 +85,7 @@ export function SingleMonthCalendar({
   const year = format(firstDay, "yyyy");
 
   return (
+    // TODO: 2025-01-12 - what does min-w-[300px] even mean?
     <Card className="min-w-[300px] border p-4 shadow-md">
       <div className="mb-4 flex items-center justify-between">
         <Button variant="ghost" size="icon" onClick={goToPreviousMonth} className="h-8 w-8">
