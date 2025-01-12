@@ -114,11 +114,8 @@ export const importData = mutation({
               name: v.string(),
               timerDuration: v.optional(v.number()),
               position: v.optional(v.number()),
-              completions: v.array(
-                v.object({
-                  completedAt: v.number(),
-                })
-              ),
+              completions: v.array(v.object({ completedAt: v.number() })),
+              targetFrequency: v.optional(v.any()),
             })
           ),
         })
