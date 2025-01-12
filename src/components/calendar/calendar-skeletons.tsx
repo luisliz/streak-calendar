@@ -77,7 +77,7 @@ function MonthRowSkeleton() {
 
             {/* Days - single continuous skeleton */}
             <div className="flex flex-1 pl-32 md:pl-48">
-              <div className="flex w-full pr-24 md:pr-28">
+              <div className="flex w-full pr-[104px] md:pr-28">
                 <Skeleton className="h-6 w-full" />
               </div>
             </div>
