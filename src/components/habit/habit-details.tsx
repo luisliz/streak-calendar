@@ -184,7 +184,7 @@ export function HabitDetails({ habit }: HabitDetailsProps) {
           />
         </div>
 
-        <div className="mx-auto w-[800px] space-y-4">
+        <div className="space-y-4">
           <HabitActivityCalendar calendarData={calendarData} completions={completions} calendarSize={calendarSize} />
 
           <HabitStatistics habitId={habit._id} completions={completions} />

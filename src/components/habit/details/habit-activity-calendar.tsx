@@ -75,9 +75,6 @@ export function HabitActivityCalendar({ calendarData, completions, calendarSize 
           <div className="inline-block">
             <ActivityCalendar
               data={calendarData}
-              labels={{
-                totalCount: "{{count}} completions in the last year",
-              }}
               showWeekdayLabels={true}
               blockRadius={20}
               hideColorLegend={true}

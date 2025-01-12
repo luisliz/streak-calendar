@@ -85,57 +85,55 @@ export function SingleMonthCalendar({
   const year = format(firstDay, "yyyy");
 
   return (
-    <Card className="max-w-[350px] border p-2 shadow-md">
-      <div className="p-4">
-        <div className="mb-4 flex items-center justify-between">
-          <Button variant="ghost" size="icon" onClick={goToPreviousMonth} className="h-8 w-8">
-            <ChevronLeft className="h-4 w-4" />
-          </Button>
-          <h3 className="text-lg font-semibold">{`${monthName} ${year}`}</h3>
-          <Button variant="ghost" size="icon" onClick={goToNextMonth} className="h-8 w-8">
-            <ChevronRight className="h-4 w-4" />
-          </Button>
-        </div>
-        <div className="mx-auto w-fit">
-          <div className="grid grid-cols-7 gap-1">
-            {/* Day name labels */}
-            {dayLabels.map((label) => (
-              <div key={label} className="text-center text-xs text-muted-foreground">
-                {label}
+    <Card className="min-w-[300px] border p-4 shadow-md">
+      <div className="mb-4 flex items-center justify-between">
+        <Button variant="ghost" size="icon" onClick={goToPreviousMonth} className="h-8 w-8">
+          <ChevronLeft className="h-4 w-4" />
+        </Button>
+        <h3 className="text-lg font-semibold">{`${monthName} ${year}`}</h3>
+        <Button variant="ghost" size="icon" onClick={goToNextMonth} className="h-8 w-8">
+          <ChevronRight className="h-4 w-4" />
+        </Button>
+      </div>
+      <div className="mx-auto w-fit">
+        <div className="grid grid-cols-7 gap-[1px]">
+          {/* Day name labels */}
+          {dayLabels.map((label) => (
+            <div key={label} className="text-center text-xs text-muted-foreground">
+              {label}
+            </div>
+          ))}
+          {/* Empty cells for start padding */}
+          {emptyStartDays.map((_, index) => (
+            <div key={`empty-start-${index}`} className="h-9 w-9">
+              <div className="h-full w-full" />
+            </div>
+          ))}
+          {/* Day cells with completion tracking */}
+          {monthDays.map((dateStr) => {
+            const isInRange = days.includes(dateStr);
+            const count = getCompletionCount(dateStr, habit._id, completions);
+            return (
+              <div key={dateStr} className="h-9 w-9">
+                <DayCell
+                  habitId={habit._id}
+                  date={dateStr}
+                  count={count}
+                  onCountChange={async (newCount) => handleToggle(habit._id, dateStr, newCount)}
+                  colorClass={color}
+                  size="medium"
+                  disabled={!isInRange}
+                  isUpdating={updatingDates.has(dateStr)}
+                />
               </div>
-            ))}
-            {/* Empty cells for start padding */}
-            {emptyStartDays.map((_, index) => (
-              <div key={`empty-start-${index}`} className="h-9 w-9">
-                <div className="h-full w-full" />
-              </div>
-            ))}
-            {/* Day cells with completion tracking */}
-            {monthDays.map((dateStr) => {
-              const isInRange = days.includes(dateStr);
-              const count = getCompletionCount(dateStr, habit._id, completions);
-              return (
-                <div key={dateStr} className="h-9 w-9">
-                  <DayCell
-                    habitId={habit._id}
-                    date={dateStr}
-                    count={count}
-                    onCountChange={async (newCount) => handleToggle(habit._id, dateStr, newCount)}
-                    colorClass={color}
-                    size="medium"
-                    disabled={!isInRange}
-                    isUpdating={updatingDates.has(dateStr)}
-                  />
-                </div>
-              );
-            })}
-            {/* Empty cells for end padding */}
-            {emptyEndDays.map((_, index) => (
-              <div key={`empty-end-${index}`} className="h-9 w-9">
-                <div className="h-full w-full" />
-              </div>
-            ))}
-          </div>
+            );
+          })}
+          {/* Empty cells for end padding */}
+          {emptyEndDays.map((_, index) => (
+            <div key={`empty-end-${index}`} className="h-9 w-9">
+              <div className="h-full w-full" />
+            </div>
+          ))}
         </div>
       </div>
     </Card>
