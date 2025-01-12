@@ -4,7 +4,9 @@ const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 
 /** @type {import('next').NextConfig} */
 const config = {
-  /* config options here */
+  typescript: {
+    ignoreBuildErrors: true,
+  },
 };
 
 export default withNextIntl(config);

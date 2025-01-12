@@ -1,4 +1,4 @@
-import { EditCalendarDialog, NewCalendarDialog, NewHabitDialog } from "@/components/calendar/calendar-dialogs";
+import { NewCalendarDialog, NewHabitDialog } from "@/components/calendar/calendar-dialogs";
 import { CalendarItem } from "@/components/calendar/calendar-item";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -34,10 +34,6 @@ type CalendarView = "monthRow" | "monthGrid";
 interface CalendarData {
   handleAddCalendar: (name: string, color: string) => Promise<void>;
   handleAddHabit: (name: string, calendarId: Id<"calendars">, timerDuration?: number) => Promise<void>;
-  handleEditCalendar: (id: Id<"calendars">, name: string, color: string, position: number) => Promise<void>;
-  handleEditHabit: (id: Id<"habits">, name: string, timerDuration?: number) => Promise<void>;
-  handleDeleteCalendar: (id: Id<"calendars">) => Promise<void>;
-  handleDeleteHabit: (id: Id<"habits">) => Promise<void>;
   handleToggleHabit: (habitId: Id<"habits">, date: string, count: number) => Promise<void>;
 }
 
@@ -58,13 +54,12 @@ interface CalendarContainerProps {
 }
 
 /**
- * Component displayed when no calendars exist
- * Provides a button to create the first calendar
+ * Empty state component shown when no calendars exist
  */
-const EmptyState = ({ monthViewData }: { monthViewData: CalendarData }) => {
-  const t = useTranslations("calendar.container.emptyState");
-  const toastMessages = useToastMessages();
+function EmptyState({ monthViewData }: { monthViewData: CalendarData }) {
+  const t = useTranslations("calendar.container");
   const { state, openNewCalendar, updateCalendarName, updateCalendarColor, resetCalendarState } = useDialogState();
+  const toastMessages = useToastMessages();
 
   const handleAddCalendar = useCallback(async () => {
     const { name, color } = state.calendar;
@@ -76,16 +71,12 @@ const EmptyState = ({ monthViewData }: { monthViewData: CalendarData }) => {
   }, [monthViewData, state.calendar, toastMessages, resetCalendarState]);
 
   return (
-    <>
-      <div className="py-12 text-center text-muted-foreground">
-        <p>{t("noCalendars")}</p>
-        <p className="mt-2">{t("createOne")}</p>
-        <Button variant="default" onClick={openNewCalendar} className="mt-4">
-          <PlusCircle className="mr-2 h-4 w-4" />
-          {t("createButton")}
-        </Button>
-      </div>
-
+    <div className="flex flex-col items-center justify-center space-y-4 py-16">
+      <p className="text-sm text-muted-foreground">{t("emptyState")}</p>
+      <Button variant="default" onClick={openNewCalendar}>
+        <PlusCircle className="h-4 w-4" />
+        {t("addCalendar")}
+      </Button>
       <NewCalendarDialog
         isOpen={state.calendar.isNewOpen}
         onOpenChange={() => resetCalendarState()}
@@ -95,9 +86,9 @@ const EmptyState = ({ monthViewData }: { monthViewData: CalendarData }) => {
         onColorChange={updateCalendarColor}
         onSubmit={handleAddCalendar}
       />
-    </>
+    </div>
   );
-};
+}
 
 /**
  * Main calendar container component that orchestrates the display and interaction
@@ -122,11 +113,9 @@ export function CalendarContainer({
   const {
     state,
     openNewCalendar,
-    openEditCalendar,
     openNewHabit,
     updateCalendarName,
     updateCalendarColor,
-    updateCalendarPosition,
     updateHabitName,
     updateHabitTimer,
     resetCalendarState,
@@ -163,28 +152,6 @@ export function CalendarContainer({
       toast.error("Failed to add habit");
     }
   }, [monthViewData, state.habit, toastMessages, resetHabitState]);
-
-  /**
-   * Handles updating an existing calendar's properties
-   * Validates name and triggers toast notification on success
-   */
-  const handleEditCalendar = useCallback(async () => {
-    const { name, color, editingCalendar, position } = state.calendar;
-    if (!name.trim() || !editingCalendar) return;
-
-    await monthViewData.handleEditCalendar(editingCalendar._id, name, color, position);
-    toastMessages.calendar.updated();
-    resetCalendarState();
-  }, [monthViewData, state.calendar, toastMessages, resetCalendarState]);
-
-  const handleDeleteCalendar = useCallback(async () => {
-    const { editingCalendar } = state.calendar;
-    if (!editingCalendar) return;
-
-    await monthViewData.handleDeleteCalendar(editingCalendar._id);
-    toastMessages.calendar.deleted();
-    resetCalendarState();
-  }, [monthViewData, state.calendar, toastMessages, resetCalendarState]);
 
   /**
    * Handles toggling habit completion for a specific date
@@ -238,7 +205,6 @@ export function CalendarContainer({
                       habits={calendarHabits}
                       key={calendar._id}
                       onAddHabit={() => openNewHabit(calendar)}
-                      onEditCalendar={() => openEditCalendar(calendar)}
                       onEditHabit={(habit) => router.push(`/habits/${habit._id}`)}
                       onToggleHabit={handleToggleHabit}
                       view={view}
@@ -258,7 +224,7 @@ export function CalendarContainer({
         </MotionCard>
       </AnimatePresence>
 
-      {/* Dialog components for creating/editing calendars and habits */}
+      {/* Dialog components for creating calendars and habits */}
       <NewCalendarDialog
         isOpen={state.calendar.isNewOpen}
         onOpenChange={() => resetCalendarState()}
@@ -276,19 +242,6 @@ export function CalendarContainer({
         timerDuration={state.habit.timerDuration}
         onTimerDurationChange={updateHabitTimer}
         onSubmit={handleAddHabit}
-      />
-      <EditCalendarDialog
-        isOpen={state.calendar.isEditOpen}
-        onOpenChange={() => resetCalendarState()}
-        name={state.calendar.name}
-        onNameChange={updateCalendarName}
-        color={state.calendar.color}
-        onColorChange={updateCalendarColor}
-        position={state.calendar.position}
-        onPositionChange={updateCalendarPosition}
-        totalCalendars={calendars?.length ?? 0}
-        onSubmit={handleEditCalendar}
-        onDelete={handleDeleteCalendar}
       />
     </>
   );

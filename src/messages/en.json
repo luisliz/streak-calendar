@@ -194,6 +194,7 @@
           "placeholder": "Select position"
         },
         "actions": {
+          "back": "Back",
           "cancel": "Cancel",
           "delete": "Delete",
           "save": "Save Changes"

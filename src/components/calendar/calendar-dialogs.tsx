@@ -1,24 +1,13 @@
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
 
 /**
  * This module contains dialog components for managing calendars and habits.
- * It provides interfaces for creating, editing, and deleting both calendars and habits.
+ * It provides interfaces for creating both calendars and habits.
  * All dialogs use shadcn/ui components for consistent styling and behavior.
  */
 
@@ -88,14 +77,6 @@ function useTimerDurations() {
  * - Calendar name input
  * - Color theme selection from predefined options
  * - Submit and cancel actions
- *
- * @param color - Currently selected color theme
- * @param isOpen - Dialog visibility state
- * @param name - Current value of calendar name input
- * @param onColorChange - Handler for color selection changes
- * @param onNameChange - Handler for name input changes
- * @param onOpenChange - Handler for dialog open/close state
- * @param onSubmit - Handler for form submission
  */
 interface NewCalendarDialogProps {
   color: string;
@@ -250,126 +231,5 @@ export const NewHabitDialog = ({
         </div>
       </DialogContent>
     </Dialog>
-  );
-};
-
-/**
- * Dialog component for editing an existing calendar.
- * Similar to NewCalendarDialog but includes delete option.
- */
-interface EditCalendarDialogProps {
-  color: string;
-  isOpen: boolean;
-  name: string;
-  position: number;
-  onColorChange: (color: string) => void;
-  onDelete: () => void;
-  onNameChange: (name: string) => void;
-  onOpenChange: (open: boolean) => void;
-  onPositionChange: (position: number) => void;
-  onSubmit: () => void;
-  totalCalendars: number;
-}
-
-export const EditCalendarDialog = ({
-  isOpen,
-  onOpenChange,
-  name,
-  onNameChange,
-  color,
-  onColorChange,
-  position,
-  onPositionChange,
-  totalCalendars,
-  onSubmit,
-  onDelete,
-}: EditCalendarDialogProps) => {
-  const [showDeleteAlert, setShowDeleteAlert] = useState(false);
-  const t = useTranslations("dialogs");
-  const colors = useColors();
-
-  return (
-    <>
-      <Dialog open={isOpen} onOpenChange={onOpenChange}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>{t("calendar.edit.title")}</DialogTitle>
-          </DialogHeader>
-          <div className="grid gap-4">
-            <div>
-              <Label htmlFor="edit-calendar-name">{t("calendar.edit.name.label")}</Label>
-              <Input id="edit-calendar-name" value={name} onChange={(e) => onNameChange(e.target.value)} />
-            </div>
-            <div>
-              <Label>{t("calendar.edit.color.label")}</Label>
-              <Select value={color} onValueChange={onColorChange}>
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder={t("calendar.edit.color.label")}>
-                    <div className="flex items-center gap-2">
-                      <div className={`h-4 w-4 rounded-full ${color}`} />
-                      {colors.find((c) => c.value === color)?.name}
-                    </div>
-                  </SelectValue>
-                </SelectTrigger>
-                <SelectContent className="max-h-40">
-                  {colors.map((c) => (
-                    <SelectItem key={c.value} value={c.value}>
-                      <div className="flex items-center gap-2">
-                        <div className={`h-4 w-4 rounded-full ${c.value}`} />
-                        {c.name}
-                      </div>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div>
-              <Label>{t("calendar.edit.position.label")}</Label>
-              <Select value={position.toString()} onValueChange={(value) => onPositionChange(parseInt(value))}>
-                <SelectTrigger>
-                  <SelectValue placeholder={t("calendar.edit.position.placeholder")} />
-                </SelectTrigger>
-                <SelectContent>
-                  {Array.from({ length: totalCalendars }, (_, i) => (
-                    <SelectItem key={i + 1} value={(i + 1).toString()}>
-                      {i + 1}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="flex gap-2">
-              <Button variant="outline" onClick={() => onOpenChange(false)} className="flex-1">
-                {t("calendar.edit.actions.cancel")}
-              </Button>
-              <Button variant="destructive" onClick={() => setShowDeleteAlert(true)}>
-                {t("calendar.edit.actions.delete")}
-              </Button>
-              <Button onClick={onSubmit} className="flex-1">
-                {t("calendar.edit.actions.save")}
-              </Button>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
-
-      <AlertDialog open={showDeleteAlert} onOpenChange={setShowDeleteAlert}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>{t("calendar.edit.deleteConfirm.title")}</AlertDialogTitle>
-            <AlertDialogDescription>{t("calendar.edit.deleteConfirm.description", { name })}</AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>{t("calendar.edit.deleteConfirm.cancel")}</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={onDelete}
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-            >
-              {t("calendar.edit.deleteConfirm.confirm")}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-    </>
   );
 };

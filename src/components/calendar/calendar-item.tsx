@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { useRouter } from "@/i18n/routing";
 import { useTranslations } from "next-intl";
 
 import { Id } from "@server/convex/_generated/dataModel";
@@ -41,8 +42,6 @@ interface CalendarItemProps {
   }>;
   /** Callback to add a new habit to this calendar */
   onAddHabit: () => void;
-  /** Callback to edit calendar properties */
-  onEditCalendar: () => void;
   /** Callback to edit a specific habit's properties */
   onEditHabit: (habit: { _id: Id<"habits">; name: string; timerDuration?: number }) => void;
   /** Callback to toggle habit completion for a specific date */
@@ -61,12 +60,12 @@ export const CalendarItem = ({
   days,
   completions,
   onAddHabit,
-  onEditCalendar,
   onEditHabit,
   onToggleHabit,
   view,
 }: CalendarItemProps) => {
   const t = useTranslations("calendar");
+  const router = useRouter();
 
   // Ensure color theme has proper Tailwind prefix
   const colorTheme = calendar.colorTheme.startsWith("bg-") ? calendar.colorTheme : `bg-${calendar.colorTheme}-500`;
@@ -75,7 +74,7 @@ export const CalendarItem = ({
     <div className="space-y-8">
       {/* Calendar Header - Displays calendar name with themed underline decoration */}
       <div className="flex justify-center">
-        <div className="cursor-pointer pt-4" onClick={onEditCalendar}>
+        <div className="cursor-pointer pt-4" onClick={() => router.push(`/calendars/${calendar._id}`)}>
           <h2
             className={`select-none text-4xl font-semibold underline decoration-wavy decoration-2 ${colorTheme.replace(
               "bg-",
