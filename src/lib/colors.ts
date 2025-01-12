@@ -1,4 +1,28 @@
 /**
+ * Available color themes for calendars and habits.
+ * Each color has a key for translation and a Tailwind background class.
+ */
+export const COLOR_VALUES = [
+  { key: "red", value: "bg-red-500" },
+  { key: "orange", value: "bg-orange-500" },
+  { key: "amber", value: "bg-amber-500" },
+  { key: "yellow", value: "bg-yellow-500" },
+  { key: "lime", value: "bg-lime-500" },
+  { key: "green", value: "bg-green-500" },
+  { key: "emerald", value: "bg-emerald-500" },
+  { key: "teal", value: "bg-teal-500" },
+  { key: "cyan", value: "bg-cyan-500" },
+  { key: "sky", value: "bg-sky-500" },
+  { key: "blue", value: "bg-blue-500" },
+  { key: "indigo", value: "bg-indigo-500" },
+  { key: "violet", value: "bg-violet-500" },
+  { key: "purple", value: "bg-purple-500" },
+  { key: "fuchsia", value: "bg-fuchsia-500" },
+  { key: "pink", value: "bg-pink-500" },
+  { key: "rose", value: "bg-rose-500" },
+] as const;
+
+/**
  * Color system for habit completion visualization.
  * Each color has 3 intensity levels using opacity.
  * The intensity increases with the completion count:
