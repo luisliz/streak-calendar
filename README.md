@@ -2,7 +2,7 @@
 
 Streak Calendar is an open-source productivity tool for habit tracking, task timing, and progress visualization. It supports multiple calendars and habits, featuring GitHub-style activity grids for tracking achievements.
 
-The project is in its experimental/alpha stage and may experience disruptions due to ongoing feature development. I’ll do my best to ensure stability, but users are encouraged to use the temporarily available import/export feature to back up their calendars, habits, and completion history manually.
+The project is in its experimental/alpha stage and may experience disruptions due to ongoing feature development. I'll do my best to ensure stability, but users are encouraged to use the temporarily available import/export feature to back up their calendars, habits, and completion history manually.
 
 Licensed under MIT, Streak Calendar is free to use and adapt. Hosting and premium services from Convex and Clerk may incur costs, so an affordable pricing model via Stripe is planned. Users can fork and self-host for full access.
 
@@ -103,8 +103,10 @@ Streak Calendar is open source to encourage transparency and collaboration. Cont
 
 ## Links
 
+- Website: [streakcalendar.com](https://streakcalendar.com)
 - Creator: [Ilya Aizenberg](https://github.com/ilyaizen)
 - Twitter/X: [@StreakCalendar](https://x.com/StreakCalendar)
+- Dev.to Article: [Building Streak Calendar: My Journey into Open-Source with the Help of AI](https://dev.to/ilyaizen/building-streak-calendar-my-journey-into-open-source-with-the-help-of-ai-1hbl)
 
 ## License
 
