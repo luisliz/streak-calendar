@@ -357,7 +357,7 @@ export function HabitAnalytics({ colorTheme, completions }: HabitAnalyticsProps)
                     bottomLeft: 0,
                     bottomRight: 0,
                   },
-                  borderDash: [5, 5],
+                  borderSkipped: false,
                   categoryPercentage: 0.8,
                   barPercentage: 0.9,
                 },
