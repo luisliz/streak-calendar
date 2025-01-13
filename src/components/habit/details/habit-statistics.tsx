@@ -8,6 +8,7 @@ import { HabitAnalytics } from "./habit-analytics";
 
 interface HabitStatisticsProps {
   habitId: Id<"habits">;
+  colorTheme: string;
   completions:
     | Array<{
         habitId: Id<"habits">;
@@ -16,7 +17,7 @@ interface HabitStatisticsProps {
     | undefined;
 }
 
-export function HabitStatistics({ habitId, completions }: HabitStatisticsProps) {
+export function HabitStatistics({ habitId, colorTheme, completions }: HabitStatisticsProps) {
   const totalCompletions = completions?.filter((c) => c.habitId === habitId).length ?? 0;
 
   const thisMonthCompletions =
@@ -92,7 +93,7 @@ export function HabitStatistics({ habitId, completions }: HabitStatisticsProps) 
               <p className="text-2xl font-bold">{currentStreak}</p>
             </div>
             <div className="space-y-1">
-              <p className="text-sm text-muted-foreground">Days Without Completion</p>
+              <p className="text-sm text-muted-foreground">Off Days</p>
               <p className="text-2xl font-bold">{offStreak}</p>
             </div>
             <div className="space-y-1">
@@ -106,7 +107,7 @@ export function HabitStatistics({ habitId, completions }: HabitStatisticsProps) 
           </div>
 
           <div className="mb-8 mt-8">
-            <HabitAnalytics completions={completions?.filter((c) => c.habitId === habitId)} />
+            <HabitAnalytics colorTheme={colorTheme} completions={completions?.filter((c) => c.habitId === habitId)} />
           </div>
         </div>
       </Card>

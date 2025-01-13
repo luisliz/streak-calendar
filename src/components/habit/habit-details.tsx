@@ -192,7 +192,7 @@ export function HabitDetails({ habit, calendar }: HabitDetailsProps) {
             colorTheme={calendar.colorTheme}
           />
 
-          <HabitStatistics habitId={habit._id} completions={completions} />
+          <HabitStatistics habitId={habit._id} colorTheme={calendar.colorTheme} completions={completions} />
         </div>
       </div>
 
