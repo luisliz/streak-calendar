@@ -1,10 +1,10 @@
 # Streak Calendar
 
-Streak Calendar is an open source productivity tool for habit tracking, task timing, and progress visualization. Supporting multiple calendars and habits, it offers a customizable approach to personal growth, with a GitHub-style activity grid to track achievements over time.
+Streak Calendar is an open-source productivity tool for habit tracking, task timing, and progress visualization. It supports multiple calendars and habits, featuring GitHub-style activity grids for tracking achievements.
 
-Currently in its experimental/alpha stage, this project is solely developed by me. Feedback, contributions, and support are welcome to help improve and refine it.
+The project is in its experimental/alpha stage and may experience disruptions due to ongoing feature development. I’ll do my best to ensure stability, but users are encouraged to use the temporarily available import/export feature to back up their calendars, habits, and completion history manually.
 
-With an MIT license, Streak Calendar is free to use and adapt. Hosting and premium services from Convex and Clerk may introduce costs, so I plan to add an affordable pricing model via Stripe. Users can also fork and self-host the project for full access to all features.
+Licensed under MIT, Streak Calendar is free to use and adapt. Hosting and premium services from Convex and Clerk may incur costs, so an affordable pricing model via Stripe is planned. Users can fork and self-host for full access.
 
 |                   Desktop                    |                       Mobile                       |
 | :------------------------------------------: | :------------------------------------------------: |
@@ -35,7 +35,7 @@ Built with a modern tech stack to ensure efficiency, scalability, and an engagin
 - Styling: [Tailwind CSS](https://tailwindcss.com/)
 - UI: [shadcn/ui](https://ui.shadcn.com/)
 
-Also used: [Canvas Confetti](https://www.kirilv.com/canvas-confetti/), [date-fns](https://date-fns.org/), [Framer Motion](https://www.framer.com/motion/), [Lucide React](https://lucide.dev/), [next-intl](https://next-intl-docs.vercel.app/), [next-themes](https://www.npmjs.com/package/next-themes), [NumberFlow](https://number-flow.barvian.me/), [Radix UI](https://www.radix-ui.com/), [React](https://react.dev/), [React Activity Calendar](https://grubersjoe.github.io/react-activity-calendar/), [shadcn-pricing-page](https://github.com/aymanch-03/shadcn-pricing-page), [TypeScript](https://www.typescriptlang.org/).
+Also used: [Canvas Confetti](https://www.kirilv.com/canvas-confetti/), [date-fns](https://date-fns.org/), [Framer Motion](https://www.framer.com/motion/), [Lucide React](https://lucide.dev/), [next-intl](https://next-intl-docs.vercel.app/), [next-themes](https://www.npmjs.com/package/next-themes), [NumberFlow](https://number-flow.barvian.me/), [Radix UI](https://www.radix-ui.com/), [React](https://react.dev/), [React Activity Calendar](https://grubersjoe.github.io/react-activity-calendar/), [shadcn-pricing-page](https://github.com/aymanch-03/shadcn-pricing-page), [TypeScript](https://www.typescriptlang.org/), [Victory](https://commerce.nearform.com/open-source/victory/).
 
 ## Getting Started
 
@@ -62,29 +62,39 @@ Visit `http://localhost:3000` to see the app running.
 
 ```
 streak-calendar/
-├── convex/             # Convex backend functions and schema
-├── public/             # Static assets
+├── convex/                # Convex backend functions and schema
+├── public/                # Static assets
 ├── src/
-│   ├── app/            # Next.js app router pages and layouts
-│   ├── components/     # Reusable UI components
-│   │   ├── calendar/   # Calendar-specific components
-│   │   └── ui/         # shadcn/ui components
-│   ├── hooks/          # Custom React hooks
-│   ├── i18n/           # Internationalization configuration
-│   ├── lib/            # Utility functions and configurations
-│   ├── messages/       # Translation files
-│   ├── utils/          # Helper functions and utilities
-│   ├── middleware.ts   # Next.js middleware
-│   └── types.ts        # TypeScript type definitions
-├── .env.local          # Environment variables
-├── .env.example        # Example environment variables
-├── .eslintrc.json      # ESLint configuration
-├── .prettierrc         # Prettier configuration
-├── components.json     # shadcn/ui components configuration
-├── next.config.mjs     # Next.js configuration
-├── package.json        # Project dependencies and scripts
-├── tailwind.config.ts  # Tailwind CSS configuration
-└── tsconfig.json       # TypeScript configuration
+│   ├── app/               # Next.js app router pages and layouts
+│   │   ├── [locale]/      # Internationalized routes
+│   │   │   ├── about/     # About page
+│   │   │   ├── calendar/  # Calendar view routes
+│   │   │   ├── calendars/ # Calendars management
+│   │   │   ├── habits/    # Habits management
+│   │   │   └── pricing/   # Pricing page
+│   │   ├── globals.css    # Global styles
+│   │   ├── layout.tsx     # Root layout
+│   │   └── providers.tsx  # App providers
+│   ├── components/        # Reusable UI components
+│   │   ├── analytics/     # Google Analytics components
+│   │   ├── calendar/      # Calendar-details components
+│   │   ├── habit/         # Habit-details components
+│   │   ├── ui/            # shadcn/ui components
+│   ├── hooks/             # Custom React hooks
+│   ├── i18n/              # Internationalization configuration
+│   ├── lib/               # Utility functions and configurations
+│   ├── messages/          # Translation files
+│   ├── types.ts           # TypeScript type definitions
+│   └── utils/             # Helper functions and utilities
+├── .env.example           # Example environment variables
+├── .env.local             # Environment variables
+├── .prettierrc            # Prettier configuration
+├── components.json        # shadcn/ui components configuration
+├── eslint.config.mjs      # ESLint configuration
+├── next.config.mjs        # Next.js configuration
+├── package.json           # Project dependencies and scripts
+├── tailwind.config.ts     # Tailwind CSS configuration
+└── tsconfig.json          # TypeScript configuration
 ```
 
 ## Contributing
