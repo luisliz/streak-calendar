@@ -14,7 +14,7 @@ import {
   Title,
   Tooltip,
 } from "chart.js";
-import { Line, Pie } from "react-chartjs-2";
+import { Bar, Line, Pie } from "react-chartjs-2";
 
 import { Id } from "@server/convex/_generated/dataModel";
 
@@ -66,13 +66,25 @@ interface HabitAnalyticsProps {
 
 export function HabitAnalytics({ completions }: HabitAnalyticsProps) {
   function calculateStreakHistory(completions: HabitAnalyticsProps["completions"]) {
-    if (!completions) return { labels: [], data: [] };
+    if (!completions) return { labels: [], activeData: [], offData: [] };
 
     const dates = completions.map((c) => new Date(c.completedAt).toISOString().split("T")[0]).sort();
     const uniqueDates = [...new Set(dates)];
-    const streaks: { date: string; length: number }[] = [];
+    const streaks: { date: string; length: number; type: "active" | "off" }[] = [];
+
+    if (uniqueDates.length === 0) return { labels: [], activeData: [], offData: [] };
+
     let currentStreak = 1;
     let streakStartDate = uniqueDates[0];
+
+    // Check if there's an initial off-streak before the first completion
+    const firstCompletionDate = new Date(uniqueDates[0]);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const daysSinceStart = Math.floor((firstCompletionDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+    if (daysSinceStart < -1) {
+      streaks.push({ date: today.toISOString().split("T")[0], length: Math.abs(daysSinceStart), type: "off" });
+    }
 
     for (let i = 1; i < uniqueDates.length; i++) {
       const curr = new Date(uniqueDates[i]);
@@ -82,12 +94,35 @@ export function HabitAnalytics({ completions }: HabitAnalyticsProps) {
       if (dayDiff === 1) {
         currentStreak++;
       } else {
-        streaks.push({ date: streakStartDate, length: currentStreak });
+        // Add the active streak
+        streaks.push({ date: streakStartDate, length: currentStreak, type: "active" });
+        // Add the off streak if there was a gap
+        if (dayDiff > 1) {
+          streaks.push({
+            date: new Date(prev.getTime() + 86400000).toISOString().split("T")[0],
+            length: dayDiff - 1,
+            type: "off",
+          });
+        }
         currentStreak = 1;
         streakStartDate = uniqueDates[i];
       }
     }
-    streaks.push({ date: streakStartDate, length: currentStreak });
+    // Add the final active streak
+    streaks.push({ date: streakStartDate, length: currentStreak, type: "active" });
+
+    // Check if there's a final off-streak after the last completion
+    const lastCompletionDate = new Date(uniqueDates[uniqueDates.length - 1]);
+    const daysSinceLastCompletion = Math.floor(
+      (today.getTime() - lastCompletionDate.getTime()) / (1000 * 60 * 60 * 24)
+    );
+    if (daysSinceLastCompletion > 1) {
+      streaks.push({
+        date: new Date(lastCompletionDate.getTime() + 86400000).toISOString().split("T")[0],
+        length: daysSinceLastCompletion - 1,
+        type: "off",
+      });
+    }
 
     // Get last 10 streaks for better visibility
     const lastStreaks = streaks.slice(-10);
@@ -96,7 +131,8 @@ export function HabitAnalytics({ completions }: HabitAnalyticsProps) {
       labels: lastStreaks.map((s) =>
         new Date(s.date).toLocaleDateString("default", { month: "short", day: "numeric" })
       ),
-      data: lastStreaks.map((s) => s.length),
+      activeData: lastStreaks.map((s) => (s.type === "active" ? s.length : null)),
+      offData: lastStreaks.map((s) => (s.type === "off" ? s.length : null)),
     };
   }
 
@@ -176,42 +212,61 @@ export function HabitAnalytics({ completions }: HabitAnalyticsProps) {
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div className="h-[240px] rounded-lg border p-4 pb-8">
           <h3 className="mb-2 text-sm text-muted-foreground">Streak History</h3>
-          <Line
+          <Bar
             data={{
               labels: streakData.labels,
               datasets: [
                 {
-                  data: streakData.data,
+                  label: "Active Streaks",
+                  data: streakData.activeData,
+                  backgroundColor: "rgb(147, 51, 234)",
                   borderColor: "rgb(147, 51, 234)",
-                  backgroundColor: "rgba(147, 51, 234, 0.2)",
-                  borderWidth: 2,
-                  tension: 0.4,
-                  fill: true,
-                  pointBackgroundColor: "rgb(147, 51, 234)",
-                  pointRadius: 4,
-                  pointHoverRadius: 6,
+                  borderWidth: 1,
+                  borderRadius: 4,
+                  categoryPercentage: 0.8,
+                  barPercentage: 0.9,
+                },
+                {
+                  label: "Off Days",
+                  data: streakData.offData,
+                  backgroundColor: "rgb(239, 68, 68)",
+                  borderColor: "rgb(239, 68, 68)",
+                  borderWidth: 1,
+                  borderRadius: 4,
+                  categoryPercentage: 0.8,
+                  barPercentage: 0.9,
                 },
               ],
             }}
             options={{
               ...chartOptions,
+              plugins: {
+                ...chartOptions.plugins,
+                legend: {
+                  display: true,
+                  position: "top",
+                },
+              },
               scales: {
                 x: {
                   grid: {
                     display: false,
                   },
+                  stacked: true,
                   title: {
                     display: true,
                     text: "Start Date",
                   },
                 },
                 y: {
+                  stacked: false,
                   grid: {
-                    display: false,
+                    display: true,
+                    color: "rgba(0, 0, 0, 0.1)",
                   },
                   title: {
                     display: true,
-                    text: "Streak Length (days)",
+                    text: "Days",
                   },
                   beginAtZero: true,
                 },
