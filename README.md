@@ -6,10 +6,6 @@ The project is in its experimental/alpha stage and may experience disruptions du
 
 Licensed under MIT, Streak Calendar is free to use and adapt. Hosting and premium services from Convex and Clerk may incur costs, so an affordable pricing model via Stripe is planned. Users can fork and self-host for full access.
 
-|                   Desktop                    |                       Mobile                       |
-| :------------------------------------------: | :------------------------------------------------: |
-| ![Desktop Dark Mode](public/screen-dark.png) | ![Mobile Dark Mode](public/screen-mobile-dark.png) |
-
 ## Features
 
 Explore a range of features designed to help you stay motivated and organized:
