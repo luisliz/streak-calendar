@@ -18,12 +18,12 @@ import { mutation, query } from "./_generated/server";
  *   }]
  * }
  */
-export const exportData = query({
+
+export const exportCalendarsAndHabits = query({
   handler: async (ctx) => {
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) return null;
 
-    // Get all calendars and habits first
     const calendars = await ctx.db
       .query("calendars")
       .filter((q) => q.eq(q.field("userId"), identity.subject))
@@ -34,43 +34,15 @@ export const exportData = query({
       .filter((q) => q.eq(q.field("userId"), identity.subject))
       .collect();
 
-    // Get all completions with a single paginated query
-    const allCompletions = [];
-    const CHUNK_SIZE = 1000;
-    let cursor = null;
-    let isDone = false;
-
-    while (!isDone) {
-      const {
-        page,
-        continueCursor,
-        isDone: done,
-      } = await ctx.db
-        .query("completions")
-        .filter((q) => q.eq(q.field("userId"), identity.subject))
-        .paginate({ numItems: CHUNK_SIZE, cursor });
-
-      allCompletions.push(...page);
-      cursor = continueCursor;
-      isDone = done;
-    }
-
-    // Group completions by habit
-    const completionsByHabit = new Map();
-    for (const completion of allCompletions) {
-      const habitCompletions = completionsByHabit.get(completion.habitId) || [];
-      habitCompletions.push({ completedAt: completion.completedAt });
-      completionsByHabit.set(completion.habitId, habitCompletions);
-    }
-
-    // Build the final export structure
+    // Build the export structure without completions
     const exportedCalendars = calendars.map((calendar) => {
       const calendarHabits = allHabits.filter((h) => h.calendarId === calendar._id);
       const exportedHabits = calendarHabits.map((habit) => ({
+        _id: habit._id,
         name: habit.name,
         position: habit.position,
         timerDuration: habit.timerDuration,
-        completions: completionsByHabit.get(habit._id) || [],
+        completions: [], // Will be filled by exportCompletions
       }));
 
       return {
@@ -82,6 +54,29 @@ export const exportData = query({
     });
 
     return { calendars: exportedCalendars };
+  },
+});
+
+export const exportCompletions = query({
+  handler: async (ctx) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) return null;
+
+    // Get all completions using the index
+    const allCompletions = await ctx.db
+      .query("completions")
+      .withIndex("by_user_and_date", (q) => q.eq("userId", identity.subject))
+      .collect();
+
+    // Group completions by habit
+    const completionsByHabit = new Map();
+    for (const completion of allCompletions) {
+      const habitCompletions = completionsByHabit.get(completion.habitId) || [];
+      habitCompletions.push({ completedAt: completion.completedAt });
+      completionsByHabit.set(completion.habitId, habitCompletions);
+    }
+
+    return { completionsByHabit: Object.fromEntries(completionsByHabit) };
   },
 });
 

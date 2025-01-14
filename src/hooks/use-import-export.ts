@@ -21,8 +21,8 @@ export function useImportExport() {
   const [importFile, setImportFile] = useState<File | null>(null);
 
   // Fetch user's calendar data for export
-  const exportData = useQuery(api.calendar_sync.exportData, isAuthenticated ? undefined : "skip");
-  // Mutation for importing calendar data
+  const calendarsAndHabits = useQuery(api.calendar_sync.exportCalendarsAndHabits, isAuthenticated ? undefined : "skip");
+  const completions = useQuery(api.calendar_sync.exportCompletions, isAuthenticated ? undefined : "skip");
   const importData = useMutation(api.calendar_sync.importData);
 
   /**
@@ -32,7 +32,7 @@ export function useImportExport() {
    */
   const handleExportConfirm = () => {
     setShowExportDialog(false);
-    if (!exportData) {
+    if (!calendarsAndHabits || !completions) {
       toast({
         title: "Export failed",
         description: "No data to export",
@@ -42,6 +42,17 @@ export function useImportExport() {
     }
 
     try {
+      // Merge the calendar and completion data
+      const exportData = {
+        calendars: calendarsAndHabits.calendars.map((calendar) => ({
+          ...calendar,
+          habits: calendar.habits.map((habit) => ({
+            ...habit,
+            completions: completions.completionsByHabit[habit._id] || [],
+          })),
+        })),
+      };
+
       const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: "application/json" });
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
