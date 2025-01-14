@@ -161,7 +161,10 @@ export function HabitDetails({ habit, calendar }: HabitDetailsProps) {
       <HabitBackNavigation />
 
       <div className="text-center">
-        <h1 className="mb-8 text-2xl font-bold">{name}</h1>
+        <h1 className="mb-8 text-2xl font-bold">
+          {name}
+          {timerDuration && <span className="ml-2 text-muted-foreground">({timerDuration}m)</span>}
+        </h1>
       </div>
 
       <div className="mx-auto max-w-[7xl] space-y-8 md:space-y-6 lg:flex lg:items-start lg:justify-center lg:space-x-6 lg:space-y-0">
