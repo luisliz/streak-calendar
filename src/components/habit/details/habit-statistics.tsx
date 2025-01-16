@@ -1,6 +1,8 @@
 "use client";
 
 import { Card } from "@/components/ui/card";
+import NumberFlow from "@number-flow/react";
+import { motion } from "framer-motion";
 
 import { Id } from "@server/convex/_generated/dataModel";
 
@@ -114,35 +116,38 @@ export function HabitStatistics({ habitId, colorTheme, completions }: HabitStati
 
   return (
     <div className="flex flex-col gap-8">
-      <Card className="w-[800px] border p-2 shadow-md">
-        <div className="p-4">
-          <h2 className="mb-4 text-lg font-semibold">Statistics</h2>
-          {/* Statistics grid with 4 key metrics */}
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <div className="space-y-1">
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
+        <Card className="w-[800px] border p-2 shadow-md">
+          <div className="p-4">
+            <h2 className="mb-4 text-lg font-semibold">Statistics</h2>
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
               <p className="text-sm text-muted-foreground">Current Streak</p>
-              <p className="text-2xl font-bold">{currentStreak}</p>
-            </div>
-            <div className="space-y-1">
-              <p className="text-sm text-muted-foreground">Off Days</p>
-              <p className="text-2xl font-bold">{offStreak}</p>
-            </div>
-            <div className="space-y-1">
-              <p className="text-sm text-muted-foreground">This Month</p>
-              <p className="text-2xl font-bold">{thisMonthCompletions}</p>
-            </div>
-            <div className="space-y-1">
-              <p className="text-sm text-muted-foreground">Total Completions</p>
-              <p className="text-2xl font-bold">{totalCompletions}</p>
-            </div>
-          </div>
+              <p className="text-2xl font-bold">
+                <NumberFlow value={currentStreak} />
+              </p>
 
-          {/* Visual analytics section */}
-          <div className="mb-8 mt-8">
+              <p className="text-sm text-muted-foreground">Off Days</p>
+              <p className="text-2xl font-bold">
+                <NumberFlow value={offStreak} />
+              </p>
+
+              <p className="text-sm text-muted-foreground">This Month</p>
+              <p className="text-2xl font-bold">
+                <NumberFlow value={thisMonthCompletions} />
+              </p>
+
+              <p className="text-sm text-muted-foreground">Total Completions</p>
+              <p className="text-2xl font-bold">
+                <NumberFlow value={totalCompletions} />
+              </p>
+            </div>
+
+            {/* Visual analytics section */}
+
             <HabitAnalytics colorTheme={colorTheme} completions={completions?.filter((c) => c.habitId === habitId)} />
           </div>
-        </div>
-      </Card>
+        </Card>
+      </motion.div>
     </div>
   );
 }
