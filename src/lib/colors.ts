@@ -183,27 +183,124 @@ export function getBackgroundColorClass(colorTheme: string, count: number): stri
 }
 
 /**
- * RGB values for each color in our theme
+ * RGB values for each color shade in our theme
  */
-const RGB_VALUES = {
-  red: "239 68 68",
-  orange: "249 115 22",
-  amber: "245 158 11",
-  yellow: "234 179 8",
-  lime: "132 204 22",
-  green: "34 197 94",
-  emerald: "16 185 129",
-  teal: "20 184 166",
-  cyan: "6 182 212",
-  sky: "14 165 233",
-  blue: "59 130 246",
-  indigo: "99 102 241",
-  violet: "139 92 246",
-  purple: "168 85 247",
-  fuchsia: "217 70 239",
-  pink: "236 72 153",
-  rose: "244 63 94",
+export const RGB_SHADES = {
+  red: {
+    300: "252 165 165",
+    400: "248 113 113",
+    500: "239 68 68",
+    600: "220 38 38",
+  },
+  orange: {
+    300: "253 186 116",
+    400: "251 146 60",
+    500: "249 115 22",
+    600: "234 88 12",
+  },
+  amber: {
+    300: "252 211 77",
+    400: "251 191 36",
+    500: "245 158 11",
+    600: "217 119 6",
+  },
+  yellow: {
+    300: "253 224 71",
+    400: "250 204 21",
+    500: "234 179 8",
+    600: "202 138 4",
+  },
+  lime: {
+    300: "190 242 100",
+    400: "163 230 53",
+    500: "132 204 22",
+    600: "101 163 13",
+  },
+  green: {
+    300: "134 239 172",
+    400: "74 222 128",
+    500: "34 197 94",
+    600: "22 163 74",
+  },
+  emerald: {
+    300: "110 231 183",
+    400: "52 211 153",
+    500: "16 185 129",
+    600: "5 150 105",
+  },
+  teal: {
+    300: "94 234 212",
+    400: "45 212 191",
+    500: "20 184 166",
+    600: "13 148 136",
+  },
+  cyan: {
+    300: "103 232 249",
+    400: "34 211 238",
+    500: "6 182 212",
+    600: "8 145 178",
+  },
+  sky: {
+    300: "125 211 252",
+    400: "56 189 248",
+    500: "14 165 233",
+    600: "2 132 199",
+  },
+  blue: {
+    300: "147 197 253",
+    400: "96 165 250",
+    500: "59 130 246",
+    600: "37 99 235",
+  },
+  indigo: {
+    300: "165 180 252",
+    400: "129 140 248",
+    500: "99 102 241",
+    600: "79 70 229",
+  },
+  violet: {
+    300: "196 181 253",
+    400: "167 139 250",
+    500: "139 92 246",
+    600: "124 58 237",
+  },
+  purple: {
+    300: "216 180 254",
+    400: "192 132 252",
+    500: "168 85 247",
+    600: "147 51 234",
+  },
+  fuchsia: {
+    300: "240 171 252",
+    400: "232 121 249",
+    500: "217 70 239",
+    600: "192 38 211",
+  },
+  pink: {
+    300: "249 168 212",
+    400: "244 114 182",
+    500: "236 72 153",
+    600: "219 39 119",
+  },
+  rose: {
+    300: "253 164 175",
+    400: "251 113 133",
+    500: "244 63 94",
+    600: "225 29 72",
+  },
 } as const;
+
+/**
+ * Gets RGB values for charts based on color theme and shade
+ * @param colorTheme - The base color theme (e.g., "bg-red-500")
+ * @param shade - The color shade (300-600)
+ * @returns RGB values string (e.g., "239 68 68")
+ */
+export function getChartRGBValues(colorTheme: string, shade: 300 | 400 | 500 | 600 = 500): string {
+  const colorMatch = colorTheme.match(/bg-(\w+)-\d+/);
+  const colorName = colorMatch ? colorMatch[1] : "purple";
+  return RGB_SHADES[colorName as keyof typeof RGB_SHADES][shade];
+}
 
 /**
  * Generates RGB color values with opacity levels for activity calendar
@@ -230,8 +327,8 @@ export function getActivityCalendarTheme(colorTheme: string): { light: string[];
     };
   }
 
-  const colorName = colorMatch[1] as keyof typeof RGB_VALUES;
-  const rgb = RGB_VALUES[colorName];
+  const colorName = colorMatch[1] as keyof typeof RGB_SHADES;
+  const rgb = RGB_SHADES[colorName][500];
 
   const theme = [
     "rgb(124 124 124 / 0.1)", // Empty state stays gray
