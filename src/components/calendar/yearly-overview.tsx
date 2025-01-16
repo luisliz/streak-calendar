@@ -10,7 +10,7 @@ import { XIcon } from "../ui/x-icon";
 import { YearlyOverviewSkeleton } from "./calendar-skeletons";
 
 /**
- * YearlyOverview Component
+ * YearlyOverview Component (2025-01-16 - DEPRECATED)
  * Displays a GitHub-style contribution graph showing habit completions over the past year.
  * The graph uses different shades of red to indicate completion intensity per day.
  */

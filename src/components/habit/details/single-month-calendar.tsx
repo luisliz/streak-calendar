@@ -11,19 +11,29 @@ import { useState } from "react";
 
 import { Id } from "@server/convex/_generated/dataModel";
 
+/**
+ * SingleMonthCalendar - A calendar component that displays and tracks habit completions for a single month
+ * Features:
+ * - Month navigation
+ * - Grid layout with day cells
+ * - Habit completion tracking
+ * - Optimistic UI updates with loading states
+ */
+
 interface SingleMonthCalendarProps {
   habit: {
     _id: Id<"habits">;
     name: string;
     timerDuration?: number;
   };
-  colorTheme: string;
+  colorTheme: string; // Theme color for completion indicators
   completions: Array<{
+    // Array of habit completion records
     habitId: Id<"habits">;
     completedAt: number;
   }>;
-  onToggle: (habitId: Id<"habits">, date: string, count: number) => void;
-  initialDate?: Date;
+  onToggle: (habitId: Id<"habits">, date: string, count: number) => void; // Callback for toggling completion state
+  initialDate?: Date; // Optional starting date, defaults to current date
 }
 
 export function SingleMonthCalendar({
@@ -35,11 +45,13 @@ export function SingleMonthCalendar({
 }: SingleMonthCalendarProps) {
   const t = useTranslations("calendar");
   const [currentDate, setCurrentDate] = useState(initialDate);
+  // Track which dates are currently being updated for loading states
   const [updatingDates, setUpdatingDates] = useState<Set<string>>(new Set());
 
   const goToPreviousMonth = () => setCurrentDate((prev) => subMonths(prev, 1));
   const goToNextMonth = () => setCurrentDate((prev) => addMonths(prev, 1));
 
+  // Handle completion toggle with optimistic updates and loading states
   const handleToggle = async (habitId: Id<"habits">, date: string, count: number) => {
     setUpdatingDates((prev) => new Set(prev).add(date));
     try {
@@ -53,7 +65,7 @@ export function SingleMonthCalendar({
     }
   };
 
-  // Get current month's days
+  // Generate array of dates for the current month
   const currentMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
   const daysInMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
 
@@ -62,9 +74,9 @@ export function SingleMonthCalendar({
     return format(day, "yyyy-MM-dd");
   });
 
-  // Get the date range for completions
+  // Calculate valid date range (1 year from today)
   const now = new Date();
-  const end = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999); // Set to end of today
+  const end = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
   const start = new Date(end);
   start.setFullYear(start.getFullYear() - 1);
   const days = monthDays.filter((d) => {
@@ -72,22 +84,22 @@ export function SingleMonthCalendar({
     return date >= start && date <= end;
   });
 
-  // Calculate padding days
+  // Calculate padding days for proper grid alignment
   const firstDay = new Date(monthDays[0]);
   const lastDay = new Date(monthDays[monthDays.length - 1]);
-  const startPadding = firstDay.getDay();
-  const endPadding = 6 - lastDay.getDay();
+  const startPadding = firstDay.getDay(); // Number of empty cells before first day
+  const endPadding = 6 - lastDay.getDay(); // Number of empty cells after last day
   const emptyStartDays = Array(startPadding).fill(null);
   const emptyEndDays = Array(endPadding).fill(null);
 
-  // Get localized day and month names
+  // Get localized strings for days and month
   const dayLabels = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"].map((d) => t(`weekDays.${d}`));
   const monthName = t(`monthNames.${format(firstDay, "MMMM").toLowerCase()}`);
   const year = format(firstDay, "yyyy");
 
   return (
-    // TODO: 2025-01-12 - what does min-w-[300px] even mean?
     <Card className="min-w-[300px] border p-4 shadow-md">
+      {/* Month navigation header */}
       <div className="mb-4 flex items-center justify-between">
         <Button variant="ghost" size="icon" onClick={goToPreviousMonth} className="h-8 w-8">
           <ChevronLeft className="h-4 w-4" />
@@ -99,7 +111,7 @@ export function SingleMonthCalendar({
       </div>
       <div className="mx-auto w-fit">
         <div className="grid grid-cols-7 gap-[1px]">
-          {/* Day name labels */}
+          {/* Weekday labels row */}
           {dayLabels.map((label) => (
             <div key={label} className="text-center text-xs text-muted-foreground">
               {label}
@@ -111,7 +123,7 @@ export function SingleMonthCalendar({
               <div className="h-full w-full" />
             </div>
           ))}
-          {/* Day cells with completion tracking */}
+          {/* Calendar day cells */}
           {monthDays.map((dateStr) => {
             const isInRange = days.includes(dateStr);
             const count = getCompletionCount(dateStr, habit._id, completions);
@@ -142,6 +154,13 @@ export function SingleMonthCalendar({
   );
 }
 
+/**
+ * Calculate the number of times a habit was completed on a specific date
+ * @param date - The date to check in YYYY-MM-DD format
+ * @param habitId - The ID of the habit to check
+ * @param completions - Array of all habit completion records
+ * @returns The number of times the habit was completed on the given date
+ */
 function getCompletionCount(
   date: string,
   habitId: Id<"habits">,

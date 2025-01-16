@@ -1,3 +1,11 @@
+/**
+ * HabitEditForm - A client-side form component for editing habit properties
+ * Provides functionality to modify:
+ * - Habit name
+ * - Associated calendar
+ * - Position within calendar
+ * - Timer duration for habit tracking
+ */
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -9,6 +17,26 @@ import { useTranslations } from "next-intl";
 
 import { Id } from "@server/convex/_generated/dataModel";
 
+/**
+ * HabitEditForm - A client-side form component for editing habit properties
+ * Provides functionality to modify:
+ * - Habit name
+ * - Associated calendar
+ * - Position within calendar
+ * - Timer duration for habit tracking
+ */
+
+/**
+ * HabitEditForm - A client-side form component for editing habit properties
+ * Provides functionality to modify:
+ * - Habit name
+ * - Associated calendar
+ * - Position within calendar
+ * - Timer duration for habit tracking
+ */
+
+// Predefined timer duration options in minutes
+// Each option has a translation key and its corresponding value in minutes
 const TIMER_VALUES = [
   { key: "1min", value: 1 },
   { key: "2min", value: 2 },
@@ -23,6 +51,21 @@ const TIMER_VALUES = [
   { key: "2hour", value: 120 },
 ];
 
+/**
+ * Props interface for HabitEditForm
+ * @property name - Current habit name
+ * @property onNameChange - Callback for habit name updates
+ * @property timerDuration - Optional timer duration in minutes
+ * @property onTimerDurationChange - Callback for timer duration updates
+ * @property selectedCalendarId - ID of currently selected calendar
+ * @property onCalendarChange - Callback for calendar selection changes
+ * @property position - Habit's position in the calendar
+ * @property onPositionChange - Callback for position updates
+ * @property calendars - Available calendars list
+ * @property habits - Habits in current calendar
+ * @property onSave - Save changes callback
+ * @property onDelete - Delete habit callback
+ */
 interface HabitEditFormProps {
   name: string;
   onNameChange: (name: string) => void;
@@ -69,19 +112,20 @@ export function HabitEditForm({
       <div className="p-4">
         <h2 className="mb-6 text-lg font-semibold">{t("habit.edit.title")}</h2>
         <div className="space-y-4">
-          {/* Habit name input field */}
+          {/* Name input field for habit */}
           <div>
             <Label htmlFor="edit-habit-name">{t("habit.edit.name.label")}</Label>
             <Input id="edit-habit-name" value={name} onChange={(e) => onNameChange(e.target.value)} />
           </div>
-          {/* Calendar selection dropdown */}
+
+          {/* Calendar selection with automatic position adjustment */}
           <div>
             <Label>{t("habit.edit.calendar.label")}</Label>
             <Select
               value={selectedCalendarId}
               onValueChange={(value) => {
                 onCalendarChange(value as Id<"calendars">);
-                // Reset position to end of new calendar
+                // When calendar changes, move habit to end of new calendar
                 const calendarHabits = habits?.length ?? 0;
                 onPositionChange(calendarHabits + 1);
               }}
@@ -98,7 +142,8 @@ export function HabitEditForm({
               </SelectContent>
             </Select>
           </div>
-          {/* Position selection dropdown */}
+
+          {/* Position selector - dynamically updates based on habits count */}
           <div>
             <Label>{t("habit.edit.position.label")}</Label>
             <Select value={position.toString()} onValueChange={(value) => onPositionChange(parseInt(value))}>
@@ -114,7 +159,8 @@ export function HabitEditForm({
               </SelectContent>
             </Select>
           </div>
-          {/* Timer duration selection dropdown */}
+
+          {/* Timer duration selector with predefined options */}
           <div>
             <Label>{t("habit.edit.timer.label")}</Label>
             <Select
@@ -134,7 +180,8 @@ export function HabitEditForm({
               </SelectContent>
             </Select>
           </div>
-          {/* Action buttons container */}
+
+          {/* Action buttons for saving or deleting the habit */}
           <div className="flex gap-2 pt-4">
             <Button variant="destructive" onClick={onDelete}>
               {t("habit.edit.actions.delete")}

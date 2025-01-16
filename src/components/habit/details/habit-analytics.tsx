@@ -19,6 +19,13 @@ import { Bar, Line } from "react-chartjs-2";
 
 import { Id } from "@server/convex/_generated/dataModel";
 
+/**
+ * HabitAnalytics Component
+ * A comprehensive analytics dashboard that visualizes habit tracking data through various charts.
+ * Uses Chart.js for rendering different visualizations of habit completion patterns.
+ */
+
+// Register required Chart.js components
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -33,6 +40,7 @@ ChartJS.register(
   Filler
 );
 
+// Global chart configuration with responsive design and mobile optimizations
 const chartOptions = {
   responsive: true,
   maintainAspectRatio: false,
@@ -88,29 +96,36 @@ const chartOptions = {
 };
 
 interface HabitAnalyticsProps {
-  colorTheme: string;
+  colorTheme: string; // Theme color for chart styling
   completions:
     | Array<{
         habitId: Id<"habits">;
-        completedAt: number;
+        completedAt: number; // Unix timestamp of completion
       }>
     | undefined;
 }
 
 export function HabitAnalytics({ colorTheme, completions }: HabitAnalyticsProps) {
+  /**
+   * Calculates streak history including both active streaks and off periods
+   * @param completions - Array of habit completion records
+   * @returns Object containing labels and data for active/off streaks
+   */
   function calculateStreakHistory(completions: HabitAnalyticsProps["completions"]) {
     if (!completions) return { labels: [], activeData: [], offData: [] };
 
+    // Convert timestamps to date strings and sort chronologically
     const dates = completions.map((c) => new Date(c.completedAt).toISOString().split("T")[0]).sort();
     const uniqueDates = [...new Set(dates)];
     const streaks: { date: string; length: number; type: "active" | "off" }[] = [];
 
     if (uniqueDates.length === 0) return { labels: [], activeData: [], offData: [] };
 
+    // Initialize streak tracking
     let currentStreak = 1;
     let streakStartDate = uniqueDates[0];
 
-    // Check if there's an initial off-streak before the first completion
+    // Check for initial off-streak before first completion
     const firstCompletionDate = new Date(uniqueDates[0]);
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -119,6 +134,7 @@ export function HabitAnalytics({ colorTheme, completions }: HabitAnalyticsProps)
       streaks.push({ date: today.toISOString().split("T")[0], length: Math.abs(daysSinceStart), type: "off" });
     }
 
+    // Calculate streaks by analyzing consecutive dates
     for (let i = 1; i < uniqueDates.length; i++) {
       const curr = new Date(uniqueDates[i]);
       const prev = new Date(uniqueDates[i - 1]);
@@ -169,6 +185,11 @@ export function HabitAnalytics({ colorTheme, completions }: HabitAnalyticsProps)
     };
   }
 
+  /**
+   * Analyzes completion patterns by day of week
+   * @param completions - Array of habit completion records
+   * @returns Object containing labels and completion counts for each day
+   */
   function calculateWeeklyPattern(completions: HabitAnalyticsProps["completions"]) {
     if (!completions) return { labels: [], data: [] };
 
@@ -189,6 +210,11 @@ export function HabitAnalytics({ colorTheme, completions }: HabitAnalyticsProps)
     };
   }
 
+  /**
+   * Aggregates completions by month to show long-term progress
+   * @param completions - Array of habit completion records
+   * @returns Object containing labels and monthly completion counts
+   */
   function calculateMonthlyProgress(completions: HabitAnalyticsProps["completions"]) {
     if (!completions) return { labels: [], data: [] };
 
@@ -215,6 +241,13 @@ export function HabitAnalytics({ colorTheme, completions }: HabitAnalyticsProps)
     };
   }
 
+  /**
+   * Analyzes completion patterns by time of day
+   * Categorizes completions into Morning (6am-12pm), Afternoon (12pm-6pm),
+   * Evening (6pm-12am), and Night (12am-6am)
+   * @param completions - Array of habit completion records
+   * @returns Object containing labels and completion counts for each time period
+   */
   function calculateTimeOfDay(completions: HabitAnalyticsProps["completions"]) {
     if (!completions) return { labels: [], data: [] };
 
@@ -239,6 +272,7 @@ export function HabitAnalytics({ colorTheme, completions }: HabitAnalyticsProps)
     };
   }
 
+  // Calculate data for all charts
   const streakData = calculateStreakHistory(completions);
   const weeklyData = calculateWeeklyPattern(completions);
   const monthlyData = calculateMonthlyProgress(completions);
@@ -247,7 +281,9 @@ export function HabitAnalytics({ colorTheme, completions }: HabitAnalyticsProps)
   return (
     <div className="w-full">
       <h2 className="mb-4 text-lg font-semibold">Analysis</h2>
+      {/* Grid layout for analytics charts with responsive design */}
       <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2">
+        {/* Streak History Chart */}
         <div className="h-[200px] w-full max-w-[300px] rounded-lg border p-2 pb-6 sm:h-[240px] sm:max-w-none sm:p-4 sm:pb-8">
           <h3 className="mb-2 text-sm text-muted-foreground">Streak History</h3>
           <Bar
@@ -323,6 +359,7 @@ export function HabitAnalytics({ colorTheme, completions }: HabitAnalyticsProps)
           />
         </div>
 
+        {/* Weekly Pattern Chart */}
         <div className="h-[200px] w-full max-w-[300px] rounded-lg border p-2 pb-6 sm:h-[240px] sm:max-w-none sm:p-4 sm:pb-8">
           <h3 className="mb-2 text-sm text-muted-foreground">Weekly Pattern</h3>
           <Line
@@ -346,6 +383,7 @@ export function HabitAnalytics({ colorTheme, completions }: HabitAnalyticsProps)
           />
         </div>
 
+        {/* Monthly Progress Chart */}
         <div className="h-[200px] w-full max-w-[300px] rounded-lg border p-2 pb-6 sm:h-[240px] sm:max-w-none sm:p-4 sm:pb-8">
           <h3 className="mb-2 text-sm text-muted-foreground">Monthly Progress</h3>
           <Line
@@ -366,6 +404,7 @@ export function HabitAnalytics({ colorTheme, completions }: HabitAnalyticsProps)
           />
         </div>
 
+        {/* Time of Day Chart */}
         <div className="h-[200px] w-full max-w-[300px] rounded-lg border p-2 pb-6 sm:h-[240px] sm:max-w-none sm:p-4 sm:pb-8">
           <h3 className="mb-2 text-sm text-muted-foreground">Time of Day</h3>
           <Line

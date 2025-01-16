@@ -14,6 +14,21 @@ import { useEffect, useMemo, useState } from "react";
 import { api } from "@server/convex/_generated/api";
 import { Id } from "@server/convex/_generated/dataModel";
 
+/**
+ * HabitDetails Component
+ * A comprehensive view for managing and displaying habit details including:
+ * - Activity calendar visualization
+ * - Monthly statistics
+ * - Habit editing capabilities
+ * - Deletion functionality
+ */
+
+/**
+ * Props interface for the HabitDetails component
+ * @property habit - The habit object containing core habit data
+ * @property calendar - The calendar object this habit belongs to
+ * @property onDelete - Callback function triggered after successful habit deletion
+ */
 interface HabitDetailsProps {
   habit: {
     _id: Id<"habits">;
@@ -30,6 +45,11 @@ interface HabitDetailsProps {
   onDelete: () => void;
 }
 
+/**
+ * Determines calendar visualization properties based on screen size
+ * Uses window.matchMedia for responsive design
+ * @returns Object containing blockSize, blockMargin, and showLabels settings
+ */
 function getCalendarSize() {
   if (typeof window === "undefined")
     return {
@@ -47,6 +67,7 @@ function getCalendarSize() {
 }
 
 export function HabitDetails({ habit, calendar }: HabitDetailsProps) {
+  // Core hooks and state management
   const router = useRouter();
   const { toast } = useToast();
   const [showDeleteAlert, setShowDeleteAlert] = useState(false);
@@ -56,12 +77,17 @@ export function HabitDetails({ habit, calendar }: HabitDetailsProps) {
   const [position, setPosition] = useState<number>(habit.position ?? 1);
   const [calendarSize, setCalendarSize] = useState(getCalendarSize());
 
+  // Convex API mutations and queries
   const updateHabit = useMutation(api.habits.update);
   const deleteHabit = useMutation(api.habits.remove);
   const markComplete = useMutation(api.habits.markComplete);
   const calendars = useQuery(api.calendars.list);
   const habits = useQuery(api.habits.list, { calendarId: selectedCalendarId });
 
+  /**
+   * Window resize handler to update calendar visualization
+   * Ensures responsive design across different screen sizes
+   */
   useEffect(() => {
     function handleResize() {
       setCalendarSize(getCalendarSize());
@@ -71,6 +97,10 @@ export function HabitDetails({ habit, calendar }: HabitDetailsProps) {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  /**
+   * Calculate the date range for habit completions
+   * Shows data for the last year up to current date
+   */
   const dateRange = useMemo(() => {
     const now = new Date();
     const end = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
@@ -85,6 +115,10 @@ export function HabitDetails({ habit, calendar }: HabitDetailsProps) {
 
   const completions = useQuery(api.habits.getCompletions, dateRange);
 
+  /**
+   * Processes completion data into a format suitable for calendar visualization
+   * Maps dates to completion counts and assigns level (0-4) based on completion frequency
+   */
   const calendarData = useMemo(() => {
     if (!completions) return [];
 
@@ -121,6 +155,10 @@ export function HabitDetails({ habit, calendar }: HabitDetailsProps) {
     });
   }, [completions, habit._id, dateRange]);
 
+  /**
+   * Handles habit updates
+   * Validates input and shows success/error toasts
+   */
   const handleSave = async () => {
     if (!name.trim()) return;
     try {
@@ -141,6 +179,10 @@ export function HabitDetails({ habit, calendar }: HabitDetailsProps) {
     }
   };
 
+  /**
+   * Handles habit deletion
+   * Includes navigation and cleanup with error handling
+   */
   const handleDelete = async () => {
     try {
       setShowDeleteAlert(false);
@@ -160,6 +202,7 @@ export function HabitDetails({ habit, calendar }: HabitDetailsProps) {
     <>
       <HabitBackNavigation />
 
+      {/* Habit header with name and timer duration */}
       <div className="text-center">
         <h1 className="mb-8 text-2xl font-bold">
           {name}
@@ -167,7 +210,9 @@ export function HabitDetails({ habit, calendar }: HabitDetailsProps) {
         </h1>
       </div>
 
+      {/* Main content layout with responsive grid */}
       <div className="mx-auto max-w-[7xl] space-y-8 md:space-y-6 lg:flex lg:items-start lg:justify-center lg:space-x-6 lg:space-y-0">
+        {/* Single month calendar view */}
         <div className="mx-auto w-full max-w-[300px] lg:mx-0 lg:w-[300px]">
           <SingleMonthCalendar
             habit={habit}
@@ -187,6 +232,7 @@ export function HabitDetails({ habit, calendar }: HabitDetailsProps) {
           />
         </div>
 
+        {/* Activity calendar and statistics section */}
         <div className="space-y-4">
           <HabitActivityCalendar
             calendarData={calendarData}
@@ -199,6 +245,7 @@ export function HabitDetails({ habit, calendar }: HabitDetailsProps) {
         </div>
       </div>
 
+      {/* Habit management forms and dialogs */}
       <HabitEditForm
         name={name}
         onNameChange={setName}
