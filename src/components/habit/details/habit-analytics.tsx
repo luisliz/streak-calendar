@@ -46,13 +46,44 @@ const chartOptions = {
       grid: {
         display: false,
       },
+      ticks: {
+        maxRotation: 45,
+        minRotation: 45,
+        font: {
+          size: window?.innerWidth < 640 ? 8 : 12,
+        },
+      },
+      offset: window?.innerWidth < 640 ? false : true,
     },
     y: {
       grid: {
         color: "rgba(0, 0, 0, 0.1)",
       },
       beginAtZero: true,
+      ticks: {
+        font: {
+          size: window?.innerWidth < 640 ? 8 : 12,
+        },
+        padding: window?.innerWidth < 640 ? 0 : 8,
+      },
+      offset: window?.innerWidth < 640 ? false : true,
     },
+  },
+  layout: {
+    padding:
+      window?.innerWidth < 640
+        ? {
+            left: 0,
+            right: 0,
+            top: 5,
+            bottom: 0,
+          }
+        : {
+            left: 10,
+            right: 10,
+            top: 10,
+            bottom: 10,
+          },
   },
 };
 
@@ -141,7 +172,10 @@ export function HabitAnalytics({ colorTheme, completions }: HabitAnalyticsProps)
   function calculateWeeklyPattern(completions: HabitAnalyticsProps["completions"]) {
     if (!completions) return { labels: [], data: [] };
 
-    const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    const days =
+      window?.innerWidth < 640
+        ? ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+        : ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
     const counts = new Array(7).fill(0);
 
     completions.forEach((c) => {
@@ -169,11 +203,13 @@ export function HabitAnalytics({ colorTheme, completions }: HabitAnalyticsProps)
     );
 
     const sortedEntries = Object.entries(monthlyData).sort(([a], [b]) => a.localeCompare(b));
+    const isMobile = window?.innerWidth < 640;
 
     return {
       labels: sortedEntries.map(([month]) => {
         const [year, monthNum] = month.split("-");
-        return `${new Date(0, Number(monthNum) - 1).toLocaleString("default", { month: "short" })} ${year}`;
+        const monthStr = new Date(0, Number(monthNum) - 1).toLocaleString("default", { month: "short" });
+        return isMobile ? monthStr : `${monthStr} ${year}`;
       }),
       data: sortedEntries.map(([, count]) => count),
     };
@@ -209,10 +245,10 @@ export function HabitAnalytics({ colorTheme, completions }: HabitAnalyticsProps)
   const timeData = calculateTimeOfDay(completions);
 
   return (
-    <>
+    <div className="w-full">
       <h2 className="mb-4 text-lg font-semibold">Analysis</h2>
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <div className="h-[240px] rounded-lg border p-4 pb-8">
+      <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2">
+        <div className="h-[200px] w-full max-w-[300px] rounded-lg border p-2 pb-6 sm:h-[240px] sm:max-w-none sm:p-4 sm:pb-8">
           <h3 className="mb-2 text-sm text-muted-foreground">Streak History</h3>
           <Bar
             data={{
@@ -258,37 +294,36 @@ export function HabitAnalytics({ colorTheme, completions }: HabitAnalyticsProps)
                 legend: {
                   display: true,
                   position: "top",
+                  labels: {
+                    font: {
+                      size: window?.innerWidth < 640 ? 8 : 12,
+                    },
+                  },
                 },
               },
               scales: {
                 x: {
-                  grid: {
-                    display: false,
-                  },
+                  ...chartOptions.scales.x,
                   stacked: true,
                   title: {
-                    display: true,
+                    display: window?.innerWidth >= 640,
                     text: "Start Date",
                   },
                 },
                 y: {
+                  ...chartOptions.scales.y,
                   stacked: false,
-                  grid: {
-                    display: true,
-                    color: "rgba(0, 0, 0, 0.1)",
-                  },
                   title: {
-                    display: true,
+                    display: window?.innerWidth >= 640,
                     text: "Days",
                   },
-                  beginAtZero: true,
                 },
               },
             }}
           />
         </div>
 
-        <div className="h-[240px] rounded-lg border p-4 pb-8">
+        <div className="h-[200px] w-full max-w-[300px] rounded-lg border p-2 pb-6 sm:h-[240px] sm:max-w-none sm:p-4 sm:pb-8">
           <h3 className="mb-2 text-sm text-muted-foreground">Weekly Pattern</h3>
           <Line
             data={{
@@ -311,7 +346,7 @@ export function HabitAnalytics({ colorTheme, completions }: HabitAnalyticsProps)
           />
         </div>
 
-        <div className="h-[240px] rounded-lg border p-4 pb-8">
+        <div className="h-[200px] w-full max-w-[300px] rounded-lg border p-2 pb-6 sm:h-[240px] sm:max-w-none sm:p-4 sm:pb-8">
           <h3 className="mb-2 text-sm text-muted-foreground">Monthly Progress</h3>
           <Line
             data={{
@@ -331,7 +366,7 @@ export function HabitAnalytics({ colorTheme, completions }: HabitAnalyticsProps)
           />
         </div>
 
-        <div className="h-[240px] rounded-lg border p-4 pb-8">
+        <div className="h-[200px] w-full max-w-[300px] rounded-lg border p-2 pb-6 sm:h-[240px] sm:max-w-none sm:p-4 sm:pb-8">
           <h3 className="mb-2 text-sm text-muted-foreground">Time of Day</h3>
           <Line
             data={{
@@ -354,6 +389,6 @@ export function HabitAnalytics({ colorTheme, completions }: HabitAnalyticsProps)
           />
         </div>
       </div>
-    </>
+    </div>
   );
 }
