@@ -3,6 +3,7 @@
 import { AuthenticationWrapper } from "@/components/authentication-wrapper";
 import { CalendarContainer } from "@/components/calendar/calendar-container";
 import { ImportExport } from "@/components/calendar/import-export";
+// DEPRECATED
 // import { YearlyOverview } from "@/components/calendar/yearly-overview";
 import { useCalendarData } from "@/hooks/use-calendar-data";
 import { useDateRange } from "@/hooks/use-date-range";

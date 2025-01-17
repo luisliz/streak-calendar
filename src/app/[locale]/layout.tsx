@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata } from "next";
-import { getMessages, unstable_setRequestLocale } from "next-intl/server";
+import { getMessages, setRequestLocale } from "next-intl/server";
 import { Inter, Noto_Sans, Noto_Sans_Arabic, Noto_Sans_Hebrew, Noto_Sans_SC } from "next/font/google";
 import { notFound } from "next/navigation";
 
@@ -84,7 +84,7 @@ export default async function LocaleLayout({
   }
 
   // Configure locale for the current request and load translations
-  unstable_setRequestLocale(locale);
+  setRequestLocale(locale);
   const messages = await getMessages({ locale });
 
   return (
