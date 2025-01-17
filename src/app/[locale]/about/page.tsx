@@ -133,6 +133,19 @@ export default function AboutPage() {
             </Avatar>
           </div>
         </CardContent>
+        <CardContent>
+          <div className="flex justify-center">
+            <a href="https://www.buymeacoffee.com/ilyaizen" target="_blank" rel="noopener noreferrer">
+              <Image
+                src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png"
+                alt="Buy Me A Coffee"
+                width={217}
+                height={60}
+                unoptimized
+              />
+            </a>
+          </div>
+        </CardContent>
         <CardFooter className="flex gap-4">
           <Button asChild variant="outline" size="lg">
             <NextLink href="https://github.com/ilyaizen/streak-calendar" target="_blank" rel="noopener noreferrer">
@@ -168,9 +181,6 @@ export default function AboutPage() {
             >
               {t("seinfeldStrategy.quote")}
             </blockquote>
-
-            {/* Explanation of the strategy's effectiveness */}
-            <p className="text-muted-foreground">{t("seinfeldStrategy.whyItWorks.description")}</p>
 
             {/* Detailed breakdown of why the strategy is successful */}
             <h3 className="mb-6 mt-6 text-xl font-bold">{t("seinfeldStrategy.whyItWorks.title")}</h3>
