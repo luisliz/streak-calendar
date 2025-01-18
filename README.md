@@ -101,6 +101,17 @@ streak-calendar/
 
 Streak Calendar is open source to encourage transparency and collaboration. Contributions and innovations from users are welcome, helping to continuously improve the tool and make it even more effective for everyone.
 
+
+## Support
+
+If you're enjoying using Streak Calendar, drop a ⭐️ on the repo!
+
+<a href="https://buymeacoffee.com/ilyaizen" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=ilyaizen/streak-calendar&type=Date)](https://star-history.com/#ilyaizen/streak-calendar&Date)
+
 ## Links
 
 - Website: [streakcalendar.com](https://streakcalendar.com)
