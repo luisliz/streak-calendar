@@ -28,12 +28,8 @@ Commit Summary: `refactor: update next-intl to use stable setRequestLocale`
 ### Changed
 
 - Updated `next-intl` implementation by replacing deprecated `unstable_setRequestLocale` with stable `setRequestLocale`
-- Optimized completions query with cursor-based pagination
-  - Added limit and cursor support to prevent loading too many records
-  - Capped maximum records per request to 100
-  - Improved performance for users with many habit completions
 
 ### Added
 
-- Added CHANGELOG.md to track project changes
-- Added INSTRUCTIONS.md
+- Added changelog.md to track project changes
+- Added instructions.md
