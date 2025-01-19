@@ -164,8 +164,10 @@ export function SingleMonthCalendar({
 function getCompletionCount(
   date: string,
   habitId: Id<"habits">,
-  completions: Array<{ habitId: Id<"habits">; completedAt: number }>
+  completions: Array<{ habitId: Id<"habits">; completedAt: number }> | null | undefined
 ): number {
+  if (!Array.isArray(completions)) return 0;
+
   return completions.filter((completion) => {
     const completionDate = new Date(completion.completedAt).toISOString().split("T")[0];
     return completion.habitId === habitId && completionDate === date;

@@ -4,11 +4,21 @@ import { mutation, query } from "./_generated/server";
 
 /**
  * Calendar operations for managing user calendars and their associated habits/completions.
- * Import/Export functionality has been moved to calendar-sync.ts
+ * This module provides CRUD operations for calendars with proper position management and cascading deletions.
+ *
+ * Key features:
+ * - Position-based ordering of calendars
+ * - Cascading deletions (calendar -> habits -> completions)
+ * - User-specific calendar management
+ * - Authentication checks on all operations
  */
 
 /**
- * Retrieves all calendars for the authenticated user, ordered by most recent first.
+ * Retrieves all calendars for the authenticated user, ordered by position ascending.
+ * This ensures calendars maintain their user-defined order in the UI.
+ *
+ * @throws {Error} If user is not authenticated
+ * @returns {Promise<Calendar[]>} List of calendars owned by the user
  */
 export const list = query({
   handler: async (ctx) => {
@@ -25,6 +35,12 @@ export const list = query({
 
 /**
  * Creates a new calendar with specified name and color theme.
+ * Automatically assigns a position value based on existing calendars count.
+ *
+ * @param {string} name - Display name for the calendar
+ * @param {string} colorTheme - Color theme identifier for UI customization
+ * @throws {Error} If user is not authenticated
+ * @returns {Promise<Id<"calendars">>} ID of the newly created calendar
  */
 export const create = mutation({
   args: {
@@ -35,7 +51,7 @@ export const create = mutation({
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) throw new Error("Not authenticated");
 
-    // Get existing calendars to determine position
+    // Position is 1-based and determined by number of existing calendars
     const existingCalendars = await ctx.db
       .query("calendars")
       .filter((q) => q.eq(q.field("userId"), identity.subject))
@@ -51,11 +67,15 @@ export const create = mutation({
 });
 
 /**
- * Removes a calendar and cascades deletion to all associated habits and completions.
- * Follows this order:
- * 1. Delete all completions for each habit
- * 2. Delete all habits in the calendar
- * 3. Delete the calendar itself
+ * Removes a calendar and all associated data in a specific order to maintain referential integrity.
+ * Performs cascading deletion in this order:
+ * 1. Deletes all completions for each habit in the calendar
+ * 2. Deletes all habits belonging to the calendar
+ * 3. Updates positions of remaining calendars to maintain order
+ * 4. Deletes the calendar itself
+ *
+ * @param {Id<"calendars">} id - ID of calendar to delete
+ * @throws {Error} If user is not authenticated or calendar not found/owned by user
  */
 export const remove = mutation({
   args: {
@@ -70,14 +90,14 @@ export const remove = mutation({
       throw new Error("Calendar not found");
     }
 
-    // Delete associated habits first
+    // Step 1 & 2: Delete habits and their completions
     const habits = await ctx.db
       .query("habits")
       .filter((q) => q.eq(q.field("calendarId"), args.id))
       .collect();
 
     for (const habit of habits) {
-      // Delete completions for each habit
+      // Delete all completions for this habit first
       await ctx.db
         .query("completions")
         .filter((q) => q.eq(q.field("habitId"), habit._id))
@@ -86,11 +106,11 @@ export const remove = mutation({
           return Promise.all(completions.map((completion) => ctx.db.delete(completion._id)));
         });
 
-      // Delete the habit
+      // Then delete the habit itself
       await ctx.db.delete(habit._id);
     }
 
-    // Get all calendars to update positions
+    // Step 3: Update positions of remaining calendars
     const allCalendars = await ctx.db
       .query("calendars")
       .filter((q) => q.eq(q.field("userId"), identity.subject))
@@ -98,7 +118,7 @@ export const remove = mutation({
 
     const deletedPosition = calendar.position ?? allCalendars.length;
 
-    // Update positions of calendars after the deleted one
+    // Decrement position of all calendars that were after the deleted one
     for (const otherCalendar of allCalendars) {
       if (otherCalendar._id === args.id) continue;
 
@@ -108,13 +128,24 @@ export const remove = mutation({
       }
     }
 
-    // Finally delete the calendar
+    // Step 4: Delete the calendar
     await ctx.db.delete(args.id);
   },
 });
 
 /**
- * Updates a calendar's name and color theme after verifying ownership.
+ * Updates a calendar's properties including its position in the list.
+ * When position changes, other calendars' positions are adjusted to maintain order.
+ *
+ * Position update logic:
+ * - Moving down: Decrement positions of calendars between old and new position
+ * - Moving up: Increment positions of calendars between new and old position
+ *
+ * @param {Id<"calendars">} id - Calendar ID to update
+ * @param {string} name - New calendar name
+ * @param {string} colorTheme - New color theme
+ * @param {number} position - New position in the list
+ * @throws {Error} If user is not authenticated or calendar not found/owned by user
  */
 export const update = mutation({
   args: {
@@ -132,29 +163,27 @@ export const update = mutation({
       throw new Error("Not authorized");
     }
 
-    // Get all calendars to handle position updates
     const allCalendars = await ctx.db
       .query("calendars")
       .filter((q) => q.eq(q.field("userId"), identity.subject))
       .collect();
 
-    // If position changed, update other calendars' positions
+    // Handle position updates if position changed
     if (calendar.position !== args.position) {
       const oldPosition = calendar.position ?? allCalendars.length;
       const newPosition = args.position;
 
-      // Update positions of other calendars
       for (const otherCalendar of allCalendars) {
         if (otherCalendar._id === args.id) continue;
 
         const currentPosition = otherCalendar.position ?? allCalendars.length;
         if (oldPosition < newPosition) {
-          // Moving down: decrement positions of calendars in between
+          // Moving down: shift affected calendars up
           if (currentPosition > oldPosition && currentPosition <= newPosition) {
             await ctx.db.patch(otherCalendar._id, { position: currentPosition - 1 });
           }
         } else {
-          // Moving up: increment positions of calendars in between
+          // Moving up: shift affected calendars down
           if (currentPosition >= newPosition && currentPosition < oldPosition) {
             await ctx.db.patch(otherCalendar._id, { position: currentPosition + 1 });
           }
@@ -162,7 +191,7 @@ export const update = mutation({
       }
     }
 
-    // Update the calendar itself
+    // Update the calendar's properties
     await ctx.db.patch(args.id, {
       name: args.name,
       colorTheme: args.colorTheme,
@@ -172,7 +201,13 @@ export const update = mutation({
 });
 
 /**
- * Retrieves a single calendar by ID after verifying it exists.
+ * Retrieves a single calendar by ID.
+ * Note: This query doesn't check ownership, as it's typically used after list()
+ * which already filters by user.
+ *
+ * @param {Id<"calendars">} id - Calendar ID to retrieve
+ * @throws {Error} If calendar not found
+ * @returns {Promise<Calendar>} The requested calendar
  */
 export const get = query({
   args: { id: v.id("calendars") },

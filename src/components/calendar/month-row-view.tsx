@@ -126,9 +126,11 @@ export function MonthRowView({
           .map((habit) => {
             // Calculate today's completion count for the habit
             const today = new Date().toISOString().split("T")[0];
-            const todayCount = completions.filter(
-              (c) => c.habitId === habit._id && new Date(c.completedAt).toISOString().split("T")[0] === today
-            ).length;
+            const todayCount = Array.isArray(completions)
+              ? completions.filter(
+                  (c) => c.habitId === habit._id && new Date(c.completedAt).toISOString().split("T")[0] === today
+                ).length
+              : 0;
 
             return (
               <div key={habit._id} className="relative flex justify-end">

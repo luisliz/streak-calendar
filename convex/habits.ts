@@ -1,7 +1,27 @@
 import { v } from "convex/values";
 
+import { Doc } from "./_generated/dataModel";
 import { mutation, query } from "./_generated/server";
 
+/**
+ * Habit management operations for tracking user habits within calendars.
+ * This module provides CRUD operations for habits with position management and completion tracking.
+ *
+ * Key features:
+ * - Position-based ordering within calendars
+ * - Multiple completion tracking per day
+ * - Cascading deletions (habit -> completions)
+ * - Timer duration support for timed habits
+ */
+
+/**
+ * Lists habits for the authenticated user, optionally filtered by calendar.
+ * Results are sorted by position to maintain user-defined order.
+ *
+ * @param {Id<"calendars">} [calendarId] - Optional calendar ID to filter habits
+ * @throws {Error} If user is not authenticated
+ * @returns {Promise<Doc<"habits">[]>} List of habits, sorted by position
+ */
 export const list = query({
   args: {
     calendarId: v.optional(v.id("calendars")),
@@ -21,6 +41,16 @@ export const list = query({
   },
 });
 
+/**
+ * Creates a new habit in the specified calendar.
+ * Automatically assigns a position value based on existing habits in the calendar.
+ *
+ * @param {string} name - Display name for the habit
+ * @param {Id<"calendars">} calendarId - Calendar to create habit in
+ * @param {number} [timerDuration] - Optional duration in milliseconds for timed habits
+ * @throws {Error} If user is not authenticated or calendar not found/owned by user
+ * @returns {Promise<Id<"habits">>} ID of the newly created habit
+ */
 export const create = mutation({
   args: {
     name: v.string(),
@@ -55,6 +85,15 @@ export const create = mutation({
   },
 });
 
+/**
+ * Marks a habit as complete for a specific date, with support for multiple completions per day.
+ * Can increase or decrease completion count for the specified date.
+ *
+ * @param {Id<"habits">} habitId - Habit to mark complete
+ * @param {number} completedAt - Timestamp for the completion
+ * @param {number} [count] - Optional target completion count, if not provided increments by 1
+ * @throws {Error} If user is not authenticated or habit not found/owned by user
+ */
 export const markComplete = mutation({
   args: {
     habitId: v.id("habits"),
@@ -107,25 +146,72 @@ export const markComplete = mutation({
   },
 });
 
+/**
+ * Response type for paginated completion queries
+ */
+type CompletionsResponse = {
+  completions: Doc<"completions">[];
+  cursor: string | null;
+  hasMore: boolean;
+};
+
+/**
+ * Retrieves paginated completions within a date range.
+ * Uses the by_user_and_date index for efficient querying.
+ *
+ * @param {number} startDate - Start of date range (timestamp)
+ * @param {number} endDate - End of date range (timestamp)
+ * @param {string} [cursor] - Pagination cursor from previous query
+ * @param {number} [limit] - Max completions to return (default 100, max 100)
+ * @throws {Error} If user is not authenticated
+ * @returns {Promise<CompletionsResponse>} Paginated completions with cursor
+ */
 export const getCompletions = query({
   args: {
     startDate: v.number(),
     endDate: v.number(),
+    cursor: v.optional(v.string()),
+    limit: v.optional(v.number()),
   },
-  handler: async (ctx, args) => {
+  handler: async (ctx, args): Promise<CompletionsResponse> => {
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) throw new Error("Not authenticated");
 
-    // Use the compound index for more efficient querying
-    return await ctx.db
+    const limit = Math.min(args.limit ?? 100, 100); // Cap at 100 completions per page
+
+    const queryBuilder = ctx.db
       .query("completions")
       .withIndex("by_user_and_date", (q) =>
         q.eq("userId", identity.subject).gte("completedAt", args.startDate).lte("completedAt", args.endDate)
       )
-      .collect();
+      .order("desc");
+
+    const page = await queryBuilder.paginate({ numItems: limit, cursor: args.cursor ?? null });
+
+    return {
+      completions: page.page,
+      cursor: page.continueCursor,
+      hasMore: page.isDone === false,
+    };
   },
 });
 
+/**
+ * Updates a habit's properties including name, timer duration, calendar, and position.
+ * Handles position management when moving habits within or between calendars.
+ *
+ * Position update scenarios:
+ * 1. Moving to different calendar: Place at end of target calendar
+ * 2. Moving within same calendar: Adjust positions of habits in between
+ * 3. No position change: Update other properties only
+ *
+ * @param {Id<"habits">} id - Habit ID to update
+ * @param {string} name - New habit name
+ * @param {number} [timerDuration] - Optional new timer duration
+ * @param {Id<"calendars">} calendarId - Calendar to move/keep habit in
+ * @param {number} [position] - Optional new position in calendar
+ * @throws {Error} If user not authenticated, habit/calendar not found, or invalid position
+ */
 export const update = mutation({
   args: {
     id: v.id("habits"),
@@ -156,7 +242,7 @@ export const update = mutation({
         .filter((q) => q.eq(q.field("calendarId"), args.calendarId))
         .collect();
 
-      // Calculate new position
+      // Calculate new position based on scenario
       let newPosition: number;
       if (args.calendarId !== habit.calendarId) {
         // Moving to different calendar - put at end
@@ -174,7 +260,7 @@ export const update = mutation({
         throw new Error("Invalid position");
       }
 
-      // Update positions of other habits
+      // Update positions of other habits if needed
       const oldPosition = habit.position ?? 0;
 
       if (args.calendarId === habit.calendarId && oldPosition !== newPosition) {
@@ -207,7 +293,7 @@ export const update = mutation({
       return;
     }
 
-    // Update the habit
+    // Update the habit's properties without position change
     await ctx.db.patch(args.id, {
       name: args.name,
       timerDuration: args.timerDuration,
@@ -217,6 +303,15 @@ export const update = mutation({
   },
 });
 
+/**
+ * Removes a habit and all its completions.
+ * Performs cascading deletion in this order:
+ * 1. Delete all completions for the habit
+ * 2. Delete the habit itself
+ *
+ * @param {Id<"habits">} id - Habit ID to delete
+ * @throws {Error} If user not authenticated or habit not found/owned by user
+ */
 export const remove = mutation({
   args: { id: v.id("habits") },
   handler: async (ctx, args) => {
@@ -241,6 +336,15 @@ export const remove = mutation({
   },
 });
 
+/**
+ * Retrieves a single habit by ID.
+ * Note: This query doesn't check ownership, as it's typically used after list()
+ * which already filters by user.
+ *
+ * @param {Id<"habits">} id - Habit ID to retrieve
+ * @throws {Error} If habit not found
+ * @returns {Promise<Doc<"habits">>} The requested habit
+ */
 export const get = query({
   args: { id: v.id("habits") },
   handler: async (ctx, args) => {

@@ -18,11 +18,16 @@ import { Id } from "@server/convex/_generated/dataModel";
 export function getCompletionCount(
   date: string,
   habitId: Id<"habits">,
-  completions: Array<{
-    habitId: Id<"habits">;
-    completedAt: number;
-  }>
+  completions:
+    | Array<{
+        habitId: Id<"habits">;
+        completedAt: number;
+      }>
+    | null
+    | undefined
 ) {
+  if (!Array.isArray(completions)) return 0;
+
   // Set start of day (midnight 00:00:00.000)
   const dayStart = new Date(date);
   dayStart.setHours(0, 0, 0, 0);

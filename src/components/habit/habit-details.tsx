@@ -120,7 +120,7 @@ export function HabitDetails({ habit, calendar }: HabitDetailsProps) {
    * Maps dates to completion counts and assigns level (0-4) based on completion frequency
    */
   const calendarData = useMemo(() => {
-    if (!completions) return [];
+    if (!completions?.completions) return [];
 
     const dates = new Map();
     const start = new Date(dateRange.startDate);
@@ -130,7 +130,7 @@ export function HabitDetails({ habit, calendar }: HabitDetailsProps) {
       dates.set(d.toISOString().split("T")[0], 0);
     }
 
-    completions
+    completions.completions
       .filter((completion) => completion.habitId === habit._id)
       .forEach((completion) => {
         const date = new Date(completion.completedAt).toISOString().split("T")[0];
@@ -217,7 +217,7 @@ export function HabitDetails({ habit, calendar }: HabitDetailsProps) {
           <SingleMonthCalendar
             habit={habit}
             colorTheme={calendar.colorTheme}
-            completions={completions ?? []}
+            completions={completions?.completions ?? []}
             onToggle={async (habitId, date, count) => {
               try {
                 const completedAt = new Date(date).getTime();
@@ -236,12 +236,16 @@ export function HabitDetails({ habit, calendar }: HabitDetailsProps) {
         <div className="space-y-4">
           <HabitActivityCalendar
             calendarData={calendarData}
-            completions={completions}
+            completions={completions?.completions}
             calendarSize={calendarSize}
             colorTheme={calendar.colorTheme}
           />
 
-          <HabitStatistics habitId={habit._id} colorTheme={calendar.colorTheme} completions={completions} />
+          <HabitStatistics
+            habitId={habit._id}
+            colorTheme={calendar.colorTheme}
+            completions={completions?.completions}
+          />
         </div>
       </div>
 
