@@ -34,11 +34,10 @@ export const exportCalendarsAndHabits = query({
       .filter((q) => q.eq(q.field("userId"), identity.subject))
       .collect();
 
-    // Build the export structure without completions
+    // Build the export structure without _id fields
     const exportedCalendars = calendars.map((calendar) => {
       const calendarHabits = allHabits.filter((h) => h.calendarId === calendar._id);
       const exportedHabits = calendarHabits.map((habit) => ({
-        _id: habit._id,
         name: habit.name,
         position: habit.position,
         timerDuration: habit.timerDuration,
@@ -99,13 +98,17 @@ export const importData = mutation({
           colorTheme: v.string(),
           position: v.optional(v.number()),
           habits: v.array(
-            v.object({
-              name: v.string(),
-              timerDuration: v.optional(v.number()),
-              position: v.optional(v.number()),
-              completions: v.array(v.object({ completedAt: v.number() })),
-              targetFrequency: v.optional(v.any()),
-            })
+            v.union(
+              v.object({
+                name: v.string(),
+                timerDuration: v.optional(v.number()),
+                position: v.optional(v.number()),
+                completions: v.array(v.object({ completedAt: v.number() })),
+                targetFrequency: v.optional(v.any()),
+              }),
+              // Allow any additional fields in the input
+              v.any()
+            )
           ),
         })
       ),
@@ -115,16 +118,24 @@ export const importData = mutation({
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) throw new Error("Not authenticated");
 
-    // Get existing calendars for matching
+    // Clean the input data to only use fields we need
+    const cleanedCalendars = args.data.calendars.map((calendar) => ({
+      ...calendar,
+      habits: calendar.habits.map((habit) => ({
+        name: habit.name,
+        timerDuration: "timerDuration" in habit ? habit.timerDuration : undefined,
+        position: "position" in habit ? habit.position : undefined,
+        completions: "completions" in habit ? habit.completions : [],
+      })),
+    }));
+
     const existingCalendars = await ctx.db
       .query("calendars")
       .filter((q) => q.eq(q.field("userId"), identity.subject))
       .collect();
 
-    // Sort imported calendars by position
-    const sortedCalendars = [...args.data.calendars].sort(
-      (a, b) => (a.position ?? Infinity) - (b.position ?? Infinity)
-    );
+    // Continue with the rest of the import using cleanedCalendars
+    const sortedCalendars = [...cleanedCalendars].sort((a, b) => (a.position ?? Infinity) - (b.position ?? Infinity));
 
     for (const calendarData of sortedCalendars) {
       const existingCalendar = existingCalendars.find((cal) => cal.name === calendarData.name);
@@ -137,34 +148,28 @@ export const importData = mutation({
           position: calendarData.position,
         });
 
-        // Get existing habits for matching
         const existingHabits = await ctx.db
           .query("habits")
           .filter((q) => q.eq(q.field("calendarId"), calendarId))
           .collect();
 
-        // Sort imported habits by position
         const sortedHabits = [...calendarData.habits].sort(
           (a, b) => (a.position ?? Infinity) - (b.position ?? Infinity)
         );
 
-        // Import habits
         for (const habitData of sortedHabits) {
           const { name, completions, timerDuration, position } = habitData;
 
-          // Find or create habit
           const existingHabit = existingHabits.find((h) => h.name === name);
           let habitId: Id<"habits">;
 
           if (existingHabit) {
             habitId = existingHabit._id;
-            // Update existing habit with position
             await ctx.db.patch(habitId, {
               position: position ?? existingHabits.indexOf(existingHabit) + 1,
               timerDuration,
             });
           } else {
-            // Create new habit with position
             habitId = await ctx.db.insert("habits", {
               name,
               userId: identity.subject,
@@ -174,27 +179,36 @@ export const importData = mutation({
             });
           }
 
-          // Get existing completions to avoid duplicates
+          // Process completions in batches of 100
           const existingCompletions = await ctx.db
             .query("completions")
             .filter((q) => q.eq(q.field("habitId"), habitId))
             .collect();
 
-          // Add only new completions
-          for (const completion of completions) {
-            const exists = existingCompletions.some((ec) => ec.completedAt === completion.completedAt);
+          const existingCompletionTimes = new Set(existingCompletions.map((c) => c.completedAt));
 
-            if (!exists) {
-              await ctx.db.insert("completions", {
-                habitId,
-                userId: identity.subject,
-                completedAt: completion.completedAt,
-              });
+          // Process completions in chunks of 100
+          for (let i = 0; i < completions.length; i += 100) {
+            const batch = completions.slice(i, i + 100);
+            const newCompletions = batch.filter(
+              (c: { completedAt: number }) => !existingCompletionTimes.has(c.completedAt)
+            );
+
+            if (newCompletions.length > 0) {
+              await Promise.all(
+                newCompletions.map((completion: { completedAt: number }) =>
+                  ctx.db.insert("completions", {
+                    habitId,
+                    userId: identity.subject,
+                    completedAt: completion.completedAt,
+                  })
+                )
+              );
             }
           }
         }
       } else {
-        // Create new calendar with position
+        // Create new calendar
         const newCalendarId = await ctx.db.insert("calendars", {
           name: calendarData.name,
           userId: identity.subject,
@@ -202,7 +216,6 @@ export const importData = mutation({
           position: calendarData.position ?? existingCalendars.length + 1,
         });
 
-        // Sort habits by position before creating
         const sortedHabits = [...calendarData.habits].sort(
           (a, b) => (a.position ?? Infinity) - (b.position ?? Infinity)
         );
@@ -218,12 +231,18 @@ export const importData = mutation({
             position: position ?? calendarData.habits.indexOf(habitData) + 1,
           });
 
-          for (const completion of completions) {
-            await ctx.db.insert("completions", {
-              habitId,
-              userId: identity.subject,
-              completedAt: completion.completedAt,
-            });
+          // Process completions in batches of 100
+          for (let i = 0; i < completions.length; i += 100) {
+            const batch = completions.slice(i, i + 100);
+            await Promise.all(
+              batch.map((completion: { completedAt: number }) =>
+                ctx.db.insert("completions", {
+                  habitId,
+                  userId: identity.subject,
+                  completedAt: completion.completedAt,
+                })
+              )
+            );
           }
         }
       }
