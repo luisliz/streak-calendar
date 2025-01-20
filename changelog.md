@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.0.9] - 2025-01-18
+
+Commit Summary: `fix: implement proper frontend pagination for completions`
+
+### Changed
+
+- Implemented proper frontend pagination for completions
+  - Added state management for accumulated completions
+  - Added loading states for pagination
+  - Fixed type issues with cursor handling
+  - Improved performance by loading completions in chunks
+
 ## [2.0.8] - 2025-01-18
 
 Commit Summary: `perf: optimize completions query with pagination`
