@@ -20,40 +20,58 @@ export function useImportExport() {
   // Currently selected file for import
   const [importFile, setImportFile] = useState<File | null>(null);
 
-  // Fetch user's calendar data for export
+  // Fetch data when authenticated
   const calendarsAndHabits = useQuery(api.calendar_sync.exportCalendarsAndHabits, isAuthenticated ? undefined : "skip");
   const completions = useQuery(api.calendar_sync.exportCompletions, isAuthenticated ? undefined : "skip");
-  const importData = useMutation(api.calendar_sync.importData);
 
-  /**
-   * Handles the export confirmation action.
-   * Creates and downloads a JSON file containing the user's calendar data
-   * with a timestamp in the filename.
-   */
-  const handleExportConfirm = () => {
+  const handleExportConfirm = async () => {
     setShowExportDialog(false);
-    if (!calendarsAndHabits || !completions) {
-      toast({
-        title: "Export failed",
-        description: "No data to export",
-        variant: "destructive",
-      });
-      return;
-    }
 
     try {
-      // Merge the calendar and completion data
-      const exportData = {
-        calendars: calendarsAndHabits.calendars.map((calendar) => ({
-          ...calendar,
-          habits: calendar.habits.map((habit) => ({
-            ...habit,
-            completions: completions.completionsByHabit[habit._id] || [],
-          })),
-        })),
-      };
+      console.log("Starting export with:", {
+        hasCalendars: !!calendarsAndHabits?.calendars,
+        numCalendars: calendarsAndHabits?.calendars?.length,
+        hasCompletions: !!completions?.completionsByHabit,
+        completionsKeys: completions?.completionsByHabit ? Object.keys(completions.completionsByHabit) : [],
+      });
 
-      const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: "application/json" });
+      const data = await new Promise((resolve, reject) => {
+        let attempts = 0;
+        const checkData = () => {
+          attempts++;
+          if (attempts > 80) {
+            reject(
+              new Error(!calendarsAndHabits?.calendars ? "Failed to fetch calendars" : "Failed to fetch completions")
+            );
+            return;
+          }
+
+          if (calendarsAndHabits?.calendars && completions?.completionsByHabit) {
+            if (!calendarsAndHabits.calendars.length) {
+              reject(new Error("No calendars found to export"));
+              return;
+            }
+
+            resolve({
+              calendars: calendarsAndHabits.calendars.map((calendar) => ({
+                ...calendar,
+                habits: calendar.habits.map((habit) => ({
+                  name: habit.name,
+                  position: habit.position,
+                  timerDuration: habit.timerDuration,
+                  completions: completions.completionsByHabit[encodeURIComponent(habit.name)] || [],
+                })),
+              })),
+            });
+            return;
+          }
+
+          setTimeout(checkData, 100);
+        };
+        checkData();
+      });
+
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
@@ -63,10 +81,9 @@ export function useImportExport() {
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
     } catch (error) {
-      console.error("[handleExportConfirm] Error:", error);
       toast({
         title: "Export failed",
-        description: "Failed to create export file",
+        description: error instanceof Error ? error.message : "Failed to create export file",
         variant: "destructive",
       });
     }
@@ -111,6 +128,8 @@ export function useImportExport() {
     setImportFile(null);
     setShowImportDialog(false);
   };
+
+  const importData = useMutation(api.calendar_sync.importData);
 
   return {
     // Dialog visibility controls

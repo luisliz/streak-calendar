@@ -59,23 +59,40 @@ export const exportCalendarsAndHabits = query({
 export const exportCompletions = query({
   handler: async (ctx) => {
     const identity = await ctx.auth.getUserIdentity();
-    if (!identity) return null;
+    if (!identity) return { completionsByHabit: {} };
 
-    // Get all completions using the index
-    const allCompletions = await ctx.db
-      .query("completions")
-      .withIndex("by_user_and_date", (q) => q.eq("userId", identity.subject))
-      .collect();
+    try {
+      // Get all habits first to map IDs to names
+      const habits = await ctx.db
+        .query("habits")
+        .filter((q) => q.eq(q.field("userId"), identity.subject))
+        .collect();
 
-    // Group completions by habit
-    const completionsByHabit = new Map();
-    for (const completion of allCompletions) {
-      const habitCompletions = completionsByHabit.get(completion.habitId) || [];
-      habitCompletions.push({ completedAt: completion.completedAt });
-      completionsByHabit.set(completion.habitId, habitCompletions);
+      const habitIdToName = new Map(habits.map((h) => [h._id, h.name]));
+
+      // Get all completions
+      const completions = await ctx.db
+        .query("completions")
+        .withIndex("by_user_and_date", (q) => q.eq("userId", identity.subject))
+        .collect();
+
+      // Group completions by habit name
+      const completionsByHabit = new Map();
+      for (const completion of completions) {
+        const habitName = habitIdToName.get(completion.habitId);
+        if (!habitName) continue;
+
+        const encodedName = encodeURIComponent(habitName);
+        const habitCompletions = completionsByHabit.get(encodedName) || [];
+        habitCompletions.push({ completedAt: completion.completedAt });
+        completionsByHabit.set(encodedName, habitCompletions);
+      }
+
+      return { completionsByHabit: Object.fromEntries(completionsByHabit) };
+    } catch (error) {
+      console.error("Error in exportCompletions:", error);
+      return { completionsByHabit: {} };
     }
-
-    return { completionsByHabit: Object.fromEntries(completionsByHabit) };
   },
 });
 
