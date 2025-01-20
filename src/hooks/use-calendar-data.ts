@@ -1,7 +1,8 @@
 import { useConvexAuth, useMutation, useQuery } from "convex/react";
+import { useCallback, useEffect, useState } from "react";
 
 import { api } from "@server/convex/_generated/api";
-import { Id } from "@server/convex/_generated/dataModel";
+import { Doc, Id } from "@server/convex/_generated/dataModel";
 
 /**
  * Custom hook for managing calendar-related data and operations in a habit tracking application.
@@ -19,8 +20,9 @@ import { Id } from "@server/convex/_generated/dataModel";
  * Note: All database operations are authenticated and will fail if user is not logged in
  */
 export function useCalendarData(startDate: Date, endDate: Date) {
-  // Authentication state from Convex - used to conditionally skip queries
   const { isAuthenticated } = useConvexAuth();
+  const [allCompletions, setAllCompletions] = useState<Doc<"completions">[]>([]);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
 
   // --- Database Queries ---
 
@@ -49,13 +51,43 @@ export function useCalendarData(startDate: Date, endDate: Date) {
       ? {
           startDate: startDate.getTime(),
           endDate: endDate.getTime(),
+          limit: 100,
         }
       : "skip"
   );
 
-  // Extract completions array from paginated response for backward compatibility
-  // Components expect a simple array of completions rather than paginated data
-  const completions = completionsQuery?.completions;
+  // Initialize allCompletions with first page
+  useEffect(() => {
+    if (completionsQuery?.completions) {
+      setAllCompletions(completionsQuery.completions);
+    }
+  }, [completionsQuery?.completions]);
+
+  // Load more completions when available
+  const nextPageQuery = useQuery(
+    api.habits.getCompletions,
+    isAuthenticated && completionsQuery?.hasMore && !isLoadingMore
+      ? {
+          startDate: startDate.getTime(),
+          endDate: endDate.getTime(),
+          limit: 100,
+          cursor: completionsQuery?.cursor || undefined,
+        }
+      : "skip"
+  );
+
+  // Append next page when loaded
+  useEffect(() => {
+    if (nextPageQuery?.completions) {
+      setAllCompletions((prev) => [...prev, ...nextPageQuery.completions]);
+      setIsLoadingMore(false);
+    }
+  }, [nextPageQuery?.completions]);
+
+  const loadMoreCompletions = useCallback(() => {
+    if (!completionsQuery?.hasMore || isLoadingMore) return;
+    setIsLoadingMore(true);
+  }, [completionsQuery?.hasMore, isLoadingMore]);
 
   // --- Database Mutations ---
   // Initialize mutation functions for CRUD operations
@@ -190,9 +222,12 @@ export function useCalendarData(startDate: Date, endDate: Date) {
   return {
     isAuthenticated,
     isLoading,
+    isLoadingMore,
     calendars: calendarsQuery,
     habits: habitsQuery,
-    completions,
+    completions: allCompletions,
+    hasMoreCompletions: completionsQuery?.hasMore ?? false,
+    loadMoreCompletions,
     handleAddCalendar,
     handleAddHabit,
     handleEditCalendar,

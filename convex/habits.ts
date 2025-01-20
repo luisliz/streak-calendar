@@ -177,7 +177,9 @@ export const getCompletions = query({
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) throw new Error("Not authenticated");
 
-    const limit = Math.min(args.limit ?? 100, 100); // Cap at 100 completions per page
+    // Use a high limit to get all completions in one query for now
+    // TODO: Implement proper pagination in the UI later
+    const limit = 10000;
 
     const queryBuilder = ctx.db
       .query("completions")
