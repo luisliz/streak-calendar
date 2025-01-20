@@ -56,6 +56,13 @@ export function useCalendarData(startDate: Date, endDate: Date) {
       : "skip"
   );
 
+  // Initialize allCompletions with first page
+  useEffect(() => {
+    if (completionsQuery?.completions) {
+      setAllCompletions(completionsQuery.completions);
+    }
+  }, [completionsQuery?.completions]);
+
   // Load more completions when available
   const nextPageQuery = useQuery(
     api.habits.getCompletions,
@@ -69,7 +76,7 @@ export function useCalendarData(startDate: Date, endDate: Date) {
       : "skip"
   );
 
-  // Update allCompletions when next page is loaded
+  // Append next page when loaded
   useEffect(() => {
     if (nextPageQuery?.completions) {
       setAllCompletions((prev) => [...prev, ...nextPageQuery.completions]);
