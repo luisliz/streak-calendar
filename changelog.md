@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.0.10] - 2025-01-21
+
+Commit Summary: `fix: accurate timestamps for habit completions`
+
+### Fixed
+
+- Fixed habit completion timestamps
+  - Today's completions now use accurate current timestamp instead of fixed time
+  - Past completions maintain midnight timestamp for historical data
+  - Improved completion tracking accuracy for current day habits
+
 ## [2.0.9] - 2025-01-18
 
 Commit Summary: `fix: implement proper frontend pagination for completions`

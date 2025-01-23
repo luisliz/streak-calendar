@@ -207,7 +207,13 @@ export function useCalendarData(startDate: Date, endDate: Date) {
    * @param count - Target number of completions (0 removes all completions)
    */
   const handleToggleHabit = async (habitId: Id<"habits">, date: string, count: number) => {
-    const timestamp = new Date(date).getTime();
+    // Check if the completion is for today
+    const today = new Date().toISOString().split("T")[0];
+    const isToday = date === today;
+
+    // Use current timestamp for today's completions, otherwise use the date's timestamp
+    const timestamp = isToday ? Date.now() : new Date(date).getTime();
+
     await markComplete({
       habitId,
       completedAt: timestamp,

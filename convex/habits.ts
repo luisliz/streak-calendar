@@ -133,11 +133,18 @@ export const markComplete = mutation({
       const toRemove = existingCompletions.slice(-numToRemove);
       await Promise.all(toRemove.map((completion) => ctx.db.delete(completion._id)));
     } else if (targetCount > currentCount) {
-      // Add new completions with accurate timestamps
+      // Check if the completion is for today
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const isToday = date.getTime() === today.getTime();
+
+      // Use current timestamp for today's completions, otherwise use the provided date
+      const baseTimestamp = isToday ? Date.now() : args.completedAt;
+
       const newCompletions = Array.from({ length: targetCount - currentCount }, (_, index) => ({
         habitId: args.habitId,
         userId: identity.subject,
-        completedAt: args.completedAt + index * 1000, // Add 1 second between each completion if multiple
+        completedAt: baseTimestamp + index * 1000, // Add 1 second between each completion if multiple
       }));
       await Promise.all(newCompletions.map((completion) => ctx.db.insert("completions", completion)));
     }
