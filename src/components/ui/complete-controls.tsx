@@ -1,16 +1,15 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { CompleteTimer } from "@/components/ui/complete-timer";
 import { ConfettiButton } from "@/components/ui/confetti";
 import { xIconPath } from "@/components/ui/x-icon";
 import NumberFlow from "@number-flow/react";
 import confettiLib from "canvas-confetti";
-import { useMutation, useQuery } from "convex/react";
-import { Minus, Plus, Timer, TimerOff } from "lucide-react";
+import { Minus, Plus } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useMemo } from "react";
 
-import { api } from "@server/convex/_generated/api";
 import { Id } from "@server/convex/_generated/dataModel";
 
 /**
@@ -49,13 +48,8 @@ export function CompleteControls({
   disabled = false,
   habitId,
 }: CompleteControlsProps) {
-  const [isScheduling, setIsScheduling] = useState(false);
-  const [timeLeft, setTimeLeft] = useState<number | null>(null);
-  const timerButtonRef = useRef<HTMLButtonElement>(null);
   const t = useTranslations("calendar.controls");
-  const schedule = useMutation(api.habits.scheduleHabitIncrement);
-  const cancelSchedule = useMutation(api.habits.cancelScheduledIncrement);
-  const habit = useQuery(api.habits.get, habitId ? { id: habitId } : "skip");
+  const confettiShape = useMemo(() => confettiLib.shapeFromPath(xIconPath), []);
 
   const handleIncrement = useCallback(async () => {
     await onIncrement();
@@ -66,8 +60,6 @@ export function CompleteControls({
     await onDecrement();
     onComplete?.();
   }, [onDecrement, onComplete]);
-
-  const confettiShape = useMemo(() => confettiLib.shapeFromPath(xIconPath), []);
 
   const getConfettiOptions = useCallback(
     (origin?: { x: number; y: number }) => ({
@@ -87,61 +79,6 @@ export function CompleteControls({
     [confettiShape]
   );
 
-  const handleStartTimer = useCallback(
-    async (durationMs: number) => {
-      if (!habitId) {
-        console.error("Timer requires habitId");
-        return;
-      }
-
-      setIsScheduling(true);
-
-      try {
-        // Cancel any existing timer first
-        if (habit?.scheduledTimer) {
-          await cancelSchedule({ habitId });
-        }
-        // Schedule new timer
-        await schedule({
-          habitId,
-          durationMs,
-          clientNow: Date.now(),
-        });
-      } catch (error) {
-        console.error("Schedule mutation failed:", error);
-      } finally {
-        setIsScheduling(false);
-      }
-    },
-    [habitId, schedule, cancelSchedule, habit]
-  );
-
-  const handleStopTimer = useCallback(async () => {
-    if (habitId) {
-      try {
-        await cancelSchedule({ habitId });
-        setTimeLeft(null);
-        if (habit) {
-          habit.timerEnd = undefined;
-        }
-      } catch (error) {
-        console.error("Failed to cancel schedule:", error);
-      }
-    }
-  }, [habitId, cancelSchedule, habit]);
-
-  useEffect(() => {
-    const updateTime = () => {
-      if (!habit?.timerEnd) return;
-      const remaining = habit.timerEnd - Date.now();
-      setTimeLeft(remaining > 0 ? remaining : null);
-    };
-
-    updateTime();
-    const interval = setInterval(updateTime, 1000);
-    return () => clearInterval(interval);
-  }, [habit?.timerEnd]);
-
   if (!habitId) {
     console.error("CompleteControls requires habitId");
     return null;
@@ -150,37 +87,16 @@ export function CompleteControls({
   // Timer mode with count = 0: Show start button
   if (timerDuration) {
     if (count === 0) {
-      if (timeLeft !== null) {
-        return (
-          <div className="flex w-[96px] flex-col gap-px">
-            <div className="flex w-[96px] items-center justify-between gap-1">
-              <Button
-                variant={variant}
-                size="icon"
-                className="aspect-square h-6 w-6 rounded-full p-0"
-                onClick={handleStopTimer}
-              >
-                <TimerOff className="h-4 w-4" />
-              </Button>
-              <Button variant={variant} size="sm" className="h-6 flex-1 text-xs" disabled={true}>
-                {Math.ceil(timeLeft / 1000)}s
-              </Button>
-            </div>
-          </div>
-        );
-      }
       return (
         <div className="flex w-[96px] flex-col gap-px">
-          <Button
-            ref={timerButtonRef}
+          <CompleteTimer
+            count={count}
+            timerDuration={timerDuration}
+            onComplete={handleIncrement}
+            disabled={disabled}
+            habitId={habitId}
             variant={variant}
-            size="sm"
-            className="h-6 w-[96px] text-xs"
-            onClick={() => handleStartTimer(timerDuration * 60 * 1000)}
-            disabled={disabled || isScheduling}
-          >
-            {isScheduling ? t("scheduling") : t("start")}
-          </Button>
+          />
         </div>
       );
     }
@@ -188,7 +104,7 @@ export function CompleteControls({
     // Timer mode with count > 0: Show decrement and timer controls
     return (
       <div className="flex w-[96px] flex-col gap-px">
-        <div className="flex w-[96px] items-center justify-between">
+        <div className="flex w-[96px] items-center justify-between gap-1">
           <Button
             variant={variant}
             size="icon"
@@ -198,31 +114,17 @@ export function CompleteControls({
           >
             <Minus className="h-4 w-4" />
           </Button>
-          <span className="w-[72px] text-center font-medium">
+          <div className="flex-1 text-center font-medium">
             <NumberFlow value={count} format={{ style: "decimal" }} />
-          </span>
-          {timeLeft !== null ? (
-            <Button
-              variant={variant}
-              size="icon"
-              className="aspect-square h-6 w-6 rounded-full p-0"
-              onClick={handleStopTimer}
-              disabled={disabled}
-            >
-              <TimerOff className="h-4 w-4" />
-            </Button>
-          ) : (
-            <Button
-              ref={timerButtonRef}
-              variant={variant}
-              size="icon"
-              className="aspect-square h-6 w-6 rounded-full p-0"
-              onClick={() => handleStartTimer(timerDuration * 60 * 1000)}
-              disabled={disabled || isScheduling}
-            >
-              <Timer className="h-4 w-4" />
-            </Button>
-          )}
+          </div>
+          <CompleteTimer
+            count={count}
+            timerDuration={timerDuration}
+            onComplete={handleIncrement}
+            disabled={disabled}
+            habitId={habitId}
+            variant={variant}
+          />
         </div>
       </div>
     );

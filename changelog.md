@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.0.12] - 2025-01-26
+
+Commit Summary: `feat: enhance timer functionality and UI adjustments`
+
+### Changed
+
+- Enhanced timer functionality for improved user experience
+  - Updated timer UI to provide clearer countdown display
+  - Added visual feedback for timer states (running, stopped, scheduling)
+  - Improved accessibility features for better usability
+
+### Fixed
+
+- Resolved issues with timer synchronization between client and server
+- Fixed bugs related to timer state management during component unmounting
+
 ## [2.0.11] - 2025-01-25
 
 Commit Summary: `refactor: move timer logic to server-side using Convex scheduled functions`
